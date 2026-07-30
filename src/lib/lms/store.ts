@@ -5,6 +5,10 @@
 
 import type { ProgrammeId } from "@/lib/programmes";
 import type { AttemptResult, ResponseMap } from "@/lib/lms/scoring";
+import type {
+  OrientationResponses,
+  OrientationResult,
+} from "@/lib/lms/orientation";
 
 const KEY = "supercube_lms_v1";
 
@@ -27,6 +31,13 @@ export interface LocalAttempt {
   completedAt: string;
 }
 
+/** Pre-pre orientation: philosophy / theory / model frame */
+export interface LocalOrientation {
+  responses: OrientationResponses;
+  result: OrientationResult;
+  completedAt: string;
+}
+
 export interface LocalLmsState {
   user?: {
     email: string;
@@ -36,6 +47,8 @@ export interface LocalLmsState {
   subscription?: LocalSubscription;
   lessonProgress: LocalLessonProgress;
   attempts: LocalAttempt[];
+  /** Completes before construct pre-assessment */
+  orientation?: LocalOrientation;
 }
 
 const empty = (): LocalLmsState => ({

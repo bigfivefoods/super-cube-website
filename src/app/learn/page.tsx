@@ -39,13 +39,14 @@ export default function LearnDashboardPage() {
     totalLessons === 0
       ? 0
       : Math.round((completedLessons / totalLessons) * 100);
+  const orientation = state.orientation;
   const pre = state.attempts.find((a) => a.phase === "pre");
   const post = state.attempts.find((a) => a.phase === "post");
 
   return (
     <LearnShell
       title="Your Super-Cube® journey"
-      subtitle="Assess → learn → practise → re-assess → report. Choose a programme, complete your profile baseline, then develop all six faces."
+      subtitle="Orient (philosophy · theory · model) → pre-assess → learn → practise → re-assess → report."
     >
       {!access && (
         <div className="mb-6 rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6">
@@ -90,10 +91,20 @@ export default function LearnDashboardPage() {
           },
           {
             label: "Assessments",
-            value: pre ? (post ? "Pre + Post" : "Pre done") : "Not started",
+            value: pre
+              ? post
+                ? "Pre + Post"
+                : orientation
+                  ? "Orient + Pre"
+                  : "Pre done"
+              : orientation
+                ? "Orient done"
+                : "Not started",
             detail: pre
               ? `Baseline overall ${pre.result.overall}`
-              : "Start pre-assessment",
+              : orientation
+                ? orientation.result.label
+                : "Start pre-pre orientation",
           },
         ].map((card) => (
           <div
@@ -131,14 +142,31 @@ export default function LearnDashboardPage() {
             <li className="flex gap-2">
               <span className="font-semibold text-ink">2.</span>
               <span>
-                Complete the pre-assessment baseline.{" "}
+                Pre-pre assessment: philosophy → theory → model.{" "}
+                {orientation ? (
+                  <span className="font-semibold text-ink">
+                    Done ({orientation.result.label}).
+                  </span>
+                ) : null}{" "}
+                <Link
+                  href="/learn/assessment/orientation"
+                  className="font-semibold text-ink underline-offset-2 hover:underline"
+                >
+                  {orientation ? "Review orientation" : "Start orientation"}
+                </Link>
+              </span>
+            </li>
+            <li className="flex gap-2">
+              <span className="font-semibold text-ink">3.</span>
+              <span>
+                Complete the construct pre-assessment baseline.{" "}
                 <Link href="/learn/assessment/pre" className="font-semibold text-ink underline-offset-2 hover:underline">
                   Start pre-assessment
                 </Link>
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="font-semibold text-ink">3.</span>
+              <span className="font-semibold text-ink">4.</span>
               <span>
                 Work through all six construct courses.{" "}
                 <Link href="/learn/courses" className="font-semibold text-ink underline-offset-2 hover:underline">
@@ -147,7 +175,7 @@ export default function LearnDashboardPage() {
               </span>
             </li>
             <li className="flex gap-2">
-              <span className="font-semibold text-ink">4.</span>
+              <span className="font-semibold text-ink">5.</span>
               <span>
                 Take the post-assessment and view your report.{" "}
                 <Link href="/learn/report" className="font-semibold text-ink underline-offset-2 hover:underline">

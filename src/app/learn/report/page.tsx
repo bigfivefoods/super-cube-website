@@ -8,6 +8,7 @@ import {
   compareAttempts,
   recommendations,
 } from "@/lib/lms/scoring";
+import { depthLabel } from "@/lib/lms/orientation";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
 
@@ -15,6 +16,7 @@ export default function ReportPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   useEffect(() => setState(loadLmsState()), []);
 
+  const orientation = state?.orientation;
   const pre = state?.attempts.find((a) => a.phase === "pre");
   const post = state?.attempts.find((a) => a.phase === "post");
   const programmeId =
@@ -42,11 +44,30 @@ export default function ReportPage() {
     return (
       <LearnShell
         title="Personal report"
-        subtitle="Complete your pre-assessment to generate a Super-Cube® profile."
+        subtitle="Complete orientation and your pre-assessment to generate a Super-Cube® profile."
       >
-        <Button href="/learn/assessment/pre" variant="primary">
-          Start pre-assessment
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          {!orientation && (
+            <Button href="/learn/assessment/orientation" variant="primary">
+              Start pre-pre assessment
+            </Button>
+          )}
+          <Button
+            href="/learn/assessment/pre"
+            variant={orientation ? "primary" : "ghost"}
+          >
+            Start pre-assessment
+          </Button>
+        </div>
+        {orientation && (
+          <p className="mt-4 text-sm text-slate">
+            Orientation complete:{" "}
+            <strong className="font-semibold text-ink">
+              {orientation.result.label}
+            </strong>
+            . {orientation.result.summary}
+          </p>
+        )}
       </LearnShell>
     );
   }
@@ -57,6 +78,11 @@ export default function ReportPage() {
       subtitle={`${programme?.name ?? "Super-Cube®"} · developmental profile (not a clinical diagnosis).`}
     >
       <div className="mb-6 flex flex-wrap gap-3 text-sm">
+        {orientation && (
+          <span className="rounded-full border border-black/[0.1] bg-white px-3 py-1 font-semibold text-ink">
+            {orientation.result.label}
+          </span>
+        )}
         <span className="rounded-full bg-ink px-3 py-1 font-semibold text-white">
           Pre overall {pre.result.overall}
         </span>
@@ -69,6 +95,44 @@ export default function ReportPage() {
           Generated {new Date(pre.completedAt).toLocaleDateString()}
         </span>
       </div>
+
+      {orientation && (
+        <section className="mb-6 rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6">
+          <h2 className="text-lg font-semibold tracking-tight text-ink">
+            Leadership knowledge frame
+          </h2>
+          <p className="mt-2 text-sm text-slate">{orientation.result.summary}</p>
+          <p className="mt-2 text-sm text-slate">{orientation.result.guidance}</p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            {(
+              [
+                ["Philosophy (high)", orientation.result.depth.philosophy],
+                ["Theory (middle)", orientation.result.depth.theory],
+                ["Model (applied)", orientation.result.depth.model],
+              ] as const
+            ).map(([label, level]) => (
+              <div
+                key={label}
+                className="rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2"
+              >
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.1em] text-muted">
+                  {label}
+                </p>
+                <p className="mt-1 text-sm font-semibold text-ink">
+                  {depthLabel(level)}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-muted">
+            Knows models: {orientation.result.knowsModels} · Uses models:{" "}
+            {orientation.result.usesModels}
+            {orientation.result.knownExamples
+              ? ` · Named: ${orientation.result.knownExamples}`
+              : ""}
+          </p>
+        </section>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6">
