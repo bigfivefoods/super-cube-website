@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs } from "@/lib/content";
@@ -7,6 +8,33 @@ export const metadata: Metadata = {
   title: "Six Constructs",
   description:
     "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model.",
+};
+
+const media: Record<string, { icon: string; banner: string }> = {
+  choices: {
+    icon: "/images/constructs/choices-icon.png",
+    banner: "/images/constructs/choices-banner.jpg",
+  },
+  principles: {
+    icon: "/images/constructs/principles-icon.png",
+    banner: "/images/constructs/principles-banner.jpg",
+  },
+  mental: {
+    icon: "/images/constructs/mental-icon.png",
+    banner: "/images/constructs/mental-banner.jpg",
+  },
+  emotional: {
+    icon: "/images/constructs/emotional-icon.png",
+    banner: "/images/constructs/emotional-banner.jpg",
+  },
+  physical: {
+    icon: "/images/constructs/physical-icon.png",
+    banner: "/images/constructs/physical-banner.jpg",
+  },
+  spiritual: {
+    icon: "/images/constructs/spiritual-icon.png",
+    banner: "/images/constructs/spiritual-banner.jpg",
+  },
 };
 
 export default function ConstructsPage() {
@@ -22,14 +50,23 @@ export default function ConstructsPage() {
         </Button>
       </PageHero>
 
-      <section className="border-b border-[var(--line)] bg-paper py-8">
+      <section className="border-b border-black/[0.06] bg-white py-8">
         <div className="container-site flex flex-wrap gap-2">
           {constructs.map((c) => (
             <a
               key={c.id}
               href={`#${c.id}`}
-              className="rounded-full border border-[var(--line-strong)] bg-cream px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-cream"
+              className="inline-flex items-center gap-2 rounded-full border border-black/[0.1] bg-white px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-white"
             >
+              <span className="relative h-5 w-5 overflow-hidden rounded">
+                <Image
+                  src={media[c.id].icon}
+                  alt=""
+                  fill
+                  className="object-contain"
+                  sizes="20px"
+                />
+              </span>
               {c.name}
             </a>
           ))}
@@ -37,7 +74,7 @@ export default function ConstructsPage() {
       </section>
 
       <section className="section-pad">
-        <div className="container-site space-y-20">
+        <div className="container-site space-y-24">
           {constructs.map((c, index) => (
             <article
               key={c.id}
@@ -45,16 +82,20 @@ export default function ConstructsPage() {
               className="scroll-mt-28 grid gap-8 lg:grid-cols-12 lg:gap-12"
             >
               <div className="lg:col-span-4">
-                <div
-                  className="inline-flex h-14 w-14 items-center justify-center rounded-2xl text-xl font-bold text-white shadow-md"
-                  style={{ background: c.color }}
-                >
-                  {String(index + 1).padStart(2, "0")}
+                <div className="relative mb-5 h-16 w-16 overflow-hidden rounded-2xl bg-[#f4f4f4]">
+                  <Image
+                    src={media[c.id].icon}
+                    alt={`${c.name} icon`}
+                    fill
+                    className="object-contain p-2"
+                    sizes="64px"
+                  />
                 </div>
-                <h2 className="heading-lg mt-5 text-ink">{c.name}</h2>
-                <p className="mt-2 font-medium" style={{ color: c.color }}>
-                  {c.tagline}
+                <p className="text-sm font-semibold text-muted">
+                  {String(index + 1).padStart(2, "0")}
                 </p>
+                <h2 className="heading-lg mt-2 text-ink">{c.name}</h2>
+                <p className="mt-2 font-medium text-slate">{c.tagline}</p>
                 {c.qualitativeShare && (
                   <p className="mt-4 text-sm text-muted">
                     Qualitative prominence in validation interviews:{" "}
@@ -63,33 +104,39 @@ export default function ConstructsPage() {
                 )}
               </div>
 
-              <div className="lg:col-span-8">
-                <div
-                  className="rounded-[var(--radius-lg)] border border-[var(--line)] p-6 md:p-8"
-                  style={{ background: c.colorSoft }}
-                >
+              <div className="lg:col-span-8 space-y-4">
+                <div className="relative aspect-[1441/630] w-full overflow-hidden rounded-2xl bg-[#f4f4f4]">
+                  <Image
+                    src={media[c.id].banner}
+                    alt={`${c.name} construct`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 66vw"
+                  />
+                </div>
+                <div className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-6 md:p-8">
                   <p className="text-lg leading-relaxed text-ink/90">
                     {c.description}
                   </p>
 
-                  <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">
+                  <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
                     Core elements
                   </h3>
                   <ul className="mt-3 flex flex-wrap gap-2">
                     {c.elements.map((el) => (
                       <li
                         key={el}
-                        className="rounded-full bg-paper/80 px-3.5 py-1.5 text-sm font-medium text-ink shadow-sm"
+                        className="rounded-full border border-black/[0.08] bg-white px-3.5 py-1.5 text-sm font-medium text-ink"
                       >
                         {el}
                       </li>
                     ))}
                   </ul>
 
-                  <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-ink/60">
+                  <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
                     Theoretical grounding
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-ink/75">
+                  <p className="mt-3 text-sm leading-relaxed text-slate">
                     {c.theory}
                   </p>
                 </div>

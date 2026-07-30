@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs, levels } from "@/lib/content";
 
@@ -7,6 +8,31 @@ export const metadata: Metadata = {
   description:
     "Blended leadership development programmes aligned with the Super-Cube® model—from personal plans to network-scale pipelines.",
 };
+
+const bookCovers = [
+  { id: "choices", title: "Choices", src: "/images/programs/choices-cover.jpg" },
+  {
+    id: "principles",
+    title: "Principles",
+    src: "/images/programs/principles-cover.jpg",
+  },
+  { id: "mental", title: "Mental", src: "/images/programs/mental-cover.jpg" },
+  {
+    id: "emotional",
+    title: "Emotional",
+    src: "/images/programs/emotional-cover.jpg",
+  },
+  {
+    id: "physical",
+    title: "Physical",
+    src: "/images/programs/physical-cover.jpg",
+  },
+  {
+    id: "spiritual",
+    title: "Spiritual",
+    src: "/images/programs/spiritual-cover.jpg",
+  },
+];
 
 const offerings = [
   {
@@ -79,6 +105,38 @@ export default function ProgramsPage() {
         </Button>
       </PageHero>
 
+      <section className="section-pad border-b border-black/[0.06] bg-white">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow="Course library"
+            title="Six construct pathways. Six book covers."
+            description="Each Super-Cube® construct is developed through deliberate practice and structured learning—anchored by its own module."
+          />
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:mt-12 sm:gap-4 md:grid-cols-3 lg:grid-cols-6">
+            {bookCovers.map((book) => (
+              <a
+                key={book.id}
+                href={`/constructs#${book.id}`}
+                className="card-lift group block overflow-hidden rounded-xl border border-black/[0.08] bg-white"
+              >
+                <div className="relative aspect-[3/4] w-full bg-[#f4f4f4]">
+                  <Image
+                    src={book.src}
+                    alt={`${book.title} course cover`}
+                    fill
+                    className="object-cover transition duration-500 group-hover:scale-[1.03]"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 16vw"
+                  />
+                </div>
+                <p className="px-2 py-2.5 text-center text-xs font-semibold tracking-tight text-ink sm:px-3 sm:py-3 sm:text-sm">
+                  {book.title}
+                </p>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       <section className="section-pad">
         <div className="container-site">
           <SectionHeading
@@ -90,7 +148,7 @@ export default function ProgramsPage() {
             {modalities.map((m) => (
               <article
                 key={m.title}
-                className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-6 shadow-[var(--shadow-sm)]"
+                className="rounded-xl border border-black/[0.08] bg-white p-6"
               >
                 <h3 className="font-semibold text-ink">{m.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate">

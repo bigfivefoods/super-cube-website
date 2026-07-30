@@ -50,8 +50,8 @@ export default function TheModelPage() {
             </p>
           </div>
           <div className="order-1 flex justify-center lg:order-2">
-            <div className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-paper p-10 shadow-[var(--shadow-sm)]">
-              <SuperCube />
+            <div className="flex justify-center rounded-2xl border border-black/[0.08] bg-[#fafafa] p-6 sm:p-10">
+              <SuperCube size="lg" showSkills />
             </div>
           </div>
         </div>

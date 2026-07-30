@@ -11,6 +11,8 @@ export const nav = [
   { href: "/the-model", label: "The Model" },
   { href: "/constructs", label: "Six Constructs" },
   { href: "/programs", label: "Programs" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/learn", label: "Learn" },
   { href: "/research", label: "Research" },
   { href: "/about", label: "About" },
 ];
@@ -56,9 +58,10 @@ export const constructs: Construct[] = [
     ],
     theory:
       "Grounded in choice theory, addressing decision-making intelligence, moral judgment, and risk assessment as developable leadership capabilities.",
-    color: "#B45309",
-    colorSoft: "#FEF3C7",
-    accent: "from-amber-600 to-orange-500",
+    // Colours sampled from public/images/constructs/*-icon.png
+    color: "#B32026",
+    colorSoft: "#FEE2E2",
+    accent: "from-red-700 to-red-500",
     qualitativeShare: "9%",
   },
   {
@@ -78,9 +81,9 @@ export const constructs: Construct[] = [
     ],
     theory:
       "Draws on principle-centred leadership and Principle Theory (Caldwell, Karri & Vollmar), emphasising ethical duties to followers and fair, trust-building governance.",
-    color: "#1E3A5F",
-    colorSoft: "#DBEAFE",
-    accent: "from-blue-900 to-indigo-700",
+    color: "#5D1F5E",
+    colorSoft: "#F3E8FF",
+    accent: "from-purple-900 to-fuchsia-700",
     qualitativeShare: "18%",
   },
   {
@@ -101,9 +104,9 @@ export const constructs: Construct[] = [
     ],
     theory:
       "Supported by cognition theory and research on cognitive skills for creative problem-solving and strategic leadership (Prinsloo & Barrett; Mumford et al.).",
-    color: "#1D4ED8",
-    colorSoft: "#DBEAFE",
-    accent: "from-blue-600 to-sky-500",
+    color: "#ED8F20",
+    colorSoft: "#FEF3C7",
+    accent: "from-amber-500 to-orange-400",
     qualitativeShare: "31%",
   },
   {
@@ -124,9 +127,9 @@ export const constructs: Construct[] = [
     ],
     theory:
       "Anchored in the ability model of emotional intelligence (Mayer, Salovey & Caruso)—perceiving, facilitating, understanding, and managing emotions as trainable competencies.",
-    color: "#BE123C",
-    colorSoft: "#FFE4E6",
-    accent: "from-rose-600 to-pink-500",
+    color: "#367638",
+    colorSoft: "#DCFCE7",
+    accent: "from-green-700 to-green-500",
     qualitativeShare: "29%",
   },
   {
@@ -147,9 +150,9 @@ export const constructs: Construct[] = [
     ],
     theory:
       "Informed by the physical wellbeing dimension of the Wheel of Wellness and holistic models that treat physiological vitality as essential to long-term effectiveness.",
-    color: "#047857",
-    colorSoft: "#D1FAE5",
-    accent: "from-emerald-600 to-teal-500",
+    color: "#16979A",
+    colorSoft: "#CCFBF1",
+    accent: "from-teal-600 to-cyan-500",
     qualitativeShare: "1%",
   },
   {
@@ -170,9 +173,9 @@ export const constructs: Construct[] = [
     ],
     theory:
       "Informed by theories of spiritual intelligence and transcendence, connecting purpose and meaning to motivation, commitment, and integrated leadership practice.",
-    color: "#6D28D9",
-    colorSoft: "#EDE9FE",
-    accent: "from-violet-600 to-purple-500",
+    color: "#26408C",
+    colorSoft: "#DBEAFE",
+    accent: "from-blue-800 to-blue-600",
     qualitativeShare: "12%",
   },
 ];

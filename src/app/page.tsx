@@ -1,53 +1,88 @@
+import Image from "next/image";
 import Link from "next/link";
-import { SuperCube } from "@/components/SuperCube";
 import { Button, CTABanner, Eyebrow, SectionHeading } from "@/components/ui";
 import { constructs, levels, site, stats, theories } from "@/lib/content";
+
+const constructIcons: Record<string, string> = {
+  choices: "/images/constructs/choices-icon.png",
+  principles: "/images/constructs/principles-icon.png",
+  mental: "/images/constructs/mental-icon.png",
+  emotional: "/images/constructs/emotional-icon.png",
+  physical: "/images/constructs/physical-icon.png",
+  spiritual: "/images/constructs/spiritual-icon.png",
+};
 
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-black/[0.06] bg-white pt-28 pb-20 md:pt-40 md:pb-28">
-        <div className="container-site relative grid items-center gap-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-12">
-          <div>
-            <p className="eyebrow animate-fade-up">Leadership development</p>
-            <h1 className="heading-xl mt-5 animate-fade-up delay-1 text-ink">
+      {/* Full-viewport hero */}
+      <section className="relative isolate flex min-h-[100svh] w-full items-end overflow-hidden bg-ink sm:items-center">
+        <Image
+          src="/images/hero/leadership-hero.jpg"
+          alt="Super-Cube® leadership development"
+          fill
+          className="object-cover object-center"
+          sizes="100vw"
+          priority
+        />
+        {/* Readability overlays — left-weighted so text stays clear */}
+        <div
+          className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20 sm:via-black/45 sm:to-transparent"
+          aria-hidden
+        />
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 sm:from-black/40 sm:to-black/20"
+          aria-hidden
+        />
+
+        <div className="container-site relative z-10 w-full pt-28 pb-12 sm:pt-32 sm:pb-20 md:pb-24">
+          <div className="max-w-xl animate-fade-up sm:max-w-2xl">
+            <p className="eyebrow text-white/70 before:bg-white/50">
+              Leadership development
+            </p>
+            <h1 className="heading-xl mt-4 text-white sm:mt-5">
               Six faces of leadership.
-              <span className="mt-1 block text-muted">You at the centre.</span>
+              <span className="mt-1 block text-white/70">
+                You at the centre.
+              </span>
             </h1>
-            <p className="mt-7 max-w-xl animate-fade-up delay-2 text-lg leading-relaxed tracking-tight text-slate md:text-xl">
+            <p className="mt-5 max-w-lg text-base leading-relaxed tracking-tight text-white/80 sm:mt-7 sm:text-lg md:text-xl">
               {site.description} Leadership is substantially developable—through
               deliberate practice, structured learning, and a model built for
               real organisational complexity.
             </p>
-            <div className="mt-10 flex animate-fade-up delay-3 flex-wrap gap-3">
-              <Button href="/the-model" variant="primary">
+            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap">
+              <Button
+                href="/the-model"
+                variant="primary"
+                className="w-full bg-white text-ink hover:bg-white/90 sm:w-auto"
+              >
                 Explore the model
               </Button>
-              <Button href="/programs" variant="ghost">
+              <Button
+                href="/programs"
+                variant="light"
+                className="w-full border-white/35 sm:w-auto"
+              >
                 View programs
               </Button>
             </div>
-            <p className="mt-10 animate-fade-up delay-4 text-sm text-muted">
+            <p className="mt-8 text-xs text-white/55 sm:mt-10 sm:text-sm">
               Empirically developed · University of KwaZulu-Natal · 2020
             </p>
-          </div>
-
-          <div className="relative flex animate-fade-up delay-2 justify-center lg:justify-end">
-            <SuperCube className="relative py-4" />
           </div>
         </div>
       </section>
 
       {/* Stats */}
       <section className="border-b border-black/[0.06] bg-[#fafafa]">
-        <div className="container-site grid grid-cols-2 gap-px bg-black/[0.06] md:grid-cols-4">
+        <div className="container-site grid grid-cols-1 gap-px bg-black/[0.06] xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="bg-[#fafafa] px-5 py-10 md:px-7 md:py-12"
+              className="bg-[#fafafa] px-4 py-8 sm:px-5 sm:py-10 md:px-7 md:py-12"
             >
-              <p className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+              <p className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl md:text-4xl">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm font-semibold text-ink">{stat.label}</p>
@@ -59,7 +94,7 @@ export default function HomePage() {
 
       {/* Model overview */}
       <section className="section-pad bg-white">
-        <div className="container-site grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div className="container-site grid gap-10 sm:gap-12 lg:grid-cols-2 lg:items-center">
           <SectionHeading
             eyebrow="The Super-Cube®"
             title="A cubic framework for whole-person leadership."
@@ -94,19 +129,21 @@ export default function HomePage() {
             description="Each construct is a developable set of capabilities—validated in practice and designed for deliberate growth."
           />
 
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-3 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3">
             {constructs.map((c) => (
               <Link
                 key={c.id}
                 href={`/constructs#${c.id}`}
-                className="card-lift group relative overflow-hidden rounded-xl border border-black/[0.08] bg-white p-6"
+                className="card-lift group relative overflow-hidden rounded-xl border border-black/[0.08] bg-white p-5 sm:p-6"
               >
-                <div
-                  className="mb-5 flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold text-white"
-                  style={{ background: c.color }}
-                  aria-hidden
-                >
-                  {c.name.charAt(0)}
+                <div className="relative mb-5 h-12 w-12 overflow-hidden rounded-xl bg-[#f4f4f4]">
+                  <Image
+                    src={constructIcons[c.id]}
+                    alt=""
+                    fill
+                    className="object-contain p-1.5"
+                    sizes="48px"
+                  />
                 </div>
                 <h3 className="text-xl font-semibold tracking-tight text-ink">
                   {c.name}
@@ -177,11 +214,11 @@ export default function HomePage() {
             description="Capacity building radiates outward—strong individuals first, then organisations, networks, and sectors."
           />
 
-          <ol className="mt-14 grid gap-3 md:grid-cols-5">
+          <ol className="mt-10 grid gap-3 sm:mt-14 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {levels.map((level) => (
               <li
                 key={level.level}
-                className="relative rounded-xl border border-black/[0.08] bg-white p-5"
+                className="relative rounded-xl border border-black/[0.08] bg-white p-4 sm:p-5"
               >
                 <span className="text-2xl font-semibold tracking-tight text-muted">
                   {String(level.level).padStart(2, "0")}

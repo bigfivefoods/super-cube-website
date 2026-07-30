@@ -61,14 +61,14 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold tracking-tight transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
+    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight transition sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
   const variants = {
     primary: "bg-ink text-white hover:bg-ink-soft",
     secondary: "bg-ink text-white hover:bg-ink-soft",
     ghost:
       "border border-black/[0.12] bg-white text-ink hover:border-black/25 hover:bg-black/[0.02]",
     light:
-      "border border-white/25 bg-transparent text-white hover:bg-white/10",
+      "border border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/15",
   };
 
   return (
@@ -90,17 +90,17 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-black/[0.06] bg-white pt-28 pb-16 md:pt-36 md:pb-24">
+    <section className="relative overflow-hidden border-b border-black/[0.06] bg-white pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-36 md:pb-24">
       <div className="container-site relative">
         <p className="eyebrow animate-fade-up">{eyebrow}</p>
-        <h1 className="heading-xl mt-5 max-w-4xl animate-fade-up delay-1 text-ink">
+        <h1 className="heading-xl mt-4 max-w-4xl animate-fade-up delay-1 text-ink sm:mt-5">
           {title}
         </h1>
-        <p className="mt-6 max-w-2xl animate-fade-up delay-2 text-lg leading-relaxed tracking-tight text-slate md:text-xl">
+        <p className="mt-5 max-w-2xl animate-fade-up delay-2 text-base leading-relaxed tracking-tight text-slate sm:mt-6 sm:text-lg md:text-xl">
           {description}
         </p>
         {children && (
-          <div className="mt-10 animate-fade-up delay-3 flex flex-wrap gap-3">
+          <div className="mt-8 animate-fade-up delay-3 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap">
             {children}
           </div>
         )}
@@ -113,27 +113,27 @@ export function CTABanner() {
   return (
     <section className="section-pad pt-0">
       <div className="container-site">
-        <div className="relative overflow-hidden rounded-2xl bg-ink px-8 py-14 text-white md:px-16 md:py-20">
-          <div className="relative grid items-center gap-10 md:grid-cols-[1.5fr_auto]">
+        <div className="relative overflow-hidden rounded-2xl bg-ink px-5 py-10 text-white sm:px-8 sm:py-14 md:px-16 md:py-20">
+          <div className="relative grid items-center gap-8 md:grid-cols-[1.5fr_auto] md:gap-10">
             <div>
               <p className="eyebrow text-white/45">Next step</p>
               <h2 className="heading-md mt-4 text-white md:text-[2rem]">
                 Build leadership capacity from the centre outward.
               </h2>
-              <p className="mt-4 max-w-xl text-[0.975rem] leading-relaxed text-white/60">
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/60 sm:text-[0.975rem]">
                 Whether you are designing a personal development plan or a
                 multi-level organisational programme, Super-Cube® provides a
                 human-centric, evidence-informed path.
               </p>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
+            <div className="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:flex-col">
               <Link
                 href="/contact"
-                className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/90"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/90 sm:w-auto"
               >
                 Begin a conversation
               </Link>
-              <Button href="/programs" variant="light">
+              <Button href="/programs" variant="light" className="w-full sm:w-auto">
                 Explore programs
               </Button>
             </div>

@@ -2,29 +2,23 @@ import Image from "next/image";
 import Link from "next/link";
 
 type BrandLogoProps = {
-  /** Use white logo mark on dark backgrounds */
   variant?: "default" | "white";
-  /** Show wordmark text next to mark (if only using logo-mark) */
   showWordmark?: boolean;
   className?: string;
-  /** Height of the logo mark in pixels */
   size?: number;
 };
 
 /**
- * Site logo. Replace files under public/brand/ to update branding:
- * - logo.svg / logo-white.svg  — full wordmark
- * - logo-mark.svg              — icon only
+ * Site logo mark. Files:
+ * - public/brand/logo.png (preferred)
+ * - public/brand/logo-mark.svg (fallback placeholder)
  */
 export function BrandLogo({
   variant = "default",
-  showWordmark = false,
+  showWordmark = true,
   className = "",
-  size = 28,
+  size = 32,
 }: BrandLogoProps) {
-  const src =
-    variant === "white" ? "/brand/logo-white.svg" : "/brand/logo-mark.svg";
-
   return (
     <Link
       href="/"
@@ -32,13 +26,12 @@ export function BrandLogo({
       aria-label="Super-Cube® home"
     >
       <Image
-        src={src}
+        src="/brand/logo.png"
         alt="Super-Cube®"
         width={size}
         height={size}
-        className="h-7 w-7 object-contain"
+        className="h-8 w-8 object-contain"
         priority
-        unoptimized
       />
       {showWordmark && (
         <span
@@ -56,19 +49,15 @@ export function BrandLogo({
   );
 }
 
-/** Full wordmark logo (replaces public/brand/logo.svg) */
+/** Full logo image (wordmark graphic) */
 export function BrandWordmark({
-  variant = "default",
   className = "",
-  height = 28,
+  height = 32,
 }: {
-  variant?: "default" | "white";
   className?: string;
   height?: number;
 }) {
-  const src = variant === "white" ? "/brand/logo-white.svg" : "/brand/logo.svg";
-  // Wordmark is ~200×40 aspect in placeholder
-  const width = Math.round((height / 40) * 200);
+  const width = Math.round(height * 3.2);
 
   return (
     <Link
@@ -77,14 +66,13 @@ export function BrandWordmark({
       aria-label="Super-Cube® home"
     >
       <Image
-        src={src}
+        src="/brand/logo.png"
         alt="Super-Cube®"
         width={width}
         height={height}
-        className="h-7 w-auto object-contain object-left"
+        className="h-8 w-auto max-w-[160px] object-contain object-left"
         style={{ height }}
         priority
-        unoptimized
       />
     </Link>
   );
