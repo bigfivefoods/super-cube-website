@@ -32,8 +32,8 @@ export function SuperCube({ className = "" }: { className?: string }) {
           ))}
         </div>
       </div>
-      <p className="max-w-[16rem] text-center text-xs font-medium tracking-wide text-muted">
-        You at the centre · six faces of developable leadership
+      <p className="max-w-[16rem] text-center text-[0.6875rem] font-medium uppercase tracking-[0.14em] text-muted">
+        You at the centre
       </p>
     </div>
   );

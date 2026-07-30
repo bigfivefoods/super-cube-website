@@ -15,8 +15,8 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-paper p-8 shadow-[var(--shadow-sm)] md:p-10">
-        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold">
+      <div className="rounded-2xl border border-black/[0.08] bg-white p-8 md:p-10">
+        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
           Message received
         </p>
         <h2 className="heading-md mt-3 text-ink">
@@ -41,7 +41,7 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[var(--radius-lg)] border border-[var(--line)] bg-paper p-6 shadow-[var(--shadow-sm)] md:p-8"
+      className="rounded-2xl border border-black/[0.08] bg-white p-6 md:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block sm:col-span-1">
@@ -51,7 +51,7 @@ export function ContactForm() {
             name="name"
             type="text"
             autoComplete="name"
-            className="mt-2 w-full rounded-xl border border-[var(--line-strong)] bg-cream px-4 py-3 text-sm text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
+            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-white focus:ring-1 focus:ring-ink"
             placeholder="Your name"
           />
         </label>
@@ -62,7 +62,7 @@ export function ContactForm() {
             name="email"
             type="email"
             autoComplete="email"
-            className="mt-2 w-full rounded-xl border border-[var(--line-strong)] bg-cream px-4 py-3 text-sm text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
+            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-white focus:ring-1 focus:ring-ink"
             placeholder="you@organisation.com"
           />
         </label>
@@ -72,7 +72,7 @@ export function ContactForm() {
             name="organisation"
             type="text"
             autoComplete="organization"
-            className="mt-2 w-full rounded-xl border border-[var(--line-strong)] bg-cream px-4 py-3 text-sm text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
+            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-white focus:ring-1 focus:ring-ink"
             placeholder="Optional"
           />
         </label>
@@ -80,7 +80,7 @@ export function ContactForm() {
           <span className="text-sm font-semibold text-ink">Interest</span>
           <select
             name="interest"
-            className="mt-2 w-full rounded-xl border border-[var(--line-strong)] bg-cream px-4 py-3 text-sm text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
+            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-white focus:ring-1 focus:ring-ink"
             defaultValue="personal"
           >
             <option value="personal">Personal Super-Cube® plan</option>
@@ -96,14 +96,14 @@ export function ContactForm() {
             required
             name="message"
             rows={5}
-            className="mt-2 w-full resize-y rounded-xl border border-[var(--line-strong)] bg-cream px-4 py-3 text-sm text-ink outline-none transition focus:border-gold focus:ring-2 focus:ring-gold/30"
+            className="mt-2 w-full resize-y rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-white focus:ring-1 focus:ring-ink"
             placeholder="Tell us about your context and goals…"
           />
         </label>
       </div>
       <button
         type="submit"
-        className="mt-6 w-full rounded-full bg-gold px-5 py-3 text-sm font-semibold text-ink shadow-sm transition hover:bg-gold-bright sm:w-auto"
+        className="mt-6 w-full rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink-soft sm:w-auto"
       >
         Send message
       </button>

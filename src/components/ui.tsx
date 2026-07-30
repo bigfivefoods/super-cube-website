@@ -25,21 +25,21 @@ export function SectionHeading({
       {eyebrow && (
         <p
           className={`eyebrow ${align === "center" ? "justify-center" : ""} ${
-            light ? "text-gold-bright" : ""
+            light ? "text-white/50" : ""
           }`}
         >
           {eyebrow}
         </p>
       )}
       <h2
-        className={`heading-lg mt-3 ${light ? "text-cream" : "text-ink"}`}
+        className={`heading-lg mt-3 ${light ? "text-white" : "text-ink"}`}
       >
         {title}
       </h2>
       {description && (
         <p
-          className={`mt-4 text-lg leading-relaxed ${
-            light ? "text-cream/70" : "text-slate"
+          className={`mt-4 text-lg leading-relaxed tracking-tight ${
+            light ? "text-white/65" : "text-slate"
           }`}
         >
           {description}
@@ -61,15 +61,14 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold";
+    "inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold tracking-tight transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
   const variants = {
-    primary: "bg-ink text-cream hover:bg-ink-soft shadow-sm",
-    secondary:
-      "bg-gold text-ink hover:bg-gold-bright shadow-sm",
+    primary: "bg-ink text-white hover:bg-ink-soft",
+    secondary: "bg-ink text-white hover:bg-ink-soft",
     ghost:
-      "border border-[var(--line-strong)] bg-paper/60 text-ink hover:bg-paper",
+      "border border-black/[0.12] bg-white text-ink hover:border-black/25 hover:bg-black/[0.02]",
     light:
-      "border border-white/20 bg-white/10 text-cream backdrop-blur hover:bg-white/15",
+      "border border-white/25 bg-transparent text-white hover:bg-white/10",
   };
 
   return (
@@ -91,19 +90,17 @@ export function PageHero({
   children?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-[var(--line)] bg-paper pt-28 pb-16 md:pt-36 md:pb-20">
-      <div className="pointer-events-none absolute inset-0 grain" />
-      <div className="pointer-events-none absolute -left-20 top-20 h-64 w-64 rounded-full bg-gold/10 blur-3xl" />
+    <section className="relative overflow-hidden border-b border-black/[0.06] bg-white pt-28 pb-16 md:pt-36 md:pb-24">
       <div className="container-site relative">
         <p className="eyebrow animate-fade-up">{eyebrow}</p>
-        <h1 className="heading-xl mt-4 max-w-3xl animate-fade-up delay-1 text-ink">
+        <h1 className="heading-xl mt-5 max-w-4xl animate-fade-up delay-1 text-ink">
           {title}
         </h1>
-        <p className="mt-6 max-w-2xl animate-fade-up delay-2 text-lg leading-relaxed text-slate md:text-xl">
+        <p className="mt-6 max-w-2xl animate-fade-up delay-2 text-lg leading-relaxed tracking-tight text-slate md:text-xl">
           {description}
         </p>
         {children && (
-          <div className="mt-8 animate-fade-up delay-3 flex flex-wrap gap-3">
+          <div className="mt-10 animate-fade-up delay-3 flex flex-wrap gap-3">
             {children}
           </div>
         )}
@@ -114,27 +111,28 @@ export function PageHero({
 
 export function CTABanner() {
   return (
-    <section className="section-pad">
+    <section className="section-pad pt-0">
       <div className="container-site">
-        <div className="relative overflow-hidden rounded-[var(--radius-lg)] bg-ink px-8 py-12 text-cream shadow-[var(--shadow)] md:px-14 md:py-16">
-          <div className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-gold/20 blur-3xl" />
-          <div className="pointer-events-none absolute -bottom-20 left-1/3 h-48 w-48 rounded-full bg-blue-500/10 blur-3xl" />
-          <div className="relative grid items-center gap-8 md:grid-cols-[1.4fr_auto]">
+        <div className="relative overflow-hidden rounded-2xl bg-ink px-8 py-14 text-white md:px-16 md:py-20">
+          <div className="relative grid items-center gap-10 md:grid-cols-[1.5fr_auto]">
             <div>
-              <p className="eyebrow text-gold-bright">Next step</p>
-              <h2 className="heading-md mt-3 text-cream">
+              <p className="eyebrow text-white/45">Next step</p>
+              <h2 className="heading-md mt-4 text-white md:text-[2rem]">
                 Build leadership capacity from the centre outward.
               </h2>
-              <p className="mt-4 max-w-xl text-cream/70 leading-relaxed">
+              <p className="mt-4 max-w-xl text-[0.975rem] leading-relaxed text-white/60">
                 Whether you are designing a personal development plan or a
                 multi-level organisational programme, Super-Cube® provides a
                 human-centric, evidence-informed path.
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
-              <Button href="/contact" variant="secondary">
+              <Link
+                href="/contact"
+                className="inline-flex items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/90"
+              >
                 Begin a conversation
-              </Button>
+              </Link>
               <Button href="/programs" variant="light">
                 Explore programs
               </Button>

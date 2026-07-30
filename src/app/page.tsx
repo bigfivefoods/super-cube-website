@@ -7,24 +7,20 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-[var(--line)] bg-paper pt-28 pb-16 md:pt-36 md:pb-24">
-        <div className="pointer-events-none absolute inset-0 grain" />
-        <div className="pointer-events-none absolute -right-24 top-10 h-80 w-80 rounded-full bg-gold/15 blur-3xl" />
-        <div className="pointer-events-none absolute -left-32 bottom-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
-
-        <div className="container-site relative grid items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8">
+      <section className="relative overflow-hidden border-b border-black/[0.06] bg-white pt-28 pb-20 md:pt-40 md:pb-28">
+        <div className="container-site relative grid items-center gap-16 lg:grid-cols-[1.2fr_0.8fr] lg:gap-12">
           <div>
             <p className="eyebrow animate-fade-up">Leadership development</p>
-            <h1 className="heading-xl mt-4 animate-fade-up delay-1 text-ink">
+            <h1 className="heading-xl mt-5 animate-fade-up delay-1 text-ink">
               Six faces of leadership.
-              <span className="block text-slate">You at the centre.</span>
+              <span className="mt-1 block text-muted">You at the centre.</span>
             </h1>
-            <p className="mt-6 max-w-xl animate-fade-up delay-2 text-lg leading-relaxed text-slate md:text-xl">
+            <p className="mt-7 max-w-xl animate-fade-up delay-2 text-lg leading-relaxed tracking-tight text-slate md:text-xl">
               {site.description} Leadership is substantially developable—through
               deliberate practice, structured learning, and a model built for
               real organisational complexity.
             </p>
-            <div className="mt-8 flex animate-fade-up delay-3 flex-wrap gap-3">
+            <div className="mt-10 flex animate-fade-up delay-3 flex-wrap gap-3">
               <Button href="/the-model" variant="primary">
                 Explore the model
               </Button>
@@ -32,27 +28,26 @@ export default function HomePage() {
                 View programs
               </Button>
             </div>
-            <p className="mt-8 animate-fade-up delay-4 text-sm text-muted">
+            <p className="mt-10 animate-fade-up delay-4 text-sm text-muted">
               Empirically developed · University of KwaZulu-Natal · 2020
             </p>
           </div>
 
           <div className="relative flex animate-fade-up delay-2 justify-center lg:justify-end">
-            <div className="absolute inset-0 m-auto h-56 w-56 rounded-full bg-gold/10 blur-2xl" />
-            <SuperCube className="relative py-6" />
+            <SuperCube className="relative py-4" />
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="border-b border-[var(--line)] bg-cream">
-        <div className="container-site grid grid-cols-2 gap-px bg-[var(--line)] md:grid-cols-4">
+      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+        <div className="container-site grid grid-cols-2 gap-px bg-black/[0.06] md:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="bg-cream px-5 py-8 md:px-6 md:py-10"
+              className="bg-[#fafafa] px-5 py-10 md:px-7 md:py-12"
             >
-              <p className="font-display text-3xl font-medium tracking-tight text-ink md:text-4xl">
+              <p className="text-3xl font-semibold tracking-tight text-ink md:text-4xl">
                 {stat.value}
               </p>
               <p className="mt-2 text-sm font-semibold text-ink">{stat.label}</p>
@@ -63,7 +58,7 @@ export default function HomePage() {
       </section>
 
       {/* Model overview */}
-      <section className="section-pad">
+      <section className="section-pad bg-white">
         <div className="container-site grid gap-12 lg:grid-cols-2 lg:items-center">
           <SectionHeading
             eyebrow="The Super-Cube®"
@@ -78,10 +73,10 @@ export default function HomePage() {
               practical development framework.
             </p>
             <p>
-              Philosophically grounded in Martin Buber’s{" "}
-              <em>I–Thou</em> philosophy of mutual respect, it treats people as
-              multidimensional beings—leaders and followers in different
-              contexts—never as objects of control.
+              Philosophically grounded in Martin Buber’s <em>I–Thou</em>{" "}
+              philosophy of mutual respect, it treats people as multidimensional
+              beings—leaders and followers in different contexts—never as
+              objects of control.
             </p>
             <Button href="/the-model" variant="ghost">
               Read the full model →
@@ -91,7 +86,7 @@ export default function HomePage() {
       </section>
 
       {/* Six constructs */}
-      <section className="section-pad border-y border-[var(--line)] bg-paper">
+      <section className="section-pad border-y border-black/[0.06] bg-[#fafafa]">
         <div className="container-site">
           <SectionHeading
             eyebrow="Six constructs"
@@ -99,30 +94,29 @@ export default function HomePage() {
             description="Each construct is a developable set of capabilities—validated in practice and designed for deliberate growth."
           />
 
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {constructs.map((c, i) => (
+          <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {constructs.map((c) => (
               <Link
                 key={c.id}
                 href={`/constructs#${c.id}`}
-                className="card-lift group relative overflow-hidden rounded-[var(--radius)] border border-[var(--line)] bg-cream p-6 shadow-[var(--shadow-sm)]"
-                style={{ animationDelay: `${i * 0.05}s` }}
+                className="card-lift group relative overflow-hidden rounded-xl border border-black/[0.08] bg-white p-6"
               >
                 <div
-                  className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl text-sm font-bold text-white shadow-sm"
+                  className="mb-5 flex h-9 w-9 items-center justify-center rounded-lg text-xs font-bold text-white"
                   style={{ background: c.color }}
                   aria-hidden
                 >
                   {c.name.charAt(0)}
                 </div>
-                <h3 className="heading-md text-[1.35rem] text-ink group-hover:text-ink-soft">
+                <h3 className="text-xl font-semibold tracking-tight text-ink">
                   {c.name}
                 </h3>
-                <p className="mt-1 text-sm font-medium text-gold">{c.tagline}</p>
+                <p className="mt-1 text-sm font-medium text-muted">{c.tagline}</p>
                 <p className="mt-3 text-sm leading-relaxed text-slate">
                   {c.summary}
                 </p>
-                <span className="mt-5 inline-flex text-sm font-semibold text-ink opacity-70 transition group-hover:opacity-100">
-                  Explore construct →
+                <span className="mt-6 inline-flex text-sm font-semibold text-ink opacity-50 transition group-hover:opacity-100">
+                  Explore →
                 </span>
               </Link>
             ))}
@@ -131,38 +125,41 @@ export default function HomePage() {
       </section>
 
       {/* Developable thesis */}
-      <section className="section-pad">
+      <section className="section-pad bg-white">
         <div className="container-site">
-          <div className="grid gap-10 overflow-hidden rounded-[var(--radius-lg)] border border-[var(--line)] bg-ink md:grid-cols-2">
-            <div className="p-8 md:p-12">
+          <div className="grid gap-0 overflow-hidden rounded-2xl border border-black/[0.08] md:grid-cols-2">
+            <div className="bg-ink p-8 text-white md:p-12">
               <Eyebrow>Core belief</Eyebrow>
-              <h2 className="heading-lg mt-3 text-cream">
+              <h2 className="heading-lg mt-4 text-white">
                 Leadership is largely learnable.
               </h2>
-              <p className="mt-5 text-lg leading-relaxed text-cream/70">
+              <p className="mt-5 text-lg leading-relaxed text-white/65">
                 Super-Cube® holds that roughly{" "}
-                <strong className="font-semibold text-gold-bright">
+                <strong className="font-semibold text-white">
                   70–76% of leadership capacity
                 </strong>{" "}
                 is developable through deliberate practice, experience, and
                 structured intervention—not fixed by heredity alone.
               </p>
-              <p className="mt-4 leading-relaxed text-cream/60">
+              <p className="mt-4 leading-relaxed text-white/45">
                 Development follows Illeris’s three-dimensional learning
-                theory: content (knowledge & skills), incentive (motivation &
-                emotion), and interaction (social application in context).
+                theory: content, incentive, and interaction.
               </p>
             </div>
-            <div className="flex flex-col justify-center gap-4 border-t border-white/10 bg-ink-soft/50 p-8 md:border-t-0 md:border-l md:p-12">
-              {theories.map((t) => (
+            <div className="flex flex-col justify-center gap-0 bg-white p-2 md:p-4">
+              {theories.map((t, i) => (
                 <div
                   key={t.name}
-                  className="flex items-start gap-3 border-b border-white/10 pb-4 last:border-0 last:pb-0"
+                  className={`flex items-start gap-3 px-6 py-4 ${
+                    i < theories.length - 1 ? "border-b border-black/[0.06]" : ""
+                  }`}
                 >
-                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink" />
                   <div>
-                    <p className="font-semibold text-cream">{t.name}</p>
-                    <p className="text-sm text-cream/55">{t.note}</p>
+                    <p className="font-semibold tracking-tight text-ink">
+                      {t.name}
+                    </p>
+                    <p className="text-sm text-muted">{t.note}</p>
                   </div>
                 </div>
               ))}
@@ -172,7 +169,7 @@ export default function HomePage() {
       </section>
 
       {/* Progressive levels */}
-      <section className="section-pad border-t border-[var(--line)] bg-paper">
+      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
         <div className="container-site">
           <SectionHeading
             eyebrow="Scale of impact"
@@ -180,17 +177,19 @@ export default function HomePage() {
             description="Capacity building radiates outward—strong individuals first, then organisations, networks, and sectors."
           />
 
-          <ol className="mt-12 grid gap-4 md:grid-cols-5">
+          <ol className="mt-14 grid gap-3 md:grid-cols-5">
             {levels.map((level) => (
               <li
                 key={level.level}
-                className="relative rounded-[var(--radius)] border border-[var(--line)] bg-cream p-5 shadow-[var(--shadow-sm)]"
+                className="relative rounded-xl border border-black/[0.08] bg-white p-5"
               >
-                <span className="font-display text-3xl font-medium text-gold">
+                <span className="text-2xl font-semibold tracking-tight text-muted">
                   {String(level.level).padStart(2, "0")}
                 </span>
-                <h3 className="mt-3 font-semibold text-ink">{level.title}</h3>
-                <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted">
+                <h3 className="mt-3 font-semibold tracking-tight text-ink">
+                  {level.title}
+                </h3>
+                <p className="mt-1 text-[0.6875rem] font-medium uppercase tracking-wider text-muted">
                   {level.subtitle}
                 </p>
                 <p className="mt-3 text-sm leading-relaxed text-slate">
@@ -200,7 +199,7 @@ export default function HomePage() {
             ))}
           </ol>
 
-          <div className="mt-10">
+          <div className="mt-12">
             <Button href="/programs" variant="primary">
               See how programs work
             </Button>
@@ -209,14 +208,14 @@ export default function HomePage() {
       </section>
 
       {/* Research strip */}
-      <section className="section-pad">
-        <div className="container-site grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+      <section className="section-pad bg-white">
+        <div className="container-site grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
           <SectionHeading
             eyebrow="Evidence"
             title="Built through rigorous mixed-methods research."
             description="Validated with confirmatory factor analysis and senior-leader thematic interviews—designed for practical utility in complex business networks."
           />
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-3 sm:grid-cols-2">
             {[
               {
                 k: "132",
@@ -241,16 +240,20 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.v}
-                className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5"
+                className="rounded-xl border border-black/[0.08] bg-[#fafafa] p-5"
               >
-                <p className="font-display text-3xl text-gold">{item.k}</p>
-                <p className="mt-1 font-semibold text-ink">{item.v}</p>
+                <p className="text-3xl font-semibold tracking-tight text-ink">
+                  {item.k}
+                </p>
+                <p className="mt-1 font-semibold tracking-tight text-ink">
+                  {item.v}
+                </p>
                 <p className="mt-1 text-sm text-muted">{item.d}</p>
               </div>
             ))}
           </div>
         </div>
-        <div className="container-site mt-8">
+        <div className="container-site mt-10">
           <Button href="/research" variant="ghost">
             Explore the research →
           </Button>

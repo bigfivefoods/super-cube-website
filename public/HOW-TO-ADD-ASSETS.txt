@@ -1,0 +1,55 @@
+SUPER-CUBE® — WHERE TO PUT YOUR IMAGES
+======================================
+
+Drop files into these paths (keep the filenames so the site picks them up).
+
+
+1. BRAND / LOGO
+---------------
+public/brand/logo.svg          Full logo (mark + wordmark) — header / footer
+public/brand/logo-mark.svg     Icon only (cube mark) — compact UI
+public/brand/logo-white.svg    White logo for dark backgrounds
+public/brand/logo.png          Optional PNG if you prefer (then tell us to switch)
+
+Recommended: SVG. Or PNG with transparent background, ~512–1024px wide.
+
+
+2. BROWSER ICONS (tab / phone home screen)
+------------------------------------------
+public/favicon.svg             Browser tab icon (already wired)
+public/favicon.ico             Optional multi-size .ico fallback
+public/apple-touch-icon.png    iOS home screen — 180×180 PNG
+public/icons/icon-192.png      Android / PWA — 192×192 PNG
+public/icons/icon-512.png      Android / PWA — 512×512 PNG
+
+
+3. SOCIAL SHARE IMAGE
+---------------------
+public/og-image.png            LinkedIn / WhatsApp / X preview — 1200×630 PNG
+
+
+4. PAGE PHOTOS
+--------------
+public/images/hero/            Homepage hero photos
+public/images/about/           About page
+public/images/programs/        Programs page
+public/images/constructs/      Six constructs imagery
+
+Examples:
+  public/images/hero/banner.jpg
+  public/images/about/craig.jpg
+  public/images/programs/workshop.jpg
+
+
+HOW TO ADD
+----------
+1. Copy your files into the folders above (same names if replacing placeholders).
+2. Refresh the site — logo/favicon update automatically for the brand paths.
+3. For new photos, tell us the filenames and we’ll place them on the pages.
+
+
+URLS IN THE BROWSER
+-------------------
+/brand/logo.svg
+/favicon.svg
+/images/hero/your-file.jpg

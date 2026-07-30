@@ -12,7 +12,13 @@ export const metadata: Metadata = {
   },
   description: site.description,
   icons: {
-    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
     title: "Super-Cube® | Human-Centric Leadership Development",
@@ -21,11 +27,20 @@ export const metadata: Metadata = {
     siteName: site.name,
     type: "website",
     locale: "en_ZA",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Super-Cube® Leadership Model",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Super-Cube® | Human-Centric Leadership Development",
     description: site.description,
+    images: ["/og-image.png"],
   },
   keywords: [
     "Super-Cube® Leadership Model",
@@ -47,7 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="h-full scroll-smooth antialiased">
-      <body className="flex min-h-full flex-col bg-cream text-ink">
+      <body className="flex min-h-full flex-col bg-white text-ink">
         <Header />
         <main className="flex-1">{children}</main>
         <Footer />

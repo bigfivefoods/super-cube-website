@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="Super-Cube mark">
+  <!-- REPLACE THIS FILE with your Super-Cube® icon / cube mark only -->
+  <rect width="64" height="64" rx="12" fill="#0a0a0a"/>
+  <path d="M32 14L48 23V41L32 50L16 41V23L32 14Z" stroke="#fff" stroke-width="2.5" fill="none"/>
+  <path d="M32 14V50M16 23L32 32L48 23M16 41L32 32L48 41" stroke="#fff" stroke-width="1.5" opacity="0.7"/>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none" role="img" aria-label="Super-Cube">
+  <!-- REPLACE THIS FILE with your full Super-Cube® logo (wordmark + mark) -->
+  <rect x="0" y="4" width="32" height="32" rx="6" fill="#0a0a0a"/>
+  <path d="M8 20h16M16 12v16" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  <text x="42" y="26" font-family="Inter, system-ui, sans-serif" font-size="18" font-weight="600" fill="#0a0a0a" letter-spacing="-0.04em">Super-Cube®</text>
+</svg>
