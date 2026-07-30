@@ -3,8 +3,8 @@ export const site = {
   tagline: "Human-centric leadership, developed from the core outward.",
   description:
     "The Super-Cube® Leadership Model is an empirically validated, multidimensional framework for developing leadership capacity at personal, organisational, and network levels.",
-  url: "https://www.super-cube.com",
-  email: "hello@super-cube.com",
+  url: "https://www.super-cube.me",
+  email: "hello@super-cube.me",
 };
 
 export const nav = [

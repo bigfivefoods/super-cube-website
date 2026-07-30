@@ -122,7 +122,7 @@ export default function AboutPage() {
             title="Education, not ornament."
           />
           <p className="mt-6">
-            super-cube.com presents the Super-Cube® Leadership Model as a clear,
+            super-cube.me presents the Super-Cube® Leadership Model as a clear,
             world-class educational resource—for leaders, L&D teams, and
             organisations seeking a coherent language for human-centric
             development.

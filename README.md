@@ -1,6 +1,6 @@
 # Super-Cube Leadership Website
 
-World-class leadership development and education site for **[super-cube.com](https://super-cube.com)**, presenting the **Super-Cube Leadership Model**—a multidimensional, human-centric framework developed by Craig Ross Muller (DBA, University of KwaZulu-Natal, 2020).
+World-class leadership development and education site for **[www.super-cube.me](https://www.super-cube.me)**, presenting the **Super-Cube Leadership Model**—a multidimensional, human-centric framework developed by Craig Ross Muller (DBA, University of KwaZulu-Natal, 2020).
 
 Content is informed by public scholarship and summaries of the model (including [Grokipedia: Super-Cube Leadership Model](https://grokipedia.com/page/Super-Cube_Leadership_Model)).
 

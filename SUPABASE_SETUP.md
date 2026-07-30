@@ -23,7 +23,7 @@ This creates programmes, plans ($6), courses tables, assessments, RLS, and profi
 - **Site URL:** `http://localhost:3000`  
 - **Redirect URLs** add:
   - `http://localhost:3000/auth/callback`
-  - `https://www.super-cube.com/auth/callback`
+  - `https://www.super-cube.me/auth/callback`
 
 ### Easier local testing (optional)
 
@@ -54,17 +54,17 @@ Supabase → **Project Settings → API**:
 
 Supabase → **Authentication → URL configuration**:
 
-- Site URL: `http://localhost:3000` (local) and later `https://www.super-cube.com`
+- Site URL: `http://localhost:3000` (local) and later `https://www.super-cube.me`
 - Redirect URLs add:
   - `http://localhost:3000/auth/callback`
-  - `https://www.super-cube.com/auth/callback`
+  - `https://www.super-cube.me/auth/callback`
 
 ## 5. Paystack ($6 USD)
 
 1. [Paystack Dashboard](https://dashboard.paystack.com) → Settings → API Keys & Webhooks  
 2. Copy **Secret** + **Public** test keys  
 3. Ensure your account can charge **USD** (or convert to ZAR if you prefer—tell me and we’ll switch)  
-4. Webhook URL (production): `https://www.super-cube.com/api/paystack/webhook`  
+4. Webhook URL (production): `https://www.super-cube.me/api/paystack/webhook`  
    Events: `charge.success`
 
 ## 6. Local `.env.local`
