@@ -18,7 +18,7 @@ export default function TheModelPage() {
         title="A multidimensional framework for developable leadership."
         description="Six human-centric constructs form the faces of a cube. The individual—you—stands at the centre. Leadership capacity radiates outward from personal practice to organisational and network impact."
         visual={
-          <div className="mx-auto w-full max-w-[16.5rem] rounded-2xl border border-black/[0.08] bg-[#fafafa] p-3 sm:max-w-[19rem] sm:p-5 lg:mx-0 lg:max-w-none lg:p-6">
+          <div className="mx-auto w-full max-w-[15rem] bg-white sm:max-w-[18rem] md:max-w-[19rem] lg:mx-0 lg:max-w-none">
             <SuperCube size="md" showSkills />
           </div>
         }
