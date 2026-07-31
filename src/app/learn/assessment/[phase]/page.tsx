@@ -70,24 +70,31 @@ export default function AssessmentRunnerPage() {
   if (!state) {
     return (
       <LearnShell title="Assessment">
-        <p className="text-muted">Loading…</p>
+        <p className="learn-meta">Loading…</p>
       </LearnShell>
     );
   }
 
   return (
     <LearnShell
-      title={`${phase === "pre" ? "Pre" : "Post"}-assessment`}
-      subtitle={`${programme?.name ?? "Programme"} · ${items.length} items across six constructs. Rate each statement from 1–5.`}
+      title={
+        phase === "pre"
+          ? "Step 3 · Measure your baseline"
+          : "Step 5 · Re-measure after the programme"
+      }
+      subtitle={
+        phase === "pre"
+          ? `${programme?.name ?? "Programme"} · ${items.length} items across six constructs. Rate each statement from 1–5—your honest starting profile.`
+          : `${programme?.name ?? "Programme"} · Same ${items.length} items as your baseline. Take this after finishing all courses so you can see real growth.`
+      }
     >
-      {/* Progress */}
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="mb-4 flex flex-wrap gap-1.5">
         {constructs.map((c, i) => (
           <button
             key={c.id}
             type="button"
             onClick={() => setStep(i)}
-            className={`rounded-full px-3 py-1.5 text-xs font-semibold transition ${
+            className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold transition ${
               i === step
                 ? "bg-ink text-white"
                 : "border border-black/[0.08] bg-white text-slate hover:text-ink"
@@ -98,27 +105,28 @@ export default function AssessmentRunnerPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-8">
-        <div className="mb-6 flex items-center gap-3">
+      <div className="learn-card !p-4 sm:!p-6">
+        <div className="mb-5 flex items-center gap-2.5">
           <span
-            className="h-3 w-3 rounded-full"
+            className="h-2.5 w-2.5 rounded-full"
             style={{ background: constructMeta?.color }}
           />
           <div>
-            <h2 className="text-xl font-semibold tracking-tight text-ink">
-              {constructMeta?.name}
-            </h2>
-            <p className="text-sm text-muted">{constructMeta?.tagline}</p>
+            <h2 className="learn-card-title">{constructMeta?.name}</h2>
+            <p className="learn-meta mt-0.5">{constructMeta?.tagline}</p>
           </div>
         </div>
 
-        <div className="space-y-8">
+        <div className="space-y-6">
           {stepItems.map((item) => (
-            <fieldset key={item.id} className="border-b border-black/[0.06] pb-6 last:border-0">
-              <legend className="text-sm font-medium leading-relaxed text-ink sm:text-base">
+            <fieldset
+              key={item.id}
+              className="border-b border-black/[0.05] pb-5 last:border-0 last:pb-0"
+            >
+              <legend className="text-[0.8125rem] font-medium leading-relaxed text-ink">
                 {item.prompt}
               </legend>
-              <div className="mt-4 grid grid-cols-5 gap-1.5 sm:gap-2">
+              <div className="mt-3 grid grid-cols-5 gap-1.5">
                 {[1, 2, 3, 4, 5].map((v) => {
                   const selected = responses[item.id] === v;
                   return (
@@ -126,10 +134,10 @@ export default function AssessmentRunnerPage() {
                       key={v}
                       type="button"
                       onClick={() => setValue(item.id, v)}
-                      className={`rounded-lg border px-1 py-3 text-center text-xs font-semibold transition sm:text-sm ${
+                      className={`rounded-lg border px-1 py-2.5 text-center text-[0.75rem] font-semibold transition sm:text-[0.8125rem] ${
                         selected
                           ? "border-ink bg-ink text-white"
-                          : "border-black/[0.1] bg-[#fafafa] text-slate hover:border-ink/40"
+                          : "border-black/[0.09] bg-[#f8f9fb] text-slate hover:border-ink/40"
                       }`}
                       title={LIKERT_LABELS[v - 1]}
                     >
@@ -138,7 +146,7 @@ export default function AssessmentRunnerPage() {
                   );
                 })}
               </div>
-              <div className="mt-2 flex justify-between text-[0.65rem] text-muted">
+              <div className="learn-meta mt-1.5 flex justify-between">
                 <span>Strongly disagree</span>
                 <span>Strongly agree</span>
               </div>
@@ -146,12 +154,12 @@ export default function AssessmentRunnerPage() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-between">
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-between">
           <button
             type="button"
             disabled={step === 0}
             onClick={() => setStep((s) => Math.max(0, s - 1))}
-            className="rounded-full border border-black/[0.12] px-5 py-2.5 text-sm font-semibold text-ink disabled:opacity-40"
+            className="learn-btn learn-btn-ghost disabled:opacity-40"
           >
             Back
           </button>
@@ -160,22 +168,24 @@ export default function AssessmentRunnerPage() {
               type="button"
               disabled={!canContinue()}
               onClick={() => setStep((s) => s + 1)}
-              className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
+              className="learn-btn learn-btn-primary disabled:opacity-40"
             >
               Next construct
             </button>
           ) : (
             <button
               type="button"
-              disabled={!canContinue() || Object.keys(responses).length < items.length}
+              disabled={
+                !canContinue() || Object.keys(responses).length < items.length
+              }
               onClick={submit}
-              className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-40"
+              className="learn-btn learn-btn-primary disabled:opacity-40"
             >
               Submit & view report
             </button>
           )}
         </div>
-        <p className="mt-4 text-xs text-muted">
+        <p className="learn-meta mt-3">
           Step {step + 1} of {constructs.length} · Answer all items on this face
           to continue.
         </p>

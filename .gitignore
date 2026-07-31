@@ -42,3 +42,16 @@ ENV_FOR_VERCEL.md
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Capacitor native projects (generate locally)
+ios/
+android/
+.capacitor/
+
+# Large generated video intermediates (not needed on Vercel)
+public/videos/courses/_raw/
+public/videos/courses/_silent/
+public/videos/courses/_audio/
+public/videos/sessions/_audio/
+# 130 session mp4s (~1.8GB) — exceed git/Vercel limits; serve via CDN if needed
+public/videos/sessions/*.mp4

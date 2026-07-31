@@ -29,7 +29,7 @@ function renderBody(md: string) {
     nodes.push(
       <Tag
         key={`list-${keyBase}`}
-        className={`my-3 space-y-1.5 pl-5 text-[0.95rem] leading-relaxed text-slate ${
+        className={`my-2.5 space-y-1 pl-4 text-[0.8125rem] leading-relaxed text-slate ${
           listBuffer.ordered ? "list-decimal" : "list-disc"
         }`}
       >
@@ -64,7 +64,7 @@ function renderBody(md: string) {
       nodes.push(
         <h4
           key={i}
-          className="mt-5 text-sm font-semibold tracking-tight text-ink first:mt-0"
+          className="mt-4 text-[0.8125rem] font-semibold tracking-tight text-ink first:mt-0"
         >
           {line.replace(/^### /, "")}
         </h4>
@@ -75,7 +75,7 @@ function renderBody(md: string) {
       nodes.push(
         <h3
           key={i}
-          className="mt-6 text-lg font-semibold tracking-tight text-ink first:mt-0"
+          className="mt-5 text-[0.9375rem] font-semibold tracking-tight text-ink first:mt-0"
         >
           {line.replace(/^## /, "")}
         </h3>
@@ -83,11 +83,11 @@ function renderBody(md: string) {
       return;
     }
     if (!line.trim()) {
-      nodes.push(<div key={i} className="h-2" />);
+      nodes.push(<div key={i} className="h-1.5" />);
       return;
     }
     nodes.push(
-      <p key={i} className="text-[0.95rem] leading-relaxed text-slate">
+      <p key={i} className="text-[0.8125rem] leading-relaxed text-slate">
         {renderInline(line)}
       </p>
     );
@@ -107,37 +107,37 @@ export function LessonContent({
   colorSoft: string;
 }) {
   return (
-    <div className="space-y-5">
+    <div className="space-y-3.5">
       {sections.map((section) => {
         const meta = BLOCK_META[section.block];
         return (
           <section
             key={`${section.block}-${section.title}`}
-            className="overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.03)]"
+            className="overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]"
           >
             <header
-              className="flex items-center gap-3 border-b border-black/[0.05] px-4 py-3 sm:px-6"
+              className="flex items-center gap-2.5 border-b border-black/[0.05] px-3.5 py-2.5 sm:px-5"
               style={{ background: colorSoft }}
             >
               <span
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-bold text-white"
+                className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-[0.7rem] font-bold text-white"
                 style={{ background: color }}
               >
                 {meta.label.slice(0, 1)}
               </span>
               <div className="min-w-0">
                 <p
-                  className="text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+                  className="learn-eyebrow"
                   style={{ color }}
                 >
                   {meta.label} · {meta.hint}
                 </p>
-                <h2 className="truncate text-base font-semibold tracking-tight text-ink sm:text-lg">
+                <h2 className="truncate text-[0.875rem] font-semibold tracking-tight text-ink sm:text-[0.9375rem]">
                   {section.title.replace(/^(Read|Engage|Apply)\s*·\s*/i, "")}
                 </h2>
               </div>
             </header>
-            <div className="space-y-1 px-4 py-5 sm:px-6 sm:py-6">
+            <div className="space-y-1 px-3.5 py-4 sm:px-5 sm:py-5">
               {renderBody(section.body)}
             </div>
           </section>

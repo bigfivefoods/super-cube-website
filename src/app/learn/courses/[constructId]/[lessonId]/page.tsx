@@ -3,13 +3,16 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { SessionVideo } from "@/components/learn/CourseVideo";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { LessonContent } from "@/components/learn/LessonContent";
+import { SessionReflection } from "@/components/learn/SessionReflection";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
 import {
   loadLmsState,
-  saveLmsState,
+  markLessonCompleted,
+  markLessonInProgress,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
@@ -40,11 +43,17 @@ export default function LessonPlayerPage() {
 
   const construct = constructs.find((c) => c.id === constructId);
 
+  // Track resume + in-progress when opening a session
+  useEffect(() => {
+    if (!data || !construct) return;
+    if (state?.lessonProgress[data.lesson.id] === "completed") return;
+    setState(markLessonInProgress(data.lesson.id, constructId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- open once per lesson id
+  }, [lessonId, constructId, data?.lesson.id]);
+
   function markComplete() {
     if (!data) return;
-    const next = loadLmsState();
-    next.lessonProgress[data.lesson.id] = "completed";
-    saveLmsState(next);
+    const next = markLessonCompleted(data.lesson.id, constructId);
     setState(next);
 
     const idx = data.course.lessons.findIndex((l) => l.id === data.lesson.id);
@@ -59,7 +68,7 @@ export default function LessonPlayerPage() {
   if (!state) {
     return (
       <LearnShell title="Lesson">
-        <p className="text-muted">Loading…</p>
+        <p className="learn-meta">Loading…</p>
       </LearnShell>
     );
   }
@@ -67,7 +76,7 @@ export default function LessonPlayerPage() {
   if (!data || !construct) {
     return (
       <LearnShell title="Lesson">
-        <p className="text-slate">Lesson not found.</p>
+        <p className="learn-body">Lesson not found.</p>
       </LearnShell>
     );
   }
@@ -84,33 +93,41 @@ export default function LessonPlayerPage() {
       title={data.lesson.title}
       subtitle={`${TYPE_LABEL[data.lesson.lessonType] ?? "Session"} ${idx + 1} of ${data.course.lessons.length} · ~${data.lesson.durationMinutes} min`}
     >
-      {/* Session header strip */}
       <div
-        className="mb-5 overflow-hidden rounded-2xl border border-black/[0.07]"
+        className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07]"
         style={{ background: colorSoft }}
       >
-        <div className="px-4 py-4 sm:px-6 sm:py-5">
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="p-3 sm:p-4">
+          <SessionVideo
+            lessonId={data.lesson.id}
+            poster={data.course.coverPath}
+            title={data.lesson.title}
+            color={color}
+            variant="hero"
+          />
+        </div>
+        <div className="border-t border-black/[0.05] px-3.5 py-3.5 sm:px-5 sm:py-4">
+          <div className="flex flex-wrap items-center gap-1.5">
             <span
-              className="rounded-full px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-white"
+              className="rounded-full px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-white"
               style={{ background: color }}
             >
               {construct.name}
             </span>
-            <span className="text-xs font-medium text-muted">
+            <span className="learn-meta font-medium">
               {TYPE_LABEL[data.lesson.lessonType]}
             </span>
           </div>
-          <p className="mt-2 text-sm font-medium text-ink">
+          <p className="mt-1.5 text-[0.8125rem] font-medium leading-snug text-ink">
             {data.lesson.outcome}
           </p>
-          <div className="mt-3 flex gap-1.5">
+          <div className="mt-2.5 flex gap-1">
             {data.course.lessons.map((l, i) => (
               <Link
                 key={l.id}
                 href={`/learn/courses/${constructId}/${l.id}`}
                 title={l.title}
-                className="h-1.5 flex-1 rounded-full transition"
+                className="h-1 flex-1 rounded-full transition"
                 style={{
                   background:
                     i === idx
@@ -122,7 +139,7 @@ export default function LessonPlayerPage() {
               />
             ))}
           </div>
-          <p className="mt-2 text-[0.7rem] text-muted">
+          <p className="learn-meta mt-1.5">
             Path: <strong className="font-semibold text-ink">Read</strong> →{" "}
             <strong className="font-semibold text-ink">Engage</strong> →{" "}
             <strong className="font-semibold text-ink">Apply</strong>
@@ -136,8 +153,14 @@ export default function LessonPlayerPage() {
         colorSoft={colorSoft}
       />
 
-      <div className="mt-8 flex flex-col gap-3 border-t border-black/[0.06] pt-6 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap gap-3 text-sm font-semibold">
+      <SessionReflection
+        lessonId={data.lesson.id}
+        constructId={constructId}
+        color={color}
+      />
+
+      <div className="mt-6 flex flex-col gap-2.5 border-t border-black/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap gap-3 text-[0.8125rem] font-semibold">
           <Link
             href={`/learn/courses/${constructId}`}
             className="text-ink underline-offset-2 hover:underline"
@@ -164,7 +187,7 @@ export default function LessonPlayerPage() {
         <button
           type="button"
           onClick={markComplete}
-          className="rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
+          className="learn-btn text-white shadow-sm transition hover:opacity-95"
           style={{ background: color }}
         >
           {done

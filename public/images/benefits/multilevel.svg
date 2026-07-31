@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-label="Multi-level">
+  <!-- Nested ascending levels (pyramid of platforms) -->
+  <rect x="18" y="86" width="84" height="12" rx="3" fill="#26408C" opacity="0.9"/>
+  <rect x="28" y="68" width="64" height="12" rx="3" fill="#16979A" opacity="0.92"/>
+  <rect x="38" y="50" width="44" height="12" rx="3" fill="#367638" opacity="0.94"/>
+  <rect x="46" y="32" width="28" height="12" rx="3" fill="#ED8F20" opacity="0.96"/>
+  <rect x="52" y="14" width="16" height="12" rx="3" fill="#B32026"/>
+  <!-- Centre spine -->
+  <line x1="60" y1="20" x2="60" y2="92" stroke="#0a0a0a" stroke-width="1.25" opacity="0.12"/>
+</svg>

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none" role="img" aria-label="Longitudinal">
+  <!-- Timeline axis -->
+  <line x1="18" y1="78" x2="102" y2="78" stroke="#0a0a0a" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Growth curve -->
+  <path d="M20 72 C 38 70, 42 48, 55 42 C 68 36, 72 52, 82 38 C 90 28, 94 24, 100 20"
+        stroke="#0a0a0a" stroke-width="2.75" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Milestone nodes -->
+  <circle cx="22" cy="72" r="5.5" fill="#B32026"/>
+  <circle cx="48" cy="46" r="5.5" fill="#ED8F20"/>
+  <circle cx="72" cy="48" r="5.5" fill="#367638"/>
+  <circle cx="98" cy="22" r="5.5" fill="#26408C"/>
+  <!-- Soft connector ticks -->
+  <line x1="22" y1="78" x2="22" y2="84" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <line x1="48" y1="78" x2="48" y2="84" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <line x1="72" y1="78" x2="72" y2="84" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+  <line x1="98" y1="78" x2="98" y2="84" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/>
+</svg>

@@ -83,25 +83,52 @@ export function PageHero({
   title,
   description,
   children,
+  visual,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: ReactNode;
+  /** Optional right-column content (e.g. Super-Cube®) */
+  visual?: ReactNode;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-black/[0.06] bg-white pt-24 pb-12 sm:pt-28 sm:pb-16 md:pt-36 md:pb-24">
-      <div className="container-site relative">
-        <p className="eyebrow animate-fade-up">{eyebrow}</p>
-        <h1 className="heading-xl mt-4 max-w-4xl animate-fade-up delay-1 text-ink sm:mt-5">
-          {title}
-        </h1>
-        <p className="mt-5 max-w-2xl animate-fade-up delay-2 text-base leading-relaxed tracking-tight text-slate sm:mt-6 sm:text-lg md:text-xl">
-          {description}
-        </p>
-        {children && (
-          <div className="mt-8 animate-fade-up delay-3 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap">
-            {children}
+    <section className="page-hero page-hero--full border-b border-black/[0.06] bg-white">
+      <div className="container-site page-hero__inner relative z-[1] w-full">
+        {visual ? (
+          <div className="grid items-start gap-8 sm:gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-12 xl:gap-14">
+            <div className="page-hero__copy min-w-0">
+              <p className="eyebrow animate-fade-up">{eyebrow}</p>
+              <h1 className="page-hero__title heading-xl mt-3 animate-fade-up delay-1 text-ink sm:mt-4">
+                {title}
+              </h1>
+              <p className="page-hero__lede mt-4 animate-fade-up delay-2 text-sm leading-relaxed tracking-tight text-slate sm:mt-5 sm:text-base md:text-lg lg:text-xl">
+                {description}
+              </p>
+              {children && (
+                <div className="mt-6 flex w-full animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3">
+                  {children}
+                </div>
+              )}
+            </div>
+            <div className="animate-fade-up delay-2 relative z-[1] mx-auto w-full max-w-[17.5rem] min-w-0 sm:max-w-[19rem] lg:mx-0 lg:max-w-none lg:justify-self-end">
+              {visual}
+            </div>
+          </div>
+        ) : (
+          <div className="page-hero__copy">
+            <p className="eyebrow animate-fade-up">{eyebrow}</p>
+            <h1 className="page-hero__title heading-xl mt-3 animate-fade-up delay-1 text-ink sm:mt-4">
+              {title}
+            </h1>
+            <p className="page-hero__lede mt-4 animate-fade-up delay-2 text-sm leading-relaxed tracking-tight text-slate sm:mt-5 sm:text-base md:text-lg lg:text-xl">
+              {description}
+            </p>
+            {children && (
+              <div className="mt-6 flex w-full animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3">
+                {children}
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -10,11 +10,27 @@
 ## 1. Create tables (required — one paste)
 
 1. Open **[SQL Editor](https://supabase.com/dashboard/project/scsgmmyjrulwoymegsid/sql/new)**  
-2. Open the file `supabase/SETUP_ALL.sql` in this repo (or `001_lms.sql` then `seed.sql`)  
+2. Open the file `supabase/SETUP_ALL.sql` in this repo (or `001_lms.sql` + `002_learner_state.sql` then `seed.sql`)  
 3. **Paste all** → click **Run**  
 4. You should see success (no red errors)
 
-This creates programmes, plans ($6), courses tables, assessments, RLS, and profile trigger.
+This creates programmes, plans ($6), courses tables, assessments, RLS, profile trigger, and **`learner_state`** (multi-device progress sync JSON).
+
+### Already ran SETUP_ALL before?
+
+Run only the new migration:
+
+1. Open `supabase/migrations/002_learner_state.sql`  
+2. Paste into SQL Editor → **Run**
+
+### Multi-device sync (app behaviour)
+
+When a user is **signed in** with Supabase:
+
+- Opening **Learn** pulls cloud progress and merges with this device  
+- Completing lessons / assessments / reflections **pushes** after ~1s  
+- **Account → Sync now** forces pull+push  
+- Offline work stays local and merges on next sign-in
 
 ## 2. Auth URLs (required for login)
 

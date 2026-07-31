@@ -25,6 +25,7 @@ export async function GET(request: Request) {
       },
     });
     await supabase.auth.exchangeCodeForSession(code);
+    // Client will pull learner_state on next /learn visit via LmsSyncProvider
   }
 
   return NextResponse.redirect(`${origin}${next}`);

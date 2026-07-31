@@ -33,7 +33,7 @@ export default function SignupPage() {
       return;
     }
 
-    const { error: err } = await supabase.auth.signUp({
+    const { data, error: err } = await supabase.auth.signUp({
       email,
       password,
       options: {
@@ -41,11 +41,24 @@ export default function SignupPage() {
         emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    setLoading(false);
     if (err) {
+      setLoading(false);
       setError(err.message);
       return;
     }
+    // Seed local + cloud with programme choice
+    const state = loadLmsState();
+    state.user = { email, fullName, programmeId };
+    saveLmsState(state);
+    if (data.session) {
+      try {
+        const { syncLearnerState } = await import("@/lib/lms/sync");
+        await syncLearnerState(supabase);
+      } catch {
+        /* ok */
+      }
+    }
+    setLoading(false);
     setMessage("Check your email to confirm, or continue to pricing.");
     router.push("/pricing");
   }

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LeadershipCircles } from "@/components/LeadershipCircles";
 import { SuperCube } from "@/components/SuperCube";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs, levels, theories } from "@/lib/content";
@@ -16,6 +17,11 @@ export default function TheModelPage() {
         eyebrow="The Super-Cube® Leadership Model"
         title="A multidimensional framework for developable leadership."
         description="Six human-centric constructs form the faces of a cube. The individual—you—stands at the centre. Leadership capacity radiates outward from personal practice to organisational and network impact."
+        visual={
+          <div className="mx-auto w-full max-w-[16.5rem] rounded-2xl border border-black/[0.08] bg-[#fafafa] p-3 sm:max-w-[19rem] sm:p-5 lg:mx-0 lg:max-w-none lg:p-6">
+            <SuperCube size="md" showSkills />
+          </div>
+        }
       >
         <Button href="/constructs" variant="primary">
           Meet the six constructs
@@ -26,8 +32,8 @@ export default function TheModelPage() {
       </PageHero>
 
       <section className="section-pad">
-        <div className="container-site grid items-center gap-12 lg:grid-cols-2">
-          <div className="prose-site order-2 lg:order-1">
+        <div className="container-site">
+          <div className="prose-site mx-auto max-w-3xl">
             <SectionHeading
               eyebrow="Definition & purpose"
               title="Built for complex environments—starting with the person."
@@ -49,11 +55,6 @@ export default function TheModelPage() {
               kind validated in that context.
             </p>
           </div>
-          <div className="order-1 flex justify-center lg:order-2">
-            <div className="flex justify-center rounded-2xl border border-black/[0.08] bg-[#fafafa] p-6 sm:p-10">
-              <SuperCube size="lg" showSkills />
-            </div>
-          </div>
         </div>
       </section>
 
@@ -62,7 +63,7 @@ export default function TheModelPage() {
           <SectionHeading
             eyebrow="Cubic structure"
             title="Geometry that teaches balance."
-            description="The cube is not decoration—it is a teaching tool. Six faces, one centre, continuous interdependence."
+            description="The cube is not decoration—it is a teaching tool. Six faces, one centre, continuous interdependence. Leadership begins with you, then expands through the people and systems you touch."
           />
 
           <div className="mt-12 grid gap-6 md:grid-cols-3">
@@ -77,7 +78,7 @@ export default function TheModelPage() {
               },
               {
                 title: "Outward radiation",
-                body: "Growth begins personally, then extends to single businesses, groups, supply networks, and industry-wide application.",
+                body: "Growth begins personally, then extends to family, friends, colleagues, community, and wider society—and, in organisations, from one person to industry scale.",
               },
             ].map((card) => (
               <article
@@ -104,6 +105,23 @@ export default function TheModelPage() {
                 {c.name}
               </span>
             ))}
+          </div>
+
+          <div className="mt-14">
+            <div className="mb-8 max-w-2xl">
+              <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                Expanding leadership circles
+              </p>
+              <h3 className="mt-2 heading-md text-[1.5rem] text-ink sm:text-[1.75rem]">
+                From you at the centre, outward.
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
+                The geometry of Super-Cube® is personal first: you develop the
+                six faces. That capacity does not stay private—it radiates into
+                the circles of life where leadership is actually lived.
+              </p>
+            </div>
+            <LeadershipCircles />
           </div>
         </div>
       </section>

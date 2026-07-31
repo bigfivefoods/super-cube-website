@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs } from "@/lib/content";
+import { interventionGains } from "@/lib/impact";
 
 export const metadata: Metadata = {
   title: "Six Constructs",
@@ -10,30 +11,49 @@ export const metadata: Metadata = {
     "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model.",
 };
 
-const media: Record<string, { icon: string; banner: string }> = {
+const media: Record<
+  string,
+  { icon: string; banner: string; quote?: string; attribution?: string }
+> = {
   choices: {
     icon: "/images/constructs/choices-icon.png",
     banner: "/images/constructs/choices-banner.jpg",
+    quote:
+      "The history of free men is never written by chance, but by choice—their choice.",
+    attribution: "Dwight D. Eisenhower",
   },
   principles: {
     icon: "/images/constructs/principles-icon.png",
     banner: "/images/constructs/principles-banner.jpg",
+    quote: "You must be the change you wish to see in the world.",
+    attribution: "Mahatma Gandhi",
   },
   mental: {
     icon: "/images/constructs/mental-icon.png",
     banner: "/images/constructs/mental-banner.jpg",
+    quote:
+      "Imagination is more important than knowledge. Memory is past—it’s finite. Vision is future—it’s infinite.",
+    attribution: "Albert Einstein",
   },
   emotional: {
     icon: "/images/constructs/emotional-icon.png",
     banner: "/images/constructs/emotional-banner.jpg",
+    quote:
+      "One of the most difficult things to give away is kindness, for it’s often returned.",
+    attribution: "Mark Ortman",
   },
   physical: {
     icon: "/images/constructs/physical-icon.png",
     banner: "/images/constructs/physical-banner.jpg",
+    quote: "Take care of your body. It’s the only place you have to live.",
+    attribution: "Jim Rohn",
   },
   spiritual: {
     icon: "/images/constructs/spiritual-icon.png",
     banner: "/images/constructs/spiritual-banner.jpg",
+    quote:
+      "Example is not the main thing in influencing others. It is the only thing.",
+    attribution: "Albert Schweitzer",
   },
 };
 
@@ -75,7 +95,9 @@ export default function ConstructsPage() {
 
       <section className="section-pad">
         <div className="container-site space-y-24">
-          {constructs.map((c, index) => (
+          {constructs.map((c, index) => {
+            const gain = interventionGains.find((g) => g.constructId === c.id);
+            return (
             <article
               key={c.id}
               id={c.id}
@@ -96,10 +118,10 @@ export default function ConstructsPage() {
                 </p>
                 <h2 className="heading-lg mt-2 text-ink">{c.name}</h2>
                 <p className="mt-2 font-medium text-slate">{c.tagline}</p>
-                {c.qualitativeShare && (
+                {gain && (
                   <p className="mt-4 text-sm text-muted">
-                    Qualitative prominence in validation interviews:{" "}
-                    <strong className="text-ink">{c.qualitativeShare}</strong>
+                    Average intervention improvement:{" "}
+                    <strong className="text-ink">+{gain.gainPct}%</strong>
                   </p>
                 )}
               </div>
@@ -113,6 +135,20 @@ export default function ConstructsPage() {
                     className="object-cover"
                     sizes="(max-width: 1024px) 100vw, 66vw"
                   />
+                  {media[c.id].quote && (
+                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/65 via-black/25 to-transparent p-4 sm:p-6 md:p-8">
+                      <blockquote className="max-w-3xl">
+                        <p className="text-lg font-semibold leading-snug tracking-tight text-white drop-shadow-sm sm:text-xl md:text-2xl md:leading-snug lg:text-[1.75rem]">
+                          “{media[c.id].quote}”
+                        </p>
+                        {media[c.id].attribution && (
+                          <footer className="mt-2 text-xs font-semibold tracking-wide text-white/85 sm:mt-2.5 sm:text-sm">
+                            — {media[c.id].attribution}
+                          </footer>
+                        )}
+                      </blockquote>
+                    </div>
+                  )}
                 </div>
                 <div className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-6 md:p-8">
                   <p className="text-lg leading-relaxed text-ink/90">
@@ -142,7 +178,8 @@ export default function ConstructsPage() {
                 </div>
               </div>
             </article>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -161,9 +198,17 @@ export default function ConstructsPage() {
                 className="card-lift flex items-center gap-3 rounded-[var(--radius)] border border-[var(--line)] bg-cream p-4 shadow-[var(--shadow-sm)]"
               >
                 <span
-                  className="h-3 w-3 shrink-0 rounded-full"
-                  style={{ background: c.color }}
-                />
+                  className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-black/[0.06]"
+                  style={{ background: c.colorSoft }}
+                >
+                  <Image
+                    src={media[c.id].icon}
+                    alt=""
+                    fill
+                    className="object-contain p-1.5"
+                    sizes="40px"
+                  />
+                </span>
                 <span className="font-semibold text-ink">{c.name}</span>
                 <span className="ml-auto text-xs text-muted">Jump ↑</span>
               </Link>

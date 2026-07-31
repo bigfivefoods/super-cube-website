@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Image from "next/image";
+import { TestimonialsSection } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
@@ -14,6 +16,29 @@ export default function AboutPage() {
         eyebrow="About Super-Cube®"
         title="From doctoral research to a development system."
         description="Super-Cube® was created to strengthen leadership capacity in complex, high-growth environments—beginning with rigorous research and a human-centric philosophy."
+        visual={
+          <figure className="w-full max-w-[66.666%] bg-white lg:ml-auto">
+            <div className="relative aspect-square w-full overflow-hidden">
+              <Image
+                src="/images/hero/steve-jobs.jpg"
+                alt="Steve Jobs"
+                fill
+                className="object-cover object-center"
+                sizes="(max-width: 1024px) 14rem, 18vw"
+                priority
+              />
+            </div>
+            <figcaption className="pt-2.5">
+              <p className="text-[0.7rem] font-medium italic leading-snug text-slate">
+                “The ones who are crazy enough to think that they can change
+                the world are the ones who do.”
+              </p>
+              <p className="mt-1 text-[0.65rem] font-semibold tracking-wide text-muted">
+                — Steve Jobs
+              </p>
+            </figcaption>
+          </figure>
+        }
       >
         <Button href="/the-model" variant="primary">
           Explore the model
@@ -142,6 +167,11 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <TestimonialsSection
+        title="Voices from the field"
+        description="Leaders from Imana Foods and Kerry Foods on the Super-Cube® programme—proof that the model lands in real organisations."
+      />
 
       <CTABanner />
     </>

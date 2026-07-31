@@ -1,5 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
+import { SuperCube } from "@/components/SuperCube";
+import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, CTABanner, Eyebrow, SectionHeading } from "@/components/ui";
 import { constructs, levels, site, stats, theories } from "@/lib/content";
 
@@ -15,8 +17,8 @@ const constructIcons: Record<string, string> = {
 export default function HomePage() {
   return (
     <>
-      {/* Full-viewport hero */}
-      <section className="relative isolate flex min-h-[100svh] w-full items-end overflow-hidden bg-ink sm:items-center">
+      {/* Full-viewport hero — shared page-hero rhythm */}
+      <section className="page-hero page-hero--full page-hero--media relative isolate flex w-full overflow-hidden bg-ink">
         <Image
           src="/images/hero/leadership-hero.jpg"
           alt="Super-Cube® leadership development"
@@ -25,33 +27,32 @@ export default function HomePage() {
           sizes="100vw"
           priority
         />
-        {/* Readability overlays — left-weighted so text stays clear */}
         <div
-          className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20 sm:via-black/45 sm:to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/25 sm:via-black/45 sm:to-transparent"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 sm:from-black/40 sm:to-black/20"
+          className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25 sm:from-black/45 sm:to-black/20"
           aria-hidden
         />
 
-        <div className="container-site relative z-10 w-full pt-28 pb-12 sm:pt-32 sm:pb-20 md:pb-24">
-          <div className="max-w-xl animate-fade-up sm:max-w-2xl">
+        <div className="container-site page-hero__inner relative z-10 w-full">
+          <div className="page-hero__copy animate-fade-up">
             <p className="eyebrow text-white/70 before:bg-white/50">
               Leadership development
             </p>
-            <h1 className="heading-xl mt-4 text-white sm:mt-5">
+            <h1 className="page-hero__title heading-xl mt-3 text-white sm:mt-4">
               Six faces of leadership.
               <span className="mt-1 block text-white/70">
                 You at the centre.
               </span>
             </h1>
-            <p className="mt-5 max-w-lg text-base leading-relaxed tracking-tight text-white/80 sm:mt-7 sm:text-lg md:text-xl">
+            <p className="page-hero__lede mt-4 text-sm leading-relaxed tracking-tight text-white/80 sm:mt-5 sm:text-base md:text-lg lg:text-xl">
               {site.description} Leadership is substantially developable—through
               deliberate practice, structured learning, and a model built for
               real organisational complexity.
             </p>
-            <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:flex-wrap">
+            <div className="mt-6 flex w-full flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3">
               <Button
                 href="/the-model"
                 variant="primary"
@@ -67,15 +68,52 @@ export default function HomePage() {
                 View programs
               </Button>
             </div>
-            <p className="mt-8 text-xs text-white/55 sm:mt-10 sm:text-sm">
+            <p className="mt-6 text-xs text-white/55 sm:mt-8 sm:text-sm">
               Empirically developed · University of KwaZulu-Natal · 2020
             </p>
           </div>
         </div>
       </section>
 
+      {/* Super-Cube interactive — below landing hero */}
+      <section className="section-pad bg-white">
+        <div className="container-site grid items-center gap-8 sm:gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12 xl:gap-16">
+          <div className="min-w-0">
+            <SectionHeading
+              eyebrow="The Super-Cube®"
+              title="A cubic framework for whole-person leadership."
+              description="Each face of the cube is a human-centric construct. Together they form an integrated system—with the individual at the centre—radiating outward from personal growth to organisational and network impact."
+            />
+            <div className="prose-site mt-5 space-y-4 sm:mt-6">
+              <p>
+                Born from doctoral research in an African FMCG business-network,
+                Super-Cube® synthesises trait, relational, charismatic,
+                evolutionary, and entrepreneurial leadership theory into a
+                practical development framework.
+              </p>
+              <p>
+                Philosophically grounded in Martin Buber’s <em>I–Thou</em>{" "}
+                philosophy of mutual respect, it treats people as multidimensional
+                beings—leaders and followers in different contexts—never as
+                objects of control.
+              </p>
+            </div>
+            <div className="mt-6 sm:mt-8">
+              <Button href="/the-model" variant="ghost">
+                Read the full model →
+              </Button>
+            </div>
+          </div>
+          <div className="flex justify-center lg:justify-end">
+            <div className="w-full max-w-[16.5rem] rounded-2xl border border-black/[0.08] bg-[#fafafa] p-3 sm:max-w-[19rem] sm:p-5 lg:max-w-[21rem] lg:p-6">
+              <SuperCube size="md" showSkills />
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Stats */}
-      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="border-y border-black/[0.06] bg-[#fafafa]">
         <div className="container-site grid grid-cols-1 gap-px bg-black/[0.06] xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4">
           {stats.map((stat) => (
             <div
@@ -89,34 +127,6 @@ export default function HomePage() {
               <p className="mt-1 text-sm leading-snug text-muted">{stat.detail}</p>
             </div>
           ))}
-        </div>
-      </section>
-
-      {/* Model overview */}
-      <section className="section-pad bg-white">
-        <div className="container-site grid gap-10 sm:gap-12 lg:grid-cols-2 lg:items-center">
-          <SectionHeading
-            eyebrow="The Super-Cube®"
-            title="A cubic framework for whole-person leadership."
-            description="Each face of the cube is a human-centric construct. Together they form an integrated system—with the individual at the centre—radiating outward from personal growth to organisational and network impact."
-          />
-          <div className="space-y-5 prose-site">
-            <p>
-              Born from doctoral research in an African FMCG business-network,
-              Super-Cube® synthesises trait, relational, charismatic,
-              evolutionary, and entrepreneurial leadership theory into a
-              practical development framework.
-            </p>
-            <p>
-              Philosophically grounded in Martin Buber’s <em>I–Thou</em>{" "}
-              philosophy of mutual respect, it treats people as multidimensional
-              beings—leaders and followers in different contexts—never as
-              objects of control.
-            </p>
-            <Button href="/the-model" variant="ghost">
-              Read the full model →
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -296,6 +306,8 @@ export default function HomePage() {
           </Button>
         </div>
       </section>
+
+      <TestimonialsStrip />
 
       <CTABanner />
     </>

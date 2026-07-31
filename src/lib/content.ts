@@ -7,14 +7,39 @@ export const site = {
   email: "hello@super-cube.me",
 };
 
-export const nav = [
+/** Primary story: Why → How → What */
+export const primaryNav = [
+  {
+    href: "/why",
+    label: "Why",
+    blurb: "Why leadership matters for the UN SDGs",
+  },
+  {
+    href: "/how",
+    label: "How",
+    blurb: "How leadership education works",
+  },
+  {
+    href: "/what",
+    label: "What",
+    blurb: "Kids · Adolescents · Adults programmes",
+  },
+] as const;
+
+/** Secondary links (header more / footer explore) */
+export const secondaryNav = [
   { href: "/the-model", label: "The Model" },
   { href: "/constructs", label: "Six Constructs" },
-  { href: "/programs", label: "Programs" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/learn", label: "Learn" },
   { href: "/research", label: "Research" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+/** @deprecated Prefer primaryNav + secondaryNav — kept for any legacy imports */
+export const nav = [
+  ...primaryNav.map(({ href, label }) => ({ href, label })),
+  ...secondaryNav,
 ];
 
 export type ConstructId =
@@ -220,9 +245,14 @@ export const levels = [
 
 export const stats = [
   {
-    value: "70–76%",
-    label: "Leadership developable",
-    detail: "Through deliberate practice—not fixed by heredity alone",
+    value: "+32.2%",
+    label: "Overall intervention gain",
+    detail: "Average improvement across all six constructs after Super-Cube® development",
+  },
+  {
+    value: "+45.1%",
+    label: "Principles (highest)",
+    detail: "Largest construct gain—integrity, context, and accountable practice",
   },
   {
     value: "6",
@@ -230,14 +260,9 @@ export const stats = [
     detail: "Choices · Principles · Mental · Emotional · Physical · Spiritual",
   },
   {
-    value: "5",
-    label: "Progressive levels",
-    detail: "From personal plans to industry-wide application",
-  },
-  {
-    value: "2020",
-    label: "Empirically validated",
-    detail: "DBA research, University of KwaZulu-Natal",
+    value: "70–76%",
+    label: "Leadership developable",
+    detail: "Through deliberate practice—not fixed by heredity alone",
   },
 ];
 

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
-import { nav } from "@/lib/content";
+import { primaryNav, secondaryNav } from "@/lib/content";
 
 export function Header() {
   const pathname = usePathname();
@@ -32,6 +32,17 @@ export function Header() {
     };
   }, [open]);
 
+  function isPrimaryActive(href: string) {
+    if (href === "/why") {
+      return (
+        pathname === "/why" ||
+        pathname.startsWith("/why-leadership") ||
+        pathname.startsWith("/why/")
+      );
+    }
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
@@ -40,23 +51,24 @@ export function Header() {
           : "border-b border-black/[0.06] bg-white/95 backdrop-blur-xl"
       }`}
     >
-      <div className="container-site flex h-14 items-center justify-between md:h-16">
+      <div className="container-site flex h-14 items-center justify-between gap-3 md:h-16">
         <BrandWordmark
           height={28}
           className={overHero ? "brightness-0 invert" : ""}
         />
 
+        {/* Desktop: even spacing — Why · How · What + secondary */}
         <nav
           className="hidden items-center gap-0.5 lg:flex"
           aria-label="Primary"
         >
-          {nav.map((item) => {
-            const active =
-              pathname === item.href || pathname.startsWith(`${item.href}/`);
+          {primaryNav.map((item) => {
+            const active = isPrimaryActive(item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
+                title={item.blurb}
                 className={`rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3.5 ${
                   active
                     ? overHero
@@ -71,9 +83,37 @@ export function Header() {
               </Link>
             );
           })}
+
+          {secondaryNav
+            .filter((i) =>
+              ["The Model", "Learn", "About"].includes(i.label)
+            )
+            .map((item) => {
+              const active =
+                pathname === item.href ||
+                pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3.5 ${
+                    active
+                      ? overHero
+                        ? "bg-white text-ink"
+                        : "bg-ink text-white"
+                      : overHero
+                        ? "text-white/85 hover:bg-white/10 hover:text-white"
+                        : "text-slate hover:bg-black/[0.04] hover:text-ink"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+
           <Link
             href="/login"
-            className={`ml-1 rounded-full px-3 py-2 text-[0.8125rem] font-medium transition ${
+            className={`rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3.5 ${
               overHero
                 ? "text-white/85 hover:bg-white/10 hover:text-white"
                 : "text-slate hover:bg-black/[0.04] hover:text-ink"
@@ -82,7 +122,7 @@ export function Header() {
             Sign in
           </Link>
           <Link
-            href="/pricing"
+            href="/what"
             className={`ml-1 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition ${
               overHero
                 ? "bg-white text-ink hover:bg-white/90"
@@ -95,7 +135,7 @@ export function Header() {
 
         <button
           type="button"
-          className={`flex h-10 w-10 items-center justify-center rounded-full border lg:hidden ${
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border lg:hidden ${
             overHero
               ? "border-white/25 bg-white/10 text-white"
               : "border-black/[0.08] bg-white text-ink"
@@ -132,26 +172,53 @@ export function Header() {
           className="max-h-[calc(100svh-3.5rem)] overflow-y-auto border-t border-black/[0.06] bg-white lg:hidden"
         >
           <nav
-            className="container-site flex flex-col gap-0.5 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+            className="container-site flex flex-col gap-1 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
             aria-label="Mobile"
           >
-            {nav.map((item) => (
+            <p className="px-3 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              Super-Cube®
+            </p>
+            {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="rounded-lg px-3 py-3.5 text-base font-medium text-ink hover:bg-black/[0.04]"
+                className={`rounded-xl px-3 py-3.5 transition ${
+                  isPrimaryActive(item.href)
+                    ? "bg-ink text-white"
+                    : "text-ink hover:bg-black/[0.04]"
+                }`}
+              >
+                <span className="block text-base font-semibold">{item.label}</span>
+                <span
+                  className={`mt-0.5 block text-xs ${
+                    isPrimaryActive(item.href) ? "text-white/70" : "text-muted"
+                  }`}
+                >
+                  {item.blurb}
+                </span>
+              </Link>
+            ))}
+
+            <p className="mt-4 px-3 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              More
+            </p>
+            {secondaryNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-black/[0.04]"
               >
                 {item.label}
               </Link>
             ))}
             <Link
               href="/login"
-              className="rounded-lg px-3 py-3.5 text-base font-medium text-ink hover:bg-black/[0.04]"
+              className="rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-black/[0.04]"
             >
               Sign in
             </Link>
             <Link
-              href="/pricing"
+              href="/what"
               className="mt-2 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white"
             >
               Get started

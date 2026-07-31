@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ImpactResults } from "@/components/ImpactResults";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs, researchHighlights } from "@/lib/content";
 
@@ -45,10 +46,12 @@ export default function ResearchPage() {
         </div>
       </section>
 
+      <ImpactResults light />
+
       <section className="section-pad border-y border-[var(--line)] bg-ink text-cream">
         <div className="container-site">
           <SectionHeading
-            eyebrow="Quantitative results"
+            eyebrow="Structural validation"
             title="Acceptable model fit. Adequate reliability."
             light
             description="Confirmatory factor analysis on survey data from 132 employees assessed overall fit of the Super-Cube® structure."

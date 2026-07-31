@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Super-Cube® Learn</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #0a0a0a;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+      }
+      p {
+        opacity: 0.75;
+        font-size: 0.9rem;
+        max-width: 20rem;
+        line-height: 1.5;
+      }
+    </style>
+    <script>
+      // Fallback if server.url fails to load; Capacitor normally navigates to live /learn
+      setTimeout(function () {
+        if (window.Capacitor && window.Capacitor.Plugins) {
+          document.getElementById("msg").textContent =
+            "Connecting to Super-Cube Learn…";
+        }
+      }, 500);
+    </script>
+  </head>
+  <body>
+    <div>
+      <h1 style="font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em">
+        Super-Cube® Learn
+      </h1>
+      <p id="msg">
+        Opening your leadership pathway. If this screen stays, check your
+        network and CAPACITOR_SERVER_URL.
+      </p>
+    </div>
+  </body>
+</html>

@@ -3,74 +3,187 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
+import {
+  JourneyRailLive,
+  useJourney,
+} from "@/components/learn/JourneyProgress";
+import type { JourneyStepId } from "@/lib/lms/journey";
 
-const links = [
-  { href: "/learn", label: "Dashboard", exact: true },
-  { href: "/learn/programmes", label: "Programmes" },
-  { href: "/learn/assessment", label: "Assessment" },
-  { href: "/learn/courses", label: "Courses" },
-  { href: "/learn/report", label: "Report" },
+const FALLBACK_STEPS: { id: JourneyStepId; n: number; short: string; href: string }[] =
+  [
+    { id: "programme", n: 1, short: "Choose", href: "/learn/programmes" },
+    { id: "orient", n: 2, short: "Orient", href: "/learn/assessment/orientation" },
+    { id: "baseline", n: 3, short: "Baseline", href: "/learn/assessment/pre" },
+    { id: "learn", n: 4, short: "Learn", href: "/learn/courses" },
+    { id: "remeasure", n: 5, short: "Re-measure", href: "/learn/assessment/post" },
+    { id: "report", n: 6, short: "Report", href: "/learn/report" },
+  ];
+
+const utilityLinks = [
+  { href: "/learn", label: "Home", exact: true },
   { href: "/learn/account", label: "Account" },
 ];
+
+function pathMatchesStep(pathname: string, id: JourneyStepId): boolean {
+  if (pathname.startsWith("/learn/programmes") && id === "programme") return true;
+  if (
+    pathname.startsWith("/learn/assessment/orientation") &&
+    id === "orient"
+  )
+    return true;
+  if (pathname.startsWith("/learn/assessment/pre") && id === "baseline")
+    return true;
+  if (pathname.startsWith("/learn/assessment/post") && id === "remeasure")
+    return true;
+  if (pathname.startsWith("/learn/courses") && id === "learn") return true;
+  if (pathname.startsWith("/learn/report") && id === "report") return true;
+  return false;
+}
 
 export function LearnShell({
   children,
   title,
   subtitle,
+  hero,
+  hideJourneyRail = false,
 }: {
   children: ReactNode;
   title?: string;
   subtitle?: string;
+  hero?: ReactNode;
+  /** Hide compact journey rail (dashboard uses full timeline) */
+  hideJourneyRail?: boolean;
 }) {
   const pathname = usePathname();
+  const journey = useJourney();
+  const steps = journey?.steps ?? FALLBACK_STEPS.map((s) => ({
+    ...s,
+    title: s.short,
+    description: "",
+    promise: "",
+    status: "upcoming" as const,
+    detail: "",
+    cta: "Continue",
+  }));
 
   return (
-    <div className="min-h-[100svh] bg-[#fafafa] pt-16">
-      <div className="container-site grid gap-6 py-6 lg:grid-cols-[220px_1fr] lg:gap-10 lg:py-10">
-        <aside className="lg:sticky lg:top-20 lg:self-start">
-          <p className="mb-3 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-            Learning
+    <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
+      {hero}
+
+      <div
+        className={`container-site grid min-w-0 gap-5 sm:gap-6 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[220px_minmax(0,1fr)] xl:gap-10 ${
+          hero
+            ? "pb-8 pt-5 sm:pb-10 sm:pt-6 lg:pb-12 lg:pt-8"
+            : "pb-8 pt-20 sm:pb-10 sm:pt-24 lg:pb-12 lg:pt-24"
+        }`}
+      >
+        <aside
+          className={`min-w-0 lg:sticky lg:self-start ${
+            hero ? "lg:top-6" : "lg:top-20"
+          }`}
+        >
+          <p className="learn-eyebrow mb-2 hidden lg:mb-2.5 lg:block">
+            Your journey
           </p>
-          <nav className="flex gap-1 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible lg:pb-0">
-            {links.map((link) => {
+
+          <nav
+            className="-mx-1 flex gap-0.5 overflow-x-auto px-1 pb-1.5 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+            aria-label="Learning pathway steps"
+          >
+            {steps.map((step) => {
+              const pathStep = pathMatchesStep(pathname, step.id);
+              const locked = "status" in step && step.status === "locked";
+              const current = "status" in step && step.status === "current";
+              const done = "status" in step && step.status === "done";
+
+              const cls = `flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[0.8125rem] font-medium tracking-tight transition lg:w-full ${
+                locked
+                  ? "cursor-not-allowed text-muted opacity-50"
+                  : pathStep || current
+                    ? "bg-ink text-white"
+                    : done
+                      ? "text-ink hover:bg-black/[0.04]"
+                      : "text-slate hover:bg-black/[0.04] hover:text-ink"
+              }`;
+
+              const content = (
+                <>
+                  <span
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[0.625rem] font-bold ${
+                      pathStep || current
+                        ? "bg-white/20 text-white"
+                        : done
+                          ? "bg-ink text-white"
+                          : "border border-black/[0.12] text-muted"
+                    }`}
+                  >
+                    {done && !pathStep && !current ? "✓" : step.n}
+                  </span>
+                  <span className="truncate">{step.short}</span>
+                </>
+              );
+
+              if (locked) {
+                return (
+                  <span
+                    key={step.id}
+                    className={cls}
+                    title="Complete previous steps first"
+                  >
+                    {content}
+                  </span>
+                );
+              }
+
+              return (
+                <Link key={step.id} href={step.href} className={cls}>
+                  {content}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="mt-4 hidden border-t border-black/[0.06] pt-3 lg:block">
+            {utilityLinks.map((link) => {
               const active = link.exact
                 ? pathname === link.href
-                : pathname === link.href ||
-                  pathname.startsWith(`${link.href}/`);
+                : pathname.startsWith(link.href);
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`shrink-0 rounded-full px-3.5 py-2 text-sm font-medium transition lg:rounded-lg ${
+                  className={`block rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium transition ${
                     active
-                      ? "bg-ink text-white"
-                      : "text-slate hover:bg-black/[0.04] hover:text-ink"
+                      ? "font-semibold text-ink"
+                      : "text-muted hover:text-ink"
                   }`}
                 >
                   {link.label}
                 </Link>
               );
             })}
-          </nav>
-          <Link
-            href="/pricing"
-            className="mt-4 hidden text-sm font-semibold text-ink underline-offset-4 hover:underline lg:inline-block"
-          >
-            Plans & pricing →
-          </Link>
+            <Link
+              href="/pricing"
+              className="mt-1 block rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium text-muted transition hover:text-ink"
+            >
+              Plans & pricing
+            </Link>
+          </div>
+
+          {journey && (
+            <p className="mt-3 hidden text-[0.7rem] text-muted lg:block">
+              {journey.doneCount} of {journey.total} steps complete
+            </p>
+          )}
         </aside>
 
         <div className="min-w-0">
+          {!hideJourneyRail && !hero && <JourneyRailLive />}
+
           {(title || subtitle) && (
-            <header className="mb-6 sm:mb-8">
-              {title && (
-                <h1 className="heading-lg text-ink">{title}</h1>
-              )}
-              {subtitle && (
-                <p className="mt-2 max-w-2xl text-base text-slate sm:text-lg">
-                  {subtitle}
-                </p>
-              )}
+            <header className="mb-5 sm:mb-6">
+              {title && <h1 className="learn-title">{title}</h1>}
+              {subtitle && <p className="learn-subtitle">{subtitle}</p>}
             </header>
           )}
           {children}

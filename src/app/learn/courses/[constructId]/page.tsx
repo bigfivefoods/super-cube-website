@@ -1,9 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { CourseVideo } from "@/components/learn/CourseVideo";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs, type ConstructId } from "@/lib/content";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
@@ -32,10 +32,10 @@ export default function CourseDetailPage() {
   if (!course || !construct) {
     return (
       <LearnShell title="Course">
-        <p className="text-slate">Course not found.</p>
+        <p className="learn-body">Course not found.</p>
         <Link
           href="/learn/courses"
-          className="mt-4 inline-block font-semibold text-ink"
+          className="mt-3 inline-block text-[0.8125rem] font-semibold text-ink"
         >
           ← All courses
         </Link>
@@ -56,75 +56,69 @@ export default function CourseDetailPage() {
       title={construct.name}
       subtitle={`${programme?.name} · ${course.lessons.length} sessions · Read · Engage · Apply`}
     >
-      {/* Themed hero */}
+      {/* Module hero with intro video */}
       <div
-        className="mb-6 overflow-hidden rounded-2xl border border-black/[0.08]"
+        className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] sm:mb-5"
         style={{ background: construct.colorSoft }}
       >
-        <div className="flex flex-col gap-4 p-4 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
-          <div
-            className="relative mx-auto h-28 w-20 shrink-0 overflow-hidden rounded-xl border border-black/[0.08] bg-white shadow-sm sm:mx-0 sm:h-32 sm:w-24"
+        <div className="p-3 sm:p-4">
+          <CourseVideo
+            programmeId={programmeId}
+            constructId={constructId}
+            poster={course.coverPath}
+            title={construct.name}
+            color={construct.color}
+            variant="hero"
+          />
+        </div>
+
+        <div className="border-t border-black/[0.05] px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
+          <p
+            className="learn-eyebrow"
+            style={{ color: construct.color }}
           >
-            <Image
-              src={course.coverPath}
-              alt={construct.name}
-              fill
-              className="object-cover"
-              sizes="96px"
-            />
-          </div>
-          <div className="min-w-0 flex-1 text-center sm:text-left">
-            <p
-              className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em]"
-              style={{ color: construct.color }}
+            Super-Cube® · {construct.shortName}
+          </p>
+          <p className="mt-1 text-[0.875rem] font-medium text-ink sm:text-[0.9375rem]">
+            {construct.tagline}
+          </p>
+          <p className="learn-body mt-1.5 max-w-2xl">{course.promise}</p>
+          <p className="learn-body-sm mt-1.5 max-w-2xl line-clamp-2">
+            {construct.description}
+          </p>
+          <div className="mt-3.5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
+            <Link
+              href={`/learn/courses/${constructId}/${firstIncomplete.id}`}
+              className="learn-btn text-white shadow-sm transition hover:opacity-95"
+              style={{ background: construct.color }}
             >
-              Super-Cube® · {construct.shortName}
-            </p>
-            <p className="mt-1 text-sm font-medium text-ink">
-              {construct.tagline}
-            </p>
-            <p className="mt-2 text-sm leading-relaxed text-slate">
-              {course.promise}
-            </p>
-            <p className="mt-2 text-sm text-slate line-clamp-2">
-              {construct.description}
-            </p>
-            <div className="mt-4 flex flex-col items-center gap-3 sm:flex-row">
-              <Link
-                href={`/learn/courses/${constructId}/${firstIncomplete.id}`}
-                className="inline-flex rounded-full px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-95"
-                style={{ background: construct.color }}
-              >
-                {doneCount === 0 ? "Start module" : "Continue"}
-              </Link>
-              <Link
-                href="/learn/courses"
-                className="text-sm font-semibold text-ink underline-offset-2 hover:underline"
-              >
-                ← All courses
-              </Link>
+              {doneCount === 0 ? "Start module" : "Continue"}
+            </Link>
+            <Link
+              href="/learn/courses"
+              className="text-center text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline sm:text-left"
+            >
+              ← All courses
+            </Link>
+          </div>
+          <div className="mt-3.5 max-w-md">
+            <div className="learn-progress">
+              <div
+                style={{ width: `${pct}%`, background: construct.color }}
+              />
             </div>
-            <div className="mt-4 max-w-md">
-              <div className="h-1.5 overflow-hidden rounded-full bg-black/[0.08]">
-                <div
-                  className="h-full rounded-full transition-all"
-                  style={{ width: `${pct}%`, background: construct.color }}
-                />
-              </div>
-              <p className="mt-1.5 text-xs text-muted">
-                {doneCount}/{course.lessons.length} complete · {pct}%
-              </p>
-            </div>
+            <p className="learn-meta mt-1">
+              {doneCount}/{course.lessons.length} complete · {pct}%
+            </p>
           </div>
         </div>
       </div>
 
-      {/* Skills strip */}
-      <div className="mb-5 flex flex-wrap gap-2">
+      <div className="mb-4 flex flex-wrap gap-1.5">
         {construct.elements.map((el) => (
           <span
             key={el}
-            className="rounded-full border px-3 py-1 text-xs font-medium text-ink"
+            className="rounded-full border px-2.5 py-0.5 text-[0.7rem] font-medium text-ink"
             style={{
               borderColor: `${construct.color}33`,
               background: construct.colorSoft,
@@ -135,14 +129,14 @@ export default function CourseDetailPage() {
         ))}
       </div>
 
-      <ol className="space-y-2">
+      <ol className="space-y-1.5">
         {course.lessons.map((lesson, i) => {
           const done = state?.lessonProgress[lesson.id] === "completed";
           return (
             <li key={lesson.id}>
               <Link
                 href={`/learn/courses/${constructId}/${lesson.id}`}
-                className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.08] bg-white px-4 py-3.5 transition hover:border-black/20"
+                className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.07] bg-white px-3.5 py-3 transition hover:border-black/18"
                 style={
                   done
                     ? { boxShadow: `inset 3px 0 0 ${construct.color}` }
@@ -151,21 +145,19 @@ export default function CourseDetailPage() {
               >
                 <div className="min-w-0">
                   <p
-                    className="text-[0.65rem] font-semibold uppercase tracking-[0.12em]"
+                    className="learn-eyebrow"
                     style={{ color: construct.color }}
                   >
                     {String(i + 1).padStart(2, "0")} ·{" "}
                     {TYPE_LABEL[lesson.lessonType] ?? lesson.lessonType}
                   </p>
-                  <p className="truncate font-semibold tracking-tight text-ink">
+                  <p className="mt-0.5 truncate text-[0.875rem] font-semibold tracking-tight text-ink">
                     {lesson.title}
                   </p>
-                  <p className="mt-0.5 truncate text-xs text-muted">
-                    {lesson.outcome}
-                  </p>
+                  <p className="learn-meta mt-0.5 truncate">{lesson.outcome}</p>
                 </div>
                 <span
-                  className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                  className={`shrink-0 rounded-full px-2 py-0.5 text-[0.7rem] font-semibold ${
                     done ? "text-white" : "bg-black/[0.04] text-muted"
                   }`}
                   style={done ? { background: construct.color } : undefined}

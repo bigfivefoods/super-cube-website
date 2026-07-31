@@ -1,8 +1,20 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { CapacitorInit } from "@/components/CapacitorInit";
+import { PwaRegister } from "@/components/PwaRegister";
 import { site } from "@/lib/content";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -11,12 +23,19 @@ export const metadata: Metadata = {
     template: "%s | Super-Cube®",
   },
   description: site.description,
+  applicationName: "Super-Cube® Learn",
+  appleWebApp: {
+    capable: true,
+    title: "Super-Cube Learn",
+    statusBarStyle: "default",
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/brand/logo.png", type: "image/png" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
     ],
-    apple: [{ url: "/brand/logo.png" }],
+    apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
     title: "Super-Cube® | Human-Centric Leadership Development",
@@ -61,9 +80,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth antialiased">
       <body className="flex min-h-full flex-col bg-white text-ink">
-        <Header />
+        <PwaRegister />
+        <CapacitorInit />
+        {/* Site chrome hidden when installed as standalone app (PWA / Capacitor) */}
+        <div className="site-chrome contents">
+          <Header />
+        </div>
         <main className="flex-1">{children}</main>
-        <Footer />
+        <div className="site-chrome contents">
+          <Footer />
+        </div>
       </body>
     </html>
   );
