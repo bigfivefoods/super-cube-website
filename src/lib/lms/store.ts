@@ -91,6 +91,10 @@ export interface LocalLmsState {
   demoUnlocked?: boolean;
   /** Last session win-of-the-day lines */
   sessionWins?: SessionWin[];
+  /** Consent to share non-journal progress with cohort coaches */
+  shareProgressWithCoach?: boolean;
+  /** Onboarding welcome completed / seen */
+  onboardingSeenAt?: string;
 }
 
 const empty = (): LocalLmsState => ({
@@ -289,13 +293,15 @@ export function unlockDemo(programmeId: ProgrammeId): LocalLmsState {
     fullName: state.user?.fullName || "Demo Learner",
     programmeId,
   };
-  if (!state.subscription) {
+  if (!state.subscription || state.subscription.status !== "active") {
     state.subscription = {
       programmeId,
       planId: `${programmeId}_demo`,
       status: "active",
       activatedAt: new Date().toISOString(),
     };
+  } else {
+    state.subscription = { ...state.subscription, programmeId };
   }
   saveLmsState(state);
   return state;
@@ -334,6 +340,20 @@ export function setCertificateMeta(
   state.certificateId = certificateId;
   state.certificateEarnedAt =
     state.certificateEarnedAt || earnedAt || new Date().toISOString();
+  saveLmsState(state);
+  return state;
+}
+
+export function setShareProgressConsent(enabled: boolean): LocalLmsState {
+  const state = loadLmsState();
+  state.shareProgressWithCoach = enabled;
+  saveLmsState(state);
+  return state;
+}
+
+export function markOnboardingSeen(): LocalLmsState {
+  const state = loadLmsState();
+  state.onboardingSeenAt = new Date().toISOString();
   saveLmsState(state);
   return state;
 }

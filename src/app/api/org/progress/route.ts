@@ -41,6 +41,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unknown org" }, { status: 404 });
     }
 
+    // Consent: client should only call when shareProgressWithCoach is true
+    if (body.consent === false) {
+      return NextResponse.json({
+        ok: false,
+        skipped: true,
+        reason: "no_consent",
+      });
+    }
+
     // Ensure membership
     await supabase.from("org_members").upsert(
       {

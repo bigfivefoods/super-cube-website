@@ -12,9 +12,11 @@ import { constructs, type ConstructId } from "@/lib/content";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { track } from "@/lib/analytics";
 import { getContinueTarget, reflectionCount } from "@/lib/lms/continue";
+import { buildWeeklyPlan } from "@/lib/lms/weekly-plan";
 import {
   loadLmsState,
   setNotifyPractice,
+  setShareProgressConsent,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
@@ -55,6 +57,7 @@ export default function LearnDashboardPage() {
   const streak = lms.practiceStreak?.current ?? 0;
   const streakBest = lms.practiceStreak?.best ?? 0;
   const reflections = reflectionCount(lms);
+  const weekly = buildWeeklyPlan(lms);
 
   const hero = (
     <section className="page-hero page-hero--full border-b border-black/[0.06] bg-white">
@@ -181,6 +184,7 @@ export default function LearnDashboardPage() {
         {(cont.kind === "resume" || cont.kind === "next_lesson") && (
           <Link
             href={cont.href}
+            onClick={() => track("continue_click", { kind: cont.kind })}
             className="mb-4 flex items-center gap-3 rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
             style={
               cont.constructColor
@@ -200,6 +204,99 @@ export default function LearnDashboardPage() {
             <span className="shrink-0 text-sm font-semibold text-ink">Open →</span>
           </Link>
         )}
+
+        {/* Weakest-face weekly plan */}
+        {weekly && weekly.items.length > 0 && (
+          <section className="mb-5 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <p className="learn-eyebrow">This week’s plan</p>
+                <h2 className="mt-0.5 text-[1rem] font-semibold tracking-tight text-ink">
+                  {weekly.weekLabel}
+                </h2>
+                <p className="learn-meta mt-0.5">{weekly.summary}</p>
+              </div>
+            </div>
+            <ul className="mt-3 space-y-2">
+              {weekly.items.map((item, i) => (
+                <li key={item.constructId}>
+                  <Link
+                    href={item.href}
+                    className="flex items-start gap-3 rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 transition hover:border-black/15"
+                  >
+                    <span
+                      className="mt-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-bold text-white"
+                      style={{ background: item.color }}
+                    >
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block text-[0.875rem] font-semibold text-ink">
+                        {item.constructName}
+                        {item.status === "done" ? " · done" : ""}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[0.75rem] text-slate">
+                        {item.lessonTitle}
+                      </span>
+                      <span className="mt-0.5 block text-[0.7rem] text-muted">
+                        {item.reason}
+                      </span>
+                    </span>
+                    <span className="shrink-0 text-xs font-semibold text-ink">
+                      Go →
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Coach progress consent */}
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-black/[0.06] bg-white px-3 py-3">
+          <input
+            id="share-coach"
+            type="checkbox"
+            className="mt-1"
+            checked={Boolean(lms.shareProgressWithCoach)}
+            onChange={(e) => {
+              setShareProgressConsent(e.target.checked);
+              setState(loadLmsState());
+              if (e.target.checked && lms.orgCode) {
+                void fetch("/api/org/progress", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    orgCode: lms.orgCode,
+                    programmeId: programmeId,
+                    consent: true,
+                    lessonsCompleted: Object.values(lms.lessonProgress).filter(
+                      (s) => s === "completed"
+                    ).length,
+                    preOverall: lms.attempts.find((a) => a.phase === "pre")
+                      ?.result.overall,
+                    postOverall: lms.attempts.find((a) => a.phase === "post")
+                      ?.result.overall,
+                    certificateId: lms.certificateId,
+                  }),
+                });
+              }
+            }}
+          />
+          <label htmlFor="share-coach" className="text-[0.8125rem] text-slate">
+            <span className="font-semibold text-ink">
+              Share progress with my cohort coach
+            </span>
+            <span className="mt-0.5 block text-[0.75rem] text-muted">
+              Scores &amp; completion only—never journal text. Requires a cohort
+              code on{" "}
+              <Link href="/learn/org" className="font-semibold text-ink">
+                /learn/org
+              </Link>
+              .
+            </span>
+          </label>
+        </div>
 
         <div className="mb-6 overflow-hidden rounded-2xl border border-ink bg-white shadow-[0_12px_40px_-20px_rgba(10,10,10,0.35)]">
           <div

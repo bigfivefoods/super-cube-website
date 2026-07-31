@@ -23,6 +23,9 @@
 | `NEXT_PUBLIC_VIDEO_CDN` | after upload (see §3) |
 | `NEXT_PUBLIC_GA_ID` | optional `G-…` |
 | `CONTACT_WEBHOOK` | optional Zapier/Make URL |
+| `RESEND_API_KEY` | optional Resend for welcome emails |
+| `EMAIL_FROM` | e.g. `Super-Cube Learn <onboarding@yourdomain>` |
+| `NEXT_PUBLIC_SENTRY_DSN` | optional browser Sentry |
 
 Redeploy after saving env.
 
@@ -72,12 +75,21 @@ See `docs/APP.md`.
 
 ## 5. Smoke test production
 
-1. `/learn/demo` → orientation  
+1. `/learn/demo` → onboarding → orientation  
 2. Complete one session → win of the day  
-3. Report → share link + certificate download  
-4. `/verify/SC-…`  
-5. Pricing → Paystack (with keys) or demo  
-6. Sign in → `/learn/org` DEMO2026 → `/learn/coach` roster  
+3. Pre assessment → weakest-face weekly plan on `/learn`  
+4. Report → share link + certificate download  
+5. `/verify/SC-…` · `/sample-report` · `/impact`  
+6. Pricing → Paystack (with keys) or demo  
+7. Sign in → `/learn/org` DEMO2026 → `/learn/coach` (create org + CSV export)  
+8. Consent checkbox on Learn dashboard before coach progress push  
+
+```bash
+npm run test:e2e:install
+BASE_URL=https://www.super-cube.me npm run test:e2e:prod
+```
+
+See also `docs/PRIORITIES.md` and `docs/STORE.md`.
 
 ## Local env note
 

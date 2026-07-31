@@ -90,11 +90,25 @@ function AccountPageInner() {
             saveLmsState(next);
             setState(next);
             track("checkout_start", { programmeId: pid, verified: true });
+            if (next.user?.email) {
+              void fetch("/api/email/welcome", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  email: next.user.email,
+                  name: next.user.fullName,
+                  programmeId: pid,
+                  mode: "purchase",
+                  force: true,
+                }),
+              });
+            }
             setMsg(
               data.subscriptionSaved
                 ? "Payment verified. Access activated (cloud + this device)."
                 : "Payment verified. Access activated on this device. Sign in to sync."
             );
+            window.location.href = `/learn/onboarding?mode=purchase&programme=${pid}`;
             return;
           }
         } catch {
@@ -119,6 +133,7 @@ function AccountPageInner() {
         saveLmsState(next);
         setState(next);
         setMsg("Access activated on this device.");
+        window.location.href = `/learn/onboarding?mode=purchase&programme=${programme}`;
       }
     })();
   }, [searchParams]);

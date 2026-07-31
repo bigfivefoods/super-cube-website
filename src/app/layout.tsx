@@ -6,6 +6,7 @@ import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PwaRegister } from "@/components/PwaRegister";
+import { SentryInit } from "@/components/SentryInit";
 import { site } from "@/lib/content";
 import "./globals.css";
 
@@ -86,6 +87,7 @@ export default function RootLayout({
         <PwaRegister />
         <CapacitorInit />
         <CapacitorPush />
+        <SentryInit />
         <AnalyticsProvider />
         {/* Site chrome hidden when installed as standalone app (PWA / Capacitor) */}
         <div className="site-chrome contents">

@@ -46,7 +46,13 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    if (!user && !path.startsWith("/learn/welcome")) {
+    // Public LMS entry points (demo unlock, post-purchase onboarding, account Paystack return)
+    const publicLearn =
+      path.startsWith("/learn/demo") ||
+      path.startsWith("/learn/onboarding") ||
+      path.startsWith("/learn/account") ||
+      path.startsWith("/learn/welcome");
+    if (!user && !publicLearn) {
       const login = new URL("/login", request.url);
       login.searchParams.set("next", path);
       return NextResponse.redirect(login);

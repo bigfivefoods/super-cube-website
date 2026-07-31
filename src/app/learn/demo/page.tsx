@@ -18,9 +18,24 @@ export default function LearnDemoPage() {
 
   function start(programmeId: ProgrammeId) {
     setBusy(programmeId);
-    unlockDemo(programmeId);
+    const next = unlockDemo(programmeId);
     track("demo_start", { programmeId });
-    router.push("/learn/assessment/orientation");
+    const email = next.user?.email;
+    if (email && !email.includes("demo@") && !email.includes("@demo.local")) {
+      void fetch("/api/email/welcome", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          name: next.user?.fullName,
+          programmeId,
+          mode: "demo",
+        }),
+      });
+    }
+    router.push(
+      `/learn/onboarding?mode=demo&programme=${programmeId}`
+    );
   }
 
   return (

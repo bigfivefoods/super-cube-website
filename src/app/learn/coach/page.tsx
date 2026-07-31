@@ -43,9 +43,14 @@ export default function CoachToolsPage() {
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [orgName, setOrgName] = useState<string | null>(null);
   const [rosterMsg, setRosterMsg] = useState<string | null>(null);
+  const [orgCode, setOrgCodeState] = useState("");
+  const [createName, setCreateName] = useState("");
+  const [createMsg, setCreateMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    setState(loadLmsState());
+    const s = loadLmsState();
+    setState(s);
+    setOrgCodeState(s.orgCode || "DEMO2026");
     const supabase = createClient();
     if (!supabase) return;
     void supabase.auth.getUser().then(({ data }) => {
@@ -53,9 +58,7 @@ export default function CoachToolsPage() {
     });
   }, []);
 
-  useEffect(() => {
-    if (!email) return;
-    const code = loadLmsState().orgCode || "DEMO2026";
+  function loadRoster(code: string) {
     void fetch(`/api/org/roster?code=${encodeURIComponent(code)}`)
       .then((r) => r.json())
       .then((j) => {
@@ -68,7 +71,35 @@ export default function CoachToolsPage() {
         setRosterMsg(j.message || null);
       })
       .catch(() => setRosterMsg("Could not load roster"));
+  }
+
+  useEffect(() => {
+    if (!email) return;
+    loadRoster(orgCode || "DEMO2026");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);
+
+  async function createOrg(e: React.FormEvent) {
+    e.preventDefault();
+    setCreateMsg(null);
+    const res = await fetch("/api/org/create", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: createName,
+        kind: "school",
+        contactEmail: email,
+      }),
+    });
+    const j = await res.json();
+    if (!res.ok) {
+      setCreateMsg(j.error || "Create failed");
+      return;
+    }
+    setCreateMsg(`Created ${j.org.code} — share this code with learners.`);
+    setOrgCodeState(j.org.code);
+    loadRoster(j.org.code);
+  }
 
   function createShare() {
     const s = state ?? loadLmsState();
@@ -181,7 +212,57 @@ export default function CoachToolsPage() {
         </section>
 
         <section className="learn-card">
-          <h2 className="learn-card-title">Cloud roster</h2>
+          <h2 className="learn-card-title">Create organisation</h2>
+          <p className="learn-body mt-1">
+            Signed-in coaches can create a cohort code (requires orgs SQL).
+          </p>
+          <form onSubmit={createOrg} className="mt-3 space-y-2">
+            <input
+              className="learn-input"
+              placeholder="School or company name"
+              value={createName}
+              onChange={(e) => setCreateName(e.target.value)}
+              required
+              disabled={!email}
+            />
+            <button
+              type="submit"
+              className="learn-btn learn-btn-primary"
+              disabled={!email}
+            >
+              Create cohort
+            </button>
+          </form>
+          {createMsg && (
+            <p className="mt-2 text-[0.8125rem] font-medium text-ink">
+              {createMsg}
+            </p>
+          )}
+          {!email && (
+            <p className="learn-meta mt-2">
+              <Link
+                href="/login?next=/learn/coach"
+                className="font-semibold text-ink underline-offset-2 hover:underline"
+              >
+                Sign in
+              </Link>{" "}
+              to create orgs.
+            </p>
+          )}
+        </section>
+
+        <section className="learn-card lg:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <h2 className="learn-card-title">Cloud roster</h2>
+            {email && orgCode && (
+              <a
+                href={`/api/org/export?code=${encodeURIComponent(orgCode)}`}
+                className="text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline"
+              >
+                Export CSV
+              </a>
+            )}
+          </div>
           {!email && (
             <p className="learn-body mt-2">
               <Link
@@ -199,6 +280,21 @@ export default function CoachToolsPage() {
           )}
           {email && (
             <>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <input
+                  className="learn-input max-w-[12rem]"
+                  value={orgCode}
+                  onChange={(e) => setOrgCodeState(e.target.value.toUpperCase())}
+                  placeholder="CODE"
+                />
+                <button
+                  type="button"
+                  className="learn-btn learn-btn-ghost"
+                  onClick={() => loadRoster(orgCode)}
+                >
+                  Load roster
+                </button>
+              </div>
               <p className="learn-meta mt-1">
                 {orgName || "No org"} · signed in as {email}
               </p>
@@ -207,7 +303,8 @@ export default function CoachToolsPage() {
               )}
               {roster.length === 0 ? (
                 <p className="learn-body mt-3">
-                  No members yet. Learners join the same code on /learn/org.
+                  No members yet. Learners join the same code on /learn/org and
+                  enable “Share progress with coach”.
                 </p>
               ) : (
                 <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto">

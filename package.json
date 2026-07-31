@@ -16,7 +16,10 @@
     "cap:android": "npx cap open android",
     "cap:add:ios": "npx cap add ios",
     "cap:add:android": "npx cap add android",
-    "cap:add:push": "npm install @capacitor/push-notifications && npx cap sync"
+    "cap:add:push": "npm install @capacitor/push-notifications && npx cap sync",
+    "test:e2e": "playwright test",
+    "test:e2e:prod": "BASE_URL=https://www.super-cube.me playwright test",
+    "test:e2e:install": "npx playwright install chromium"
   },
   "dependencies": {
     "@capacitor/app": "^8.1.1",
@@ -34,6 +37,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.51.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

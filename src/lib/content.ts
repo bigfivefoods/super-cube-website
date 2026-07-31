@@ -31,6 +31,8 @@ export const secondaryNav = [
   { href: "/the-model", label: "The Model" },
   { href: "/constructs", label: "Six Constructs" },
   { href: "/learn", label: "Learn" },
+  { href: "/sample-report", label: "Sample report" },
+  { href: "/impact", label: "Impact" },
   { href: "/research", label: "Research" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

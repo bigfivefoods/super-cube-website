@@ -15,10 +15,23 @@ export default function PricingPage() {
   const router = useRouter();
 
   function startDemo(programmeId: ProgrammeId) {
-    unlockDemo(programmeId);
+    const next = unlockDemo(programmeId);
     track("checkout_demo", { programmeId });
     track("programme_selected", { programmeId, mode: "demo" });
-    router.push("/learn");
+    const email = next.user?.email;
+    if (email && !email.includes("@demo.local") && email !== "demo@super-cube.me") {
+      void fetch("/api/email/welcome", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          name: next.user?.fullName,
+          programmeId,
+          mode: "demo",
+        }),
+      });
+    }
+    router.push(`/learn/onboarding?mode=demo&programme=${programmeId}`);
   }
 
   async function startPaystack(programmeId: ProgrammeId) {
