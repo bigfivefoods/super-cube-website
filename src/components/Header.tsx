@@ -45,19 +45,21 @@ export function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${
+      className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${
         overHero
           ? "border-b border-transparent bg-transparent"
           : "border-b border-black/[0.06] bg-white/95 backdrop-blur-xl"
       }`}
     >
-      <div className="container-site flex h-14 items-center justify-between gap-3 md:h-16">
+      <div className="container-site flex h-14 items-center justify-between gap-2 sm:gap-3 md:h-16">
         <BrandWordmark
-          height={28}
-          className={overHero ? "brightness-0 invert" : ""}
+          height={26}
+          className={`min-w-0 max-w-[min(100%,11rem)] shrink sm:max-w-none ${
+            overHero ? "brightness-0 invert" : ""
+          }`}
         />
 
-        {/* Desktop: even spacing — Why · How · What + secondary */}
+        {/* Desktop / large tablet landscape */}
         <nav
           className="hidden items-center gap-0.5 lg:flex"
           aria-label="Primary"
@@ -135,7 +137,7 @@ export function Header() {
 
         <button
           type="button"
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border lg:hidden ${
+          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border touch-manipulation lg:hidden ${
             overHero
               ? "border-white/25 bg-white/10 text-white"
               : "border-black/[0.08] bg-white text-ink"
@@ -169,28 +171,34 @@ export function Header() {
       {open && (
         <div
           id="mobile-nav"
-          className="max-h-[calc(100svh-3.5rem)] overflow-y-auto border-t border-black/[0.06] bg-white lg:hidden"
+          className="max-h-[min(100dvh,100svh)] overflow-y-auto overscroll-contain border-t border-black/[0.06] bg-white lg:hidden"
+          style={{
+            maxHeight:
+              "calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px))",
+          }}
         >
           <nav
-            className="container-site flex flex-col gap-1 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+            className="container-site flex flex-col gap-0.5 py-3 sm:py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
             aria-label="Mobile"
           >
-            <p className="px-3 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="px-3 pb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Super-Cube®
             </p>
             {primaryNav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className={`rounded-xl px-3 py-3.5 transition ${
+                className={`rounded-xl px-3 py-3 transition active:scale-[0.99] sm:py-3.5 ${
                   isPrimaryActive(item.href)
                     ? "bg-ink text-white"
                     : "text-ink hover:bg-black/[0.04]"
                 }`}
               >
-                <span className="block text-base font-semibold">{item.label}</span>
+                <span className="block text-[0.975rem] font-semibold sm:text-base">
+                  {item.label}
+                </span>
                 <span
-                  className={`mt-0.5 block text-xs ${
+                  className={`mt-0.5 block text-[0.7rem] leading-snug sm:text-xs ${
                     isPrimaryActive(item.href) ? "text-white/70" : "text-muted"
                   }`}
                 >
@@ -199,27 +207,29 @@ export function Header() {
               </Link>
             ))}
 
-            <p className="mt-4 px-3 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="mt-3 px-3 pb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted sm:mt-4">
               More
             </p>
-            {secondaryNav.map((item) => (
+            <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-2">
+              {secondaryNav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="rounded-lg px-3 py-3 text-[0.975rem] font-medium text-ink hover:bg-black/[0.04] sm:text-base"
+                >
+                  {item.label}
+                </Link>
+              ))}
               <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-black/[0.04]"
+                href="/login"
+                className="rounded-lg px-3 py-3 text-[0.975rem] font-medium text-ink hover:bg-black/[0.04] sm:text-base"
               >
-                {item.label}
+                Sign in
               </Link>
-            ))}
-            <Link
-              href="/login"
-              className="rounded-lg px-3 py-3 text-base font-medium text-ink hover:bg-black/[0.04]"
-            >
-              Sign in
-            </Link>
+            </div>
             <Link
               href="/what"
-              className="mt-2 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white"
+              className="mt-2 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white active:bg-ink-soft"
             >
               Get started
             </Link>

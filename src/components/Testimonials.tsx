@@ -94,10 +94,10 @@ export function TestimonialsSection({
 /** Compact home / conversion strip */
 export function TestimonialsStrip() {
   return (
-    <section className="border-y border-black/[0.06] bg-white py-12 sm:py-16">
+    <section className="border-y border-black/[0.06] bg-white py-10 sm:py-14 md:py-16">
       <div className="container-site">
-        <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <div>
+        <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+          <div className="min-w-0">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               What leaders say
             </p>
@@ -105,11 +105,11 @@ export function TestimonialsStrip() {
               Proven in practice
             </h2>
           </div>
-          <p className="max-w-md text-sm text-slate sm:text-right">
+          <p className="max-w-md text-sm leading-relaxed text-slate sm:text-right">
             Voices from Imana Foods and Kerry Foods programme participants.
           </p>
         </div>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3">
           {featuredTestimonials.map((t, i) => (
             <QuoteCard
               key={t.id}

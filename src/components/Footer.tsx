@@ -6,38 +6,38 @@ import { programmes } from "@/lib/programmes";
 export function Footer() {
   return (
     <footer className="border-t border-black/[0.06] bg-white text-ink">
-      <div className="container-site section-pad pb-10">
+      <div className="container-site section-pad pb-[max(2.5rem,env(safe-area-inset-bottom))]">
         {/* Story strip */}
-        <div className="mb-12 grid gap-4 sm:grid-cols-3">
+        <div className="mb-8 grid gap-3 sm:mb-12 sm:grid-cols-3 sm:gap-4">
           {primaryNav.map((item, i) => (
             <Link
               key={item.href}
               href={item.href}
-              className="group rounded-2xl border border-black/[0.07] bg-[#fafafa] p-5 transition hover:border-black/15 hover:bg-white hover:shadow-sm"
+              className="group rounded-xl border border-black/[0.07] bg-[#fafafa] p-4 transition hover:border-black/15 hover:bg-white hover:shadow-sm sm:rounded-2xl sm:p-5"
             >
               <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted">
                 {String(i + 1).padStart(2, "0")} · {item.label}
               </p>
-              <p className="mt-2 text-base font-semibold tracking-tight text-ink group-hover:underline group-hover:underline-offset-4">
+              <p className="mt-2 text-sm font-semibold tracking-tight text-ink group-hover:underline group-hover:underline-offset-4 sm:text-base">
                 {item.blurb}
               </p>
             </Link>
           ))}
         </div>
 
-        <div className="grid gap-12 md:grid-cols-12">
+        <div className="grid gap-10 sm:gap-12 md:grid-cols-12">
           <div className="md:col-span-4">
-            <BrandWordmark height={28} />
-            <p className="mt-5 max-w-sm text-[0.9375rem] leading-relaxed text-slate">
+            <BrandWordmark height={26} />
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate sm:mt-5 sm:text-[0.9375rem]">
               {site.tagline} Why leadership matters · How education works · What
               programmes we offer.
             </p>
-            <p className="mt-6 text-sm text-muted">
+            <p className="mt-4 text-xs text-muted sm:mt-6 sm:text-sm">
               Craig Ross Muller · University of KwaZulu-Natal · 2020
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 md:col-span-8">
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-10 md:col-span-8">
             <div>
               <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Why · How · What

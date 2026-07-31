@@ -191,7 +191,7 @@ export function SuperCube({
         </div>
       </div>
 
-      <div className="flex w-full max-w-full flex-col items-center gap-2 px-1 sm:max-w-[20rem]">
+      <div className="flex w-full max-w-full flex-col items-center gap-2 px-0.5 sm:max-w-[20rem]">
         <p className="text-center text-[0.65rem] font-medium uppercase tracking-[0.12em] text-muted sm:text-[0.6875rem] sm:tracking-[0.14em]">
           <span className="sm:hidden">Drag to rotate</span>
           <span className="hidden sm:inline">
@@ -200,11 +200,11 @@ export function SuperCube({
           </span>
         </p>
 
-        <div className="flex max-w-full flex-wrap items-center justify-center gap-1 sm:gap-1.5">
+        <div className="flex max-w-full flex-wrap items-center justify-center gap-1.5 sm:gap-1.5">
           <button
             type="button"
             onClick={() => nudge("y", -25)}
-            className="rounded-full border border-black/[0.1] bg-white px-2 py-1 text-[0.7rem] font-semibold text-ink hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Rotate left"
           >
             ↺ Y
@@ -212,7 +212,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("y", 25)}
-            className="rounded-full border border-black/[0.1] bg-white px-2 py-1 text-[0.7rem] font-semibold text-ink hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Rotate right"
           >
             ↻ Y
@@ -220,7 +220,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("x", -25)}
-            className="rounded-full border border-black/[0.1] bg-white px-2 py-1 text-[0.7rem] font-semibold text-ink hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Tilt up"
           >
             ↑ X
@@ -228,7 +228,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("x", 25)}
-            className="rounded-full border border-black/[0.1] bg-white px-2 py-1 text-[0.7rem] font-semibold text-ink hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Tilt down"
           >
             ↓ X
@@ -236,7 +236,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("z", 25)}
-            className="rounded-full border border-black/[0.1] bg-white px-2 py-1 text-[0.7rem] font-semibold text-ink hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Roll"
           >
             ⟳ Z
@@ -244,14 +244,14 @@ export function SuperCube({
           <button
             type="button"
             onClick={reset}
-            className="rounded-full border border-black/[0.1] bg-white px-2 py-1 text-[0.7rem] font-semibold text-ink hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
           >
             Reset
           </button>
           <button
             type="button"
             onClick={() => setAutoEnabled((v) => !v)}
-            className={`rounded-full border px-2 py-1 text-[0.7rem] font-semibold sm:px-2.5 sm:text-xs ${
+            className={`cube-ctrl rounded-full border px-2.5 py-1.5 text-[0.7rem] font-semibold touch-manipulation sm:px-2.5 sm:text-xs ${
               autoEnabled
                 ? "border-ink bg-ink text-white"
                 : "border-black/[0.1] bg-white text-ink hover:border-ink/30"
