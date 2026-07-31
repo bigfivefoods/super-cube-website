@@ -49,57 +49,15 @@ export function BrandLogo({
   );
 }
 
-/**
- * Site logo in the header.
- * - Default: full colour wordmark graphic
- * - onDark: cube keeps natural colours; “Super-Cube®” is white text
- *   (avoids invert filter that washes the cube to pure white)
- */
+/** Full logo image (wordmark graphic) */
 export function BrandWordmark({
   className = "",
   height = 32,
-  onDark = false,
 }: {
   className?: string;
   height?: number;
-  /** Dark hero / inverted chrome — keep cube colours, white wordmark text */
-  onDark?: boolean;
 }) {
   const width = Math.round(height * 3.2);
-  const mark = Math.round(height * 1.05);
-
-  if (onDark) {
-    return (
-      <Link
-        href="/"
-        className={`inline-flex min-w-0 items-center gap-2 ${className}`}
-        aria-label="Super-Cube® home"
-      >
-        {/* Crop left of wordmark asset → cube mark, full colour (no invert) */}
-        <span
-          className="relative shrink-0 overflow-hidden"
-          style={{ width: mark, height: mark }}
-        >
-          <Image
-            src="/brand/logo.png"
-            alt=""
-            width={width}
-            height={height}
-            className="absolute left-0 top-0 h-full w-auto max-w-none object-cover object-left"
-            style={{ height: mark }}
-            priority
-          />
-        </span>
-        <span
-          className="truncate text-[0.9rem] font-semibold tracking-tight text-white sm:text-[0.95rem]"
-          style={{ lineHeight: 1.1 }}
-        >
-          Super-Cube
-          <span className="text-white/55">®</span>
-        </span>
-      </Link>
-    );
-  }
 
   return (
     <Link

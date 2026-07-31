@@ -54,8 +54,9 @@ export function Header() {
       <div className="container-site flex h-14 items-center justify-between gap-2 sm:gap-3 md:h-16">
         <BrandWordmark
           height={26}
-          onDark={overHero}
-          className="min-w-0 max-w-[min(100%,12.5rem)] shrink sm:max-w-none"
+          className={`min-w-0 max-w-[min(100%,11rem)] shrink sm:max-w-none ${
+            overHero ? "brightness-0 invert" : ""
+          }`}
         />
 
         {/* Desktop / large tablet landscape */}
