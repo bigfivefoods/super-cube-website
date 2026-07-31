@@ -56,7 +56,7 @@ export default function HomePage() {
               <Button
                 href="/the-model"
                 variant="primary"
-                className="w-full bg-white text-ink hover:bg-white/90 sm:w-auto"
+                className="w-full !bg-white !text-ink hover:!bg-white/90 sm:w-auto"
               >
                 Explore the model
               </Button>
