@@ -5,39 +5,103 @@ import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
 import { loadLmsState, setOrgCode, type LocalLmsState } from "@/lib/lms/store";
+import { createClient } from "@/lib/supabase/client";
 
 /**
- * Light org / school cohort join — stores a cohort code on the learner.
- * Full multi-user dashboards can read orgCode once server-side rostering ships.
+ * Join school / company cohort — local code always; Supabase membership when signed in.
  */
 export default function LearnOrgPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [code, setCode] = useState("");
+  const [role, setRole] = useState<"learner" | "coach">("learner");
   const [saved, setSaved] = useState(false);
+  const [cloudMsg, setCloudMsg] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
 
   useEffect(() => {
     const s = loadLmsState();
     setState(s);
     setCode(s.orgCode ?? "");
+    const supabase = createClient();
+    if (!supabase) return;
+    void supabase.auth.getUser().then(({ data }) => {
+      setEmail(data.user?.email ?? null);
+    });
   }, []);
 
-  function join(e: React.FormEvent) {
+  async function join(e: React.FormEvent) {
     e.preventDefault();
     const next = setOrgCode(code);
     setState(next);
     setSaved(true);
-    track("org_join", { orgCode: next.orgCode ?? "" });
+    track("org_join", { orgCode: next.orgCode ?? "", role });
+
+    // Cloud membership when signed in
+    if (email) {
+      try {
+        const res = await fetch("/api/org/join", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            code: next.orgCode,
+            role,
+            displayName: next.user?.fullName || email,
+          }),
+        });
+        const j = await res.json();
+        if (!res.ok) {
+          setCloudMsg(
+            j.error ||
+              "Cloud join failed — run SUPABASE_RUN_THIS_ORGS_COACH.sql if tables are missing."
+          );
+        } else {
+          setCloudMsg(`Joined ${j.org?.name || next.orgCode} as ${role}.`);
+          // Push progress snapshot for coaches
+          void pushProgress(next.orgCode!);
+        }
+      } catch {
+        setCloudMsg("Cloud join unavailable offline.");
+      }
+    } else {
+      setCloudMsg(
+        "Saved on this device. Sign in to join the cloud roster for coaches."
+      );
+    }
+  }
+
+  async function pushProgress(orgCode: string) {
+    const s = loadLmsState();
+    const pre = s.attempts.find((a) => a.phase === "pre");
+    const post = s.attempts.find((a) => a.phase === "post");
+    const lessonsCompleted = Object.values(s.lessonProgress).filter(
+      (x) => x === "completed"
+    ).length;
+    await fetch("/api/org/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orgCode,
+        programmeId:
+          s.subscription?.programmeId || s.user?.programmeId || null,
+        pathwayPct: 0,
+        lessonsCompleted,
+        preOverall: pre?.result.overall ?? null,
+        postOverall: post?.result.overall ?? null,
+        growth:
+          pre && post
+            ? Math.round((post.result.overall - pre.result.overall) * 10) / 10
+            : null,
+        certificateId: s.certificateId ?? null,
+      }),
+    });
   }
 
   return (
     <LearnShell
       title="School or company cohort"
-      subtitle="Join a Super-Cube® pilot or organisational cohort with a short code from your facilitator. Your journals stay private; only pathway progress can be aggregated later with consent."
+      subtitle="Join a Super-Cube® pilot with a short code. Local save always works; signed-in users join the cloud roster coaches can view."
     >
-      <form
-        onSubmit={join}
-        className="learn-card max-w-md space-y-3"
-      >
+      <form onSubmit={join} className="learn-card max-w-md space-y-3">
         <label className="block">
           <span className="learn-label">Cohort code</span>
           <input
@@ -45,24 +109,58 @@ export default function LearnOrgPage() {
             onChange={(e) => {
               setCode(e.target.value.toUpperCase());
               setSaved(false);
+              setCloudMsg(null);
             }}
-            placeholder="e.g. IMANA2026"
+            placeholder="e.g. DEMO2026"
             className="learn-input mt-1.5"
             maxLength={24}
             autoCapitalize="characters"
             aria-describedby="org-help"
           />
         </label>
+        <fieldset className="flex gap-4 text-sm">
+          <legend className="sr-only">Role</legend>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              checked={role === "learner"}
+              onChange={() => setRole("learner")}
+            />
+            Learner
+          </label>
+          <label className="flex items-center gap-2">
+            <input
+              type="radio"
+              name="role"
+              checked={role === "coach"}
+              onChange={() => setRole("coach")}
+            />
+            Coach / facilitator
+          </label>
+        </fieldset>
         <p id="org-help" className="learn-meta">
-          Codes are case-insensitive. Ask your teacher, HR lead, or Super-Cube®
-          facilitator if you don’t have one.
+          Try <strong className="text-ink">DEMO2026</strong> after running the
+          orgs SQL. Ask your facilitator for a live school code.
         </p>
         <button type="submit" className="learn-btn learn-btn-primary">
-          Save cohort
+          Join cohort
         </button>
         {saved && (
           <p className="text-[0.8125rem] font-medium text-emerald-800">
-            Saved{state?.orgCode ? `: ${state.orgCode}` : ""}.
+            Local code saved{state?.orgCode ? `: ${state.orgCode}` : ""}.
+          </p>
+        )}
+        {cloudMsg && <p className="learn-meta">{cloudMsg}</p>}
+        {!email && (
+          <p className="learn-meta">
+            <Link
+              href="/login?next=/learn/org"
+              className="font-semibold text-ink underline-offset-2 hover:underline"
+            >
+              Sign in
+            </Link>{" "}
+            for multi-device roster membership.
           </p>
         )}
       </form>
@@ -70,19 +168,12 @@ export default function LearnOrgPage() {
       <div className="mt-6 learn-card-muted max-w-md">
         <p className="learn-label">Facilitators</p>
         <p className="learn-body mt-1">
-          For a pilot roster, school licence, or coach view of consented growth
-          summaries, email{" "}
-          <a href="mailto:hello@super-cube.me" className="font-semibold text-ink">
-            hello@super-cube.me
-          </a>
-          .
+          After joining as coach, open{" "}
+          <Link href="/learn/coach" className="font-semibold text-ink">
+            Coach tools
+          </Link>{" "}
+          to see the roster (requires SQL + sign-in).
         </p>
-        <Link
-          href="/learn/coach"
-          className="mt-3 inline-block text-[0.8125rem] font-semibold text-ink"
-        >
-          Open coach tools →
-        </Link>
       </div>
     </LearnShell>
   );

@@ -4,29 +4,71 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs } from "@/lib/content";
+import { track } from "@/lib/analytics";
 import {
   buildReportSharePayload,
   encodeShareToken,
+  ensureCertificateId,
   shareReportUrl,
 } from "@/lib/lms/share";
 import {
   loadLmsState,
+  setCertificateMeta,
   type LocalLmsState,
 } from "@/lib/lms/store";
-import { track } from "@/lib/analytics";
+import { createClient } from "@/lib/supabase/client";
 
-/**
- * Coach / facilitator toolkit on-device:
- * - Create a shareable growth link from the current learner (consent = they share)
- * - Instructions for cohort codes
- */
+type RosterRow = {
+  userId: string;
+  role: string;
+  displayName: string | null;
+  joinedAt: string;
+  progress: {
+    programme_id?: string;
+    pathway_pct?: number;
+    lessons_completed?: number;
+    pre_overall?: number | null;
+    post_overall?: number | null;
+    growth?: number | null;
+    certificate_id?: string | null;
+  } | null;
+};
+
 export default function CoachToolsPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [link, setLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [roster, setRoster] = useState<RosterRow[]>([]);
+  const [orgName, setOrgName] = useState<string | null>(null);
+  const [rosterMsg, setRosterMsg] = useState<string | null>(null);
 
-  useEffect(() => setState(loadLmsState()), []);
+  useEffect(() => {
+    setState(loadLmsState());
+    const supabase = createClient();
+    if (!supabase) return;
+    void supabase.auth.getUser().then(({ data }) => {
+      setEmail(data.user?.email ?? null);
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!email) return;
+    const code = loadLmsState().orgCode || "DEMO2026";
+    void fetch(`/api/org/roster?code=${encodeURIComponent(code)}`)
+      .then((r) => r.json())
+      .then((j) => {
+        if (j.error) {
+          setRosterMsg(j.error);
+          return;
+        }
+        setOrgName(j.org?.name || null);
+        setRoster(j.roster || []);
+        setRosterMsg(j.message || null);
+      })
+      .catch(() => setRosterMsg("Could not load roster"));
+  }, [email]);
 
   function createShare() {
     const s = state ?? loadLmsState();
@@ -35,6 +77,25 @@ export default function CoachToolsPage() {
       setError("Complete at least the baseline assessment to share growth.");
       setLink(null);
       return;
+    }
+    if (s.attempts.some((a) => a.phase === "post")) {
+      const certId = ensureCertificateId(s);
+      setCertificateMeta(certId);
+      payload.certificateId = certId;
+      // Register in cloud when possible
+      void fetch("/api/certificates/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: certId,
+          learnerName: payload.name,
+          programmeId: payload.programmeId,
+          preOverall: payload.preOverall,
+          postOverall: payload.postOverall,
+          growth: payload.growth,
+          orgCode: payload.orgCode,
+        }),
+      });
     }
     setError(null);
     const token = encodeShareToken(payload);
@@ -63,15 +124,14 @@ export default function CoachToolsPage() {
   return (
     <LearnShell
       title="Coach & facilitator tools"
-      subtitle="Share consented growth summaries with a private link. Journals and raw reflections never leave the learner’s device unless they export a backup."
+      subtitle="Share consented growth summaries and view cloud cohort roster when signed in as coach."
     >
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="learn-card">
           <h2 className="learn-card-title">Share this learner’s growth</h2>
           <p className="learn-body mt-2">
-            Creates a read-only snapshot (pre / post / construct deltas). The
-            learner should only share with a coach, parent, or HR partner they
-            trust.
+            Read-only snapshot (pre / post / construct deltas). Journals never
+            leave the device.
           </p>
           <ul className="mt-3 space-y-1 text-[0.75rem] text-slate">
             <li>
@@ -88,9 +148,7 @@ export default function CoachToolsPage() {
             </li>
             <li>
               Cohort:{" "}
-              <strong className="text-ink">
-                {state?.orgCode || "none"}
-              </strong>
+              <strong className="text-ink">{state?.orgCode || "none"}</strong>
             </li>
           </ul>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -123,8 +181,74 @@ export default function CoachToolsPage() {
         </section>
 
         <section className="learn-card">
-          <h2 className="learn-card-title">Construct colours (quick ref)</h2>
-          <ul className="mt-3 space-y-2">
+          <h2 className="learn-card-title">Cloud roster</h2>
+          {!email && (
+            <p className="learn-body mt-2">
+              <Link
+                href="/login?next=/learn/coach"
+                className="font-semibold text-ink underline-offset-2 hover:underline"
+              >
+                Sign in
+              </Link>{" "}
+              and join{" "}
+              <Link href="/learn/org" className="font-semibold text-ink">
+                /learn/org
+              </Link>{" "}
+              as coach (try DEMO2026 after SQL).
+            </p>
+          )}
+          {email && (
+            <>
+              <p className="learn-meta mt-1">
+                {orgName || "No org"} · signed in as {email}
+              </p>
+              {rosterMsg && (
+                <p className="learn-meta mt-1 text-amber-800">{rosterMsg}</p>
+              )}
+              {roster.length === 0 ? (
+                <p className="learn-body mt-3">
+                  No members yet. Learners join the same code on /learn/org.
+                </p>
+              ) : (
+                <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto">
+                  {roster.map((r) => (
+                    <li
+                      key={r.userId}
+                      className="rounded-lg border border-black/[0.06] bg-[#fafafa] px-3 py-2 text-[0.75rem]"
+                    >
+                      <p className="font-semibold text-ink">
+                        {r.displayName || r.userId.slice(0, 8)}
+                        <span className="ml-2 font-normal text-muted">
+                          {r.role}
+                        </span>
+                      </p>
+                      {r.progress ? (
+                        <p className="mt-0.5 text-slate">
+                          Lessons {r.progress.lessons_completed ?? 0}
+                          {r.progress.pre_overall != null
+                            ? ` · pre ${r.progress.pre_overall}`
+                            : ""}
+                          {r.progress.post_overall != null
+                            ? ` · post ${r.progress.post_overall}`
+                            : ""}
+                          {r.progress.growth != null
+                            ? ` · Δ ${r.progress.growth}`
+                            : ""}
+                        </p>
+                      ) : (
+                        <p className="mt-0.5 text-muted">No snapshot yet</p>
+                      )}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </>
+          )}
+        </section>
+
+        <section className="learn-card lg:col-span-2">
+          <h2 className="learn-card-title">Construct colours</h2>
+          <ul className="mt-3 flex flex-wrap gap-3">
             {constructs.map((c) => (
               <li key={c.id} className="flex items-center gap-2 text-sm">
                 <span
@@ -135,12 +259,6 @@ export default function CoachToolsPage() {
               </li>
             ))}
           </ul>
-          <Link
-            href="/learn/org"
-            className="mt-4 inline-block text-[0.8125rem] font-semibold text-ink"
-          >
-            Manage cohort code →
-          </Link>
         </section>
       </div>
     </LearnShell>

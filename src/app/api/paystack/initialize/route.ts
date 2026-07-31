@@ -27,8 +27,9 @@ export async function POST(request: Request) {
       });
     }
 
-    const siteUrl =
-      process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+    const siteUrl = (
+      process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me"
+    ).replace(/\/$/, "");
 
     const result = await initializeTransaction({
       email,
@@ -46,6 +47,8 @@ export async function POST(request: Request) {
     return NextResponse.json({
       authorization_url: result.data.authorization_url,
       reference: result.data.reference,
+      access_code: result.data.access_code,
+      publicKey: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || null,
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : "Checkout failed";

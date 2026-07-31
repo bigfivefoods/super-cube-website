@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { Button } from "@/components/ui";
+import { track } from "@/lib/analytics";
 import { reflectionCount } from "@/lib/lms/continue";
 import { syncLearnerState } from "@/lib/lms/sync";
 import {
@@ -14,15 +16,31 @@ import {
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
-import { getProgramme } from "@/lib/programmes";
+import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 
 export default function AccountPage() {
+  return (
+    <Suspense
+      fallback={
+        <LearnShell title="Account">
+          <p className="learn-meta">Loading…</p>
+        </LearnShell>
+      }
+    >
+      <AccountPageInner />
+    </Suspense>
+  );
+}
+
+function AccountPageInner() {
+  const searchParams = useSearchParams();
   const [state, setState] = useState<LocalLmsState | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const [msg, setMsg] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [signedInEmail, setSignedInEmail] = useState<string | null>(null);
   const cloudReady = isSupabaseConfigured();
+  const paidHandled = useRef(false);
 
   useEffect(() => {
     setState(loadLmsState());
@@ -32,6 +50,78 @@ export default function AccountPage() {
       setSignedInEmail(data.user?.email ?? null);
     });
   }, []);
+
+  // Paystack return: ?paid=1&reference=...&programme=...
+  useEffect(() => {
+    if (paidHandled.current) return;
+    const paid = searchParams.get("paid");
+    const reference =
+      searchParams.get("reference") || searchParams.get("trxref");
+    const programme = searchParams.get("programme") as ProgrammeId | null;
+    if (paid !== "1" && !reference) return;
+    paidHandled.current = true;
+
+    void (async () => {
+      if (reference) {
+        try {
+          const res = await fetch("/api/paystack/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              reference,
+              programmeId: programme || undefined,
+            }),
+          });
+          const data = await res.json();
+          if (data.paid && data.activateLocal?.programmeId) {
+            const next = loadLmsState();
+            const pid = data.activateLocal.programmeId as ProgrammeId;
+            next.subscription = {
+              programmeId: pid,
+              planId: data.activateLocal.planId || `${pid}_once`,
+              status: "active",
+              activatedAt: new Date().toISOString(),
+            };
+            next.user = {
+              email: data.email || next.user?.email || "learner@super-cube.me",
+              fullName: next.user?.fullName || "Learner",
+              programmeId: pid,
+            };
+            saveLmsState(next);
+            setState(next);
+            track("checkout_start", { programmeId: pid, verified: true });
+            setMsg(
+              data.subscriptionSaved
+                ? "Payment verified. Access activated (cloud + this device)."
+                : "Payment verified. Access activated on this device. Sign in to sync."
+            );
+            return;
+          }
+        } catch {
+          /* fall through */
+        }
+      }
+
+      // Fallback: activate local from query if Paystack not verifying
+      if (programme) {
+        const next = loadLmsState();
+        next.subscription = {
+          programmeId: programme,
+          planId: `${programme}_once`,
+          status: "active",
+          activatedAt: new Date().toISOString(),
+        };
+        next.user = {
+          email: next.user?.email || "learner@super-cube.me",
+          fullName: next.user?.fullName || "Learner",
+          programmeId: programme,
+        };
+        saveLmsState(next);
+        setState(next);
+        setMsg("Access activated on this device.");
+      }
+    })();
+  }, [searchParams]);
 
   async function forceSync() {
     setSyncing(true);

@@ -3,6 +3,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { CapacitorInit } from "@/components/CapacitorInit";
+import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PwaRegister } from "@/components/PwaRegister";
 import { site } from "@/lib/content";
@@ -84,6 +85,7 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col bg-white text-ink">
         <PwaRegister />
         <CapacitorInit />
+        <CapacitorPush />
         <AnalyticsProvider />
         {/* Site chrome hidden when installed as standalone app (PWA / Capacitor) */}
         <div className="site-chrome contents">

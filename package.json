@@ -8,11 +8,15 @@
     "start": "next start",
     "lint": "eslint",
     "supabase:verify": "node --env-file=.env.local scripts/verify-supabase.mjs",
+    "supabase:orgs": "node --env-file=.env.local scripts/run-orgs-sql.mjs",
+    "videos:upload": "node --env-file=.env.local scripts/upload-videos-to-supabase.mjs",
+    "videos:upload:courses": "node --env-file=.env.local scripts/upload-videos-to-supabase.mjs --courses-only",
     "cap:sync": "npx cap sync",
     "cap:ios": "npx cap open ios",
     "cap:android": "npx cap open android",
     "cap:add:ios": "npx cap add ios",
-    "cap:add:android": "npx cap add android"
+    "cap:add:android": "npx cap add android",
+    "cap:add:push": "npm install @capacitor/push-notifications && npx cap sync"
   },
   "dependencies": {
     "@capacitor/app": "^8.1.1",

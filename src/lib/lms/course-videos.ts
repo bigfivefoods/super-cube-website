@@ -15,7 +15,11 @@ function videoBase(): string {
 function withBase(path: string): string {
   const base = videoBase();
   if (!base) return path;
-  return `${base}${path.startsWith("/") ? path : `/${path}`}`;
+  // Local paths are /videos/courses/... ; Supabase bucket is already "videos",
+  // so strip the /videos prefix when using CDN:
+  //   CDN=…/object/public/videos + /courses/adults/choices.mp4
+  const stripped = path.replace(/^\/videos(?=\/)/, "") || path;
+  return `${base}${stripped.startsWith("/") ? stripped : `/${stripped}`}`;
 }
 
 /**

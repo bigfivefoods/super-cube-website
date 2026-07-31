@@ -1,26 +1,51 @@
-import type { Metadata } from "next";
-import Link from "next/link";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Verify certificate",
-  description:
-    "Verify a Super-Cube® Leadership Development certificate of completion.",
-  robots: { index: false, follow: false },
+import Link from "next/link";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { getProgramme } from "@/lib/programmes";
+
+type CertRow = {
+  id: string;
+  learner_name: string;
+  programme_id: string | null;
+  pre_overall: number | null;
+  post_overall: number | null;
+  growth: number | null;
+  issued_at: string;
+  org_code: string | null;
 };
 
-/**
- * Public certificate verify page.
- * Full cryptographic registry can be added server-side later; IDs are printed
- * on PDFs and share payloads so coaches can confirm format + origin.
- */
-export default async function VerifyCertificatePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id: raw } = await params;
-  const id = decodeURIComponent(raw || "").trim().toUpperCase();
-  const validFormat = /^SC-\d{8}-[0-9A-F]{6,12}$/i.test(id);
+export default function VerifyCertificatePage() {
+  const params = useParams();
+  const id = String(params.id || "")
+    .trim()
+    .toUpperCase();
+  const formatValid = /^SC-\d{8}-[0-9A-F]{6,12}$/i.test(id);
+  const [loading, setLoading] = useState(true);
+  const [found, setFound] = useState(false);
+  const [cert, setCert] = useState<CertRow | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) {
+      setLoading(false);
+      return;
+    }
+    void fetch(`/api/certificates/register?id=${encodeURIComponent(id)}`)
+      .then((r) => r.json())
+      .then((j) => {
+        setFound(Boolean(j.found));
+        setCert(j.certificate ?? null);
+        setMessage(j.message ?? null);
+      })
+      .catch(() => setMessage("Could not reach registry"))
+      .finally(() => setLoading(false));
+  }, [id]);
+
+  const programme = cert?.programme_id
+    ? getProgramme(cert.programme_id as "kids" | "adolescents" | "adults")
+    : null;
 
   return (
     <main className="mx-auto max-w-lg px-4 py-16 sm:py-20">
@@ -34,35 +59,65 @@ export default async function VerifyCertificatePage({
         {id || "—"}
       </p>
 
-      {validFormat ? (
+      {loading && (
+        <p className="mt-6 text-sm text-muted">Checking registry…</p>
+      )}
+
+      {!loading && found && cert && (
         <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
-          <p className="font-semibold">Format looks valid</p>
-          <p className="mt-1.5 leading-relaxed text-emerald-900/90">
-            This matches the Super-Cube® certificate ID pattern issued after a
-            learner completes the pathway and post-assessment. For full audit
-            trails (org cohorts), contact{" "}
-            <a className="underline" href="mailto:hello@super-cube.me">
-              hello@super-cube.me
-            </a>{" "}
-            with this ID.
+          <p className="font-semibold">Registered certificate</p>
+          <p className="mt-2">
+            <strong>{cert.learner_name}</strong>
+            {programme ? ` · ${programme.name}` : ""}
+          </p>
+          {cert.post_overall != null && (
+            <p className="mt-1 tabular-nums">
+              Growth: {cert.pre_overall ?? "—"} → {cert.post_overall}
+              {cert.growth != null
+                ? ` (${cert.growth > 0 ? "+" : ""}${cert.growth} pts)`
+                : ""}
+            </p>
+          )}
+          <p className="mt-1 text-emerald-900/80">
+            Issued{" "}
+            {new Date(cert.issued_at).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            {cert.org_code ? ` · Cohort ${cert.org_code}` : ""}
           </p>
         </div>
-      ) : (
+      )}
+
+      {!loading && !found && formatValid && (
+        <div className="mt-6 rounded-xl border border-sky-200 bg-sky-50 px-4 py-4 text-sm text-sky-950">
+          <p className="font-semibold">Format looks valid</p>
+          <p className="mt-1.5 leading-relaxed">
+            ID matches Super-Cube® certificate pattern. It is not yet in the
+            cloud registry (learner may have generated offline, or{" "}
+            <code className="text-xs">SUPABASE_RUN_THIS_ORGS_COACH.sql</code>{" "}
+            not applied). Ask the learner to re-download from Learn → Report
+            while signed in.
+          </p>
+          {message && <p className="mt-2 text-xs opacity-80">{message}</p>}
+        </div>
+      )}
+
+      {!loading && !formatValid && (
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-950">
           <p className="font-semibold">Unrecognised format</p>
           <p className="mt-1.5">
-            Expected pattern like{" "}
+            Expected like{" "}
             <code className="rounded bg-white/80 px-1">SC-20260731-A1B2C3D4</code>
-            . Ask the learner to re-download their certificate from Learn →
-            Report.
+            .
           </p>
         </div>
       )}
 
       <ul className="mt-8 space-y-2 text-sm text-slate">
         <li>· Certificates are developmental, not clinical credentials.</li>
-        <li>· IDs are generated when the post-assessment pathway is complete.</li>
-        <li>· Shared growth reports may also include this ID.</li>
+        <li>· Registry is privacy-preserving (name + scores, no journals).</li>
       </ul>
 
       <div className="mt-10 flex flex-wrap gap-3">

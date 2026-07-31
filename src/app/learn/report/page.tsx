@@ -197,6 +197,23 @@ export default function ReportPage() {
                 certificateId: certId,
               });
               track("certificate_download", { certificateId: certId });
+              void fetch("/api/certificates/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  id: certId,
+                  learnerName:
+                    next.user?.fullName || next.user?.email || "Learner",
+                  programmeId: programmeId,
+                  preOverall: pre.result.overall,
+                  postOverall: post.result.overall,
+                  growth:
+                    Math.round(
+                      (post.result.overall - pre.result.overall) * 10
+                    ) / 10,
+                  orgCode: next.orgCode,
+                }),
+              });
             }}
           >
             Download certificate (PDF)
