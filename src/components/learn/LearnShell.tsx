@@ -2,22 +2,27 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { LearnCourseNav } from "@/components/learn/LearnCourseNav";
 import {
   JourneyRailLive,
   useJourney,
 } from "@/components/learn/JourneyProgress";
 import type { JourneyStepId } from "@/lib/lms/journey";
 
-const FALLBACK_STEPS: { id: JourneyStepId; n: number; short: string; href: string }[] =
-  [
-    { id: "programme", n: 1, short: "Choose", href: "/learn/programmes" },
-    { id: "orient", n: 2, short: "Orient", href: "/learn/assessment/orientation" },
-    { id: "baseline", n: 3, short: "Baseline", href: "/learn/assessment/pre" },
-    { id: "learn", n: 4, short: "Learn", href: "/learn/courses" },
-    { id: "remeasure", n: 5, short: "Re-measure", href: "/learn/assessment/post" },
-    { id: "report", n: 6, short: "Report", href: "/learn/report" },
-  ];
+const FALLBACK_STEPS: {
+  id: JourneyStepId;
+  n: number;
+  short: string;
+  href: string;
+}[] = [
+  { id: "programme", n: 1, short: "Choose", href: "/learn/programmes" },
+  { id: "orient", n: 2, short: "Orient", href: "/learn/assessment/orientation" },
+  { id: "baseline", n: 3, short: "Baseline", href: "/learn/assessment/pre" },
+  { id: "learn", n: 4, short: "Learn", href: "/learn/courses" },
+  { id: "remeasure", n: 5, short: "Re-measure", href: "/learn/assessment/post" },
+  { id: "report", n: 6, short: "Report", href: "/learn/report" },
+];
 
 const utilityLinks = [
   { href: "/learn", label: "Home", exact: true },
@@ -66,12 +71,19 @@ export function LearnShell({
     cta: "Continue",
   }));
 
+  const onCourses = pathname.startsWith("/learn/courses");
+  const [learnOpen, setLearnOpen] = useState(onCourses);
+
+  useEffect(() => {
+    if (onCourses) setLearnOpen(true);
+  }, [onCourses]);
+
   return (
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
       {hero}
 
       <div
-        className={`container-site grid min-w-0 gap-5 sm:gap-6 lg:grid-cols-[200px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[220px_minmax(0,1fr)] xl:gap-10 ${
+        className={`container-site grid min-w-0 gap-5 sm:gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-10 ${
           hero
             ? "pb-8 pt-5 sm:pb-10 sm:pt-6 lg:pb-12 lg:pt-8"
             : "pb-8 pt-20 sm:pb-10 sm:pt-24 lg:pb-12 lg:pt-24"
@@ -87,7 +99,7 @@ export function LearnShell({
           </p>
 
           <nav
-            className="-mx-1 flex gap-0.5 overflow-x-auto px-1 pb-1.5 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-1 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
+            className="-mx-1 flex gap-0.5 overflow-x-auto px-1 pb-1.5 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
             aria-label="Learning pathway steps"
           >
             {steps.map((step) => {
@@ -95,6 +107,7 @@ export function LearnShell({
               const locked = "status" in step && step.status === "locked";
               const current = "status" in step && step.status === "current";
               const done = "status" in step && step.status === "done";
+              const isLearn = step.id === "learn";
 
               const cls = `flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[0.8125rem] font-medium tracking-tight transition lg:w-full ${
                 locked
@@ -106,7 +119,7 @@ export function LearnShell({
                       : "text-slate hover:bg-black/[0.04] hover:text-ink"
               }`;
 
-              const content = (
+              const stepInner = (
                 <>
                   <span
                     className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[0.625rem] font-bold ${
@@ -119,7 +132,7 @@ export function LearnShell({
                   >
                     {done && !pathStep && !current ? "✓" : step.n}
                   </span>
-                  <span className="truncate">{step.short}</span>
+                  <span className="min-w-0 flex-1 truncate">{step.short}</span>
                 </>
               );
 
@@ -130,18 +143,72 @@ export function LearnShell({
                     className={cls}
                     title="Complete previous steps first"
                   >
-                    {content}
+                    {stepInner}
                   </span>
+                );
+              }
+
+              if (isLearn) {
+                return (
+                  <div key={step.id} className="contents lg:block lg:w-full">
+                    <div className="flex shrink-0 items-stretch gap-0.5 lg:w-full">
+                      <Link
+                        href={step.href}
+                        className={`${cls} min-w-0 flex-1`}
+                        onClick={() => setLearnOpen(true)}
+                      >
+                        {stepInner}
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setLearnOpen((v) => !v)}
+                        className={`flex shrink-0 items-center justify-center rounded-xl px-2.5 text-[0.7rem] font-semibold transition ${
+                          pathStep || current
+                            ? "bg-ink text-white hover:bg-ink-soft"
+                            : "text-muted hover:bg-black/[0.04] hover:text-ink"
+                        }`}
+                        aria-expanded={learnOpen}
+                        aria-label={
+                          learnOpen
+                            ? "Collapse courses and sessions"
+                            : "Expand courses and sessions"
+                        }
+                      >
+                        <span
+                          className={`inline-block transition-transform ${
+                            learnOpen ? "rotate-90" : ""
+                          }`}
+                          aria-hidden
+                        >
+                          ▸
+                        </span>
+                      </button>
+                    </div>
+                    {/* Desktop: nested under Learn step */}
+                    <div className="hidden lg:block">
+                      <LearnCourseNav expanded={learnOpen} nested />
+                    </div>
+                  </div>
                 );
               }
 
               return (
                 <Link key={step.id} href={step.href} className={cls}>
-                  {content}
+                  {stepInner}
                 </Link>
               );
             })}
           </nav>
+
+          {/* Mobile / tablet: full-width expandable course panel under journey pills */}
+          {learnOpen && (
+            <div className="mt-2 rounded-xl border border-black/[0.07] bg-white p-2.5 shadow-[0_1px_0_rgba(0,0,0,0.02)] lg:hidden">
+              <LearnCourseNav
+                expanded
+                onToggle={() => setLearnOpen(false)}
+              />
+            </div>
+          )}
 
           <div className="mt-4 hidden border-t border-black/[0.06] pt-3 lg:block">
             {utilityLinks.map((link) => {
