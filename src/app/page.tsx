@@ -105,7 +105,7 @@ export default function HomePage() {
             </div>
           </div>
           <div className="flex justify-center lg:justify-end">
-            <div className="w-full max-w-[16.5rem] rounded-2xl border border-black/[0.08] bg-[#fafafa] p-3 sm:max-w-[19rem] sm:p-5 lg:max-w-[21rem] lg:p-6">
+            <div className="w-full max-w-[16.5rem] bg-white sm:max-w-[19rem] lg:max-w-[21rem]">
               <SuperCube size="md" showSkills />
             </div>
           </div>
