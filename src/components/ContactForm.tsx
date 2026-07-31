@@ -1,16 +1,47 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { track } from "@/lib/analytics";
 
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
   const [name, setName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const data = new FormData(e.currentTarget);
-    setName(String(data.get("name") || "").trim());
-    setSubmitted(true);
+    setError(null);
+    setLoading(true);
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const payload = {
+      name: String(data.get("name") || "").trim(),
+      email: String(data.get("email") || "").trim(),
+      organisation: String(data.get("organisation") || "").trim(),
+      intent: String(data.get("interest") || "general"),
+      message: String(data.get("message") || "").trim(),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const j = (await res.json().catch(() => ({}))) as { error?: string };
+        throw new Error(j.error || "Could not send message");
+      }
+      setName(payload.name);
+      setSubmitted(true);
+      track("contact_submit", { intent: payload.intent });
+      form.reset();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -23,9 +54,14 @@ export function ContactForm() {
           Thank you{name ? `, ${name}` : ""}.
         </h2>
         <p className="mt-4 leading-relaxed text-slate">
-          This demo form captures your interest locally. In production, wire
-          this endpoint to your CRM or email service. We look forward to
-          exploring Super-Cube® development with you.
+          We’ve received your note. If you left a school or company pilot
+          request, we’ll prioritise that conversation. Prefer email?{" "}
+          <a
+            href="mailto:hello@super-cube.me"
+            className="font-semibold text-ink underline-offset-2 hover:underline"
+          >
+            hello@super-cube.me
+          </a>
         </p>
         <button
           type="button"
@@ -42,6 +78,7 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit}
       className="rounded-2xl border border-black/[0.08] bg-white p-6 md:p-8"
+      noValidate={false}
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block sm:col-span-1">
@@ -73,7 +110,7 @@ export function ContactForm() {
             type="text"
             autoComplete="organization"
             className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-white focus:ring-1 focus:ring-ink"
-            placeholder="Optional"
+            placeholder="Optional — school, company, or network"
           />
         </label>
         <label className="block sm:col-span-2">
@@ -85,6 +122,7 @@ export function ContactForm() {
           >
             <option value="personal">Personal Super-Cube® plan</option>
             <option value="pipeline">Organisational leadership pipeline</option>
+            <option value="school">School / youth pilot</option>
             <option value="network">Network / alliance programme</option>
             <option value="research">Research partnership</option>
             <option value="other">Something else</option>
@@ -101,11 +139,17 @@ export function ContactForm() {
           />
         </label>
       </div>
+      {error && (
+        <p className="mt-4 text-sm font-medium text-red-700" role="alert">
+          {error}
+        </p>
+      )}
       <button
         type="submit"
-        className="mt-6 w-full rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink-soft sm:w-auto"
+        disabled={loading}
+        className="mt-6 w-full rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white transition hover:bg-ink-soft disabled:opacity-60 sm:w-auto"
       >
-        Send message
+        {loading ? "Sending…" : "Send message"}
       </button>
       <p className="mt-4 text-xs text-muted">
         By submitting, you agree we may contact you about Super-Cube® programmes

@@ -1,8 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PageHero, Button } from "@/components/ui";
-import { loadLmsState, saveLmsState } from "@/lib/lms/store";
+import { track } from "@/lib/analytics";
+import { loadLmsState, saveLmsState, unlockDemo } from "@/lib/lms/store";
 import {
   COURSE_PRICE_USD,
   programmes,
@@ -13,23 +15,15 @@ export default function PricingPage() {
   const router = useRouter();
 
   function startDemo(programmeId: ProgrammeId) {
-    const state = loadLmsState();
-    state.user = {
-      email: state.user?.email || "learner@demo.local",
-      fullName: state.user?.fullName || "Demo Learner",
-      programmeId,
-    };
-    state.subscription = {
-      programmeId,
-      planId: `${programmeId}_once`,
-      status: "active",
-      activatedAt: new Date().toISOString(),
-    };
-    saveLmsState(state);
+    unlockDemo(programmeId);
+    track("checkout_demo", { programmeId });
+    track("programme_selected", { programmeId, mode: "demo" });
     router.push("/learn");
   }
 
   async function startPaystack(programmeId: ProgrammeId) {
+    track("checkout_start", { programmeId });
+    track("programme_selected", { programmeId, mode: "paystack" });
     try {
       const res = await fetch("/api/paystack/initialize", {
         method: "POST",
@@ -55,8 +49,8 @@ export default function PricingPage() {
     <>
       <PageHero
         eyebrow="Pricing"
-        title="Three programmes. One price."
-        description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Each Super-Cube® pathway is $${COURSE_PRICE_USD} once—assessment, six construct courses, practice, and your personal report.`}
+        title="Start free. Go deep for $6."
+        description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Try Super-Cube® free on this device, then unlock full paid access for $${COURSE_PRICE_USD} once—assessment, six faces, practice, report, and certificate.`}
       />
 
       {/* Separate band so pricing content never sits “on” the hero */}
@@ -132,18 +126,58 @@ export default function PricingPage() {
               ))}
             </div>
 
+            {/* Schools / teams */}
+            <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-black/[0.08] bg-white p-6 sm:mt-12 sm:p-8">
+              <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                Schools · companies · cohorts
+              </p>
+              <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+                Team & school pilots
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
+                For classrooms, leadership pipelines, or multi-entity networks we
+                set up a cohort code, facilitator guidance, and consented growth
+                summaries—without exposing private journals.
+              </p>
+              <ul className="mt-4 space-y-1.5 text-sm text-slate">
+                <li>· Individual seats from ${COURSE_PRICE_USD} USD</li>
+                <li>· Cohort codes via Learn → Org</li>
+                <li>· Coach share links + certificate verify IDs</li>
+                <li>· Custom pricing for 20+ seats / school licences</li>
+              </ul>
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Button href="/contact" variant="primary">
+                  Book a pilot conversation
+                </Button>
+                <Button href="/learn/demo" variant="ghost">
+                  Try free demo first
+                </Button>
+                <Link
+                  href="/learn/org"
+                  className="inline-flex min-h-11 items-center text-sm font-semibold text-ink underline-offset-2 hover:underline"
+                >
+                  Join with a cohort code →
+                </Link>
+              </div>
+            </div>
+
             <div className="mx-auto mt-10 max-w-2xl sm:mt-12">
               <p className="text-sm leading-relaxed text-muted">
                 Production payments use{" "}
                 <strong className="text-ink">Paystack</strong> in{" "}
                 <strong className="text-ink">USD</strong> (${COURSE_PRICE_USD} =
-                600 cents). Set keys in{" "}
-                <code className="text-ink">.env.local</code>. Until then, use
-                demo access to explore the LMS.
+                600 cents). Set{" "}
+                <code className="text-ink">PAYSTACK_SECRET_KEY</code> and{" "}
+                <code className="text-ink">NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY</code>{" "}
+                in Vercel. Until then, free demo unlocks the full Learn path on
+                this device.
               </p>
-              <div className="mt-6">
+              <div className="mt-6 flex flex-wrap gap-3">
                 <Button href="/learn" variant="ghost">
                   Go to learning dashboard →
+                </Button>
+                <Button href="/learn/demo" variant="primary">
+                  Start free demo
                 </Button>
               </div>
             </div>

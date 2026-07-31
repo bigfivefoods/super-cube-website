@@ -1,15 +1,22 @@
 /* Super-Cube® Learn — lightweight service worker for PWA install + offline shell */
-const CACHE = "supercube-learn-v1";
+const CACHE = "supercube-learn-v2";
 const PRECACHE = [
   "/learn",
   "/learn/courses",
   "/learn/report",
   "/learn/account",
+  "/learn/demo",
+  "/learn/org",
+  "/learn/coach",
+  "/learn/programmes",
+  "/learn/assessment",
+  "/learn/assessment/orientation",
   "/manifest.webmanifest",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/apple-touch-icon.png",
   "/brand/logo-mark.png",
+  "/brand/logo.png",
   "/favicon.svg",
 ];
 
@@ -49,7 +56,10 @@ self.addEventListener("fetch", (event) => {
   const isStatic =
     url.pathname.startsWith("/icons/") ||
     url.pathname.startsWith("/brand/") ||
-    url.pathname === "/favicon.svg";
+    url.pathname.startsWith("/images/") ||
+    url.pathname === "/favicon.svg" ||
+    url.pathname.endsWith(".css") ||
+    url.pathname.endsWith(".woff2");
 
   if (isStatic) {
     event.respondWith(

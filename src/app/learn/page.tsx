@@ -10,9 +10,11 @@ import {
 } from "@/components/learn/JourneyProgress";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { track } from "@/lib/analytics";
 import { getContinueTarget, reflectionCount } from "@/lib/lms/continue";
 import {
   loadLmsState,
+  setNotifyPractice,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
@@ -78,20 +80,36 @@ export default function LearnDashboardPage() {
           )}
 
           <div className="mt-6 flex w-full animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3">
-            <a
-              href="#your-path"
-              className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 py-2.5 text-sm font-semibold tracking-tight text-white transition hover:bg-ink-soft sm:px-6"
-            >
-              See your path
-            </a>
             <Link
               href={cont.href}
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 py-2.5 text-sm font-semibold tracking-tight text-ink transition hover:border-black/25 hover:bg-black/[0.02] sm:px-6"
+              onClick={() =>
+                track("continue_click", {
+                  kind: cont.kind,
+                  href: cont.href,
+                })
+              }
+              className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold tracking-tight text-white transition hover:bg-ink-soft sm:w-auto sm:min-h-11 sm:py-2.5"
             >
-              {cont.kind === "resume" ? "Resume session" : cont.kind === "next_lesson" ? "Continue session" : next.cta}{" "}
+              {cont.kind === "resume"
+                ? "Continue where you left off"
+                : cont.kind === "next_lesson"
+                  ? "Continue next session"
+                  : next.cta}{" "}
               →
             </Link>
+            <a
+              href="#your-path"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 py-2.5 text-sm font-semibold tracking-tight text-ink transition hover:border-black/25 hover:bg-black/[0.02] sm:px-6"
+            >
+              See full pathway
+            </a>
           </div>
+          {(cont.kind === "resume" || cont.kind === "next_lesson") && (
+            <p className="mt-3 max-w-xl text-sm text-slate">
+              <span className="font-semibold text-ink">{cont.title}</span>
+              {cont.detail ? ` · ${cont.detail}` : ""}
+            </p>
+          )}
         </div>
       </div>
     </section>
@@ -109,6 +127,37 @@ export default function LearnDashboardPage() {
               <span className="ml-1 text-sm font-medium text-muted">days</span>
             </p>
             <p className="learn-meta mt-0.5">Best {streakBest}</p>
+            <button
+              type="button"
+              className="mt-2 text-[0.7rem] font-semibold text-ink underline-offset-2 hover:underline"
+              onClick={async () => {
+                if (!("Notification" in window)) return;
+                if (Notification.permission === "granted") {
+                  setNotifyPractice(true);
+                  setState(loadLmsState());
+                  track("notify_opt_in");
+                  return;
+                }
+                const perm = await Notification.requestPermission();
+                if (perm === "granted") {
+                  setNotifyPractice(true);
+                  setState(loadLmsState());
+                  track("notify_opt_in");
+                  try {
+                    new Notification("Super-Cube® Learn", {
+                      body: "We’ll nudge you to keep your practice streak going.",
+                      icon: "/icons/icon-192.png",
+                    });
+                  } catch {
+                    /* ignore */
+                  }
+                }
+              }}
+            >
+              {lms.notifyPractice
+                ? "Reminders on"
+                : "Enable practice reminders"}
+            </button>
           </div>
           <div className="learn-card !p-3.5">
             <p className="learn-eyebrow">Journal entries</p>

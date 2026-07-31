@@ -12,14 +12,23 @@ import {
 } from "@/lib/lms/scoring";
 import { depthLabel } from "@/lib/lms/orientation";
 import {
+  buildReportSharePayload,
+  encodeShareToken,
+  ensureCertificateId,
+  shareReportUrl,
+} from "@/lib/lms/share";
+import {
   loadLmsState,
-  saveLmsState,
+  setCertificateMeta,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
+import { track } from "@/lib/analytics";
 
 export default function ReportPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
+  const [shareUrl, setShareUrl] = useState<string | null>(null);
+  const [shareCopied, setShareCopied] = useState(false);
   useEffect(() => setState(loadLmsState()), []);
 
   const orientation = state?.orientation;
@@ -178,19 +187,94 @@ export default function ReportPage() {
             type="button"
             className="learn-btn learn-btn-primary mt-3 sm:mt-0"
             onClick={() => {
-              downloadCompletionCertificate({ state, pre, post });
-              if (!state.certificateEarnedAt) {
-                const next = loadLmsState();
-                next.certificateEarnedAt = new Date().toISOString();
-                saveLmsState(next);
-                setState(next);
-              }
+              const certId = ensureCertificateId(state);
+              const next = setCertificateMeta(certId);
+              setState(next);
+              downloadCompletionCertificate({
+                state: next,
+                pre,
+                post,
+                certificateId: certId,
+              });
+              track("certificate_download", { certificateId: certId });
             }}
           >
             Download certificate (PDF)
           </button>
         </div>
       )}
+
+      {/* Coach-shareable growth link */}
+      <div className="mb-4 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
+        <p className="learn-eyebrow">Share with a coach (consent)</p>
+        <p className="mt-1 text-sm font-semibold text-ink">
+          Private growth summary link
+        </p>
+        <p className="learn-meta mt-0.5">
+          Pre/post scores only—journals stay on this device. Only share with
+          someone you trust.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="learn-btn learn-btn-primary"
+            onClick={() => {
+              const payload = buildReportSharePayload(state);
+              if (!payload) return;
+              if (post) {
+                const certId = ensureCertificateId(state);
+                setCertificateMeta(certId);
+                payload.certificateId = certId;
+              }
+              const url = shareReportUrl(encodeShareToken(payload));
+              setShareUrl(url);
+              track("report_share", {
+                hasPost: post != null,
+              });
+            }}
+          >
+            Generate share link
+          </button>
+          {shareUrl && (
+            <button
+              type="button"
+              className="learn-btn learn-btn-ghost"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(shareUrl);
+                  setShareCopied(true);
+                  setTimeout(() => setShareCopied(false), 2000);
+                } catch {
+                  /* ignore */
+                }
+              }}
+            >
+              {shareCopied ? "Copied" : "Copy link"}
+            </button>
+          )}
+          <Button
+            href="/learn/coach"
+            variant="ghost"
+            className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+          >
+            Coach tools
+          </Button>
+        </div>
+        {shareUrl && (
+          <p className="mt-2 break-all text-[0.7rem] text-slate">{shareUrl}</p>
+        )}
+        {state.certificateId && (
+          <p className="learn-meta mt-2">
+            Certificate ID:{" "}
+            <a
+              href={`/verify/${state.certificateId}`}
+              className="font-semibold text-ink underline-offset-2 hover:underline"
+            >
+              {state.certificateId}
+            </a>
+          </p>
+        )}
+      </div>
 
       <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-1.5">

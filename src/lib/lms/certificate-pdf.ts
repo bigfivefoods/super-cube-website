@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 import type { LocalLmsState, LocalAttempt } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
 import { constructs } from "@/lib/content";
+import { ensureCertificateId } from "@/lib/lms/share";
 
 /**
  * Landscape certificate of completion after full pathway + post-assessment.
@@ -10,8 +11,10 @@ export function downloadCompletionCertificate(opts: {
   state: LocalLmsState;
   pre: LocalAttempt;
   post: LocalAttempt;
+  certificateId?: string;
 }): string {
   const { state, pre, post } = opts;
+  const certificateId = opts.certificateId || ensureCertificateId(state);
   const doc = new jsPDF({
     unit: "mm",
     format: "a4",
@@ -99,7 +102,24 @@ export function downloadCompletionCertificate(opts: {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
   doc.setTextColor(90, 90, 90);
-  doc.text(`Awarded ${date}`, w / 2, 120, { align: "center" });
+  doc.text(`Awarded ${date}`, w / 2, 118, { align: "center" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(10, 10, 10);
+  doc.text(`Certificate ID: ${certificateId}`, w / 2, 128, {
+    align: "center",
+  });
+
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor(100, 100, 100);
+  doc.text(
+    `Verify at www.super-cube.me/verify/${certificateId}`,
+    w / 2,
+    135,
+    { align: "center" }
+  );
 
   doc.setFontSize(9);
   doc.text(

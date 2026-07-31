@@ -311,6 +311,61 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Proof + try free */}
+      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+        <div className="container-site grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <SectionHeading
+              eyebrow="Proof of growth"
+              title="Not activity theatre—measured change."
+              description="Learners orient, set a six-face baseline, practice deliberately, then re-measure. Your dual radar and PDF report make growth visible for you, a coach, or your organisation."
+            />
+            <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-slate sm:text-base">
+              <li>· Pre → post comparison across all six Super-Cube® faces</li>
+              <li>· Downloadable growth PDF + certificate with verify ID</li>
+              <li>· Optional private share link for coaches (journals stay private)</li>
+            </ul>
+            <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+              <Button href="/learn/demo" variant="primary">
+                Try Learn free
+              </Button>
+              <Button href="/pricing" variant="ghost">
+                View pricing · $6
+              </Button>
+            </div>
+          </div>
+          <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              Sample outcome view
+            </p>
+            <p className="mt-2 text-lg font-semibold tracking-tight text-ink">
+              Baseline 3.4 → Post 4.1
+            </p>
+            <p className="mt-1 text-sm text-slate">
+              Illustrative overall growth after deliberate practice across the
+              cube—not a guarantee of individual results.
+            </p>
+            <div className="mt-5 space-y-2">
+              {[
+                { n: "Choices", d: "+0.6" },
+                { n: "Emotional", d: "+0.9" },
+                { n: "Principles", d: "+0.5" },
+              ].map((row) => (
+                <div
+                  key={row.n}
+                  className="flex items-center justify-between rounded-lg bg-[#fafafa] px-3 py-2 text-sm"
+                >
+                  <span className="font-medium text-ink">{row.n}</span>
+                  <span className="font-semibold tabular-nums text-ink">
+                    {row.d}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       <TestimonialsStrip />
 
       <CTABanner />

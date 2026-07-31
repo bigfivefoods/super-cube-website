@@ -9,10 +9,13 @@ import { LessonContent } from "@/components/learn/LessonContent";
 import { SessionReflection } from "@/components/learn/SessionReflection";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
+import { track } from "@/lib/analytics";
+import { sessionWinLine } from "@/lib/lms/wins";
 import {
   loadLmsState,
   markLessonCompleted,
   markLessonInProgress,
+  recordSessionWin,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
@@ -29,6 +32,7 @@ export default function LessonPlayerPage() {
   const constructId = params.constructId as ConstructId;
   const lessonId = params.lessonId as string;
   const [state, setState] = useState<LocalLmsState | null>(null);
+  const [winBanner, setWinBanner] = useState<string | null>(null);
 
   useEffect(() => setState(loadLmsState()), []);
 
@@ -53,11 +57,31 @@ export default function LessonPlayerPage() {
 
   function markComplete() {
     if (!data) return;
-    const next = markLessonCompleted(data.lesson.id, constructId);
-    setState(next);
+    if (state?.lessonProgress[data.lesson.id] === "completed") {
+      continueAfterWin();
+      return;
+    }
+    markLessonCompleted(data.lesson.id, constructId);
+    const win = sessionWinLine(
+      constructId,
+      programmeId,
+      data.lesson.title
+    );
+    recordSessionWin(data.lesson.id, constructId, win);
+    setState(loadLmsState());
+    setWinBanner(win);
+    track("lesson_complete", {
+      constructId,
+      lessonId: data.lesson.id,
+      programmeId,
+    });
+  }
 
-    const idx = data.course.lessons.findIndex((l) => l.id === data.lesson.id);
-    const nextLesson = data.course.lessons[idx + 1];
+  function continueAfterWin() {
+    if (!data) return;
+    setWinBanner(null);
+    const i = data.course.lessons.findIndex((l) => l.id === data.lesson.id);
+    const nextLesson = data.course.lessons[i + 1];
     if (nextLesson) {
       router.push(`/learn/courses/${constructId}/${nextLesson.id}`);
     } else {
@@ -158,6 +182,29 @@ export default function LessonPlayerPage() {
         constructId={constructId}
         color={color}
       />
+
+      {winBanner && (
+        <div
+          className="mt-5 rounded-2xl border border-black/[0.08] bg-white p-4 sm:p-5"
+          style={{ boxShadow: `inset 3px 0 0 ${color}` }}
+          role="status"
+        >
+          <p className="learn-eyebrow" style={{ color }}>
+            Win of the day
+          </p>
+          <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-ink">
+            {winBanner}
+          </p>
+          <button
+            type="button"
+            onClick={continueAfterWin}
+            className="learn-btn learn-btn-primary mt-3 text-white"
+            style={{ background: color }}
+          >
+            {next ? "Continue to next session →" : "Back to module →"}
+          </button>
+        </div>
+      )}
 
       <div className="mt-6 flex flex-col gap-2.5 border-t border-black/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-3 text-[0.8125rem] font-semibold">

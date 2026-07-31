@@ -55,6 +55,13 @@ export interface PracticeStreak {
   lastDate: string | null;
 }
 
+export interface SessionWin {
+  lessonId: string;
+  constructId: ConstructId;
+  text: string;
+  at: string;
+}
+
 export interface LocalLmsState {
   user?: {
     email: string;
@@ -76,6 +83,14 @@ export interface LocalLmsState {
   notifyPractice?: boolean;
   /** ISO date when completion certificate was first earned */
   certificateEarnedAt?: string;
+  /** Public certificate verification id (SC-YYYYMMDD-HEX) */
+  certificateId?: string;
+  /** School / company cohort code */
+  orgCode?: string;
+  /** Free demo unlock (one construct sample) without full paywall */
+  demoUnlocked?: boolean;
+  /** Last session win-of-the-day lines */
+  sessionWins?: SessionWin[];
 }
 
 const empty = (): LocalLmsState => ({
@@ -251,4 +266,74 @@ export function isSupabaseConfigured() {
 export function hasLocalAccess(state: LocalLmsState): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true") return true;
   return state.subscription?.status === "active";
+}
+
+/** Access to full programme or open demo mode */
+export function hasLearnAccess(state: LocalLmsState): boolean {
+  if (hasLocalAccess(state)) return true;
+  return Boolean(state.demoUnlocked);
+}
+
+export function setOrgCode(code: string): LocalLmsState {
+  const state = loadLmsState();
+  state.orgCode = code.trim().toUpperCase().slice(0, 24) || undefined;
+  saveLmsState(state);
+  return state;
+}
+
+export function unlockDemo(programmeId: ProgrammeId): LocalLmsState {
+  let state = loadLmsState();
+  state.demoUnlocked = true;
+  state.user = {
+    email: state.user?.email || "demo@super-cube.me",
+    fullName: state.user?.fullName || "Demo Learner",
+    programmeId,
+  };
+  if (!state.subscription) {
+    state.subscription = {
+      programmeId,
+      planId: `${programmeId}_demo`,
+      status: "active",
+      activatedAt: new Date().toISOString(),
+    };
+  }
+  saveLmsState(state);
+  return state;
+}
+
+export function recordSessionWin(
+  lessonId: string,
+  constructId: ConstructId,
+  text: string
+): LocalLmsState {
+  let state = loadLmsState();
+  const wins = [...(state.sessionWins ?? [])];
+  wins.unshift({
+    lessonId,
+    constructId,
+    text,
+    at: new Date().toISOString(),
+  });
+  state.sessionWins = wins.slice(0, 20);
+  saveLmsState(state);
+  return state;
+}
+
+export function setNotifyPractice(enabled: boolean): LocalLmsState {
+  const state = loadLmsState();
+  state.notifyPractice = enabled;
+  saveLmsState(state);
+  return state;
+}
+
+export function setCertificateMeta(
+  certificateId: string,
+  earnedAt?: string
+): LocalLmsState {
+  const state = loadLmsState();
+  state.certificateId = certificateId;
+  state.certificateEarnedAt =
+    state.certificateEarnedAt || earnedAt || new Date().toISOString();
+  saveLmsState(state);
+  return state;
 }
