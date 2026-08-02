@@ -5,11 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { constructs, mainNav, moreNavGroups } from "@/lib/content";
-import {
-  darkHeroPaths,
-  lightHeroPaths,
-  modelHeroNavBg,
-} from "@/lib/hero-media";
+import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
 
 function linkActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -29,13 +25,11 @@ export function Header() {
   const [moreOpen, setMoreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  const isHome = pathname === "/";
-  const isModel = pathname === "/the-model" || pathname.startsWith("/the-model/");
   const isLightHero = matchesPath(pathname, lightHeroPaths);
   const isDarkHero = matchesPath(pathname, darkHeroPaths);
   /** Over media hero (not scrolled, menu closed) */
   const overHero = (isDarkHero || isLightHero) && !scrolled && !open;
-  /** Dark photo / model hero — white type / inverted logo */
+  /** Dark photo / model hero — transparent, white type / inverted logo */
   const overDark = overHero && isDarkHero;
   /** Light grey geometric hero — ink type, grey blend */
   const overLight = overHero && isLightHero;
@@ -82,9 +76,7 @@ export function Header() {
   };
 
   const headerSurface = overDark
-    ? isModel
-      ? "border-b border-transparent backdrop-blur-md"
-      : "border-b border-transparent bg-transparent"
+    ? "border-b border-transparent bg-transparent"
     : overLight
       ? "border-b border-transparent bg-[#e8e8e8]/90 backdrop-blur-md"
       : "border-b border-black/[0.06] bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl";
@@ -92,11 +84,6 @@ export function Header() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${headerSurface}`}
-      style={
-        overDark && isModel
-          ? { backgroundColor: `${modelHeroNavBg}e6` }
-          : undefined
-      }
     >
       <div className="container-site flex h-14 items-center justify-between gap-3 md:h-16">
         <BrandWordmark
