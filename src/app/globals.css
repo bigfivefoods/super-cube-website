@@ -211,6 +211,13 @@ body {
   }
 }
 
+/* Constructs page face jump pills */
+.face-jump:hover {
+  background-color: var(--face-color) !important;
+  border-color: var(--face-color) !important;
+  color: #fff !important;
+}
+
 /* Medium: keep top-aligned content block readable over photo */
 @media (min-width: 640px) and (max-width: 1023px) {
   .page-hero--media .page-hero__copy {

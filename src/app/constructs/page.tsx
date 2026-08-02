@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ConstructBanner } from "@/components/ConstructBanner";
-import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
+import { Button, CTABanner, PageHero } from "@/components/ui";
 import { constructs, type ConstructId } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
 export const metadata: Metadata = {
   title: "Six faces",
   description:
-    "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model. Jump to Principles for character components.",
+    "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model.",
 };
 
 const media: Record<
-  string,
+  ConstructId,
   { icon: string; banner: string; quote?: string; attribution?: string }
 > = {
   choices: {
@@ -58,6 +57,22 @@ const media: Record<
   },
 };
 
+/** Short compelling overview under each face name */
+const overviews: Record<ConstructId, string> = {
+  choices:
+    "Leadership is a series of decisions under pressure. Choices trains you to decide with moral clarity, sound judgement, and calculated courage—so ambiguity becomes action, not freeze or flinch.",
+  principles:
+    "Trust is earned when power meets character. Principles turns ethics into lived practice—integrity you can see, fairness others can feel, and governance that holds when incentives pull the wrong way.",
+  mental:
+    "Strategy without clarity is noise. Mental builds the cognitive craft of leadership: seeing systems, setting vision, solving hard problems, and applying knowledge when the map no longer matches the terrain.",
+  emotional:
+    "People follow leaders who can read the room and themselves. Emotional intelligence converts feeling into connection—psychological safety, resilient teams, and influence that does not require fear.",
+  physical:
+    "Presence is not posture alone—it is energy, stamina, and the body as leadership signal. Physical develops the capacity to show up steady under load, so others experience reliability, not depletion.",
+  spiritual:
+    "Purpose is the quiet force that keeps effort meaningful. Spiritual leadership connects daily work to contribution beyond self—conviction, example, and a why strong enough to outlast a quarter.",
+};
+
 export default function ConstructsPage() {
   return (
     <>
@@ -65,7 +80,7 @@ export default function ConstructsPage() {
         theme="model"
         eyebrow="The six faces"
         title="Human-centric constructs. Developable skills."
-        description="Each face of the Super-Cube® is a coherent domain of leadership practice—grounded in theory, validated in research, and designed for deliberate growth. Use the jump links below (or header → Six faces) to open Principles, Choices, and the rest."
+        description="Each face of the Super-Cube® is a full domain of leadership practice—grounded in theory, validated in research, and built for deliberate growth. Scroll each face: full-bleed image, then a clear overview."
       >
         <Button href="/learn/start" variant="primary">
           Start free baseline
@@ -75,166 +90,267 @@ export default function ConstructsPage() {
         </Button>
       </PageHero>
 
-      {/* Sticky jump bar — Principles etc. always one click away */}
-      <section className="sticky top-14 z-40 border-b border-black/[0.06] bg-white/95 py-3 backdrop-blur-md md:top-16">
-        <div className="container-site">
-          <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
-            Jump to a face
+      {/* Sticky face jump */}
+      <nav
+        className="sticky top-14 z-40 border-b border-black/[0.06] bg-white/95 py-2.5 backdrop-blur-md md:top-16"
+        aria-label="Jump to face"
+      >
+        <div className="container-site flex flex-wrap items-center gap-2">
+          <span className="mr-1 hidden text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted sm:inline">
+            Faces
+          </span>
+          {constructs.map((c) => (
+            <a
+              key={c.id}
+              href={`#${c.id}`}
+              className="face-jump inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-1.5 text-[0.8125rem] font-semibold text-ink transition"
+              style={{ ["--face-color" as string]: c.color }}
+            >
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ background: c.color }}
+                aria-hidden
+              />
+              {c.name}
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      {constructs.map((c, index) => {
+        const m = media[c.id];
+        const gain = interventionGains.find((g) => g.constructId === c.id);
+        const next = constructs[(index + 1) % constructs.length]!;
+
+        return (
+          <article key={c.id} id={c.id} className="scroll-mt-0">
+            {/* Full-bleed face hero */}
+            <section className="relative isolate flex min-h-[100svh] min-h-[100dvh] w-full flex-col justify-end overflow-hidden">
+              <Image
+                src={m.banner}
+                alt=""
+                fill
+                priority={index === 0}
+                className="object-cover object-center"
+                sizes="100vw"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/25"
+                aria-hidden
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent sm:via-black/20"
+                aria-hidden
+              />
+              {/* Colour accent bar */}
+              <div
+                className="absolute inset-x-0 top-0 h-1 z-[2]"
+                style={{ background: c.color }}
+                aria-hidden
+              />
+
+              <div className="container-site relative z-[2] w-full pb-10 pt-[max(6rem,env(safe-area-inset-top))] sm:pb-14 md:pb-16">
+                <div className="max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
+                  <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/60">
+                    Face {String(index + 1).padStart(2, "0")} of 06
+                  </p>
+                  <h2 className="heading-xl mt-3 text-white">{c.name}</h2>
+                  <p className="mt-3 text-base font-medium tracking-tight text-white/85 sm:text-lg md:text-xl">
+                    {c.tagline}
+                  </p>
+                  {m.quote && (
+                    <blockquote className="mt-6 border-l-2 pl-4 sm:mt-8" style={{ borderColor: c.color }}>
+                      <p className="text-sm font-medium italic leading-relaxed text-white/90 sm:text-base">
+                        “{m.quote}”
+                      </p>
+                      {m.attribution && (
+                        <footer className="mt-2 text-xs font-semibold tracking-wide text-white/55">
+                          — {m.attribution}
+                        </footer>
+                      )}
+                    </blockquote>
+                  )}
+                  <a
+                    href={`#${c.id}-detail`}
+                    className="mt-8 inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-white underline-offset-4 hover:underline"
+                  >
+                    Read overview
+                    <span aria-hidden>↓</span>
+                  </a>
+                </div>
+              </div>
+            </section>
+
+            {/* Detail panel — white + construct colour accents */}
+            <section
+              id={`${c.id}-detail`}
+              className="scroll-mt-28 border-b border-black/[0.06] bg-white"
+            >
+              <div
+                className="h-1 w-full"
+                style={{ background: c.color }}
+                aria-hidden
+              />
+              <div className="container-site section-pad">
+                <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
+                  {/* Overview column */}
+                  <div className="lg:col-span-5">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className="relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-2xl"
+                        style={{ background: c.colorSoft }}
+                      >
+                        <Image
+                          src={m.icon}
+                          alt=""
+                          width={36}
+                          height={36}
+                          className="object-contain p-1"
+                        />
+                      </span>
+                      <div>
+                        <p
+                          className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
+                          style={{ color: c.color }}
+                        >
+                          Overview
+                        </p>
+                        <h3 className="text-xl font-semibold tracking-tight text-ink sm:text-2xl">
+                          Why {c.name} matters
+                        </h3>
+                      </div>
+                    </div>
+                    <p className="mt-5 text-base leading-relaxed text-slate sm:text-[1.0625rem]">
+                      {overviews[c.id]}
+                    </p>
+                    <p className="mt-4 text-sm font-medium text-ink">
+                      {c.summary}
+                    </p>
+                    {gain && (
+                      <p
+                        className="mt-6 inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-semibold text-white"
+                        style={{ background: c.color }}
+                      >
+                        Research intervention gain · +{gain.gainPct}%
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Deep content */}
+                  <div className="lg:col-span-7">
+                    <h3 className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
+                      In depth
+                    </h3>
+                    <p className="mt-3 text-[0.975rem] leading-relaxed text-ink/90 sm:text-base">
+                      {c.description}
+                    </p>
+
+                    <h3 className="mt-8 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
+                      Core elements
+                    </h3>
+                    <ul className="mt-3 flex flex-wrap gap-2">
+                      {c.elements.map((el) => (
+                        <li
+                          key={el}
+                          className="rounded-full border border-black/[0.08] bg-[#fafafa] px-3.5 py-1.5 text-sm font-medium text-ink"
+                          style={{ boxShadow: `inset 0 0 0 1px ${c.color}22` }}
+                        >
+                          {el}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {c.keyComponents && c.keyComponents.length > 0 && (
+                      <>
+                        <h3 className="mt-8 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
+                          Key components
+                        </h3>
+                        <p className="mt-2 text-sm text-slate">
+                          Character virtues that make principled leadership
+                          concrete in daily behaviour.
+                        </p>
+                        <ul className="mt-4 grid gap-2.5 sm:grid-cols-2">
+                          {c.keyComponents.map((comp) => (
+                            <li
+                              key={comp.name}
+                              className="rounded-xl bg-[#fafafa] p-3.5 sm:p-4"
+                              style={{
+                                boxShadow: `inset 3px 0 0 ${c.color}`,
+                              }}
+                            >
+                              <p className="text-sm font-semibold tracking-tight text-ink">
+                                {comp.name}
+                              </p>
+                              <p className="mt-1 text-[0.8125rem] leading-relaxed text-slate">
+                                {comp.definition}
+                              </p>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+
+                    <h3 className="mt-8 text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
+                      Theoretical grounding
+                    </h3>
+                    <p className="mt-3 text-sm leading-relaxed text-slate">
+                      {c.theory}
+                    </p>
+
+                    <div className="mt-8 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+                      <Link
+                        href={`/learn/courses/${c.id}`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-semibold text-white transition hover:opacity-90"
+                        style={{ background: c.color }}
+                      >
+                        Learn {c.name} in Super-Cube® Learn
+                      </Link>
+                      <Link
+                        href={`#${next.id}`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 text-sm font-semibold text-ink transition hover:border-black/25"
+                      >
+                        Next · {next.name} →
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </article>
+        );
+      })}
+
+      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+        <div className="container-site max-w-3xl">
+          <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
+            Integrated practice
           </p>
-          <div className="flex flex-wrap gap-2">
+          <h2 className="heading-lg mt-2 text-ink">No face stands alone.</h2>
+          <p className="mt-4 text-base leading-relaxed text-slate sm:text-lg">
+            Mental and Emotional often dominate day-to-day discourse—but
+            Super-Cube® insists on balance. Choices without Principles erode
+            trust. Vision without Physical resilience burns out. Purpose without
+            Emotional intelligence fails to move people. Develop the whole cube.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-2">
             {constructs.map((c) => (
               <a
                 key={c.id}
                 href={`#${c.id}`}
-                className="inline-flex items-center gap-2 rounded-full border border-black/[0.1] bg-white px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-white"
+                className="inline-flex items-center gap-2 rounded-full px-3.5 py-2 text-sm font-semibold text-white"
+                style={{ background: c.color }}
               >
-                <span
-                  className="h-2 w-2 rounded-full"
-                  style={{ background: c.color }}
-                  aria-hidden
-                />
                 {c.name}
               </a>
             ))}
           </div>
-        </div>
-      </section>
-
-      <section className="section-pad">
-        <div className="container-site space-y-24">
-          {constructs.map((c, index) => {
-            const gain = interventionGains.find((g) => g.constructId === c.id);
-            return (
-            <article
-              key={c.id}
-              id={c.id}
-              className="scroll-mt-28 grid gap-8 lg:grid-cols-12 lg:gap-12"
-            >
-              <div className="lg:col-span-4">
-                <div className="relative mb-5 h-16 w-16 overflow-hidden rounded-2xl bg-[#f4f4f4]">
-                  <Image
-                    src={media[c.id].icon}
-                    alt={`${c.name} icon`}
-                    fill
-                    className="object-contain p-2"
-                    sizes="64px"
-                  />
-                </div>
-                <p className="text-sm font-semibold text-muted">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-                <h2 className="heading-lg mt-2 text-ink">{c.name}</h2>
-                <p className="mt-2 font-medium text-slate">{c.tagline}</p>
-                {gain && (
-                  <p className="mt-4 text-sm text-muted">
-                    Average intervention improvement:{" "}
-                    <strong className="text-ink">+{gain.gainPct}%</strong>
-                  </p>
-                )}
-              </div>
-
-              <div className="lg:col-span-8 space-y-4">
-                <ConstructBanner
-                  constructId={c.id as ConstructId}
-                  name={c.name}
-                  color={c.color}
-                  banner={media[c.id].banner}
-                  quote={media[c.id].quote}
-                  attribution={media[c.id].attribution}
-                />
-                <div className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-6 md:p-8">
-                  <p className="text-lg leading-relaxed text-ink/90">
-                    {c.description}
-                  </p>
-
-                  <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                    Core elements
-                  </h3>
-                  <ul className="mt-3 flex flex-wrap gap-2">
-                    {c.elements.map((el) => (
-                      <li
-                        key={el}
-                        className="rounded-full border border-black/[0.08] bg-white px-3.5 py-1.5 text-sm font-medium text-ink"
-                      >
-                        {el}
-                      </li>
-                    ))}
-                  </ul>
-
-                  {c.keyComponents && c.keyComponents.length > 0 && (
-                    <>
-                      <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                        Key components
-                      </h3>
-                      <p className="mt-2 text-sm text-slate">
-                        Character virtues that make principled leadership
-                        concrete in daily behaviour.
-                      </p>
-                      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-                        {c.keyComponents.map((comp) => (
-                          <li
-                            key={comp.name}
-                            className="rounded-xl border border-black/[0.07] bg-white p-3.5 sm:p-4"
-                            style={{
-                              boxShadow: `inset 3px 0 0 ${c.color}`,
-                            }}
-                          >
-                            <p className="text-sm font-semibold tracking-tight text-ink">
-                              {comp.name}
-                            </p>
-                            <p className="mt-1 text-[0.8125rem] leading-relaxed text-slate">
-                              {comp.definition}
-                            </p>
-                          </li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-
-                  <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
-                    Theoretical grounding
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate">
-                    {c.theory}
-                  </p>
-                </div>
-              </div>
-            </article>
-            );
-          })}
-        </div>
-      </section>
-
-      <section className="section-pad border-t border-[var(--line)] bg-paper">
-        <div className="container-site">
-          <SectionHeading
-            eyebrow="Integrated practice"
-            title="No face stands alone."
-            description="Mental and Emotional dimensions often dominate day-to-day leadership discourse—but Super-Cube® insists on balance. Choices without Principles erode trust. Vision without Physical resilience burns out. Purpose without Emotional intelligence fails to move people."
-          />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {constructs.map((c) => (
-              <Link
-                key={c.id}
-                href={`#${c.id}`}
-                className="card-lift flex items-center gap-3 rounded-[var(--radius)] border border-[var(--line)] bg-cream p-4 shadow-[var(--shadow-sm)]"
-              >
-                <span
-                  className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-black/[0.06]"
-                  style={{ background: c.colorSoft }}
-                >
-                  <Image
-                    src={media[c.id].icon}
-                    alt=""
-                    fill
-                    className="object-contain p-1.5"
-                    sizes="40px"
-                  />
-                </span>
-                <span className="font-semibold text-ink">{c.name}</span>
-                <span className="ml-auto text-xs text-muted">Jump ↑</span>
-              </Link>
-            ))}
+          <div className="mt-8 flex flex-col gap-2.5 sm:flex-row">
+            <Button href="/learn/start" variant="primary">
+              Start free baseline
+            </Button>
+            <Button href="/the-model" variant="ghost">
+              Back to the model
+            </Button>
           </div>
         </div>
       </section>
