@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { ConstructBanner } from "@/components/ConstructBanner";
-import { Button, CTABanner, PageHero } from "@/components/ui";
+import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs, type ConstructId } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
