@@ -77,7 +77,7 @@ export default function ConstructsPage() {
   return (
     <>
       <PageHero
-        theme="model"
+        theme="constructs"
         eyebrow="The six faces"
         title="Human-centric constructs. Developable skills."
         description="Each face of the Super-Cube® is a full domain of leadership practice—grounded in theory, validated in research, and built for deliberate growth. Scroll each face: full-bleed image, then a clear overview."

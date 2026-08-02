@@ -9,6 +9,7 @@ export type HeroTheme =
   | "research"
   | "about"
   | "model"
+  | "constructs"
   | "programs"
   | "impact"
   | "none";
@@ -41,6 +42,12 @@ export const heroThemes: Record<
     src: "/images/hero/hero-model.jpg",
     alt: "Abstract luminous multidimensional cube representing Super-Cube®",
     position: "object-[70%_center] sm:object-center",
+  },
+  constructs: {
+    src: "/images/hero/hero-constructs.jpg",
+    alt: "Multicolour geometric cubes in Super-Cube® face colours — modern construct overview",
+    // Cubes sit on the right; keep subject visible on large screens
+    position: "object-[80%_center] sm:object-[70%_center] md:object-center",
   },
   programs: {
     src: "/images/hero/hero-programs.jpg",
