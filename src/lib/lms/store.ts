@@ -95,6 +95,25 @@ export interface LocalLmsState {
   shareProgressWithCoach?: boolean;
   /** Onboarding welcome completed / seen */
   onboardingSeenAt?: string;
+  /** In-progress assessment draft (save/resume) */
+  assessmentDraft?: {
+    phase: "pre" | "post";
+    programmeId: ProgrammeId;
+    responses: ResponseMap;
+    step: number;
+    updatedAt: string;
+  };
+  /** Completed micro-practice ids by ISO date YYYY-MM-DD */
+  microPracticeLog?: Record<string, string[]>;
+  /** Guided first-run steps completed */
+  firstRun?: {
+    orient?: boolean;
+    pre?: boolean;
+    firstLesson?: boolean;
+    firstWin?: boolean;
+  };
+  /** UI locale hint */
+  locale?: "en" | "zu";
 }
 
 const empty = (): LocalLmsState => ({
@@ -354,6 +373,59 @@ export function setShareProgressConsent(enabled: boolean): LocalLmsState {
 export function markOnboardingSeen(): LocalLmsState {
   const state = loadLmsState();
   state.onboardingSeenAt = new Date().toISOString();
+  saveLmsState(state);
+  return state;
+}
+
+export function saveAssessmentDraft(draft: NonNullable<LocalLmsState["assessmentDraft"]>): LocalLmsState {
+  const state = loadLmsState();
+  state.assessmentDraft = draft;
+  saveLmsState(state);
+  return state;
+}
+
+export function clearAssessmentDraft(): LocalLmsState {
+  const state = loadLmsState();
+  delete state.assessmentDraft;
+  saveLmsState(state);
+  return state;
+}
+
+export function logMicroPractice(practiceId: string): LocalLmsState {
+  const state = loadLmsState();
+  const day = new Date().toISOString().slice(0, 10);
+  const log = { ...(state.microPracticeLog ?? {}) };
+  const list = new Set(log[day] ?? []);
+  list.add(practiceId);
+  log[day] = [...list];
+  state.microPracticeLog = log;
+  // Count as streak activity
+  const streak = state.practiceStreak ?? { current: 0, best: 0, lastDate: null };
+  if (streak.lastDate !== day) {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const y = yesterday.toISOString().slice(0, 10);
+    streak.current = streak.lastDate === y ? streak.current + 1 : 1;
+    streak.best = Math.max(streak.best, streak.current);
+    streak.lastDate = day;
+  }
+  state.practiceStreak = streak;
+  saveLmsState(state);
+  return state;
+}
+
+export function markFirstRunStep(
+  step: keyof NonNullable<LocalLmsState["firstRun"]>
+): LocalLmsState {
+  const state = loadLmsState();
+  state.firstRun = { ...(state.firstRun ?? {}), [step]: true };
+  saveLmsState(state);
+  return state;
+}
+
+export function setLmsLocale(locale: "en" | "zu"): LocalLmsState {
+  const state = loadLmsState();
+  state.locale = locale;
   saveLmsState(state);
   return state;
 }

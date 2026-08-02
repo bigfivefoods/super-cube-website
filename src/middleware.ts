@@ -46,10 +46,13 @@ export async function middleware(request: NextRequest) {
       data: { user },
     } = await supabase.auth.getUser();
 
-    // Public LMS entry points (demo unlock, post-purchase onboarding, account Paystack return)
+    // Public LMS entry points (demo unlock, guided start, post-purchase, account)
     const publicLearn =
       path.startsWith("/learn/demo") ||
+      path.startsWith("/learn/start") ||
       path.startsWith("/learn/onboarding") ||
+      path.startsWith("/learn/feedback") ||
+      path.startsWith("/learn/practice") ||
       path.startsWith("/learn/account") ||
       path.startsWith("/learn/welcome");
     if (!user && !publicLearn) {

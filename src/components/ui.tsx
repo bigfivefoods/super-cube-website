@@ -145,23 +145,22 @@ export function CTABanner() {
             <div className="min-w-0">
               <p className="eyebrow text-white/45">Next step</p>
               <h2 className="heading-md mt-3 text-white sm:mt-4 md:text-[2rem]">
-                Build leadership capacity from the centre outward.
+                Measure growth in your first 10 minutes.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/60 sm:mt-4 sm:text-[0.975rem]">
-                Whether you are designing a personal development plan or a
-                multi-level organisational programme, Super-Cube® provides a
-                human-centric, evidence-informed path.
+                Free baseline on this device—or book a school/company pilot with
+                facilitator calendar, consented roster, and verify certificates.
               </p>
             </div>
             <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:gap-3 md:w-auto md:flex-col">
               <Link
-                href="/contact"
+                href="/learn/start"
                 className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/90 sm:w-auto"
               >
-                Begin a conversation
+                Start free baseline
               </Link>
-              <Button href="/programs" variant="light" className="w-full sm:w-auto">
-                Explore programs
+              <Button href="/pricing#pilot" variant="light" className="w-full sm:w-auto">
+                Book a pilot
               </Button>
             </div>
           </div>

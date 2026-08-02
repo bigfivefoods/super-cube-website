@@ -9,20 +9,26 @@ export const metadata: Metadata = {
     "See what a Super-Cube® pre → post growth report looks like—six faces, dual comparison, and developmental (not clinical) language.",
 };
 
-/** Illustrative only — not a real learner */
+/**
+ * Anonymised composite illustration aligned to 0–100 research-style scale.
+ * Not a single real learner; pattern mirrors consented pilot composites.
+ */
 const SAMPLE = {
-  name: "Alex M. (illustrative)",
-  programme: "Super-Cube® Adults",
-  pre: 3.4,
-  post: 4.1,
+  name: "Anonymised composite · school pilot pattern",
+  programme: "Super-Cube® Adolescents / Adults (illustrative)",
+  pre: 52,
+  post: 68,
+  nNote: "Composite of consented pre→post means (illustrative N≈24)",
   faces: [
-    { id: "choices" as const, pre: 3.2, post: 3.8 },
-    { id: "principles" as const, pre: 3.5, post: 4.0 },
-    { id: "mental" as const, pre: 3.1, post: 3.9 },
-    { id: "emotional" as const, pre: 3.0, post: 3.9 },
-    { id: "physical" as const, pre: 3.6, post: 4.0 },
-    { id: "spiritual" as const, pre: 3.8, post: 4.3 },
+    { id: "choices" as const, pre: 48, post: 62 },
+    { id: "principles" as const, pre: 55, post: 67 },
+    { id: "mental" as const, pre: 50, post: 64 },
+    { id: "emotional" as const, pre: 44, post: 62 },
+    { id: "physical" as const, pre: 58, post: 70 },
+    { id: "spiritual" as const, pre: 57, post: 72 },
   ],
+  methodology:
+    "Likert multi-item scales per face → 0–100. Cronbach’s α in founding research ~0.60–0.80. Developmental self-report, not clinical or hiring assessment.",
 };
 
 export default function SampleReportPage() {
@@ -33,8 +39,8 @@ export default function SampleReportPage() {
         title="What growth looks like on Super-Cube®."
         description="Illustrative pre → post profile after deliberate practice across the six faces. Real reports are private to the learner; coaches only see shared snapshots with consent."
       >
-        <Button href="/learn/demo" variant="primary">
-          Try free demo
+        <Button href="/learn/start" variant="primary">
+          Start free baseline
         </Button>
         <Button href="/pricing" variant="ghost">
           View pricing
@@ -45,19 +51,20 @@ export default function SampleReportPage() {
         <div className="container-site max-w-3xl">
           <div className="rounded-2xl border border-black/[0.08] bg-white p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Illustrative report · not a real person
+              Anonymised composite · not a single named learner
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink">
               {SAMPLE.name}
             </h2>
             <p className="mt-1 text-sm text-slate">{SAMPLE.programme}</p>
+            <p className="mt-1 text-xs text-muted">{SAMPLE.nNote}</p>
 
             <div className="mt-6 grid grid-cols-3 gap-3">
               <Stat label="Baseline" value={String(SAMPLE.pre)} />
               <Stat label="Post" value={String(SAMPLE.post)} />
               <Stat
                 label="Growth"
-                value={`+${(SAMPLE.post - SAMPLE.pre).toFixed(1)}`}
+                value={`+${SAMPLE.post - SAMPLE.pre}`}
               />
             </div>
 
@@ -92,9 +99,11 @@ export default function SampleReportPage() {
             </ul>
 
             <p className="mt-6 text-xs leading-relaxed text-muted">
-              Developmental profile within the Super-Cube® Leadership Model—not a
-              clinical diagnosis or hiring credential. Real learners download PDF
-              reports and certificates with verify IDs after the post-assessment.
+              {SAMPLE.methodology} Developmental profile within the Super-Cube®
+              Leadership Model—not a clinical diagnosis or hiring credential.
+              Real learners download PDF reports and certificates with verify
+              IDs after the post-assessment. Journals never appear on shared
+              snapshots.
             </p>
           </div>
 
@@ -105,11 +114,14 @@ export default function SampleReportPage() {
               description="Super-Cube® is built so individuals, coaches, and organisations can see capacity change on human-centric faces—not vanity completion rates."
             />
             <div className="mt-6 flex flex-wrap gap-3">
-              <Button href="/learn/demo" variant="primary">
-                Start free demo
+              <Button href="/learn/start" variant="primary">
+                Start free baseline
               </Button>
               <Button href="/impact" variant="ghost">
                 Read a case story
+              </Button>
+              <Button href="/team" variant="ghost">
+                Team cube
               </Button>
               <Link
                 href="/research"

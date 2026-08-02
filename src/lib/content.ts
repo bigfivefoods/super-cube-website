@@ -30,9 +30,12 @@ export const primaryNav = [
 export const secondaryNav = [
   { href: "/the-model", label: "The Model" },
   { href: "/constructs", label: "Six Constructs" },
-  { href: "/learn", label: "Learn" },
+  { href: "/learn/start", label: "Learn" },
   { href: "/sample-report", label: "Sample report" },
   { href: "/impact", label: "Impact" },
+  { href: "/insights", label: "Insights" },
+  { href: "/practices", label: "Practices" },
+  { href: "/facilitator", label: "Facilitator" },
   { href: "/research", label: "Research" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },

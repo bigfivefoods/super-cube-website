@@ -17,13 +17,52 @@ export default function ResearchPage() {
         title="Evidence that the model holds."
         description="Super-Cube® was developed and tested through a pragmatic explanatory sequential mixed-methods design—quantitative structure first, qualitative depth second—within an African FMCG business-network."
       >
-        <Button href="/the-model" variant="primary">
+        <Button href="/media" variant="primary">
+          Media kit & citation
+        </Button>
+        <Button href="/the-model" variant="ghost">
           Return to the model
         </Button>
         <Button href="/about" variant="ghost">
           Origins & authorship
         </Button>
       </PageHero>
+
+      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+        <div className="container-site max-w-3xl py-10 sm:py-12">
+          <SectionHeading
+            eyebrow="Open summary"
+            title="Thesis abstract (non-paywalled)"
+            description="For full academic text, contact the author. This summary is free to share with schools, L&D, and media."
+          />
+          <div className="prose-site mt-6 space-y-4 text-slate">
+            <p>
+              <strong className="text-ink">Title:</strong> A Leadership Skills
+              Development Model for the Kwaden Group: A Case Study of an African
+              FMCG Business-Network (Muller, C. R., 2020, University of
+              KwaZulu-Natal, Doctor of Business Administration).
+            </p>
+            <p>
+              Leadership capacity in emerging-market business networks is
+              constrained by complexity, skills gaps, and imported models that
+              under-weight whole-person development. This research developed and
+              validated a six-construct cubic model—Choices, Principles, Mental,
+              Emotional, Physical, Spiritual—with the individual at the centre.
+            </p>
+            <p>
+              Mixed methods: survey (N=132) with confirmatory factor analysis
+              (acceptable fit, CFI≈0.86; scale reliability α≈0.60–0.80) and
+              senior-leader interviews (N=10) for thematic validation. Philosophy
+              of mutual respect (Buber’s I–Thou) informs practice design.
+            </p>
+            <p>
+              Implication: leadership is substantially developable; measurement
+              before and after deliberate practice is the product. Super-Cube®
+              Learn operationalises that loop for kids, adolescents, and adults.
+            </p>
+          </div>
+        </div>
+      </section>
 
       <section className="section-pad">
         <div className="container-site">

@@ -8,15 +8,24 @@ import { test, expect } from "@playwright/test";
 const base = process.env.BASE_URL || "http://127.0.0.1:3000";
 
 test.describe("Super-Cube smoke", () => {
-  test("home loads", async ({ page }) => {
+  test("home loads outcome CTA", async ({ page }) => {
     await page.goto(base + "/");
     await expect(page.locator("h1").first()).toBeVisible();
-    await expect(page.getByRole("link", { name: /explore the model/i })).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /start free baseline/i }).first()
+    ).toBeVisible();
+  });
+
+  test("privacy and terms", async ({ page }) => {
+    await page.goto(base + "/privacy");
+    await expect(page.getByText(/journals stay private/i).first()).toBeVisible();
+    await page.goto(base + "/terms");
+    await expect(page.getByText(/not clinical/i).first()).toBeVisible();
   });
 
   test("sample report page", async ({ page }) => {
     await page.goto(base + "/sample-report");
-    await expect(page.getByText(/illustrative/i).first()).toBeVisible();
+    await expect(page.getByText(/anonymised composite/i).first()).toBeVisible();
   });
 
   test("impact / case stories", async ({ page }) => {
@@ -24,16 +33,24 @@ test.describe("Super-Cube smoke", () => {
     await expect(page.getByText(/FMCG/i).first()).toBeVisible();
   });
 
-  test("learn demo unlock path", async ({ page }) => {
-    await page.goto(base + "/learn/demo");
-    await expect(page.getByText(/try super-cube/i)).toBeVisible();
-    await page.getByRole("button", { name: /start free demo/i }).first().click();
-    await page.waitForURL(/\/learn\/(onboarding|assessment)/);
+  test("guided start path", async ({ page }) => {
+    await page.goto(base + "/learn/start");
+    await expect(page.getByText(/first 10 minutes/i).first()).toBeVisible();
   });
 
-  test("pricing page", async ({ page }) => {
+  test("insights + practices + facilitator", async ({ page }) => {
+    await page.goto(base + "/insights");
+    await expect(page.getByText(/leadership is largely learnable/i).first()).toBeVisible();
+    await page.goto(base + "/practices");
+    await expect(page.getByText(/I–Thou/i).first()).toBeVisible();
+    await page.goto(base + "/facilitator");
+    await expect(page.getByText(/Week 1/i).first()).toBeVisible();
+  });
+
+  test("pricing pilot anchor", async ({ page }) => {
     await page.goto(base + "/pricing");
     await expect(page.getByText(/\$6/i).first()).toBeVisible();
+    await expect(page.getByText(/Book a pilot/i).first()).toBeVisible();
   });
 
   test("the model cube section", async ({ page }) => {

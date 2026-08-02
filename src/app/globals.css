@@ -58,6 +58,28 @@ html {
   overflow-x: clip;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .cube--manual {
+    animation: none !important;
+  }
+}
+
+/* Visible keyboard focus for accessibility */
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 body {
   background: #fff;
   color: var(--ink);

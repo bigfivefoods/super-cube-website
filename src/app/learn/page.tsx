@@ -15,11 +15,13 @@ import { getContinueTarget, reflectionCount } from "@/lib/lms/continue";
 import { buildWeeklyPlan } from "@/lib/lms/weekly-plan";
 import {
   loadLmsState,
+  setLmsLocale,
   setNotifyPractice,
   setShareProgressConsent,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
+import { setLocaleInStorage, t, type Locale } from "@/lib/i18n";
 
 const rainbow = constructs.map((c) => c.color).join(", ");
 
@@ -205,6 +207,32 @@ export default function LearnDashboardPage() {
           </Link>
         )}
 
+        {/* Micro-practice + feedback shortcuts */}
+        {journey.preDone && (
+          <div className="mb-4 grid gap-2 sm:grid-cols-2">
+            <Link
+              href="/learn/practice"
+              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
+            >
+              <p className="learn-eyebrow">3–5 min</p>
+              <p className="mt-0.5 font-semibold text-ink">
+                Today’s micro-practice
+              </p>
+              <p className="learn-meta mt-0.5">Weakest-face first · streak</p>
+            </Link>
+            <Link
+              href="/learn/feedback"
+              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
+            >
+              <p className="learn-eyebrow">Baseline</p>
+              <p className="mt-0.5 font-semibold text-ink">
+                Narrative + lit cube
+              </p>
+              <p className="learn-meta mt-0.5">Strengths · stretch · practices</p>
+            </Link>
+          </div>
+        )}
+
         {/* Weakest-face weekly plan */}
         {weekly && weekly.items.length > 0 && (
           <section className="mb-5 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
@@ -216,6 +244,12 @@ export default function LearnDashboardPage() {
                 </h2>
                 <p className="learn-meta mt-0.5">{weekly.summary}</p>
               </div>
+              <Link
+                href="/learn/practice"
+                className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+              >
+                Micro-practice →
+              </Link>
             </div>
             <ul className="mt-3 space-y-2">
               {weekly.items.map((item, i) => (
@@ -285,7 +319,7 @@ export default function LearnDashboardPage() {
           />
           <label htmlFor="share-coach" className="text-[0.8125rem] text-slate">
             <span className="font-semibold text-ink">
-              Share progress with my cohort coach
+              {t("shareCoach", (lms.locale as Locale) || "en")}
             </span>
             <span className="mt-0.5 block text-[0.75rem] text-muted">
               Scores &amp; completion only—never journal text. Requires a cohort
@@ -296,6 +330,55 @@ export default function LearnDashboardPage() {
               .
             </span>
           </label>
+        </div>
+
+        {/* Locale scaffold + weekly email hook */}
+        <div className="mb-4 flex flex-col gap-3 rounded-xl border border-black/[0.06] bg-white px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-2 text-[0.8125rem]">
+            <span className="font-semibold text-ink">Language</span>
+            {(["en", "zu"] as Locale[]).map((loc) => (
+              <button
+                key={loc}
+                type="button"
+                className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold ${
+                  (lms.locale || "en") === loc
+                    ? "bg-ink text-white"
+                    : "border border-black/[0.08] text-slate"
+                }`}
+                onClick={() => {
+                  setLmsLocale(loc);
+                  setLocaleInStorage(loc);
+                  setState(loadLmsState());
+                }}
+              >
+                {loc === "en" ? "English" : "isiZulu"}
+              </button>
+            ))}
+          </div>
+          {lms.user?.email && weekly && (
+            <button
+              type="button"
+              className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+              onClick={() => {
+                void fetch("/api/email/weekly", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    email: lms.user?.email,
+                    name: lms.user?.fullName,
+                    weekLabel: weekly.weekLabel,
+                    summary: weekly.summary,
+                    weakest: weekly.items
+                      .map((i) => i.constructName)
+                      .slice(0, 2)
+                      .join(" & "),
+                  }),
+                }).then(() => track("weekly_email_request", {}));
+              }}
+            >
+              Email me this week’s plan →
+            </button>
+          )}
         </div>
 
         <div className="mb-6 overflow-hidden rounded-2xl border border-ink bg-white shadow-[0_12px_40px_-20px_rgba(10,10,10,0.35)]">

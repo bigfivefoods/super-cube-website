@@ -120,10 +120,32 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-black/[0.06] pt-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Super-Cube® Leadership Model.</p>
+          <div>
+            <p>© {new Date().getFullYear()} Super-Cube® Leadership Model.</p>
+            <p className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+              <Link href="/privacy" className="hover:text-ink">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-ink">
+                Terms
+              </Link>
+              <Link href="/media" className="hover:text-ink">
+                Media kit
+              </Link>
+              <Link href="/certify" className="hover:text-ink">
+                Certification
+              </Link>
+              <Link href="/community" className="hover:text-ink">
+                Community
+              </Link>
+              <Link href="/team" className="hover:text-ink">
+                Team cube
+              </Link>
+            </p>
+          </div>
           <p className="max-w-md sm:text-right">
             Research-informed leadership education for a world that needs the
-            SDGs delivered.
+            SDGs delivered. Journals private · scores shared only with consent.
           </p>
         </div>
       </div>

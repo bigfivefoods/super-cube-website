@@ -140,7 +140,10 @@ export default function PricingPage() {
             </div>
 
             {/* Schools / teams */}
-            <div className="mx-auto mt-10 max-w-3xl rounded-2xl border border-black/[0.08] bg-white p-6 sm:mt-12 sm:p-8">
+            <div
+              id="pilot"
+              className="mx-auto mt-10 max-w-3xl scroll-mt-24 rounded-2xl border border-black/[0.08] bg-white p-6 sm:mt-12 sm:p-8"
+            >
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Schools · companies · cohorts
               </p>
@@ -154,16 +157,26 @@ export default function PricingPage() {
               </p>
               <ul className="mt-4 space-y-1.5 text-sm text-slate">
                 <li>· Individual seats from ${COURSE_PRICE_USD} USD</li>
-                <li>· Cohort codes via Learn → Org</li>
-                <li>· Coach share links + certificate verify IDs</li>
+                <li>· Cohort codes via Learn → Org · coach heat map + CSV</li>
+                <li>· 8-week facilitator calendar · practice library</li>
+                <li>· Certificate verify IDs · sample report for stakeholders</li>
                 <li>· Custom pricing for 20+ seats / school licences</li>
               </ul>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Button href="/contact" variant="primary">
-                  Book a pilot conversation
+                <Button
+                  href="mailto:hello@super-cube.me?subject=Book%20a%20Super-Cube%20pilot&body=Organisation%3A%0AAudience%20(kids%2Fadolescents%2Fadults)%3A%0AApprox%20seats%3A%0APreferred%20dates%3A%0A"
+                  variant="primary"
+                >
+                  Book a pilot (email)
                 </Button>
-                <Button href="/learn/demo" variant="ghost">
-                  Try free demo first
+                <Button href="/contact" variant="ghost">
+                  Contact form
+                </Button>
+                <Button href="/facilitator" variant="ghost">
+                  Facilitator kit
+                </Button>
+                <Button href="/learn/start" variant="ghost">
+                  Try free baseline first
                 </Button>
                 <Link
                   href="/learn/org"

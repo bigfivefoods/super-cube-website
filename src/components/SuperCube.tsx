@@ -39,6 +39,8 @@ export function SuperCube({
   showSkills = true,
   size = "md",
   autoSpin = true,
+  scores,
+  showScores = false,
 }: {
   className?: string;
   /** Show high-level skills under each face name */
@@ -46,6 +48,10 @@ export function SuperCube({
   size?: "sm" | "md" | "lg";
   /** Gentle auto-spin when the user is not dragging */
   autoSpin?: boolean;
+  /** Optional 0–100 scores per face — dims weak faces, lights strong ones */
+  scores?: Partial<Record<ConstructId, number>>;
+  /** Show numeric score under face name when scores provided */
+  showScores?: boolean;
 }) {
   const [rot, setRot] = useState(DEFAULT_ROT);
   const [dragging, setDragging] = useState(false);
@@ -60,9 +66,15 @@ export function SuperCube({
     rotRef.current = rot;
   }, [rot]);
 
-  // Ambient auto-spin on Y when idle
+  // Ambient auto-spin on Y when idle (respect reduced motion)
   useEffect(() => {
     if (!autoEnabled) return;
+    if (
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      return;
+    }
     let frame = 0;
     let last = performance.now();
 
@@ -166,6 +178,12 @@ export function SuperCube({
         >
           {faceLayout.map((face) => {
             const c = byId[face.id];
+            const score = scores?.[face.id];
+            const hasScore = typeof score === "number";
+            // Map 0–100 → opacity 0.35–1 so weak faces read dimmer
+            const intensity = hasScore
+              ? Math.min(1, Math.max(0.35, 0.35 + (score / 100) * 0.65))
+              : 1;
             return (
               <div
                 key={face.className}
@@ -174,11 +192,20 @@ export function SuperCube({
                   {
                     "--face-bg": c.color,
                     background: c.color,
+                    opacity: intensity,
+                    boxShadow: hasScore && score >= 70
+                      ? `0 0 18px ${c.color}`
+                      : undefined,
                   } as CSSProperties
                 }
               >
                 <span className="cube-face__name">{c.name}</span>
-                {showSkills && (
+                {showScores && hasScore && (
+                  <span className="mt-1 block text-[0.65rem] font-bold tabular-nums text-white/95">
+                    {Math.round(score)}
+                  </span>
+                )}
+                {showSkills && !showScores && (
                   <ul className="cube-face__skills">
                     {c.elements.map((skill) => (
                       <li key={skill}>{skill}</li>

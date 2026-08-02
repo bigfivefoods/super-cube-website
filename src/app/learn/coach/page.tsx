@@ -307,44 +307,106 @@ export default function CoachToolsPage() {
                   enable “Share progress with coach”.
                 </p>
               ) : (
-                <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto">
-                  {roster.map((r) => (
-                    <li
-                      key={r.userId}
-                      className="rounded-lg border border-black/[0.06] bg-[#fafafa] px-3 py-2 text-[0.75rem]"
-                    >
-                      <p className="font-semibold text-ink">
-                        {r.displayName || r.userId.slice(0, 8)}
-                        <span className="ml-2 font-normal text-muted">
-                          {r.role}
-                        </span>
-                      </p>
-                      {r.progress ? (
-                        <p className="mt-0.5 text-slate">
-                          Lessons {r.progress.lessons_completed ?? 0}
-                          {r.progress.pre_overall != null
-                            ? ` · pre ${r.progress.pre_overall}`
-                            : ""}
-                          {r.progress.post_overall != null
-                            ? ` · post ${r.progress.post_overall}`
-                            : ""}
-                          {r.progress.growth != null
-                            ? ` · Δ ${r.progress.growth}`
-                            : ""}
+                <>
+                  {/* Heat map: completion + growth bands (no ranking language) */}
+                  <div className="mt-4">
+                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                      Cohort heat · completion & growth
+                    </p>
+                    <p className="learn-meta mt-0.5">
+                      Colours show effort and change—not fixed ability. Never
+                      display as a public leaderboard.
+                    </p>
+                    <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
+                      {roster.map((r) => {
+                        const pre = r.progress?.pre_overall;
+                        const growth = r.progress?.growth;
+                        const lessons = r.progress?.lessons_completed ?? 0;
+                        const heat =
+                          growth != null && growth >= 8
+                            ? "#059669"
+                            : growth != null && growth >= 3
+                              ? "#3b82f6"
+                              : lessons >= 3
+                                ? "#a3a3a3"
+                                : "#e5e5e5";
+                        return (
+                          <div
+                            key={r.userId}
+                            className="rounded-lg px-2 py-2 text-center text-[0.65rem] font-semibold text-white"
+                            style={{ background: heat }}
+                            title="Consented snapshot only"
+                          >
+                            <span className="block truncate">
+                              {(r.displayName || "Learner").split(" ")[0]}
+                            </span>
+                            <span className="block opacity-90">
+                              {lessons} sess
+                              {pre != null ? ` · ${pre}` : ""}
+                              {growth != null ? ` · Δ${growth}` : ""}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <ul className="mt-2 flex flex-wrap gap-3 text-[0.65rem] text-muted">
+                      <li>
+                        <span className="inline-block h-2 w-2 rounded-full bg-emerald-600" />{" "}
+                        Strong growth
+                      </li>
+                      <li>
+                        <span className="inline-block h-2 w-2 rounded-full bg-blue-500" />{" "}
+                        Emerging growth
+                      </li>
+                      <li>
+                        <span className="inline-block h-2 w-2 rounded-full bg-neutral-400" />{" "}
+                        Active
+                      </li>
+                      <li>
+                        <span className="inline-block h-2 w-2 rounded-full bg-neutral-200" />{" "}
+                        Early
+                      </li>
+                    </ul>
+                  </div>
+                  <ul className="mt-3 max-h-64 space-y-2 overflow-y-auto">
+                    {roster.map((r) => (
+                      <li
+                        key={r.userId}
+                        className="rounded-lg border border-black/[0.06] bg-[#fafafa] px-3 py-2 text-[0.75rem]"
+                      >
+                        <p className="font-semibold text-ink">
+                          {r.displayName || r.userId.slice(0, 8)}
+                          <span className="ml-2 font-normal text-muted">
+                            {r.role}
+                          </span>
                         </p>
-                      ) : (
-                        <p className="mt-0.5 text-muted">No snapshot yet</p>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+                        {r.progress ? (
+                          <p className="mt-0.5 text-slate">
+                            Lessons {r.progress.lessons_completed ?? 0}
+                            {r.progress.pre_overall != null
+                              ? ` · pre ${r.progress.pre_overall}`
+                              : ""}
+                            {r.progress.post_overall != null
+                              ? ` · post ${r.progress.post_overall}`
+                              : ""}
+                            {r.progress.growth != null
+                              ? ` · Δ ${r.progress.growth}`
+                              : ""}
+                          </p>
+                        ) : (
+                          <p className="mt-0.5 text-muted">No snapshot yet</p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </>
               )}
             </>
           )}
         </section>
 
         <section className="learn-card lg:col-span-2">
-          <h2 className="learn-card-title">Construct colours</h2>
+          <h2 className="learn-card-title">Construct colours · tools</h2>
           <ul className="mt-3 flex flex-wrap gap-3">
             {constructs.map((c) => (
               <li key={c.id} className="flex items-center gap-2 text-sm">
@@ -356,6 +418,17 @@ export default function CoachToolsPage() {
               </li>
             ))}
           </ul>
+          <div className="mt-4 flex flex-wrap gap-2 text-[0.8125rem] font-semibold">
+            <Link href="/facilitator" className="text-ink underline-offset-2 hover:underline">
+              8-week calendar →
+            </Link>
+            <Link href="/team" className="text-ink underline-offset-2 hover:underline">
+              Team cube →
+            </Link>
+            <Link href="/practices" className="text-ink underline-offset-2 hover:underline">
+              Practice library →
+            </Link>
+          </div>
         </section>
       </div>
     </LearnShell>

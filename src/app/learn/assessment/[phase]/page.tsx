@@ -9,12 +9,16 @@ import {
 } from "@/lib/lms/curriculum";
 import { scoreAttempt } from "@/lib/lms/scoring";
 import {
+  clearAssessmentDraft,
   loadLmsState,
+  markFirstRunStep,
+  saveAssessmentDraft,
   saveLmsState,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { constructs } from "@/lib/content";
+import { track } from "@/lib/analytics";
 
 export default function AssessmentRunnerPage() {
   const params = useParams();
@@ -24,10 +28,17 @@ export default function AssessmentRunnerPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [step, setStep] = useState(0);
   const [responses, setResponses] = useState<Record<string, number>>({});
+  const [savedNote, setSavedNote] = useState<string | null>(null);
 
   useEffect(() => {
-    setState(loadLmsState());
-  }, []);
+    const s = loadLmsState();
+    setState(s);
+    if (s.assessmentDraft?.phase === phase) {
+      setResponses(s.assessmentDraft.responses ?? {});
+      setStep(s.assessmentDraft.step ?? 0);
+      setSavedNote("Resumed your saved answers.");
+    }
+  }, [phase]);
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||
@@ -42,6 +53,10 @@ export default function AssessmentRunnerPage() {
   const currentConstruct = constructIds[step];
   const stepItems = items.filter((i) => i.constructId === currentConstruct);
   const constructMeta = constructs.find((c) => c.id === currentConstruct);
+  const answered = Object.keys(responses).filter(
+    (k) => responses[k] >= 1 && responses[k] <= 5
+  ).length;
+  const pct = items.length ? Math.round((answered / items.length) * 100) : 0;
 
   function setValue(itemId: string, value: number) {
     setResponses((r) => ({ ...r, [itemId]: value }));
@@ -49,6 +64,18 @@ export default function AssessmentRunnerPage() {
 
   function canContinue() {
     return stepItems.every((i) => responses[i.id] >= 1 && responses[i.id] <= 5);
+  }
+
+  function saveDraft() {
+    saveAssessmentDraft({
+      phase,
+      programmeId,
+      responses,
+      step,
+      updatedAt: new Date().toISOString(),
+    });
+    setSavedNote("Progress saved on this device. You can leave and return.");
+    track("assessment_draft_save", { phase, step, answered });
   }
 
   function submit() {
@@ -63,8 +90,17 @@ export default function AssessmentRunnerPage() {
       completedAt: new Date().toISOString(),
     });
     saveLmsState(next);
-    setState(next);
-    router.push("/learn/report");
+    clearAssessmentDraft();
+    if (phase === "pre") {
+      markFirstRunStep("pre");
+      track("pre_complete", { overall: result.overall });
+      setState(loadLmsState());
+      router.push("/learn/feedback");
+    } else {
+      track("post_complete", { overall: result.overall });
+      setState(next);
+      router.push("/learn/report");
+    }
   }
 
   if (!state) {
@@ -84,10 +120,42 @@ export default function AssessmentRunnerPage() {
       }
       subtitle={
         phase === "pre"
-          ? `${programme?.name ?? "Programme"} · ${items.length} items across six constructs. Rate each statement from 1–5—your honest starting profile.`
-          : `${programme?.name ?? "Programme"} · Same ${items.length} items as your baseline. Take this after finishing all courses so you can see real growth.`
+          ? `${programme?.name ?? "Programme"} · ${items.length} items across six constructs (Likert 1–5). Developmental self-report—not clinical. Save anytime.`
+          : `${programme?.name ?? "Programme"} · Same ${items.length} items as baseline. Take after finishing courses to see real growth.`
       }
     >
+      {/* Progress + credibility */}
+      <div className="mb-4 rounded-xl border border-black/[0.07] bg-white p-3 sm:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-[0.75rem] font-semibold text-ink">
+            Progress · {answered}/{items.length} items ({pct}%)
+          </p>
+          <button
+            type="button"
+            onClick={saveDraft}
+            className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+          >
+            Save & resume later
+          </button>
+        </div>
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
+          <div
+            className="h-full rounded-full bg-ink transition-all"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <p className="mt-2 text-[0.7rem] leading-relaxed text-muted">
+          Instrument note: multi-item scales per face; Cronbach’s α in research
+          ~0.60–0.80. Honest answers make growth measurable. Journals stay
+          separate and private.
+        </p>
+        {savedNote && (
+          <p className="mt-1.5 text-[0.75rem] font-medium text-emerald-800">
+            {savedNote}
+          </p>
+        )}
+      </div>
+
       <div className="mb-4 flex flex-wrap gap-1.5">
         {constructs.map((c, i) => (
           <button
@@ -140,6 +208,7 @@ export default function AssessmentRunnerPage() {
                           : "border-black/[0.09] bg-[#f8f9fb] text-slate hover:border-ink/40"
                       }`}
                       title={LIKERT_LABELS[v - 1]}
+                      aria-pressed={selected}
                     >
                       {v}
                     </button>
@@ -167,7 +236,16 @@ export default function AssessmentRunnerPage() {
             <button
               type="button"
               disabled={!canContinue()}
-              onClick={() => setStep((s) => s + 1)}
+              onClick={() => {
+                saveAssessmentDraft({
+                  phase,
+                  programmeId,
+                  responses,
+                  step: step + 1,
+                  updatedAt: new Date().toISOString(),
+                });
+                setStep((s) => s + 1);
+              }}
               className="learn-btn learn-btn-primary disabled:opacity-40"
             >
               Next construct
@@ -181,7 +259,9 @@ export default function AssessmentRunnerPage() {
               onClick={submit}
               className="learn-btn learn-btn-primary disabled:opacity-40"
             >
-              Submit & view report
+              {phase === "pre"
+                ? "Submit & see your narrative"
+                : "Submit & view report"}
             </button>
           )}
         </div>

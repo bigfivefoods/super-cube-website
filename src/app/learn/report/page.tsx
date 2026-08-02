@@ -108,6 +108,23 @@ export default function ReportPage() {
           : "—baseline view. Complete all courses, then the post-assessment, to see full growth."
       }`}
     >
+      <div className="mb-4 flex flex-wrap gap-2">
+        <Button
+          href="/learn/feedback"
+          variant="ghost"
+          className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+        >
+          Narrative + lit cube
+        </Button>
+        <Button
+          href="/learn/practice"
+          variant="ghost"
+          className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+        >
+          Micro-practice
+        </Button>
+      </div>
+
       {!post && (
         <div className="mb-4 rounded-2xl border border-ink bg-white p-4 sm:flex sm:items-center sm:justify-between sm:p-5">
           <div>

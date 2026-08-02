@@ -40,7 +40,10 @@ export default function AboutPage() {
           </figure>
         }
       >
-        <Button href="/the-model" variant="primary">
+        <Button href="/learn/start" variant="primary">
+          Start free baseline
+        </Button>
+        <Button href="/the-model" variant="ghost">
           Explore the model
         </Button>
         <Button href="/contact" variant="ghost">
@@ -59,7 +62,12 @@ export default function AboutPage() {
               The Super-Cube® Leadership Model was developed by{" "}
               <strong>Craig Ross Muller</strong> in 2020 as the core output of
               his Doctor of Business Administration thesis at the{" "}
-              <strong>University of KwaZulu-Natal</strong>.
+              <strong>University of KwaZulu-Natal</strong>. Contact:{" "}
+              <a href="mailto:hello@super-cube.me">hello@super-cube.me</a>.
+              Citation pack:{" "}
+              <a href="/media">/media</a>. Privacy: journals private by default;
+              coaches only see consented scores (
+              <a href="/privacy">privacy policy</a>).
             </p>
             <p>
               The thesis—<em>A Leadership Skills Development Model for the

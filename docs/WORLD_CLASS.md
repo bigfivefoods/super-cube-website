@@ -1,45 +1,52 @@
-# Super-Cube® Learn — world-class product layer
+# Super-Cube® — world-class product layer
 
-This note tracks the **learner-experience** upgrades that turn the LMS from a content library into a deliberate leadership practice system.
+Track of learner + marketing upgrades that turn Super-Cube® into a category-defining leadership development system.
 
-## Shipped (product)
+## Shipped (this wave)
 
-| Capability | Why it matters |
-|------------|----------------|
-| **6-step linear pathway** | Reduces drop-off; always clear next action |
-| **Pre → post growth report + dual radar** | Evidence of change, not activity theatre |
-| **PDF growth report + certificate** | Shareable outcomes for HR, coaches, self |
-| **Session video + VO** | Multimodal entry into each session |
-| **Session reflection journal** | Reflection is the transfer mechanism |
-| **Practice streak + resume** | Habit formation; reduce re-orientation cost |
-| **Progress backup / restore** | Trust and multi-device before full cloud |
-| **PWA + Capacitor path** | App-like distribution without dual codebases |
+| Capability | Path |
+|------------|------|
+| Outcome-first homepage | `/` — free baseline CTA, proof strip, buyer paths |
+| Privacy & terms | `/privacy` · `/terms` |
+| Guided 10-minute start | `/learn/start` |
+| Post-baseline narrative + lit cube | `/learn/feedback` · SuperCube `scores` |
+| Assessment save/resume + instrument note | `/learn/assessment/[phase]` |
+| Micro-practices + streak | `/learn/practice` |
+| I–Thou practice library | `/practices` |
+| Facilitator 8-week kit | `/facilitator` |
+| Coach heat map | `/learn/coach` |
+| Insights content engine | `/insights` · `/insights/[slug]` |
+| Media kit + citation | `/media` |
+| Research open abstract | `/research` |
+| Certification ladder | `/certify` |
+| Community of practice | `/community` |
+| Team / network cube | `/team` |
+| Weekly email hook | `POST /api/email/weekly` |
+| Book pilot | `/pricing#pilot` |
+| SDG impact framing | `/impact` |
+| Sample report composite (0–100) | `/sample-report` |
+| SEO JSON-LD | Organization + Course on home |
+| EN / isiZulu UI scaffold | Learn dashboard locale toggle |
+| a11y: reduced motion + focus-visible | `globals.css` |
 
-## Shipped — cloud sync
-
-| Piece | Path |
-|--------|------|
-| SQL table + RLS | `supabase/migrations/002_learner_state.sql` |
-| Merge + pull/push | `src/lib/lms/sync.ts` |
-| Auto sync on Learn | `LmsSyncProvider` in `learn/layout.tsx` |
-| Debounced push | `saveLmsState` → `scheduleCloudPush` |
-| Account controls | Sync now / sign-in status |
-
-**Ops:** run `002_learner_state.sql` in Supabase if the table is missing.
-
-## Recommended next (engineering / ops)
-
-1. ~~**Supabase progress sync**~~ ✅  
-2. **Coach / org dashboards** — cohort progress (with consent)  
-3. **Push notifications** — Capacitor Push + web push for streaks  
-4. **Offline lesson packs** — IndexedDB snapshot of curriculum text  
-5. **Accessibility audit** — WCAG on assessments and video controls  
-6. **Analytics** — funnel: orient → pre → first lesson → 50% → post  
-
-## Design principles we keep
+## Design principles
 
 1. **Linear before flexible** — unlock freedom after mastery of the path  
 2. **Measure before and after** — growth is the product, not content hours  
 3. **Whole-person faces** — six constructs, never a single fad skill  
 4. **Private by default** — journal and scores on-device until user shares  
 5. **One model across life** — Kids → Adults, same cube, deeper context  
+6. **Outcome-first marketing** — prove change, then explain the model  
+
+## Still ops / partner-dependent
+
+- Live Paystack, Resend, Sentry, GA, VIDEO_CDN keys  
+- Orgs SQL in Supabase  
+- Real caption files for every video (add VTT when ready)  
+- Full isiZulu course content (scaffold only)  
+- Capacitor store builds on Mac  
+- SSO / seat billing when enterprise revenue justifies  
+
+## Funnel events
+
+`guided_start_open` → `pre_complete` → `micro_practice_complete` → `lesson_complete` → `post_complete` → `certificate_download` / `report_share` / `weekly_email_request`

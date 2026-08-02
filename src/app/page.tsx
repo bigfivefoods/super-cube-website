@@ -2,6 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
+import {
+  courseJsonLd,
+  JsonLd,
+  organizationJsonLd,
+} from "@/components/JsonLd";
 import { Button, CTABanner, Eyebrow, SectionHeading } from "@/components/ui";
 import { constructs, levels, site, stats, theories } from "@/lib/content";
 
@@ -14,10 +19,20 @@ const constructIcons: Record<string, string> = {
   spiritual: "/images/constructs/spiritual-icon.png",
 };
 
+const proofStrip = [
+  "UKZN doctoral research · 2020",
+  "Pre → post growth measured",
+  "Sample report + verify certificates",
+  "Private journals · consented coach share",
+];
+
 export default function HomePage() {
   return (
     <>
-      {/* Full-viewport hero — shared page-hero rhythm */}
+      <JsonLd data={organizationJsonLd(site.url)} />
+      <JsonLd data={courseJsonLd(site.url)} />
+
+      {/* Outcome-first hero */}
       <section className="page-hero page-hero--full page-hero--media relative isolate flex w-full overflow-hidden bg-ink">
         <Image
           src="/images/hero/leadership-hero.jpg"
@@ -28,79 +43,96 @@ export default function HomePage() {
           priority
         />
         <div
-          className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/55 to-black/25 sm:via-black/45 sm:to-transparent"
+          className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/60 to-black/30 sm:via-black/50 sm:to-transparent"
           aria-hidden
         />
         <div
-          className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/25 sm:from-black/45 sm:to-black/20"
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"
           aria-hidden
         />
 
         <div className="container-site page-hero__inner relative z-10 w-full pb-2">
-          <div className="page-hero__copy animate-fade-up max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
+          <div className="page-hero__copy animate-fade-up max-w-2xl md:max-w-[38rem] lg:max-w-[42rem]">
             <p className="eyebrow text-white/70 before:bg-white/50">
-              Leadership development
+              Measured leadership growth
             </p>
             <h1 className="page-hero__title heading-xl mt-3 text-white sm:mt-4">
-              Six faces of leadership.
-              <span className="mt-1 block text-white/70">
-                You at the centre.
+              Grow leadership you can measure—
+              <span className="mt-1 block text-white/75">
+                across six faces, in weeks not slogans.
               </span>
             </h1>
             <p className="page-hero__lede mt-4 text-[0.9375rem] leading-relaxed tracking-tight text-white/80 sm:mt-5 sm:text-base md:text-lg lg:text-xl">
-              {site.description} Leadership is substantially developable—through
-              deliberate practice, structured learning, and a model built for
-              real organisational complexity.
+              Orient in minutes. Set a six-face baseline. Practice deliberately.
+              Re-measure. Download a growth report and certificate with a public
+              verify ID—built from doctoral research in African business
+              networks.
             </p>
             <div className="mt-6 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3">
               <Button
-                href="/the-model"
+                href="/learn/start"
                 variant="primary"
                 className="w-full !bg-white !text-ink hover:!bg-white/90 sm:w-auto"
               >
-                Explore the model
+                Start free baseline · 10 min
               </Button>
               <Button
-                href="/programs"
+                href="/sample-report"
                 variant="light"
                 className="w-full border-white/35 sm:w-auto"
               >
-                View programs
+                See sample report
               </Button>
             </div>
-            <p className="mt-6 text-[0.7rem] leading-snug text-white/55 sm:mt-8 sm:text-sm">
-              Empirically developed · University of KwaZulu-Natal · 2020
+            <p className="mt-5 text-[0.75rem] leading-snug text-white/55 sm:mt-6 sm:text-sm">
+              What changes: clarity on weak faces · weekly practice plan ·
+              pre→post evidence for you, coach, or school
             </p>
           </div>
         </div>
       </section>
 
-      {/* Super-Cube interactive — below landing hero */}
+      {/* Trust / proof strip */}
+      <section className="border-b border-black/[0.06] bg-white">
+        <div className="container-site flex flex-wrap items-center justify-center gap-x-6 gap-y-2 py-3.5 sm:py-4">
+          {proofStrip.map((item) => (
+            <p
+              key={item}
+              className="text-[0.7rem] font-medium tracking-tight text-slate sm:text-xs"
+            >
+              {item}
+            </p>
+          ))}
+        </div>
+      </section>
+
+      {/* Super-Cube interactive */}
       <section className="section-pad bg-white">
         <div className="container-site grid items-center gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12 xl:gap-16">
           <div className="min-w-0 order-2 md:order-1">
             <SectionHeading
               eyebrow="The Super-Cube®"
-              title="A cubic framework for whole-person leadership."
-              description="Each face of the cube is a human-centric construct. Together they form an integrated system—with the individual at the centre—radiating outward from personal growth to organisational and network impact."
+              title="Whole-person leadership—not one fad skill."
+              description="Six developable faces with you at the centre. After your baseline, the cube lights by your scores so growth priorities are visible."
             />
             <div className="prose-site mt-5 space-y-4 sm:mt-6">
               <p>
                 Born from doctoral research in an African FMCG business-network,
                 Super-Cube® synthesises trait, relational, charismatic,
                 evolutionary, and entrepreneurial leadership theory into a
-                practical development framework.
+                practical development system.
               </p>
               <p>
                 Philosophically grounded in Martin Buber’s <em>I–Thou</em>{" "}
-                philosophy of mutual respect, it treats people as multidimensional
-                beings—leaders and followers in different contexts—never as
-                objects of control.
+                philosophy—people as subjects, never objects of control.
               </p>
             </div>
-            <div className="mt-6 sm:mt-8">
+            <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap">
               <Button href="/the-model" variant="ghost" className="w-full sm:w-auto">
                 Read the full model →
+              </Button>
+              <Button href="/learn/start" variant="primary" className="w-full sm:w-auto">
+                Try free · light your cube
               </Button>
             </div>
           </div>
@@ -131,6 +163,63 @@ export default function HomePage() {
               </p>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Buyer paths */}
+      <section className="section-pad bg-white">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow="Who it’s for"
+            title="One model. Clear paths for every buyer."
+            description="Individuals, schools, companies, and coaches share the same cube—with the right onboarding and proof for each."
+          />
+          <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                t: "Individual",
+                d: "Free baseline → deliberate practice → growth report & certificate.",
+                href: "/learn/start",
+                cta: "Start free",
+              },
+              {
+                t: "School",
+                d: "Cohort code, facilitator calendar, consented roster & CSV export.",
+                href: "/facilitator",
+                cta: "Facilitator kit",
+              },
+              {
+                t: "Corporate L&D",
+                d: "Impact proof, pilot pricing, sample report, book a walkthrough.",
+                href: "/impact",
+                cta: "See impact",
+              },
+              {
+                t: "Coach / partner",
+                d: "Share links, verify IDs, community clinic, certification ladder.",
+                href: "/certify",
+                cta: "Certification",
+              },
+            ].map((card) => (
+              <div
+                key={card.t}
+                className="flex flex-col rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5"
+              >
+                <h3 className="text-base font-semibold tracking-tight text-ink">
+                  {card.t}
+                </h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
+                  {card.d}
+                </p>
+                <Link
+                  href={card.href}
+                  className="mt-4 text-sm font-semibold text-ink underline-offset-4 hover:underline"
+                >
+                  {card.cta} →
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -249,12 +338,6 @@ export default function HomePage() {
               </li>
             ))}
           </ol>
-
-          <div className="mt-8 sm:mt-12">
-            <Button href="/programs" variant="primary" className="w-full sm:w-auto">
-              See how programs work
-            </Button>
-          </div>
         </div>
       </section>
 
@@ -304,9 +387,12 @@ export default function HomePage() {
             ))}
           </div>
         </div>
-        <div className="container-site mt-8 sm:mt-10">
+        <div className="container-site mt-8 flex flex-col gap-2.5 sm:mt-10 sm:flex-row">
           <Button href="/research" variant="ghost" className="w-full sm:w-auto">
             Explore the research →
+          </Button>
+          <Button href="/media" variant="ghost" className="w-full sm:w-auto">
+            Media kit →
           </Button>
         </div>
       </section>
@@ -318,7 +404,7 @@ export default function HomePage() {
             <SectionHeading
               eyebrow="Proof of growth"
               title="Not activity theatre—measured change."
-              description="Learners orient, set a six-face baseline, practice deliberately, then re-measure. Your dual radar and PDF report make growth visible for you, a coach, or your organisation."
+              description="Learners orient, set a six-face baseline, practice deliberately, then re-measure. Dual radar and PDF report make growth visible for you, a coach, or your organisation."
             />
             <ul className="mt-6 space-y-2.5 text-sm leading-relaxed text-slate sm:text-base">
               <li>· Pre → post comparison across all six Super-Cube® faces</li>
@@ -326,30 +412,31 @@ export default function HomePage() {
               <li>· Optional private share link for coaches (journals stay private)</li>
             </ul>
             <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
-              <Button href="/learn/demo" variant="primary">
-                Try Learn free
+              <Button href="/learn/start" variant="primary">
+                Start free baseline
               </Button>
               <Button href="/pricing" variant="ghost">
-                View pricing · $6
+                Pricing · pilot · book walkthrough
               </Button>
             </div>
           </div>
           <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Sample outcome view
+              Anonymised cohort illustration
             </p>
             <p className="mt-2 text-lg font-semibold tracking-tight text-ink">
-              Baseline 3.4 → Post 4.1
+              Baseline 52 → Post 68
             </p>
             <p className="mt-1 text-sm text-slate">
-              Illustrative overall growth after deliberate practice across the
-              cube—not a guarantee of individual results.
+              Composite 0–100 scale after an 8-week school pilot pattern
+              (illustrative; individual results vary). See methodology notes on
+              the sample report.
             </p>
             <div className="mt-5 space-y-2">
               {[
-                { n: "Choices", d: "+0.6" },
-                { n: "Emotional", d: "+0.9" },
-                { n: "Principles", d: "+0.5" },
+                { n: "Emotional", d: "+18" },
+                { n: "Choices", d: "+14" },
+                { n: "Principles", d: "+12" },
               ].map((row) => (
                 <div
                   key={row.n}
@@ -362,6 +449,12 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
+            <Link
+              href="/sample-report"
+              className="mt-4 inline-block text-sm font-semibold text-ink underline-offset-4 hover:underline"
+            >
+              Open full sample report →
+            </Link>
           </div>
         </div>
       </section>

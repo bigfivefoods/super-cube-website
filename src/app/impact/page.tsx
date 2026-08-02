@@ -18,10 +18,41 @@ export default function ImpactPage() {
         <Button href="/sample-report" variant="primary">
           View sample report
         </Button>
-        <Button href="/learn/demo" variant="ghost">
-          Try free demo
+        <Button href="/learn/start" variant="ghost">
+          Start free baseline
+        </Button>
+        <Button href="/pricing#pilot" variant="ghost">
+          Book a pilot
         </Button>
       </PageHero>
+
+      <section className="border-b border-black/[0.06] bg-white">
+        <div className="container-site max-w-3xl py-10">
+          <SectionHeading
+            eyebrow="SDG-linked impact certificate"
+            title="Report capacity growth as development impact"
+            description="Schools and NGOs can attach consented pre→post deltas and verify IDs to SDG-aligned education and decent-work narratives—without publishing journals."
+          />
+          <ul className="mt-4 list-disc space-y-1.5 pl-5 text-sm text-slate">
+            <li>SDG 4 Quality education · structured leadership pathway</li>
+            <li>SDG 5 / 8 / 16 · agency, work capability, institutions of trust</li>
+            <li>
+              Export: coach CSV + sample report pattern +{" "}
+              <a href="/verify/SC-DEMO" className="font-semibold text-ink">
+                certificate verify
+              </a>
+            </li>
+          </ul>
+          <div className="mt-5 flex flex-wrap gap-2">
+            <Button href="/facilitator" variant="primary">
+              Facilitator kit
+            </Button>
+            <Button href="/team" variant="ghost">
+              Team cube visual
+            </Button>
+          </div>
+        </div>
+      </section>
 
       <section className="section-pad">
         <div className="container-site max-w-3xl space-y-12">
