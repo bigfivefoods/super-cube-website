@@ -67,7 +67,9 @@ export default function AboutPage() {
               Citation pack:{" "}
               <a href="/media">/media</a>. Privacy: journals private by default;
               coaches only see consented scores (
-              <a href="/privacy">privacy policy</a>).
+              <a href="/privacy">privacy policy</a>). Theoretical foundations
+              span major leadership schools through Ubuntu, I–Thou, and AQAL—see{" "}
+              <a href="/the-model#theory">the full theory map</a>.
             </p>
             <p>
               The thesis—<em>A Leadership Skills Development Model for the

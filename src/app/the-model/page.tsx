@@ -2,12 +2,17 @@ import type { Metadata } from "next";
 import { LeadershipCircles } from "@/components/LeadershipCircles";
 import { SuperCube } from "@/components/SuperCube";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
-import { constructs, levels, theories } from "@/lib/content";
+import {
+  constructs,
+  levels,
+  theoryCategories,
+  theoryLiteratureOverview,
+} from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "The Model",
   description:
-    "Understand the Super-Cube® Leadership Model—a multidimensional, human-centric framework with six constructs and you at the centre.",
+    "Understand the Super-Cube® Leadership Model—a multidimensional, human-centric framework with six constructs, grounded in major leadership schools, contemporary topics, skills-development literature, AQAL, I–Thou, and Ubuntu.",
 };
 
 export default function TheModelPage() {
@@ -131,21 +136,26 @@ export default function TheModelPage() {
           <div>
             <SectionHeading
               eyebrow="Philosophy"
-              title="I–Thou: people as whole beings."
+              title="I–Thou, Ubuntu, and the whole person."
             />
             <div className="prose-site mt-6">
               <p>
                 Super-Cube® is philosophically grounded in Martin Buber’s{" "}
-                <em>I–Thou</em> philosophy, which emphasises mutual respect and
-                encounters between equals who recognise each other’s
-                psychological, intellectual, emotional, and spiritual
-                attributes.
+                <em>I–Thou</em> philosophy—mutual respect and encounters between
+                equals who recognise each other’s psychological, intellectual,
+                emotional, and spiritual attributes—and in the African
+                philosophy of <strong>Ubuntu</strong>: personhood-in-relation (
+                <em>I am because we are</em>), human dignity, and shared
+                becoming.
               </p>
               <p>
                 Leadership is framed as a process that values people as
                 multidimensional “Thous” rather than objects—capable of leading
-                and following in different contexts. This human-centric stance
-                underpins every construct and every level of application.
+                and following in different contexts. Ken Wilber’s{" "}
+                <strong>AQAL</strong> (All Quadrant All Level) integral approach
+                further holds interior and exterior, individual and collective
+                dimensions together. This human-centric stance underpins every
+                construct and every level of application.
               </p>
             </div>
           </div>
@@ -187,22 +197,41 @@ export default function TheModelPage() {
         </div>
       </section>
 
-      <section className="section-pad border-t border-[var(--line)] bg-ink text-cream">
+      <section
+        id="theory"
+        className="section-pad border-t border-[var(--line)] bg-ink text-cream"
+      >
         <div className="container-site">
           <SectionHeading
-            eyebrow="Theoretical foundations"
-            title="Integrated leadership theories."
-            description="Super-Cube® synthesises established traditions into one multidimensional foundation suited to dynamic business networks."
+            eyebrow="Theoretical foundations · Theory level"
+            title="Literature map that underpins Super-Cube®."
+            description={theoryLiteratureOverview}
             light
           />
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {theories.map((t) => (
-              <div
-                key={t.name}
-                className="rounded-[var(--radius)] border border-white/10 bg-white/5 p-5 backdrop-blur"
-              >
-                <h3 className="font-semibold text-cream">{t.name}</h3>
-                <p className="mt-2 text-sm text-cream/55">{t.note}</p>
+
+          <div className="mt-12 space-y-10">
+            {theoryCategories.map((cat) => (
+              <div key={cat.id}>
+                <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-cream/45">
+                  {cat.subtitle}
+                </p>
+                <h3 className="mt-1 text-xl font-semibold tracking-tight text-cream sm:text-2xl">
+                  {cat.title}
+                </h3>
+                <p className="mt-2 max-w-3xl text-sm leading-relaxed text-cream/55">
+                  {cat.description}
+                </p>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {cat.items.map((t) => (
+                    <div
+                      key={t.name}
+                      className="rounded-[var(--radius)] border border-white/10 bg-white/5 p-4 backdrop-blur sm:p-5"
+                    >
+                      <h4 className="font-semibold text-cream">{t.name}</h4>
+                      <p className="mt-1.5 text-sm text-cream/55">{t.note}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>

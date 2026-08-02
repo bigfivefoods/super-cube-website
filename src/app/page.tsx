@@ -118,18 +118,21 @@ export default function HomePage() {
             <div className="prose-site mt-5 space-y-4 sm:mt-6">
               <p>
                 Born from doctoral research in an African FMCG business-network,
-                Super-Cube® synthesises trait, relational, charismatic,
-                evolutionary, and entrepreneurial leadership theory into a
-                practical development system.
+                Super-Cube® synthesises the major leadership schools—from trait
+                and contingency through relational, shared, evolutionary, and
+                neuroscientific perspectives—plus contemporary topics and
+                skills-development debates into one practical system.
               </p>
               <p>
-                Philosophically grounded in Martin Buber’s <em>I–Thou</em>{" "}
-                philosophy—people as subjects, never objects of control.
+                Philosophically grounded in Buber’s <em>I–Thou</em>, Wilber’s
+                AQAL integral frame, and the African philosophy of{" "}
+                <strong>Ubuntu</strong>—people as subjects-in-relation, never
+                objects of control.
               </p>
             </div>
             <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap">
-              <Button href="/the-model" variant="ghost" className="w-full sm:w-auto">
-                Read the full model →
+              <Button href="/the-model#theory" variant="ghost" className="w-full sm:w-auto">
+                Full theory map →
               </Button>
               <Button href="/learn/start" variant="primary" className="w-full sm:w-auto">
                 Try free · light your cube
@@ -287,6 +290,9 @@ export default function HomePage() {
               </p>
             </div>
             <div className="flex flex-col justify-center gap-0 bg-white p-1 sm:p-2 md:p-4">
+              <p className="px-4 pt-3 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted sm:px-6">
+                Theory map (summary)
+              </p>
               {theories.map((t, i) => (
                 <div
                   key={t.name}
@@ -303,6 +309,14 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
+              <div className="border-t border-black/[0.06] px-4 py-3 sm:px-6">
+                <a
+                  href="/the-model#theory"
+                  className="text-sm font-semibold text-ink underline-offset-4 hover:underline"
+                >
+                  Open full literature map →
+                </a>
+              </div>
             </div>
           </div>
         </div>

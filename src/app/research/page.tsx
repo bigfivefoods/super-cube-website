@@ -60,6 +60,19 @@ export default function ResearchPage() {
               before and after deliberate practice is the product. Super-Cube®
               Learn operationalises that loop for kids, adolescents, and adults.
             </p>
+            <p>
+              The Theory-level literature map moves from classical
+              trait/behavioural/contingency schools through relational, shared,
+              biological/evolutionary and neuroscientific perspectives, into
+              contemporary topics (identity, culture, globalisation,
+              entrepreneurial leadership), skills-development debates, and
+              higher-order frames—AQAL, I–Thou, and Ubuntu—which collectively
+              underpin the six-dimensional model. See{" "}
+              <a href="/the-model#theory" className="font-semibold text-ink">
+                The Model · Theory map
+              </a>
+              .
+            </p>
           </div>
         </div>
       </section>

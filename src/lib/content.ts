@@ -290,26 +290,216 @@ export const researchHighlights = [
   },
 ];
 
-export const theories = [
+/**
+ * Literature map under the “Theory” abstraction level of the Super-Cube®
+ * conceptual model (leadership skills development). Moves from classical
+ * trait/behavioural/contingency schools through relational, shared,
+ * biological/evolutionary and neuroscientific perspectives, into contemporary
+ * topics, skills-development debates, and higher-order integral/philosophical
+ * frames (AQAL, I–Thou, Ubuntu). These collectively underpin the six-dimensional
+ * Super-Cube® model.
+ */
+export const theoryLiteratureOverview =
+  "The Super-Cube® literature map moves from classical trait, behavioural, and contingency theories, through relational, shared, biological/evolutionary, and neuroscientific perspectives, into contemporary topics (identity, culture, globalisation, entrepreneurial leadership), skills-development debates, and higher-order integral and philosophical frames (AQAL and I–Thou). It is also grounded in the African philosophical perspective of Ubuntu. Together these strands underpin the six-dimensional Super-Cube® model.";
+
+export type TheoryItem = {
+  name: string;
+  note: string;
+};
+
+export type TheoryCategory = {
+  id: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  items: TheoryItem[];
+};
+
+/** Full Theory-level map from the conceptual model table */
+export const theoryCategories: TheoryCategory[] = [
   {
-    name: "Trait theory",
-    note: "Attributes that contribute to effective leadership",
+    id: "major-schools",
+    title: "Historical and major schools",
+    subtitle: "Classic and evolving major schools of leadership",
+    description:
+      "The established and evolving “major schools” of leadership research and practice—trait through neuroscience—often read as leadership past, present, and future.",
+    items: [
+      {
+        name: "Trait approach",
+        note: "Traits and attitudes associated with effective leadership",
+      },
+      {
+        name: "Behavioural approach",
+        note: "What leaders do—styles and observable behaviours",
+      },
+      {
+        name: "Contingency / situational approaches",
+        note: "Contingencies, context, and situation as conditions for effectiveness",
+      },
+      {
+        name: "Charisma and new leadership",
+        note: "Inspirational, visionary, and transformational “new leadership” traditions",
+      },
+      {
+        name: "Follower-centric approaches",
+        note: "Followers as active co-constructors of leadership",
+      },
+      {
+        name: "Relational approaches",
+        note: "Leader–follower dynamics, mutual influence, and relatedness",
+      },
+      {
+        name: "Shared leadership",
+        note: "Distributed influence across teams and networks",
+      },
+      {
+        name: "Biological and evolutionary schools",
+        note: "Leadership as adaptive to environmental and evolutionary pressures",
+      },
+      {
+        name: "Neuroscience perspectives",
+        note: "Brain-based and neuroscientific accounts of leading and following",
+      },
+    ],
   },
   {
-    name: "Relational theory",
-    note: "Leader–follower dynamics and mutual influence",
+    id: "past-present-future",
+    title: "Leadership: past, present and future",
+    subtitle: "Additional framing in the conceptual table",
+    description:
+      "Complementary labels that sit alongside the major schools—context, relation, critique, cognition, and emerging agendas.",
+    items: [
+      {
+        name: "Contextual leadership",
+        note: "How place, institution, and moment shape leadership",
+      },
+      {
+        name: "Relational leadership",
+        note: "Leadership as process between people, not only a person",
+      },
+      {
+        name: "Sceptics",
+        note: "Critical and sceptical readings of leadership claims and fads",
+      },
+      {
+        name: "Information-processing approaches",
+        note: "How leaders and followers process information and make sense",
+      },
+      {
+        name: "Emerging issues",
+        note: "Open and evolving questions at the frontier of the field",
+      },
+    ],
   },
   {
-    name: "Charismatic theory",
-    note: "Inspirational and visionary qualities",
+    id: "contemporary",
+    title: "Contemporary / current topics",
+    subtitle: "Live agendas in leadership research and practice",
+    description:
+      "Current topics that sit on top of the classical schools and shape how Super-Cube® is applied in complex, global, and entrepreneurial settings.",
+    items: [
+      {
+        name: "Socio-cognition and social perception",
+        note: "How people perceive, categorise, and make sense of leaders and followers",
+      },
+      {
+        name: "Gender",
+        note: "Gendered expectations, equity, and leadership opportunity",
+      },
+      {
+        name: "Power",
+        note: "Power, influence, and the ethics of its use",
+      },
+      {
+        name: "Identity",
+        note: "Leader and follower identity work and self-concept",
+      },
+      {
+        name: "Culture",
+        note: "Cultural values, meaning systems, and organisational culture",
+      },
+      {
+        name: "Globalisation",
+        note: "Cross-border, multi-stakeholder, and planetary-scale leadership",
+      },
+      {
+        name: "Entrepreneurial leadership",
+        note: "Innovation, opportunity recognition, and calculated risk",
+      },
+    ],
   },
   {
-    name: "Evolutionary theory",
-    note: "Leadership as adaptive to environmental change",
+    id: "skills-development",
+    title: "Leadership skills development literature",
+    subtitle: "How capacity is built over time",
+    description:
+      "The development literature that justifies deliberate practice, measurement, and progressive pathways in Super-Cube® Learn.",
+    items: [
+      {
+        name: "Nature versus nurture debate",
+        note: "How much leadership capacity is fixed versus developable",
+      },
+      {
+        name: "Longitudinal perspectives",
+        note: "Growth tracked over time—not one-off training events",
+      },
+      {
+        name: "Knowledge, skills and abilities (KSAs)",
+        note: "What can be taught, practised, and assessed as leadership capability",
+      },
+      {
+        name: "Theory, research and practice of leadership development",
+        note: "Integrating explanation, evidence, and lived developmental practice",
+      },
+    ],
   },
   {
-    name: "Entrepreneurial leadership",
-    note: "Innovation, opportunity, and calculated risk",
+    id: "philosophical",
+    title: "Broader theoretical / philosophical perspectives",
+    subtitle: "Higher-order frames for the whole person",
+    description:
+      "Integral and dialogical philosophies that hold the Super-Cube® as a human-centric system—with African Ubuntu as a foundational stance alongside Western integral and dialogical thought.",
+    items: [
+      {
+        name: "All Quadrant All Level (AQAL)",
+        note: "Ken Wilber’s integral approach—interior/exterior, individual/collective",
+      },
+      {
+        name: "I–Thou theory (Martin Buber)",
+        note: "Mutual respect; people as full subjects, never mere objects of control",
+      },
+      {
+        name: "Ubuntu",
+        note: "African philosophy of personhood-in-relation: I am because we are—humanity, dignity, and shared becoming",
+      },
+    ],
+  },
+];
+
+/**
+ * Compact highlight list for homepage / narrow UI.
+ * Full map: theoryCategories.
+ */
+export const theories: TheoryItem[] = [
+  {
+    name: "Major schools",
+    note: "Trait · behavioural · contingency · charisma · follower · relational · shared · evolutionary · neuroscience",
+  },
+  {
+    name: "Contemporary topics",
+    note: "Socio-cognition · gender · power · identity · culture · globalisation · entrepreneurial leadership",
+  },
+  {
+    name: "Skills development",
+    note: "Nature–nurture · longitudinal growth · KSAs · theory–research–practice",
+  },
+  {
+    name: "Integral & philosophical frames",
+    note: "AQAL · I–Thou (Buber) · Ubuntu",
+  },
+  {
+    name: "Past, present & future",
+    note: "Contextual · relational · sceptics · information-processing · emerging issues",
   },
 ];
 
