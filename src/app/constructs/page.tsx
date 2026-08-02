@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
-import { constructs } from "@/lib/content";
+import { ConstructBanner } from "@/components/ConstructBanner";
+import { Button, CTABanner, PageHero } from "@/components/ui";
+import { constructs, type ConstructId } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
 export const metadata: Metadata = {
@@ -132,29 +132,14 @@ export default function ConstructsPage() {
               </div>
 
               <div className="lg:col-span-8 space-y-4">
-                <div className="relative aspect-[1441/630] w-full overflow-hidden rounded-2xl bg-[#f4f4f4]">
-                  <Image
-                    src={media[c.id].banner}
-                    alt={`${c.name} construct`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 66vw"
-                  />
-                  {media[c.id].quote && (
-                    <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/65 via-black/25 to-transparent p-4 sm:p-6 md:p-8">
-                      <blockquote className="max-w-3xl">
-                        <p className="text-lg font-semibold leading-snug tracking-tight text-white drop-shadow-sm sm:text-xl md:text-2xl md:leading-snug lg:text-[1.75rem]">
-                          “{media[c.id].quote}”
-                        </p>
-                        {media[c.id].attribution && (
-                          <footer className="mt-2 text-xs font-semibold tracking-wide text-white/85 sm:mt-2.5 sm:text-sm">
-                            — {media[c.id].attribution}
-                          </footer>
-                        )}
-                      </blockquote>
-                    </div>
-                  )}
-                </div>
+                <ConstructBanner
+                  constructId={c.id as ConstructId}
+                  name={c.name}
+                  color={c.color}
+                  banner={media[c.id].banner}
+                  quote={media[c.id].quote}
+                  attribution={media[c.id].attribution}
+                />
                 <div className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-6 md:p-8">
                   <p className="text-lg leading-relaxed text-ink/90">
                     {c.description}
