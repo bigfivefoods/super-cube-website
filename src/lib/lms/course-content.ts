@@ -211,7 +211,7 @@ Principled leadership is lived through virtues you can practise: **love**, **joy
 **Trust rises** when competence meets consistency and care.  
 **Trust falls** when rules are private, exceptions are unexplained, or power is unaccountable.
 
-Principled leaders do not only “mean well”—they design **fair process** others can see, and they grow the character components that make trust durable.
+Principled leaders do not only “mean well”—they design **fair process** others can see, and they grow the character components that make trust durable.`,
     overviewEngage: `### Engage · trust audit
 
 Rate yourself 1–5 on:
