@@ -8,34 +8,58 @@ export const site = {
 };
 
 /**
- * Simple main header links — always visible, plain labels.
- * “Six faces” is /constructs (Principles, Choices, etc. on that page).
+ * Desktop primary bar — short labels, left → right journey.
+ * Six faces → /constructs (Principles, Choices, …).
  */
 export const mainNav = [
-  { href: "/the-model", label: "The model" },
+  { href: "/the-model", label: "Model" },
   { href: "/constructs", label: "Six faces" },
   { href: "/what", label: "Programmes" },
-  { href: "/pricing", label: "Pricing" },
   { href: "/learn/start", label: "Learn" },
-  { href: "/about", label: "About" },
-  { href: "/contact", label: "Contact" },
+  { href: "/pricing", label: "Pricing" },
 ] as const;
 
-/** Extra links — mobile “More”, footer, optional desktop overflow */
-export const moreNav = [
-  { href: "/why", label: "Why leadership" },
-  { href: "/how", label: "How it works" },
-  { href: "/research", label: "Research" },
-  { href: "/sample-report", label: "Sample report" },
-  { href: "/impact", label: "Impact" },
-  { href: "/insights", label: "Insights" },
-  { href: "/practices", label: "Practices" },
-  { href: "/facilitator", label: "Facilitator kit" },
-  { href: "/team", label: "Team cube" },
-  { href: "/media", label: "Media kit" },
-  { href: "/certify", label: "Certification" },
-  { href: "/community", label: "Community" },
+/** Grouped “More” menu — logical sections */
+export const moreNavGroups = [
+  {
+    title: "Story",
+    links: [
+      { href: "/why", label: "Why leadership" },
+      { href: "/how", label: "How it works" },
+      { href: "/research", label: "Research" },
+      { href: "/about", label: "About" },
+    ],
+  },
+  {
+    title: "Proof & practice",
+    links: [
+      { href: "/sample-report", label: "Sample report" },
+      { href: "/impact", label: "Impact" },
+      { href: "/practices", label: "Practices" },
+      { href: "/insights", label: "Insights" },
+    ],
+  },
+  {
+    title: "Organisations",
+    links: [
+      { href: "/facilitator", label: "Facilitator kit" },
+      { href: "/team", label: "Team cube" },
+      { href: "/certify", label: "Certification" },
+      { href: "/community", label: "Community" },
+    ],
+  },
+  {
+    title: "Connect",
+    links: [
+      { href: "/contact", label: "Contact" },
+      { href: "/media", label: "Media kit" },
+      { href: "/login", label: "Sign in" },
+    ],
+  },
 ] as const;
+
+/** Flat list for simple maps (mobile extras, legacy) */
+export const moreNav = moreNavGroups.flatMap((g) => [...g.links]);
 
 /** Story strip (Why → How → What) — footer / homepage narrative only */
 export const primaryNav = [

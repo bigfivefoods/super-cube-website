@@ -12,6 +12,7 @@ export default function PrivacyPage() {
   return (
     <>
       <PageHero
+        theme="none"
         eyebrow="Legal"
         title="Privacy"
         description={`How ${site.name} handles personal data. Journals stay private by default. Coaches only see consented progress snapshots—never journal text.`}

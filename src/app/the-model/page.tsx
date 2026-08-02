@@ -19,11 +19,12 @@ export default function TheModelPage() {
   return (
     <>
       <PageHero
+        theme="model"
         eyebrow="The Super-Cube® Leadership Model"
         title="A multidimensional framework for developable leadership."
         description="Six human-centric constructs form the faces of a cube. The individual—you—stands at the centre. Leadership capacity radiates outward from personal practice to organisational and network impact."
         visual={
-          <div className="mx-auto w-full max-w-[15rem] bg-white sm:max-w-[18rem] md:max-w-[19rem] lg:mx-0 lg:max-w-none">
+          <div className="mx-auto w-full max-w-[15rem] rounded-2xl border border-white/15 bg-white/95 p-3 shadow-xl sm:max-w-[18rem] md:max-w-[19rem] lg:mx-0 lg:max-w-none">
             <SuperCube size="md" showSkills />
           </div>
         }

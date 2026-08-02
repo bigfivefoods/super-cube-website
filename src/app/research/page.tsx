@@ -13,6 +13,7 @@ export default function ResearchPage() {
   return (
     <>
       <PageHero
+        theme="research"
         eyebrow="Research & validation"
         title="Evidence that the model holds."
         description="Super-Cube® was developed and tested through a pragmatic explanatory sequential mixed-methods design—quantitative structure first, qualitative depth second—within an African FMCG business-network."

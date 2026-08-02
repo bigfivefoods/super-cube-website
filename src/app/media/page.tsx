@@ -13,6 +13,7 @@ export default function MediaKitPage() {
   return (
     <>
       <PageHero
+        theme="about"
         eyebrow="Press & partners"
         title="Media kit"
         description="Logos, model description, research abstract, and how to credit Super-Cube®. For interviews and features: hello@super-cube.me."

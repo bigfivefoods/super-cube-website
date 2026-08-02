@@ -68,11 +68,12 @@ export default function HowPage() {
   return (
     <>
       <PageHero
+        theme="leadership"
         eyebrow="How Super-Cube® works"
         title="Leadership education that turns insight into practice."
         description="How we develop leaders: a clear model, honest assessment, six construct courses, deliberate practice, and measured growth—designed for kids, adolescents, and adults."
         visual={
-          <figure className="w-full bg-white">
+          <figure className="w-full overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-xl backdrop-blur-sm">
             <div className="relative aspect-[694/584] w-full overflow-hidden">
               <Image
                 src="/images/hero/nelson-mandela.jpg"
@@ -83,12 +84,12 @@ export default function HowPage() {
                 priority
               />
             </div>
-            <figcaption className="pt-2.5">
-              <p className="text-[0.7rem] font-medium italic leading-snug text-slate">
+            <figcaption className="p-3.5 sm:p-4">
+              <p className="text-[0.7rem] font-medium italic leading-snug text-white/85">
                 “Education is the most powerful weapon which you can use to
                 change the world.”
               </p>
-              <p className="mt-1 text-[0.65rem] font-semibold tracking-wide text-muted">
+              <p className="mt-1 text-[0.65rem] font-semibold tracking-wide text-white/55">
                 — Nelson Mandela
               </p>
             </figcaption>

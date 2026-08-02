@@ -13,6 +13,7 @@ export default function InsightsIndexPage() {
   return (
     <>
       <PageHero
+        theme="research"
         eyebrow="Content"
         title="Insights"
         description="Short, research-informed essays for leaders, L&D, and educators. Continuous publishing keeps Super-Cube® a living authority—not a static brochure."

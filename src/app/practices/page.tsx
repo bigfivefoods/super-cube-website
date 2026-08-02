@@ -14,6 +14,7 @@ export default function PracticesPage() {
   return (
     <>
       <PageHero
+        theme="leadership"
         eyebrow="Deliberate practice"
         title="I–Thou practice library"
         description="Short relational exercises that transfer course content into culture—presence, decision craft, emotion naming, purpose, and more."

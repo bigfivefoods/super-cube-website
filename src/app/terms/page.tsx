@@ -11,6 +11,7 @@ export default function TermsPage() {
   return (
     <>
       <PageHero
+        theme="none"
         eyebrow="Legal"
         title="Terms of use"
         description="By using super-cube.me and Super-Cube® Learn you agree to these terms. Super-Cube® is a trademark of its owner; the model is for educational and development use."

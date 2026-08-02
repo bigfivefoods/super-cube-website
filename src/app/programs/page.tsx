@@ -93,6 +93,7 @@ export default function ProgramsPage() {
   return (
     <>
       <PageHero
+        theme="programs"
         eyebrow="Programs & pathways"
         title="Structured development. Measurable growth."
         description="Super-Cube® programmes combine deliberate practice with blended learning—flexible, interactive, and designed to embed in organisational systems."

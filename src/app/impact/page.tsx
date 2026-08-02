@@ -11,6 +11,7 @@ export default function ImpactPage() {
   return (
     <>
       <PageHero
+        theme="impact"
         eyebrow="Impact"
         title="Built in practice. Proven in networks."
         description="Super-Cube® was shaped in African FMCG business-networks and is designed for schools, companies, and multi-entity alliances that need human-centric capacity—not generic leadership theatre."

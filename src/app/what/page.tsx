@@ -165,11 +165,12 @@ export default function WhatPage() {
   return (
     <>
       <PageHero
+        theme="programs"
         eyebrow="What Super-Cube® is"
         title="One leadership model. Three age programmes."
         description={`Kids, Adolescents, and Adults—each pathway uses the same six faces of Super-Cube®, with language and practice matched to life stage. Launch price: $${COURSE_PRICE_USD} USD once per programme.`}
         visual={
-          <div className="mx-auto w-full max-w-[16.5rem] bg-white sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-none">
+          <div className="mx-auto w-full max-w-[16.5rem] rounded-2xl border border-white/15 bg-white/95 p-3 shadow-xl sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-none">
             <SuperCube size="md" showSkills />
           </div>
         }

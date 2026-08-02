@@ -25,6 +25,7 @@ export default function TeamCubePage() {
   return (
     <>
       <PageHero
+        theme="model"
         eyebrow="Teams & networks"
         title="Team Super-Cube®"
         description="Enter cohort mean scores (from consented export) to light a shared cube. Illustrates network-level impact—not individual ranking."

@@ -12,6 +12,7 @@ export default function FacilitatorPage() {
   return (
     <>
       <PageHero
+        theme="programs"
         eyebrow="Schools & companies"
         title="Facilitator kit"
         description="An 8-week cohort pattern: orient, baseline, faces, re-measure, certify. Pair with /learn/coach for codes, roster, and CSV export."

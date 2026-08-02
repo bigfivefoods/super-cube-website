@@ -25,11 +25,12 @@ export default function WhyLeadershipPage() {
   return (
     <>
       <PageHero
+        theme="sdg"
         eyebrow="Why · Super-Cube®"
         title="The world has goals. It needs leaders who can deliver them."
         description="The UN Sustainable Development Goals (SDGs) are humanity’s shared agenda for people, planet, and prosperity. Progress is off track—not only for lack of money or technology, but for lack of human-centric leadership at every level."
         visual={
-          <figure className="mx-auto w-full max-w-[17rem] bg-white sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-[22rem]">
+          <figure className="mx-auto w-full max-w-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-white/95 p-4 shadow-xl sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-[22rem]">
             <div className="relative mx-auto aspect-[1280/811] w-full">
               <Image
                 src="/images/sdgs/sdg-logo.png"

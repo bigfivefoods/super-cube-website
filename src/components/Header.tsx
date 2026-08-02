@@ -4,15 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
-import { constructs, mainNav, moreNav } from "@/lib/content";
+import { constructs, mainNav, moreNavGroups } from "@/lib/content";
 
 function linkActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   if (href === "/learn/start") {
     return pathname === "/learn" || pathname.startsWith("/learn/");
-  }
-  if (href === "/constructs") {
-    return pathname === "/constructs" || pathname.startsWith("/constructs");
   }
   return pathname === href || pathname.startsWith(`${href}/`);
 }
@@ -46,7 +43,7 @@ export function Header() {
   }, [open]);
 
   const navLinkClass = (active: boolean) =>
-    `rounded-full px-2.5 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3 ${
+    `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
       active
         ? overHero
           ? "bg-white text-ink"
@@ -61,10 +58,10 @@ export function Header() {
       className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${
         overHero
           ? "border-b border-transparent bg-transparent"
-          : "border-b border-black/[0.06] bg-white/95 backdrop-blur-xl"
+          : "border-b border-black/[0.06] bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl"
       }`}
     >
-      <div className="container-site flex h-14 items-center justify-between gap-2 sm:gap-3 md:h-16">
+      <div className="container-site flex h-14 items-center justify-between gap-3 md:h-16">
         <BrandWordmark
           height={26}
           className={`min-w-0 max-w-[min(100%,11rem)] shrink sm:max-w-none ${
@@ -72,25 +69,20 @@ export function Header() {
           }`}
         />
 
-        {/* Desktop */}
         <nav
           className="hidden items-center gap-0.5 lg:flex"
           aria-label="Main"
         >
-          {mainNav.map((item) => {
-            const active = linkActive(pathname, item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={navLinkClass(active)}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {mainNav.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={navLinkClass(linkActive(pathname, item.href))}
+            >
+              {item.label}
+            </Link>
+          ))}
 
-          {/* More menu */}
           <div className="relative">
             <button
               type="button"
@@ -100,44 +92,59 @@ export function Header() {
               onClick={() => setMoreOpen((v) => !v)}
             >
               More
+              <span className="ml-1 text-[0.65rem] opacity-60" aria-hidden>
+                ▾
+              </span>
             </button>
             {moreOpen && (
               <>
                 <button
                   type="button"
-                  className="fixed inset-0 z-40 cursor-default"
-                  aria-label="Close more menu"
+                  className="fixed inset-0 z-40 cursor-default bg-transparent"
+                  aria-label="Close menu"
                   onClick={() => setMoreOpen(false)}
                 />
                 <div
-                  className="absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-black/[0.08] bg-white py-2 shadow-lg"
+                  className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-black/[0.08] bg-white p-4 shadow-xl"
                   role="menu"
                 >
-                  {moreNav.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      role="menuitem"
-                      className="block px-4 py-2.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
-                      onClick={() => setMoreOpen(false)}
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                  <div className="grid grid-cols-2 gap-4">
+                    {moreNavGroups.map((group) => (
+                      <div key={group.title}>
+                        <p className="px-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                          {group.title}
+                        </p>
+                        <ul className="mt-1.5 space-y-0.5">
+                          {group.links.map((item) => (
+                            <li key={item.href}>
+                              <Link
+                                href={item.href}
+                                role="menuitem"
+                                className="block rounded-lg px-2 py-1.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
+                                onClick={() => setMoreOpen(false)}
+                              >
+                                {item.label}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </>
             )}
           </div>
 
           <Link
-            href="/login"
-            className={navLinkClass(pathname === "/login")}
+            href="/contact"
+            className={navLinkClass(pathname === "/contact")}
           >
-            Sign in
+            Contact
           </Link>
           <Link
             href="/learn/start"
-            className={`ml-1 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition ${
+            className={`ml-1.5 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition ${
               overHero
                 ? "bg-white text-ink hover:bg-white/90"
                 : "bg-ink text-white hover:bg-ink-soft"
@@ -190,39 +197,40 @@ export function Header() {
           }}
         >
           <nav
-            className="container-site flex flex-col gap-0.5 py-3 sm:py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+            className="container-site flex flex-col py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
             aria-label="Mobile"
           >
-            <p className="px-3 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Menu
+            <p className="px-1 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              Main
             </p>
-            {mainNav.map((item) => {
-              const active = linkActive(pathname, item.href);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`rounded-xl px-3 py-3.5 text-[1rem] font-semibold transition ${
-                    active
-                      ? "bg-ink text-white"
-                      : "text-ink hover:bg-black/[0.04]"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              );
-            })}
+            <div className="flex flex-col gap-0.5">
+              {mainNav.map((item) => {
+                const active = linkActive(pathname, item.href);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`rounded-xl px-3 py-3 text-[1rem] font-semibold ${
+                      active
+                        ? "bg-ink text-white"
+                        : "text-ink hover:bg-black/[0.04]"
+                    }`}
+                  >
+                    {item.label}
+                  </Link>
+                );
+              })}
+            </div>
 
-            {/* Jump to each face — so Principles is one tap away */}
-            <p className="mt-4 px-3 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            <p className="mt-5 px-1 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Six faces
             </p>
-            <div className="grid grid-cols-2 gap-1 px-1">
+            <div className="grid grid-cols-2 gap-1.5">
               {constructs.map((c) => (
                 <Link
                   key={c.id}
                   href={`/constructs#${c.id}`}
-                  className="rounded-xl px-3 py-3 text-[0.875rem] font-semibold text-ink hover:bg-black/[0.04]"
+                  className="rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 text-[0.875rem] font-semibold text-ink"
                   style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
                 >
                   {c.name}
@@ -230,28 +238,28 @@ export function Header() {
               ))}
             </div>
 
-            <p className="mt-4 px-3 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              More
-            </p>
-            {moreNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-ink hover:bg-black/[0.04]"
-              >
-                {item.label}
-              </Link>
+            {moreNavGroups.map((group) => (
+              <div key={group.title} className="mt-5">
+                <p className="px-1 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                  {group.title}
+                </p>
+                <div className="flex flex-col gap-0.5">
+                  {group.links.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium text-ink hover:bg-black/[0.04]"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
             ))}
 
             <Link
-              href="/login"
-              className="rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-ink hover:bg-black/[0.04]"
-            >
-              Sign in
-            </Link>
-            <Link
               href="/learn/start"
-              className="mt-2 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white active:bg-ink-soft"
+              className="mt-5 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white"
             >
               Start free baseline
             </Link>

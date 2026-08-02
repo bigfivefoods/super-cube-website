@@ -12,6 +12,7 @@ export default function CommunityPage() {
   return (
     <>
       <PageHero
+        theme="leadership"
         eyebrow="Partners"
         title="Community of practice"
         description="A monthly clinic for facilitators running school or company cohorts—heat maps, safeguarding, I–Thou exercises, and product updates."

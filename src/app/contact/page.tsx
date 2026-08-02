@@ -13,6 +13,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHero
+        theme="leadership"
         eyebrow="Contact"
         title="Begin development."
         description="Tell us about your context—individual growth, a leadership pipeline, or network-scale capacity building. We’ll explore how Super-Cube® can fit."

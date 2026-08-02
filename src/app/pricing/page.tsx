@@ -61,6 +61,7 @@ export default function PricingPage() {
   return (
     <>
       <PageHero
+        theme="leadership"
         eyebrow="Pricing"
         title="Start free. Go deep for $6."
         description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Try Super-Cube® free on this device, then unlock full paid access for $${COURSE_PRICE_USD} once—assessment, six faces, practice, report, and certificate.`}

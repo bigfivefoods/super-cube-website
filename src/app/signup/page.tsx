@@ -66,6 +66,7 @@ export default function SignupPage() {
   return (
     <>
       <PageHero
+        theme="none"
         eyebrow="Account"
         title="Create your account"
         description="Choose your age programme, then subscribe to unlock learning."

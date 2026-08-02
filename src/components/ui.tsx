@@ -1,5 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { heroThemes, type HeroTheme } from "@/lib/hero-media";
 
 export function Eyebrow({ children }: { children: ReactNode }) {
   return <p className="eyebrow">{children}</p>;
@@ -84,51 +86,120 @@ export function PageHero({
   description,
   children,
   visual,
+  theme = "leadership",
+  image,
+  imageAlt,
+  full = false,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: ReactNode;
-  /** Optional right-column content (e.g. Super-Cube®) */
+  /** Optional right-column content (e.g. Super-Cube®) — sits on the media panel */
   visual?: ReactNode;
+  /**
+   * Preset photography for non-home heroes.
+   * Use "none" for plain white (legal / form-heavy pages).
+   */
+  theme?: HeroTheme;
+  /** Override theme image */
+  image?: string;
+  imageAlt?: string;
+  /** Full viewport height (default: editorial media band) */
+  full?: boolean;
 }) {
+  const preset =
+    theme !== "none" && !image ? heroThemes[theme] : null;
+  const mediaSrc = image ?? preset?.src;
+  const mediaAlt = imageAlt ?? preset?.alt ?? "";
+  const isMedia = Boolean(mediaSrc);
+
+  const actionsClass = isMedia
+    ? "mt-6 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
+    : "mt-6 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3";
+
   return (
-    <section className="page-hero page-hero--full border-b border-black/[0.06] bg-white">
+    <section
+      className={`page-hero relative isolate overflow-hidden border-b border-black/[0.06] ${
+        full ? "page-hero--full" : "page-hero--band"
+      } ${isMedia ? "page-hero--media bg-ink" : "bg-white"}`}
+    >
+      {isMedia && mediaSrc && (
+        <>
+          <Image
+            src={mediaSrc}
+            alt={mediaAlt}
+            fill
+            priority
+            className="object-cover object-center"
+            sizes="100vw"
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/62 to-black/35 sm:via-black/55 sm:to-black/25"
+            aria-hidden
+          />
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"
+            aria-hidden
+          />
+        </>
+      )}
+
       <div className="container-site page-hero__inner relative z-[1] w-full">
         {visual ? (
-          <div className="grid items-start gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-12 xl:gap-14">
+          <div className="grid items-center gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-12 xl:gap-14">
             <div className="page-hero__copy order-2 min-w-0 md:order-1">
-              <p className="eyebrow animate-fade-up">{eyebrow}</p>
-              <h1 className="page-hero__title heading-xl mt-3 animate-fade-up delay-1 text-ink sm:mt-4">
+              <p
+                className={`eyebrow animate-fade-up ${
+                  isMedia ? "text-white/70 before:bg-white/50" : ""
+                }`}
+              >
+                {eyebrow}
+              </p>
+              <h1
+                className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${
+                  isMedia ? "text-white" : "text-ink"
+                }`}
+              >
                 {title}
               </h1>
-              <p className="page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight text-slate sm:mt-5 sm:text-base md:text-lg lg:text-xl">
+              <p
+                className={`page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${
+                  isMedia ? "text-white/80" : "text-slate"
+                }`}
+              >
                 {description}
               </p>
-              {children && (
-                <div className="mt-6 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3">
-                  {children}
-                </div>
-              )}
+              {children && <div className={actionsClass}>{children}</div>}
             </div>
             <div className="animate-fade-up delay-2 relative z-[1] order-1 mx-auto w-full max-w-[15rem] min-w-0 sm:max-w-[18rem] md:order-2 md:mx-0 md:max-w-[19rem] lg:max-w-none lg:justify-self-end">
               {visual}
             </div>
           </div>
         ) : (
-          <div className="page-hero__copy min-w-0">
-            <p className="eyebrow animate-fade-up">{eyebrow}</p>
-            <h1 className="page-hero__title heading-xl mt-3 animate-fade-up delay-1 text-ink sm:mt-4">
+          <div className="page-hero__copy min-w-0 max-w-3xl">
+            <p
+              className={`eyebrow animate-fade-up ${
+                isMedia ? "text-white/70 before:bg-white/50" : ""
+              }`}
+            >
+              {eyebrow}
+            </p>
+            <h1
+              className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${
+                isMedia ? "text-white" : "text-ink"
+              }`}
+            >
               {title}
             </h1>
-            <p className="page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight text-slate sm:mt-5 sm:text-base md:text-lg lg:text-xl">
+            <p
+              className={`page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${
+                isMedia ? "text-white/80" : "text-slate"
+              }`}
+            >
               {description}
             </p>
-            {children && (
-              <div className="mt-6 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3">
-                {children}
-              </div>
-            )}
+            {children && <div className={actionsClass}>{children}</div>}
           </div>
         )}
       </div>
