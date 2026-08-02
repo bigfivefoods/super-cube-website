@@ -72,5 +72,14 @@ export const heroThemes: Record<
   },
 };
 
-/** Paths where the fixed header sits over a light media hero (transparent → white on scroll) */
+/** Paths where the fixed header sits over a light media hero (soft grey → white on scroll) */
 export const lightHeroPaths = ["/constructs"] as const;
+
+/**
+ * Paths where the fixed header sits over a dark media hero
+ * (transparent / charcoal → white on scroll), same pattern as the homepage.
+ */
+export const darkHeroPaths = ["/", "/the-model"] as const;
+
+/** Charcoal matching the-model hero top edge (~#2f3237) */
+export const modelHeroNavBg = "#2f3237";
