@@ -55,6 +55,11 @@ export type ConstructId =
   | "physical"
   | "spiritual";
 
+export interface ConstructComponent {
+  name: string;
+  definition: string;
+}
+
 export interface Construct {
   id: ConstructId;
   name: string;
@@ -62,7 +67,13 @@ export interface Construct {
   tagline: string;
   summary: string;
   description: string;
+  /** High-level capability labels (shown on cube / chips) */
   elements: string[];
+  /**
+   * Optional detailed key components with definitions
+   * (e.g. Principles virtues). Shown on constructs page.
+   */
+  keyComponents?: ConstructComponent[];
   theory: string;
   color: string;
   colorSoft: string;
@@ -100,17 +111,94 @@ export const constructs: Construct[] = [
     shortName: "Principles",
     tagline: "Ethical foundations that earn lasting trust",
     summary:
-      "Lead with integrity, contextual awareness, situational judgement, and accountable governance.",
+      "Lead with integrity, contextual awareness, situational judgement, and accountable governance—lived through virtues from love and honesty to forgiveness and improvement.",
     description:
-      "Principles positions ethical and principled guidance as the bedrock of trustworthy leadership. Leaders learn to act according to established standards—integrating social, economic, and natural-law principles—so decisions remain moral, contextual, and sustainable, especially where ethical lapses can undermine organisational health.",
+      "Principles positions ethical and principled guidance as the bedrock of trustworthy leadership. Leaders learn to act according to established standards—integrating social, economic, and natural-law principles—so decisions remain moral, contextual, and sustainable, especially where ethical lapses can undermine organisational health. The construct is expressed through key character components (love, joy, peace, patience, mercy, kindness, goodness, faithfulness, gentleness, self-control, gratefulness, honesty, integrity, authenticity, forgiveness, and improvement) that turn abstract ethics into everyday leadership behaviour.",
     elements: [
       "Ethical foundations",
       "Contextual awareness",
       "Situational judgement",
       "Governance",
     ],
+    keyComponents: [
+      {
+        name: "Love",
+        definition:
+          "The unselfish, loyal, and benevolent concern for the good of another.",
+      },
+      {
+        name: "Joy",
+        definition:
+          "The state of well-being characterised by positive or pleasant emotions.",
+      },
+      {
+        name: "Peace",
+        definition:
+          "A state of harmony characterised by the lack of violent, conflict behaviours and freedom from fear of violence.",
+      },
+      {
+        name: "Patience",
+        definition: "The level of endurance before negativity.",
+      },
+      {
+        name: "Mercy",
+        definition: "Compassionate behaviour by those in power.",
+      },
+      {
+        name: "Kindness",
+        definition:
+          "Being marked by good and charitable behaviour, pleasant disposition, and concern for others.",
+      },
+      {
+        name: "Goodness",
+        definition:
+          "Do what is morally right and be an advantage to someone or something.",
+      },
+      {
+        name: "Faithfulness",
+        definition: "Unwavering commitment to someone or something.",
+      },
+      {
+        name: "Gentleness",
+        definition: "To ensure power and strength are controlled.",
+      },
+      {
+        name: "Self-control",
+        definition:
+          "The ability to control one’s emotions, behaviour, and desire.",
+      },
+      {
+        name: "Gratefulness",
+        definition:
+          "Attitude of acknowledgment of a benefit that one has received or will receive.",
+      },
+      {
+        name: "Honesty",
+        definition:
+          "Being truthful, trustworthy, loyal, fair, sincere, and straightforward.",
+      },
+      {
+        name: "Integrity",
+        definition:
+          "The truthfulness or accuracy of one’s intent and actions.",
+      },
+      {
+        name: "Authenticity",
+        definition:
+          "The degree to which one is true to one’s own personality, spirit, or character, despite external pressures.",
+      },
+      {
+        name: "Forgiveness",
+        definition:
+          "To grant free pardon and to give up all claim on account of an offense or debt.",
+      },
+      {
+        name: "Improvement",
+        definition: "To make or become better.",
+      },
+    ],
     theory:
-      "Draws on principle-centred leadership and Principle Theory (Caldwell, Karri & Vollmar), emphasising ethical duties to followers and fair, trust-building governance.",
+      "Draws on principle-centred leadership and Principle Theory (Caldwell, Karri & Vollmar), emphasising ethical duties to followers and fair, trust-building governance—expressed through developable character virtues that operationalise principled leadership in daily practice.",
     color: "#5D1F5E",
     colorSoft: "#F3E8FF",
     accent: "from-purple-900 to-fuchsia-700",

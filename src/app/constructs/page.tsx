@@ -169,6 +169,36 @@ export default function ConstructsPage() {
                     ))}
                   </ul>
 
+                  {c.keyComponents && c.keyComponents.length > 0 && (
+                    <>
+                      <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
+                        Key components
+                      </h3>
+                      <p className="mt-2 text-sm text-slate">
+                        Character virtues that make principled leadership
+                        concrete in daily behaviour.
+                      </p>
+                      <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {c.keyComponents.map((comp) => (
+                          <li
+                            key={comp.name}
+                            className="rounded-xl border border-black/[0.07] bg-white p-3.5 sm:p-4"
+                            style={{
+                              boxShadow: `inset 3px 0 0 ${c.color}`,
+                            }}
+                          >
+                            <p className="text-sm font-semibold tracking-tight text-ink">
+                              {comp.name}
+                            </p>
+                            <p className="mt-1 text-[0.8125rem] leading-relaxed text-slate">
+                              {comp.definition}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
                   <h3 className="mt-8 text-xs font-semibold uppercase tracking-[0.14em] text-muted">
                     Theoretical grounding
                   </h3>

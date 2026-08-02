@@ -204,11 +204,14 @@ Mark complete when you have used the pause at least **three times**.`,
 
 The Principles face builds **ethical foundations**, **contextual awareness**, **situational judgement**, and **governance**. Philosophy says what good leadership is; principles make it operational in messy situations.
 
+### Key character components
+Principled leadership is lived through virtues you can practise: **love**, **joy**, **peace**, **patience**, **mercy**, **kindness**, **goodness**, **faithfulness**, **gentleness**, **self-control**, **gratefulness**, **honesty**, **integrity**, **authenticity**, **forgiveness**, and **improvement**.
+
 ### Trust equation (practical)
 **Trust rises** when competence meets consistency and care.  
 **Trust falls** when rules are private, exceptions are unexplained, or power is unaccountable.
 
-Principled leaders do not only “mean well”—they design **fair process** others can see.`,
+Principled leaders do not only “mean well”—they design **fair process** others can see, and they grow the character components that make trust durable.
     overviewEngage: `### Engage · trust audit
 
 Rate yourself 1–5 on:
