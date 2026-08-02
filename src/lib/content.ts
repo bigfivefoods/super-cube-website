@@ -7,7 +7,37 @@ export const site = {
   email: "hello@super-cube.me",
 };
 
-/** Primary story: Why → How → What */
+/**
+ * Simple main header links — always visible, plain labels.
+ * “Six faces” is /constructs (Principles, Choices, etc. on that page).
+ */
+export const mainNav = [
+  { href: "/the-model", label: "The model" },
+  { href: "/constructs", label: "Six faces" },
+  { href: "/what", label: "Programmes" },
+  { href: "/pricing", label: "Pricing" },
+  { href: "/learn/start", label: "Learn" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+/** Extra links — mobile “More”, footer, optional desktop overflow */
+export const moreNav = [
+  { href: "/why", label: "Why leadership" },
+  { href: "/how", label: "How it works" },
+  { href: "/research", label: "Research" },
+  { href: "/sample-report", label: "Sample report" },
+  { href: "/impact", label: "Impact" },
+  { href: "/insights", label: "Insights" },
+  { href: "/practices", label: "Practices" },
+  { href: "/facilitator", label: "Facilitator kit" },
+  { href: "/team", label: "Team cube" },
+  { href: "/media", label: "Media kit" },
+  { href: "/certify", label: "Certification" },
+  { href: "/community", label: "Community" },
+] as const;
+
+/** Story strip (Why → How → What) — footer / homepage narrative only */
 export const primaryNav = [
   {
     href: "/why",
@@ -26,10 +56,10 @@ export const primaryNav = [
   },
 ] as const;
 
-/** Secondary links (header more / footer explore) */
+/** @deprecated Prefer mainNav + moreNav */
 export const secondaryNav = [
   { href: "/the-model", label: "The Model" },
-  { href: "/constructs", label: "Six Constructs" },
+  { href: "/constructs", label: "Six faces" },
   { href: "/learn/start", label: "Learn" },
   { href: "/sample-report", label: "Sample report" },
   { href: "/impact", label: "Impact" },
@@ -41,10 +71,9 @@ export const secondaryNav = [
   { href: "/contact", label: "Contact" },
 ] as const;
 
-/** @deprecated Prefer primaryNav + secondaryNav — kept for any legacy imports */
+/** @deprecated Prefer mainNav */
 export const nav = [
-  ...primaryNav.map(({ href, label }) => ({ href, label })),
-  ...secondaryNav,
+  ...mainNav.map(({ href, label }) => ({ href, label })),
 ];
 
 export type ConstructId =

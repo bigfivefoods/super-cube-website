@@ -6,9 +6,9 @@ import { constructs } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
 export const metadata: Metadata = {
-  title: "Six Constructs",
+  title: "Six faces",
   description:
-    "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model.",
+    "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model. Jump to Principles for character components.",
 };
 
 const media: Record<
@@ -63,33 +63,38 @@ export default function ConstructsPage() {
       <PageHero
         eyebrow="The six faces"
         title="Human-centric constructs. Developable skills."
-        description="Each face of the Super-Cube® is a coherent domain of leadership practice—grounded in theory, validated in research, and designed for deliberate growth."
+        description="Each face of the Super-Cube® is a coherent domain of leadership practice—grounded in theory, validated in research, and designed for deliberate growth. Use the jump links below (or header → Six faces) to open Principles, Choices, and the rest."
       >
-        <Button href="/programs" variant="primary">
-          Develop these capabilities
+        <Button href="/learn/start" variant="primary">
+          Start free baseline
+        </Button>
+        <Button href="/the-model" variant="ghost">
+          How the model works
         </Button>
       </PageHero>
 
-      <section className="border-b border-black/[0.06] bg-white py-8">
-        <div className="container-site flex flex-wrap gap-2">
-          {constructs.map((c) => (
-            <a
-              key={c.id}
-              href={`#${c.id}`}
-              className="inline-flex items-center gap-2 rounded-full border border-black/[0.1] bg-white px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-white"
-            >
-              <span className="relative h-5 w-5 overflow-hidden rounded">
-                <Image
-                  src={media[c.id].icon}
-                  alt=""
-                  fill
-                  className="object-contain"
-                  sizes="20px"
+      {/* Sticky jump bar — Principles etc. always one click away */}
+      <section className="sticky top-14 z-40 border-b border-black/[0.06] bg-white/95 py-3 backdrop-blur-md md:top-16">
+        <div className="container-site">
+          <p className="mb-2 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+            Jump to a face
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {constructs.map((c) => (
+              <a
+                key={c.id}
+                href={`#${c.id}`}
+                className="inline-flex items-center gap-2 rounded-full border border-black/[0.1] bg-white px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-white"
+              >
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ background: c.color }}
+                  aria-hidden
                 />
-              </span>
-              {c.name}
-            </a>
-          ))}
+                {c.name}
+              </a>
+            ))}
+          </div>
         </div>
       </section>
 

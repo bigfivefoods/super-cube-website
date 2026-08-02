@@ -4,11 +4,23 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
-import { primaryNav, secondaryNav } from "@/lib/content";
+import { constructs, mainNav, moreNav } from "@/lib/content";
+
+function linkActive(pathname: string, href: string) {
+  if (href === "/") return pathname === "/";
+  if (href === "/learn/start") {
+    return pathname === "/learn" || pathname.startsWith("/learn/");
+  }
+  if (href === "/constructs") {
+    return pathname === "/constructs" || pathname.startsWith("/constructs");
+  }
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
 
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const isHome = pathname === "/";
@@ -23,6 +35,7 @@ export function Header() {
 
   useEffect(() => {
     setOpen(false);
+    setMoreOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -32,16 +45,16 @@ export function Header() {
     };
   }, [open]);
 
-  function isPrimaryActive(href: string) {
-    if (href === "/why") {
-      return (
-        pathname === "/why" ||
-        pathname.startsWith("/why-leadership") ||
-        pathname.startsWith("/why/")
-      );
-    }
-    return pathname === href || pathname.startsWith(`${href}/`);
-  }
+  const navLinkClass = (active: boolean) =>
+    `rounded-full px-2.5 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3 ${
+      active
+        ? overHero
+          ? "bg-white text-ink"
+          : "bg-ink text-white"
+        : overHero
+          ? "text-white/85 hover:bg-white/10 hover:text-white"
+          : "text-slate hover:bg-black/[0.04] hover:text-ink"
+    }`;
 
   return (
     <header
@@ -59,79 +72,78 @@ export function Header() {
           }`}
         />
 
-        {/* Desktop / large tablet landscape */}
+        {/* Desktop */}
         <nav
           className="hidden items-center gap-0.5 lg:flex"
-          aria-label="Primary"
+          aria-label="Main"
         >
-          {primaryNav.map((item) => {
-            const active = isPrimaryActive(item.href);
+          {mainNav.map((item) => {
+            const active = linkActive(pathname, item.href);
             return (
               <Link
                 key={item.href}
                 href={item.href}
-                title={item.blurb}
-                className={`rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3.5 ${
-                  active
-                    ? overHero
-                      ? "bg-white text-ink"
-                      : "bg-ink text-white"
-                    : overHero
-                      ? "text-white/85 hover:bg-white/10 hover:text-white"
-                      : "text-slate hover:bg-black/[0.04] hover:text-ink"
-                }`}
+                className={navLinkClass(active)}
               >
                 {item.label}
               </Link>
             );
           })}
 
-          {secondaryNav
-            .filter((i) =>
-              ["The Model", "Learn", "About"].includes(i.label)
-            )
-            .map((item) => {
-              const active =
-                pathname === item.href ||
-                pathname.startsWith(`${item.href}/`);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3.5 ${
-                    active
-                      ? overHero
-                        ? "bg-white text-ink"
-                        : "bg-ink text-white"
-                      : overHero
-                        ? "text-white/85 hover:bg-white/10 hover:text-white"
-                        : "text-slate hover:bg-black/[0.04] hover:text-ink"
-                  }`}
+          {/* More menu */}
+          <div className="relative">
+            <button
+              type="button"
+              className={navLinkClass(moreOpen)}
+              aria-expanded={moreOpen}
+              aria-haspopup="true"
+              onClick={() => setMoreOpen((v) => !v)}
+            >
+              More
+            </button>
+            {moreOpen && (
+              <>
+                <button
+                  type="button"
+                  className="fixed inset-0 z-40 cursor-default"
+                  aria-label="Close more menu"
+                  onClick={() => setMoreOpen(false)}
+                />
+                <div
+                  className="absolute right-0 top-full z-50 mt-2 w-56 rounded-2xl border border-black/[0.08] bg-white py-2 shadow-lg"
+                  role="menu"
                 >
-                  {item.label}
-                </Link>
-              );
-            })}
+                  {moreNav.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      role="menuitem"
+                      className="block px-4 py-2.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
+                      onClick={() => setMoreOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
 
           <Link
             href="/login"
-            className={`rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors xl:px-3.5 ${
-              overHero
-                ? "text-white/85 hover:bg-white/10 hover:text-white"
-                : "text-slate hover:bg-black/[0.04] hover:text-ink"
-            }`}
+            className={navLinkClass(pathname === "/login")}
           >
             Sign in
           </Link>
           <Link
-            href="/what"
+            href="/learn/start"
             className={`ml-1 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition ${
               overHero
                 ? "bg-white text-ink hover:bg-white/90"
                 : "bg-ink text-white hover:bg-ink-soft"
             }`}
           >
-            Get started
+            Start free
           </Link>
         </nav>
 
@@ -181,57 +193,67 @@ export function Header() {
             className="container-site flex flex-col gap-0.5 py-3 sm:py-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
             aria-label="Mobile"
           >
-            <p className="px-3 pb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Super-Cube®
+            <p className="px-3 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              Menu
             </p>
-            {primaryNav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-xl px-3 py-3 transition active:scale-[0.99] sm:py-3.5 ${
-                  isPrimaryActive(item.href)
-                    ? "bg-ink text-white"
-                    : "text-ink hover:bg-black/[0.04]"
-                }`}
-              >
-                <span className="block text-[0.975rem] font-semibold sm:text-base">
-                  {item.label}
-                </span>
-                <span
-                  className={`mt-0.5 block text-[0.7rem] leading-snug sm:text-xs ${
-                    isPrimaryActive(item.href) ? "text-white/70" : "text-muted"
-                  }`}
-                >
-                  {item.blurb}
-                </span>
-              </Link>
-            ))}
-
-            <p className="mt-3 px-3 pb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted sm:mt-4">
-              More
-            </p>
-            <div className="grid grid-cols-1 gap-0.5 sm:grid-cols-2">
-              {secondaryNav.map((item) => (
+            {mainNav.map((item) => {
+              const active = linkActive(pathname, item.href);
+              return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="rounded-lg px-3 py-3 text-[0.975rem] font-medium text-ink hover:bg-black/[0.04] sm:text-base"
+                  className={`rounded-xl px-3 py-3.5 text-[1rem] font-semibold transition ${
+                    active
+                      ? "bg-ink text-white"
+                      : "text-ink hover:bg-black/[0.04]"
+                  }`}
                 >
                   {item.label}
                 </Link>
+              );
+            })}
+
+            {/* Jump to each face — so Principles is one tap away */}
+            <p className="mt-4 px-3 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              Six faces
+            </p>
+            <div className="grid grid-cols-2 gap-1 px-1">
+              {constructs.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/constructs#${c.id}`}
+                  className="rounded-xl px-3 py-3 text-[0.875rem] font-semibold text-ink hover:bg-black/[0.04]"
+                  style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
+                >
+                  {c.name}
+                </Link>
               ))}
-              <Link
-                href="/login"
-                className="rounded-lg px-3 py-3 text-[0.975rem] font-medium text-ink hover:bg-black/[0.04] sm:text-base"
-              >
-                Sign in
-              </Link>
             </div>
+
+            <p className="mt-4 px-3 pb-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              More
+            </p>
+            {moreNav.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-ink hover:bg-black/[0.04]"
+              >
+                {item.label}
+              </Link>
+            ))}
+
             <Link
-              href="/what"
+              href="/login"
+              className="rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-ink hover:bg-black/[0.04]"
+            >
+              Sign in
+            </Link>
+            <Link
+              href="/learn/start"
               className="mt-2 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white active:bg-ink-soft"
             >
-              Get started
+              Start free baseline
             </Link>
           </nav>
         </div>

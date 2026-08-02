@@ -1,86 +1,50 @@
 import Link from "next/link";
 import { BrandWordmark } from "@/components/BrandLogo";
-import { constructs, primaryNav, secondaryNav, site } from "@/lib/content";
-import { programmes } from "@/lib/programmes";
+import { constructs, mainNav, moreNav, site } from "@/lib/content";
 
 export function Footer() {
   return (
     <footer className="border-t border-black/[0.06] bg-white text-ink">
       <div className="container-site section-pad pb-[max(2.5rem,env(safe-area-inset-bottom))]">
-        {/* Story strip */}
-        <div className="mb-8 grid gap-3 sm:mb-12 sm:grid-cols-3 sm:gap-4">
-          {primaryNav.map((item, i) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group rounded-xl border border-black/[0.07] bg-[#fafafa] p-4 transition hover:border-black/15 hover:bg-white hover:shadow-sm sm:rounded-2xl sm:p-5"
-            >
-              <p className="text-[0.65rem] font-bold uppercase tracking-[0.16em] text-muted">
-                {String(i + 1).padStart(2, "0")} · {item.label}
-              </p>
-              <p className="mt-2 text-sm font-semibold tracking-tight text-ink group-hover:underline group-hover:underline-offset-4 sm:text-base">
-                {item.blurb}
-              </p>
-            </Link>
-          ))}
-        </div>
-
         <div className="grid gap-10 sm:gap-12 md:grid-cols-12">
           <div className="md:col-span-4">
             <BrandWordmark height={26} />
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-slate sm:mt-5 sm:text-[0.9375rem]">
-              {site.tagline} Why leadership matters · How education works · What
-              programmes we offer.
+              {site.tagline}
             </p>
             <p className="mt-4 text-xs text-muted sm:mt-6 sm:text-sm">
               Craig Ross Muller · University of KwaZulu-Natal · 2020
             </p>
+            <Link
+              href="/learn/start"
+              className="mt-5 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-soft"
+            >
+              Start free baseline
+            </Link>
           </div>
 
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-10 md:col-span-8">
             <div>
               <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                Why · How · What
+                Main menu
               </h3>
               <ul className="mt-4 space-y-2.5">
-                {primaryNav.map((item) => (
+                {mainNav.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
                       className="text-sm font-medium text-ink transition hover:underline hover:underline-offset-4"
                     >
                       {item.label}
-                      <span className="mt-0.5 block text-xs font-normal text-muted">
-                        {item.blurb}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                Programmes
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {programmes.map((p) => (
-                  <li key={p.id}>
-                    <Link
-                      href={`/what#${p.id}`}
-                      className="text-sm text-slate transition hover:text-ink"
-                    >
-                      {p.name.replace("Super-Cube® ", "")}
-                      <span className="text-muted"> · {p.ageLabel}</span>
                     </Link>
                   </li>
                 ))}
                 <li>
                   <Link
-                    href="/pricing"
-                    className="text-sm text-slate transition hover:text-ink"
+                    href="/login"
+                    className="text-sm font-medium text-ink transition hover:underline hover:underline-offset-4"
                   >
-                    Pricing
+                    Sign in
                   </Link>
                 </li>
               </ul>
@@ -88,10 +52,33 @@ export function Footer() {
 
             <div>
               <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                Explore
+                Six faces
               </h3>
               <ul className="mt-4 space-y-2.5">
-                {secondaryNav.map((item) => (
+                {constructs.map((c) => (
+                  <li key={c.id}>
+                    <Link
+                      href={`/constructs#${c.id}`}
+                      className="text-sm text-slate transition hover:text-ink"
+                    >
+                      <span
+                        className="mr-1.5 inline-block h-2 w-2 rounded-full"
+                        style={{ background: c.color }}
+                        aria-hidden
+                      />
+                      {c.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                More
+              </h3>
+              <ul className="mt-4 space-y-2.5">
+                {moreNav.map((item) => (
                   <li key={item.href}>
                     <Link
                       href={item.href}
@@ -104,19 +91,6 @@ export function Footer() {
               </ul>
             </div>
           </div>
-        </div>
-
-        <div className="mt-12 flex flex-wrap gap-2">
-          {constructs.map((c) => (
-            <Link
-              key={c.id}
-              href={`/constructs#${c.id}`}
-              className="rounded-full px-2.5 py-1 text-[0.65rem] font-semibold text-white transition hover:opacity-90"
-              style={{ background: c.color }}
-            >
-              {c.shortName}
-            </Link>
-          ))}
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-black/[0.06] pt-8 text-sm text-muted sm:flex-row sm:items-center sm:justify-between">
@@ -132,20 +106,10 @@ export function Footer() {
               <Link href="/media" className="hover:text-ink">
                 Media kit
               </Link>
-              <Link href="/certify" className="hover:text-ink">
-                Certification
-              </Link>
-              <Link href="/community" className="hover:text-ink">
-                Community
-              </Link>
-              <Link href="/team" className="hover:text-ink">
-                Team cube
-              </Link>
             </p>
           </div>
           <p className="max-w-md sm:text-right">
-            Research-informed leadership education for a world that needs the
-            SDGs delivered. Journals private · scores shared only with consent.
+            Journals private · scores shared only with consent.
           </p>
         </div>
       </div>
