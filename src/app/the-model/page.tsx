@@ -23,11 +23,6 @@ export default function TheModelPage() {
         eyebrow="The Super-Cube® Leadership Model"
         title="A multidimensional framework for developable leadership."
         description="Six human-centric constructs form the faces of a cube. The individual—you—stands at the centre. Leadership capacity radiates outward from personal practice to organisational and network impact."
-        visual={
-          <div className="mx-auto w-full max-w-[15rem] rounded-2xl border border-white/15 bg-white/95 p-3 shadow-xl sm:max-w-[18rem] md:max-w-[19rem] lg:mx-0 lg:max-w-none">
-            <SuperCube size="md" showSkills />
-          </div>
-        }
       >
         <Button href="/constructs" variant="primary">
           Meet the six constructs
@@ -37,9 +32,9 @@ export default function TheModelPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad">
-        <div className="container-site">
-          <div className="prose-site mx-auto max-w-3xl">
+      <section className="section-pad bg-white">
+        <div className="container-site grid items-center gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-12 lg:gap-16">
+          <div className="prose-site min-w-0">
             <SectionHeading
               eyebrow="Definition & purpose"
               title="Built for complex environments—starting with the person."
@@ -60,6 +55,11 @@ export default function TheModelPage() {
               FMCG business-network and is among the first frameworks of its
               kind validated in that context.
             </p>
+          </div>
+          <div className="flex justify-center md:justify-end">
+            <div className="w-full max-w-[15rem] bg-transparent sm:max-w-[17rem] md:max-w-[18rem] lg:max-w-[20rem]">
+              <SuperCube size="md" showSkills />
+            </div>
           </div>
         </div>
       </section>
