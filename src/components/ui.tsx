@@ -116,16 +116,42 @@ export function PageHero({
   const objectPos = preset?.position ?? "object-center";
   const isMedia = Boolean(mediaSrc);
   const useFull = full ?? isMedia;
+  const lightTone = isMedia && preset?.tone === "light";
+  const darkTone = isMedia && !lightTone;
 
-  const actionsClass = isMedia
-    ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
-    : "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto";
+  const actionsClass = lightTone
+    ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto"
+    : darkTone
+      ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
+      : "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto";
+
+  const eyebrowCls = lightTone
+    ? "text-slate before:bg-black/25"
+    : darkTone
+      ? "text-white/70 before:bg-white/50"
+      : "";
+  const titleCls = lightTone
+    ? "text-ink"
+    : darkTone
+      ? "text-white"
+      : "text-ink";
+  const ledeCls = lightTone
+    ? "text-slate"
+    : darkTone
+      ? "text-white/80"
+      : "text-slate";
 
   return (
     <section
       className={`page-hero relative isolate flex w-full flex-col overflow-hidden border-b border-black/[0.06] ${
         useFull ? "page-hero--full" : "page-hero--band"
-      } ${isMedia ? "page-hero--media bg-ink" : "bg-white"}`}
+      } ${
+        isMedia
+          ? lightTone
+            ? "page-hero--media page-hero--media-light bg-[#e8e8e8]"
+            : "page-hero--media bg-ink"
+          : "bg-white"
+      }`}
     >
       {isMedia && mediaSrc && (
         <>
@@ -137,15 +163,30 @@ export function PageHero({
             className={`object-cover ${objectPos}`}
             sizes="100vw"
           />
-          {/* Match landing page gradient system — readable type on all viewports */}
-          <div
-            className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/40 sm:via-black/55 sm:to-black/20 md:to-transparent"
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 sm:from-black/55 sm:to-black/25"
-            aria-hidden
-          />
+          {lightTone ? (
+            <>
+              {/* Soft light overlays — keep grey hero visible under navbar */}
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-white/75 via-white/25 to-transparent sm:from-white/55 sm:via-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-white/50 via-transparent to-transparent"
+                aria-hidden
+              />
+            </>
+          ) : (
+            <>
+              <div
+                className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/40 sm:via-black/55 sm:to-black/20 md:to-transparent"
+                aria-hidden
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 sm:from-black/55 sm:to-black/25"
+                aria-hidden
+              />
+            </>
+          )}
         </>
       )}
 
@@ -153,24 +194,14 @@ export function PageHero({
         {visual ? (
           <div className="grid w-full items-center gap-6 sm:gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-12 xl:gap-16">
             <div className="page-hero__copy order-2 min-w-0 md:order-1">
-              <p
-                className={`eyebrow animate-fade-up ${
-                  isMedia ? "text-white/70 before:bg-white/50" : ""
-                }`}
-              >
-                {eyebrow}
-              </p>
+              <p className={`eyebrow animate-fade-up ${eyebrowCls}`}>{eyebrow}</p>
               <h1
-                className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${
-                  isMedia ? "text-white" : "text-ink"
-                }`}
+                className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${titleCls}`}
               >
                 {title}
               </h1>
               <p
-                className={`page-hero__lede mt-4 max-w-xl animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:max-w-2xl md:text-lg lg:text-xl ${
-                  isMedia ? "text-white/80" : "text-slate"
-                }`}
+                className={`page-hero__lede mt-4 max-w-xl animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:max-w-2xl md:text-lg lg:text-xl ${ledeCls}`}
               >
                 {description}
               </p>
@@ -182,24 +213,14 @@ export function PageHero({
           </div>
         ) : (
           <div className="page-hero__copy min-w-0 max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
-            <p
-              className={`eyebrow animate-fade-up ${
-                isMedia ? "text-white/70 before:bg-white/50" : ""
-              }`}
-            >
-              {eyebrow}
-            </p>
+            <p className={`eyebrow animate-fade-up ${eyebrowCls}`}>{eyebrow}</p>
             <h1
-              className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${
-                isMedia ? "text-white" : "text-ink"
-              }`}
+              className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${titleCls}`}
             >
               {title}
             </h1>
             <p
-              className={`page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${
-                isMedia ? "text-white/80" : "text-slate"
-              }`}
+              className={`page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${ledeCls}`}
             >
               {description}
             </p>

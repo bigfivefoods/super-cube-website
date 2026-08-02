@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { constructs, mainNav, moreNavGroups } from "@/lib/content";
+import { lightHeroPaths } from "@/lib/hero-media";
 
 function linkActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -14,6 +15,12 @@ function linkActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+function isLightHeroPath(pathname: string) {
+  return lightHeroPaths.some(
+    (p) => pathname === p || pathname.startsWith(`${p}/`)
+  );
+}
+
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
@@ -21,7 +28,13 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
 
   const isHome = pathname === "/";
-  const overHero = isHome && !scrolled && !open;
+  const isLightHero = isLightHeroPath(pathname);
+  /** Transparent over hero (landing dark or constructs light grey) */
+  const overHero = (isHome || isLightHero) && !scrolled && !open;
+  /** Dark photo hero — white type / inverted logo */
+  const overDark = overHero && isHome;
+  /** Light grey geometric hero — ink type, grey blend */
+  const overLight = overHero && isLightHero;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -42,30 +55,43 @@ export function Header() {
     };
   }, [open]);
 
-  const navLinkClass = (active: boolean) =>
-    `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
-      active
-        ? overHero
+  const navLinkClass = (active: boolean) => {
+    if (overDark) {
+      return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
+        active
           ? "bg-white text-ink"
-          : "bg-ink text-white"
-        : overHero
-          ? "text-white/85 hover:bg-white/10 hover:text-white"
-          : "text-slate hover:bg-black/[0.04] hover:text-ink"
+          : "text-white/85 hover:bg-white/10 hover:text-white"
+      }`;
+    }
+    if (overLight) {
+      return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
+        active
+          ? "bg-ink text-white"
+          : "text-ink/80 hover:bg-black/[0.06] hover:text-ink"
+      }`;
+    }
+    return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
+      active
+        ? "bg-ink text-white"
+        : "text-slate hover:bg-black/[0.04] hover:text-ink"
     }`;
+  };
+
+  const headerSurface = overDark
+    ? "border-b border-transparent bg-transparent"
+    : overLight
+      ? "border-b border-transparent bg-[#e8e8e8]/90 backdrop-blur-md"
+      : "border-b border-black/[0.06] bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl";
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${
-        overHero
-          ? "border-b border-transparent bg-transparent"
-          : "border-b border-black/[0.06] bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${headerSurface}`}
     >
       <div className="container-site flex h-14 items-center justify-between gap-3 md:h-16">
         <BrandWordmark
           height={26}
           className={`min-w-0 max-w-[min(100%,11rem)] shrink sm:max-w-none ${
-            overHero ? "brightness-0 invert" : ""
+            overDark ? "brightness-0 invert" : ""
           }`}
         />
 
@@ -145,7 +171,7 @@ export function Header() {
           <Link
             href="/learn/start"
             className={`ml-1.5 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition ${
-              overHero
+              overDark
                 ? "bg-white text-ink hover:bg-white/90"
                 : "bg-ink text-white hover:bg-ink-soft"
             }`}
@@ -157,9 +183,9 @@ export function Header() {
         <button
           type="button"
           className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border touch-manipulation lg:hidden ${
-            overHero
+            overDark
               ? "border-white/25 bg-white/10 text-white"
-              : "border-black/[0.08] bg-white text-ink"
+              : "border-black/[0.1] bg-white/80 text-ink"
           }`}
           aria-expanded={open}
           aria-controls="mobile-nav"
@@ -170,17 +196,17 @@ export function Header() {
           <span className="relative block h-3.5 w-4">
             <span
               className={`absolute left-0 block h-px w-full transition ${
-                overHero ? "bg-white" : "bg-ink"
+                overDark ? "bg-white" : "bg-ink"
               } ${open ? "top-1.5 rotate-45" : "top-0"}`}
             />
             <span
               className={`absolute left-0 top-1.5 block h-px w-full transition ${
-                overHero ? "bg-white" : "bg-ink"
+                overDark ? "bg-white" : "bg-ink"
               } ${open ? "opacity-0" : ""}`}
             />
             <span
               className={`absolute left-0 block h-px w-full transition ${
-                overHero ? "bg-white" : "bg-ink"
+                overDark ? "bg-white" : "bg-ink"
               } ${open ? "top-1.5 -rotate-45" : "top-3"}`}
             />
           </span>
