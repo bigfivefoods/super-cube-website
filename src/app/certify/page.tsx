@@ -36,7 +36,7 @@ export default function CertifyPage() {
   return (
     <>
       <PageHero
-        theme="leadership"
+        theme="impact"
         eyebrow="Credentials"
         title="Certification ladder"
         description="Growth you can verify—not empty badges. Each rung maps to product behaviour already in Super-Cube® Learn."

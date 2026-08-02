@@ -35,7 +35,7 @@ export default function SampleReportPage() {
   return (
     <>
       <PageHero
-        theme="leadership"
+        theme="impact"
         eyebrow="Sample outcome"
         title="What growth looks like on Super-Cube®."
         description="Illustrative pre → post profile after deliberate practice across the six faces. Real reports are private to the learner; coaches only see shared snapshots with consent."

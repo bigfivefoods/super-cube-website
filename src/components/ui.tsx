@@ -89,7 +89,8 @@ export function PageHero({
   theme = "leadership",
   image,
   imageAlt,
-  full = false,
+  /** Media heroes match landing: full viewport. Pass false for shorter band. */
+  full,
 }: {
   eyebrow: string;
   title: string;
@@ -105,23 +106,25 @@ export function PageHero({
   /** Override theme image */
   image?: string;
   imageAlt?: string;
-  /** Full viewport height (default: editorial media band) */
+  /** Full viewport height (default true for media themes, false for plain) */
   full?: boolean;
 }) {
   const preset =
     theme !== "none" && !image ? heroThemes[theme] : null;
   const mediaSrc = image ?? preset?.src;
   const mediaAlt = imageAlt ?? preset?.alt ?? "";
+  const objectPos = preset?.position ?? "object-center";
   const isMedia = Boolean(mediaSrc);
+  const useFull = full ?? isMedia;
 
   const actionsClass = isMedia
-    ? "mt-6 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
-    : "mt-6 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3";
+    ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
+    : "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto";
 
   return (
     <section
-      className={`page-hero relative isolate overflow-hidden border-b border-black/[0.06] ${
-        full ? "page-hero--full" : "page-hero--band"
+      className={`page-hero relative isolate flex w-full flex-col overflow-hidden border-b border-black/[0.06] ${
+        useFull ? "page-hero--full" : "page-hero--band"
       } ${isMedia ? "page-hero--media bg-ink" : "bg-white"}`}
     >
       {isMedia && mediaSrc && (
@@ -131,23 +134,24 @@ export function PageHero({
             alt={mediaAlt}
             fill
             priority
-            className="object-cover object-center"
+            className={`object-cover ${objectPos}`}
             sizes="100vw"
           />
+          {/* Match landing page gradient system — readable type on all viewports */}
           <div
-            className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/62 to-black/35 sm:via-black/55 sm:to-black/25"
+            className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/40 sm:via-black/55 sm:to-black/20 md:to-transparent"
             aria-hidden
           />
           <div
-            className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30"
+            className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 sm:from-black/55 sm:to-black/25"
             aria-hidden
           />
         </>
       )}
 
-      <div className="container-site page-hero__inner relative z-[1] w-full">
+      <div className="container-site page-hero__inner relative z-[1] w-full pb-2">
         {visual ? (
-          <div className="grid items-center gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-10 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:gap-12 xl:gap-14">
+          <div className="grid w-full items-center gap-6 sm:gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-12 xl:gap-16">
             <div className="page-hero__copy order-2 min-w-0 md:order-1">
               <p
                 className={`eyebrow animate-fade-up ${
@@ -164,7 +168,7 @@ export function PageHero({
                 {title}
               </h1>
               <p
-                className={`page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${
+                className={`page-hero__lede mt-4 max-w-xl animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:max-w-2xl md:text-lg lg:text-xl ${
                   isMedia ? "text-white/80" : "text-slate"
                 }`}
               >
@@ -172,12 +176,12 @@ export function PageHero({
               </p>
               {children && <div className={actionsClass}>{children}</div>}
             </div>
-            <div className="animate-fade-up delay-2 relative z-[1] order-1 mx-auto w-full max-w-[15rem] min-w-0 sm:max-w-[18rem] md:order-2 md:mx-0 md:max-w-[19rem] lg:max-w-none lg:justify-self-end">
+            <div className="animate-fade-up delay-2 relative z-[1] order-1 mx-auto w-full max-w-[13.5rem] min-w-0 xs:max-w-[15rem] sm:max-w-[17rem] md:order-2 md:mx-0 md:max-w-[18rem] lg:max-w-[20rem] lg:justify-self-end">
               {visual}
             </div>
           </div>
         ) : (
-          <div className="page-hero__copy min-w-0 max-w-3xl">
+          <div className="page-hero__copy min-w-0 max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
             <p
               className={`eyebrow animate-fade-up ${
                 isMedia ? "text-white/70 before:bg-white/50" : ""

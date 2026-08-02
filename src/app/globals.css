@@ -187,17 +187,35 @@ body {
   min-height: 100dvh;
 }
 
-/* Editorial media band for inner marketing pages (not homepage) */
+/* Editorial media band when full viewport is not used */
 .page-hero--band {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: clamp(22rem, 52vh, 34rem);
+  min-height: clamp(20rem, 48svh, 32rem);
 }
 
 /* Photo / gradient heroes clear the default white fill */
 .page-hero--media {
   background-color: transparent;
+}
+
+/* Mobile: full-viewport media heroes like the landing page */
+@media (max-width: 639px) {
+  .page-hero--full.page-hero--media {
+    min-height: 100svh;
+    min-height: 100dvh;
+  }
+  .page-hero--media .page-hero__lede {
+    max-width: 100%;
+  }
+}
+
+/* Medium: keep top-aligned content block readable over photo */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .page-hero--media .page-hero__copy {
+    max-width: min(100%, 36rem);
+  }
 }
 
 .page-hero__inner {
