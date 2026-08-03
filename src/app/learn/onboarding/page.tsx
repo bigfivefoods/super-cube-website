@@ -30,7 +30,7 @@ function OnboardingInner() {
       subtitle={
         mode === "purchase"
           ? "Payment confirmed (or access activated). Here’s the clearest path to real growth—not a content binge."
-          : "Free on this device. Four steps. Deliberate practice. You’ll see pre → post change on your report."
+          : "Free on this device. Five steps. Deliberate practice. You’ll see pre → post change on your report."
       }
     >
       <div className="mb-5 rounded-2xl border border-ink bg-white p-5 sm:p-6">
@@ -41,8 +41,7 @@ function OnboardingInner() {
           Your next 30 minutes
         </h2>
         <ol className="mt-4 space-y-3">
-          {[
-            {
+          {[{
               n: "1",
               t: "Orient",
               d: "Pre-pre assessment — how you see leadership levels",
@@ -62,6 +61,12 @@ function OnboardingInner() {
             },
             {
               n: "4",
+              t: "First face pulse",
+              d: "30 seconds — rate 3 faces so continuous patterns can start",
+              href: "/learn/pulse",
+            },
+            {
+              n: "5",
               t: "Reflect",
               d: "2–5 sentences in the journal — transfer is the product",
               href: "/learn",

@@ -24,7 +24,6 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: "Sign in required" }, { status: 401 });
     }
 
-    // Find orgs where user is coach/admin
     const { data: memberships } = await supabase
       .from("org_members")
       .select("org_id, role, organisations(id, code, name, kind)")
@@ -49,7 +48,6 @@ export async function GET(request: Request) {
       null;
 
     if (!org && code) {
-      // Allow looking up by code if member is coach
       const { data: byCode } = await supabase
         .from("organisations")
         .select("id, code, name, kind")
@@ -76,23 +74,26 @@ export async function GET(request: Request) {
 
     let progress: Record<string, unknown>[] | null = null;
     {
-      const first = await supabase
-        .from("org_progress_snapshots")
-        .select(
-          "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, face_scores, client_updated_at"
-        )
-        .eq("org_id", org.id);
-      if (first.error && /face_scores/i.test(first.error.message)) {
-        const retry = await supabase
+      const selects = [
+        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, face_scores, pulse_count, pulse_consistency, last_pulse_at, client_updated_at",
+        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, face_scores, client_updated_at",
+        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, client_updated_at",
+      ];
+      for (const sel of selects) {
+        const res = await supabase
           .from("org_progress_snapshots")
-          .select(
-            "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, client_updated_at"
-          )
+          .select(sel)
           .eq("org_id", org.id);
-        progress = (retry.data || []) as Record<string, unknown>[];
-      } else {
-        progress = (first.data || []) as Record<string, unknown>[];
+        if (!res.error) {
+          progress = (res.data || []) as Record<string, unknown>[];
+          break;
+        }
+        if (!/column|face_scores|pulse_/i.test(res.error.message)) {
+          progress = [];
+          break;
+        }
       }
+      if (!progress) progress = [];
     }
 
     const progressByUser = new Map(
