@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { FacilitatorDownloadButton } from "@/components/FacilitatorDownload";
 import { cohortCalendar, safeguardingKids } from "@/lib/facilitator";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
@@ -15,7 +16,7 @@ export default function FacilitatorPage() {
         theme="programs"
         eyebrow="Schools & companies"
         title="Facilitator kit"
-        description="An 8-week cohort pattern: orient, baseline, faces, re-measure, certify. Pair with /learn/coach for codes, roster, and CSV export."
+        description="An 8-week cohort pattern: orient, baseline, faces, re-measure, certify. Pair with /learn/coach for codes, roster, and CSV export. Download a printable one-pager for staff rooms."
       >
         <Button href="/learn/coach" variant="primary">
           Open coach tools
@@ -24,6 +25,20 @@ export default function FacilitatorPage() {
           Book a pilot
         </Button>
       </PageHero>
+
+      <section className="border-b border-black/[0.06] bg-white">
+        <div className="container-site flex flex-col items-start justify-between gap-4 py-8 sm:flex-row sm:items-center">
+          <div>
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
+              Printable pack
+            </p>
+            <p className="mt-1 text-sm text-slate">
+              One-page PDF: six faces, 8-week calendar, safeguarding notes.
+            </p>
+          </div>
+          <FacilitatorDownloadButton />
+        </div>
+      </section>
 
       <section className="section-pad bg-white">
         <div className="container-site">

@@ -16,8 +16,11 @@ export type FunnelEvent =
   | "orient_complete"
   | "pre_start"
   | "pre_complete"
+  | "mid_start"
+  | "mid_complete"
   | "lesson_open"
   | "lesson_complete"
+  | "session_done_today"
   | "reflection_save"
   | "post_start"
   | "post_complete"
@@ -28,7 +31,28 @@ export type FunnelEvent =
   | "demo_start"
   | "contact_submit"
   | "org_join"
-  | "notify_opt_in";
+  | "notify_opt_in"
+  | "weekly_email_request"
+  | "pilot_click"
+  | "micro_practice_complete"
+  | "guided_start_open"
+  | "guided_start_cta"
+  | "client_error";
+
+/** Conversion funnel steps to watch in GA4 + local debug */
+export const FUNNEL_GOALS = [
+  { event: "demo_start", label: "Demo start" },
+  { event: "guided_start_open", label: "Guided start" },
+  { event: "orient_complete", label: "Orientation done" },
+  { event: "pre_complete", label: "Baseline done" },
+  { event: "lesson_complete", label: "Lesson complete" },
+  { event: "mid_complete", label: "Mid check-in" },
+  { event: "post_complete", label: "Post assessment" },
+  { event: "report_view", label: "Report viewed" },
+  { event: "certificate_download", label: "Certificate" },
+  { event: "contact_submit", label: "Contact / lead" },
+  { event: "pilot_click", label: "Book pilot click" },
+] as const;
 
 const KEY = "supercube_analytics_v1";
 const MAX = 400;

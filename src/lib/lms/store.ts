@@ -25,7 +25,7 @@ export interface LocalLessonProgress {
 }
 
 export interface LocalAttempt {
-  phase: "pre" | "post";
+  phase: "pre" | "post" | "mid";
   programmeId: ProgrammeId;
   responses: ResponseMap;
   result: AttemptResult;
@@ -97,12 +97,14 @@ export interface LocalLmsState {
   onboardingSeenAt?: string;
   /** In-progress assessment draft (save/resume) */
   assessmentDraft?: {
-    phase: "pre" | "post";
+    phase: "pre" | "post" | "mid";
     programmeId: ProgrammeId;
     responses: ResponseMap;
     step: number;
     updatedAt: string;
   };
+  /** ISO date of last "done for today" acknowledgment */
+  doneForTodayAt?: string;
   /** Completed micro-practice ids by ISO date YYYY-MM-DD */
   microPracticeLog?: Record<string, string[]>;
   /** Guided first-run steps completed */
@@ -426,6 +428,13 @@ export function markFirstRunStep(
 export function setLmsLocale(locale: "en" | "zu"): LocalLmsState {
   const state = loadLmsState();
   state.locale = locale;
+  saveLmsState(state);
+  return state;
+}
+
+export function markDoneForToday(): LocalLmsState {
+  const state = loadLmsState();
+  state.doneForTodayAt = new Date().toISOString();
   saveLmsState(state);
   return state;
 }

@@ -71,6 +71,23 @@ export default function ImpactPage() {
               Facilitators stopped tracking only attendance and started reviewing
               pre → post deltas by face with consent.
             </p>
+            <div className="mt-5 grid grid-cols-3 gap-2">
+              {[
+                { k: "52 → 68", v: "Mean overall (0–100)" },
+                { k: "+16", v: "Emotional face Δ" },
+                { k: "8 wks", v: "Pathway length" },
+              ].map((s) => (
+                <div
+                  key={s.v}
+                  className="rounded-xl bg-[#fafafa] px-3 py-3 text-center"
+                >
+                  <p className="text-lg font-semibold tabular-nums text-ink">
+                    {s.k}
+                  </p>
+                  <p className="mt-0.5 text-[0.65rem] text-muted">{s.v}</p>
+                </div>
+              ))}
+            </div>
             <ul className="mt-4 space-y-2 text-sm text-slate">
               <li>
                 · <strong className="text-ink">Challenge:</strong> talent

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { PageHero, Button } from "@/components/ui";
 import { track } from "@/lib/analytics";
-import { loadLmsState, saveLmsState, unlockDemo } from "@/lib/lms/store";
+import { loadLmsState, unlockDemo } from "@/lib/lms/store";
 import {
   COURSE_PRICE_USD,
   programmes,
@@ -164,12 +164,18 @@ export default function PricingPage() {
                 <li>· Custom pricing for 20+ seats / school licences</li>
               </ul>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Button
-                  href="mailto:hello@super-cube.me?subject=Book%20a%20Super-Cube%20pilot&body=Organisation%3A%0AAudience%20(kids%2Fadolescents%2Fadults)%3A%0AApprox%20seats%3A%0APreferred%20dates%3A%0A"
-                  variant="primary"
+                <a
+                  href={
+                    process.env.NEXT_PUBLIC_PILOT_CALENDAR_URL?.trim() ||
+                    "mailto:hello@super-cube.me?subject=Book%20a%20Super-Cube%20pilot&body=Organisation%3A%0AAudience%20(kids%2Fadolescents%2Fadults)%3A%0AApprox%20seats%3A%0APreferred%20dates%3A%0A"
+                  }
+                  onClick={() => track("pilot_click", { source: "pricing" })}
+                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white transition hover:bg-ink-soft"
                 >
-                  Book a pilot (email)
-                </Button>
+                  {process.env.NEXT_PUBLIC_PILOT_CALENDAR_URL
+                    ? "Book a pilot (calendar)"
+                    : "Book a pilot (email)"}
+                </a>
                 <Button href="/contact" variant="ghost">
                   Contact form
                 </Button>

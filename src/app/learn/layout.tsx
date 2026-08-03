@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnBottomNav } from "@/components/learn/LearnBottomNav";
 import { LmsSyncProvider } from "@/components/learn/LmsSyncProvider";
+import { StickyContinue } from "@/components/learn/StickyContinue";
 
 export const metadata: Metadata = {
   title: "Learn",
@@ -30,10 +31,11 @@ export default function LearnLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="learn-app min-h-[100svh] bg-[#fafafa] pb-16 lg:pb-0">
+    <div className="learn-app min-h-[100svh] bg-[#fafafa] pb-28 lg:pb-0">
       <LmsSyncProvider>
         <InstallAppBanner />
         {children}
+        <StickyContinue />
         <LearnBottomNav />
       </LmsSyncProvider>
     </div>

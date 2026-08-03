@@ -349,6 +349,49 @@ export default function CoachToolsPage() {
                         );
                       })}
                     </div>
+                    {/* Face-level strip: intensity from mean consented pre (proxy until face scores sync) */}
+                    <div className="mt-5">
+                      <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                        Face intensity · cohort mean pre
+                      </p>
+                      <p className="learn-meta mt-0.5">
+                        Uses overall pre as a shared intensity until face-level
+                        snapshots are shared. Stretch faces still guide weekly
+                        plans on the learner device.
+                      </p>
+                      <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6">
+                        {(() => {
+                          const pres = roster
+                            .map((r) => r.progress?.pre_overall)
+                            .filter((n): n is number => typeof n === "number");
+                          const mean =
+                            pres.length > 0
+                              ? pres.reduce((a, b) => a + b, 0) / pres.length
+                              : 50;
+                          const intensity = Math.min(
+                            1,
+                            Math.max(0.25, mean / 100)
+                          );
+                          return constructs.map((c) => (
+                            <div
+                              key={c.id}
+                              className="rounded-lg px-1.5 py-2 text-center"
+                              style={{
+                                background: c.color,
+                                opacity: 0.35 + intensity * 0.65,
+                              }}
+                            >
+                              <p className="text-[0.6rem] font-bold text-white">
+                                {c.shortName}
+                              </p>
+                              <p className="text-[0.65rem] tabular-nums text-white/90">
+                                {Math.round(mean)}
+                              </p>
+                            </div>
+                          ));
+                        })()}
+                      </div>
+                    </div>
                     <ul className="mt-2 flex flex-wrap gap-3 text-[0.65rem] text-muted">
                       <li>
                         <span className="inline-block h-2 w-2 rounded-full bg-emerald-600" />{" "}

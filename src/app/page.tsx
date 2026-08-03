@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FounderVideo } from "@/components/FounderVideo";
 import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import {
@@ -103,6 +104,25 @@ export default function HomePage() {
               {item}
             </p>
           ))}
+        </div>
+      </section>
+
+      {/* Founder / model video (optional embed URL) */}
+      <section className="section-pad border-b border-black/[0.06] bg-white">
+        <div className="container-site grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
+          <div>
+            <SectionHeading
+              eyebrow="Watch"
+              title="Understand the model in minutes."
+              description="A short founder explainer builds trust before the free baseline. Add your YouTube/Vimeo embed via NEXT_PUBLIC_FOUNDER_VIDEO_URL."
+            />
+            <div className="mt-6">
+              <Button href="/learn/start" variant="primary">
+                Start free baseline
+              </Button>
+            </div>
+          </div>
+          <FounderVideo />
         </div>
       </section>
 

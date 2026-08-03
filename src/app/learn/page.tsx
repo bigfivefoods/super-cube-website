@@ -230,6 +230,18 @@ export default function LearnDashboardPage() {
               </p>
               <p className="learn-meta mt-0.5">Strengths · stretch · practices</p>
             </Link>
+            <Link
+              href="/learn/assessment/mid"
+              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15 sm:col-span-2"
+            >
+              <p className="learn-eyebrow">Mid-pathway</p>
+              <p className="mt-0.5 font-semibold text-ink">
+                Check-in re-measure
+              </p>
+              <p className="learn-meta mt-0.5">
+                Refresh scores so your weekly plan adapts
+              </p>
+            </Link>
           </div>
         )}
 
@@ -244,12 +256,20 @@ export default function LearnDashboardPage() {
                 </h2>
                 <p className="learn-meta mt-0.5">{weekly.summary}</p>
               </div>
-              <Link
-                href="/learn/practice"
-                className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-              >
-                Micro-practice →
-              </Link>
+              <div className="flex flex-col items-end gap-1">
+                <Link
+                  href="/learn/practice"
+                  className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+                >
+                  Micro-practice →
+                </Link>
+                <Link
+                  href="/learn/assessment/mid"
+                  className="text-[0.7rem] font-medium text-muted underline-offset-2 hover:underline"
+                >
+                  Mid check-in
+                </Link>
+              </div>
             </div>
             <ul className="mt-3 space-y-2">
               {weekly.items.map((item, i) => (

@@ -21,7 +21,9 @@
 | `PAYSTACK_SECRET_KEY` | `sk_live_…` or `sk_test_…` |
 | `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` | `pk_live_…` or `pk_test_…` |
 | `NEXT_PUBLIC_VIDEO_CDN` | after upload (see §3) |
-| `NEXT_PUBLIC_GA_ID` | optional `G-…` |
+| `NEXT_PUBLIC_GA_ID` | optional `G-…` — see `docs/ANALYTICS.md` |
+| `NEXT_PUBLIC_FOUNDER_VIDEO_URL` | optional YouTube/Vimeo **embed** URL |
+| `NEXT_PUBLIC_PILOT_CALENDAR_URL` | optional Cal.com / Calendly booking link |
 | `CONTACT_WEBHOOK` | optional Zapier/Make URL |
 | `RESEND_API_KEY` | optional Resend for welcome emails |
 | `EMAIL_FROM` | e.g. `Super-Cube Learn <onboarding@yourdomain>` |

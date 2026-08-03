@@ -23,7 +23,10 @@ import { track } from "@/lib/analytics";
 export default function AssessmentRunnerPage() {
   const params = useParams();
   const router = useRouter();
-  const phase = (params.phase === "post" ? "post" : "pre") as "pre" | "post";
+  const raw = String(params.phase || "pre");
+  const phase = (
+    raw === "post" ? "post" : raw === "mid" ? "mid" : "pre"
+  ) as "pre" | "post" | "mid";
 
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [step, setStep] = useState(0);
@@ -96,6 +99,10 @@ export default function AssessmentRunnerPage() {
       track("pre_complete", { overall: result.overall });
       setState(loadLmsState());
       router.push("/learn/feedback");
+    } else if (phase === "mid") {
+      track("mid_complete", { overall: result.overall });
+      setState(loadLmsState());
+      router.push("/learn/feedback?mode=mid");
     } else {
       track("post_complete", { overall: result.overall });
       setState(next);
@@ -116,12 +123,16 @@ export default function AssessmentRunnerPage() {
       title={
         phase === "pre"
           ? "Step 3 · Measure your baseline"
-          : "Step 5 · Re-measure after the programme"
+          : phase === "mid"
+            ? "Mid-pathway check-in"
+            : "Step 5 · Re-measure after the programme"
       }
       subtitle={
         phase === "pre"
           ? `${programme?.name ?? "Programme"} · ${items.length} items across six constructs (Likert 1–5). Developmental self-report—not clinical. Save anytime.`
-          : `${programme?.name ?? "Programme"} · Same ${items.length} items as baseline. Take after finishing courses to see real growth.`
+          : phase === "mid"
+            ? `${programme?.name ?? "Programme"} · Short re-measure to refresh your weekly plan. Same faces, honest scores.`
+            : `${programme?.name ?? "Programme"} · Same ${items.length} items as baseline. Take after finishing courses to see real growth.`
       }
     >
       {/* Progress + credibility */}
@@ -261,7 +272,9 @@ export default function AssessmentRunnerPage() {
             >
               {phase === "pre"
                 ? "Submit & see your narrative"
-                : "Submit & view report"}
+                : phase === "mid"
+                  ? "Submit mid check-in"
+                  : "Submit & view report"}
             </button>
           )}
         </div>

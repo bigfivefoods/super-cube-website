@@ -26,6 +26,7 @@ export function CourseVideo({
   variant = "thumb",
   className = "",
   badge = "15s intro · with voice",
+  captionsSrc = "/videos/captions/sample-en.vtt",
 }: {
   programmeId?: ProgrammeId;
   constructId?: ConstructId;
@@ -39,6 +40,8 @@ export function CourseVideo({
   variant?: Variant;
   className?: string;
   badge?: string;
+  /** WebVTT captions (EN). Replace with per-video files when available. */
+  captionsSrc?: string | null;
 }) {
   const src =
     srcProp ??
@@ -152,9 +155,20 @@ export function CourseVideo({
         controls={isHero && started}
         // User-gesture play unlocks audio (quote + overview voice-over)
         muted={false}
+        crossOrigin="anonymous"
         onError={() => setError(true)}
         aria-label={`${title} intro video with voice-over`}
-      />
+      >
+        {captionsSrc ? (
+          <track
+            kind="captions"
+            srcLang="en"
+            label="English"
+            src={captionsSrc}
+            default
+          />
+        ) : null}
+      </video>
 
       {/* Soft gradient for play button contrast */}
       {!playing && (

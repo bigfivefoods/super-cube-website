@@ -246,6 +246,20 @@ function AccountPageInner() {
         </p>
       )}
 
+      <section className="learn-card mb-4">
+        <h2 className="learn-card-title">Funnel analytics</h2>
+        <p className="learn-body mt-1">
+          Local event counts on this device. Site-wide visits need Google
+          Analytics.
+        </p>
+        <a
+          href="/learn/analytics"
+          className="learn-btn learn-btn-primary mt-3 inline-flex"
+        >
+          Open funnel debug
+        </a>
+      </section>
+
       <div className="mb-4 grid gap-2 sm:grid-cols-3">
         <div className="learn-card !p-3.5">
           <p className="learn-eyebrow">Streak</p>

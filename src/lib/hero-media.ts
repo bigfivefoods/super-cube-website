@@ -53,9 +53,7 @@ export const heroThemes: Record<
   constructs: {
     src: "/images/hero/hero-constructs.jpg",
     alt: "Multicolour geometric cubes in Super-Cube® face colours — modern construct overview",
-    // Cubes sit on the right; keep subject visible on large screens
     position: "object-[80%_center] sm:object-[70%_center] md:object-center",
-    /** Light grey hero — soft overlay so navbar can blend like homepage */
     tone: "light",
   },
   programs: {
@@ -76,7 +74,28 @@ export const heroThemes: Record<
 export const lightHeroPaths = ["/constructs"] as const;
 
 /**
- * Paths where the fixed header sits over a dark media hero
- * (transparent → white on scroll), same pattern as the homepage.
+ * Paths where the fixed header is transparent over a dark media hero
+ * (hero colour shows through → white on scroll).
  */
-export const darkHeroPaths = ["/", "/the-model"] as const;
+export const darkHeroPaths = [
+  "/",
+  "/the-model",
+  "/what",
+  "/how",
+  "/why-leadership",
+  "/why",
+  "/research",
+  "/about",
+  "/pricing",
+  "/impact",
+  "/sample-report",
+  "/practices",
+  "/facilitator",
+  "/programs",
+  "/contact",
+  "/insights",
+  "/media",
+  "/certify",
+  "/community",
+  "/team",
+] as const;
