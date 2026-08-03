@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
+import { getProfile, profileComplete } from "@/lib/lms/profile";
 import {
   loadLmsState,
   unlockDemo,
@@ -15,20 +17,39 @@ import { getProgramme, type ProgrammeId } from "@/lib/programmes";
  * Guided 10-minute first run — never dump users on full dashboard.
  */
 export default function GuidedStartPage() {
+  const router = useRouter();
   const [state, setState] = useState<LocalLmsState | null>(null);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    const p = getProfile();
+    if (!profileComplete(p)) {
+      router.replace("/learn/welcome");
+      return;
+    }
     const s = loadLmsState();
     if (!s.demoUnlocked && !s.subscription) {
-      unlockDemo("adults");
+      unlockDemo(
+        (p?.programmeId || s.user?.programmeId || "adults") as ProgrammeId
+      );
     }
     setState(loadLmsState());
+    setReady(true);
     track("page_view", { path: "/learn/start" });
     track("guided_start_open", {});
-  }, []);
+  }, [router]);
+
+  if (!ready || !state) {
+    return (
+      <LearnShell title="Your first 10 minutes">
+        <p className="learn-meta">Loading…</p>
+      </LearnShell>
+    );
+  }
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||
+    state?.profile?.programmeId ||
     "adults") as ProgrammeId;
   const programme = getProgramme(programmeId);
   const fr = state?.firstRun ?? {};
@@ -39,6 +60,8 @@ export default function GuidedStartPage() {
   const lessonDone =
     Boolean(fr.firstLesson) ||
     Object.values(state?.lessonProgress ?? {}).some((s) => s === "completed");
+
+  const name = state.profile?.displayName || state.user?.fullName;
 
   const steps = [
     {
@@ -79,7 +102,7 @@ export default function GuidedStartPage() {
 
   return (
     <LearnShell
-      title="Your first 10 minutes"
+      title={name ? `${name.split(" ")[0]}, your first 10 minutes` : "Your first 10 minutes"}
       subtitle={`${programme?.name ?? "Super-Cube®"} · Guided path. Skip anytime—this is the fastest route to a real baseline and first practice.`}
       hideJourneyRail
     >
@@ -151,8 +174,12 @@ export default function GuidedStartPage() {
           Go to Learn
         </Link>
         {" · "}
-        <Link href="/learn/demo" className="font-semibold text-ink underline-offset-2 hover:underline">
-          Programme picker
+        <Link href="/learn/account" className="font-semibold text-ink underline-offset-2 hover:underline">
+          You / profile
+        </Link>
+        {" · "}
+        <Link href="/learn/welcome" className="font-semibold text-ink underline-offset-2 hover:underline">
+          Edit profile
         </Link>
       </p>
     </LearnShell>
