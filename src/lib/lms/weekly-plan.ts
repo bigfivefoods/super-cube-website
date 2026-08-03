@@ -1,6 +1,7 @@
 import type { ConstructId } from "@/lib/content";
 import { constructs } from "@/lib/content";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { deriveFacePattern } from "@/lib/lms/face-tracking";
 import type { LocalLmsState } from "@/lib/lms/store";
 import type { ProgrammeId } from "@/lib/programmes";
 
@@ -23,7 +24,8 @@ export type WeeklyPlan = {
 };
 
 /**
- * Build a 3-session weekly practice plan prioritising weakest baseline faces.
+ * Build a 3-session weekly practice plan prioritising weakest faces
+ * (longitudinal pulses first, then baseline assessment).
  */
 export function buildWeeklyPlan(state: LocalLmsState): WeeklyPlan | null {
   const programmeId = (state.subscription?.programmeId ||
@@ -31,6 +33,7 @@ export function buildWeeklyPlan(state: LocalLmsState): WeeklyPlan | null {
   if (!programmeId) return null;
 
   const courses = getCoursesForProgramme(programmeId);
+  const pattern = deriveFacePattern(state);
   const pre = state.attempts.find((a) => a.phase === "pre");
   const progress = state.lessonProgress;
 
@@ -39,11 +42,22 @@ export function buildWeeklyPlan(state: LocalLmsState): WeeklyPlan | null {
     score: number | null;
     name: string;
     color: string;
+    fromPulses: boolean;
   };
 
   let ranked: Ranked[];
 
-  if (pre?.result.constructScores?.length) {
+  if (Object.keys(pattern.averages).length > 0) {
+    ranked = constructs
+      .map((c) => ({
+        constructId: c.id,
+        score: pattern.averages[c.id] ?? null,
+        name: c.name,
+        color: c.color,
+        fromPulses: pattern.pulseCount > 0,
+      }))
+      .sort((a, b) => (a.score ?? 999) - (b.score ?? 999));
+  } else if (pre?.result.constructScores?.length) {
     ranked = constructs
       .map((c) => {
         const s = pre.result.constructScores.find(
@@ -54,16 +68,17 @@ export function buildWeeklyPlan(state: LocalLmsState): WeeklyPlan | null {
           score: s?.score ?? null,
           name: c.name,
           color: c.color,
+          fromPulses: false,
         };
       })
       .sort((a, b) => (a.score ?? 999) - (b.score ?? 999));
   } else {
-    // No baseline yet — curriculum order
     ranked = constructs.map((c) => ({
       constructId: c.id,
       score: null,
       name: c.name,
       color: c.color,
+      fromPulses: false,
     }));
   }
 
@@ -82,19 +97,32 @@ export function buildWeeklyPlan(state: LocalLmsState): WeeklyPlan | null {
         : progress[lesson.id] === "in_progress"
           ? "in_progress"
           : "todo";
+
+    let reason: string;
+    if (face.score == null) {
+      reason = "Start here after orientation & baseline";
+    } else if (face.fromPulses) {
+      reason =
+        face.score < 50
+          ? `Priority from recent pulses (~${face.score})`
+          : face.score < 70
+            ? `Growth opportunity from pulses (~${face.score})`
+            : `Maintain strength from pulses (~${face.score})`;
+    } else {
+      reason =
+        face.score < 50
+          ? `Weakest face (baseline ${face.score}) — highest leverage`
+          : face.score < 70
+            ? `Growth opportunity (baseline ${face.score})`
+            : `Maintain strength (baseline ${face.score})`;
+    }
+
     items.push({
       constructId: face.constructId,
       constructName: face.name,
       color: face.color,
       score: face.score,
-      reason:
-        face.score == null
-          ? "Start here after orientation & baseline"
-          : face.score < 50
-            ? `Weakest face (baseline ${face.score}) — highest leverage`
-            : face.score < 70
-              ? `Growth opportunity (baseline ${face.score})`
-              : `Maintain strength (baseline ${face.score})`,
+      reason,
       href: `/learn/courses/${face.constructId}/${lesson.id}`,
       lessonTitle: lesson.title,
       status,
@@ -108,9 +136,12 @@ export function buildWeeklyPlan(state: LocalLmsState): WeeklyPlan | null {
     weekLabel,
     focusConstructId: focus,
     items,
-    summary: pre
-      ? "This week: deliberate practice on your lowest baseline faces first."
-      : "Complete orientation + baseline so we can prioritise your weakest faces.",
+    summary:
+      pattern.pulseCount > 0
+        ? "This week: deliberate practice guided by your recent face pulses."
+        : pre
+          ? "This week: deliberate practice on your lowest baseline faces first. Track daily pulses to refine priorities."
+          : "Complete orientation + baseline so we can prioritise your weakest faces.",
   };
 }
 

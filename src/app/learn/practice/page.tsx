@@ -1,12 +1,16 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs, type ConstructId } from "@/lib/content";
 import {
   getMicroPracticesFor,
-  pickDailyMicroPractice,
 } from "@/lib/lms/micro-practices";
+import {
+  deriveFacePattern,
+  recommendPractice,
+} from "@/lib/lms/face-tracking";
 import {
   loadLmsState,
   logMicroPractice,
@@ -24,18 +28,16 @@ export default function MicroPracticePage() {
     track("page_view", { path: "/learn/practice" });
   }, []);
 
-  const weakest = useMemo(() => {
-    const pre = state?.attempts.find((a) => a.phase === "pre");
-    if (!pre) return [] as ConstructId[];
-    return [...pre.result.constructScores]
-      .sort((a, b) => a.score - b.score)
-      .slice(0, 2)
-      .map((s) => s.constructId);
-  }, [state]);
+  const pattern = useMemo(
+    () => deriveFacePattern(state ?? undefined),
+    [state]
+  );
+
+  const weakest = pattern.weakest as ConstructId[];
 
   const daily = useMemo(
-    () => pickDailyMicroPractice(weakest),
-    [weakest]
+    () => recommendPractice(state ?? undefined),
+    [state]
   );
 
   const day = new Date().toISOString().slice(0, 10);
@@ -58,8 +60,17 @@ export default function MicroPracticePage() {
   return (
     <LearnShell
       title="Micro-practice"
-      subtitle="3–5 minutes. Weakest-face first. Streak counts."
+      subtitle="3–5 minutes. Guided by your face patterns and baseline. Streak counts."
     >
+      {pattern.insight && (
+        <p className="mb-3 rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 text-[0.8125rem] text-slate">
+          {pattern.insight}{" "}
+          <Link href="/learn/pulse" className="font-semibold text-ink underline">
+            Track faces →
+          </Link>
+        </p>
+      )}
+
       <section
         className="rounded-2xl border border-ink bg-white p-5 sm:p-6"
         style={meta ? { boxShadow: `inset 4px 0 0 ${meta.color}` } : undefined}
