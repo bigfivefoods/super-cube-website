@@ -59,6 +59,18 @@ export function Header() {
     };
   }, [open]);
 
+  /* Escape closes mobile nav + more menu (Tier 3 a11y) */
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        setOpen(false);
+        setMoreOpen(false);
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   const navLinkClass = (active: boolean) => {
     if (overDark) {
       return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
