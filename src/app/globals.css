@@ -1,13 +1,12 @@
-/* Inter — clean modern sans (Tesla / SpaceX product UI language) */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+/* Inter via next/font (layout.tsx) — no render-blocking Google CSS */
 @import "tailwindcss";
 
 :root {
   /* Bright white system — black / white / cool gray */
   --ink: #0a0a0a;
   --ink-soft: #1a1a1a;
-  --slate: #5c5c5c;
-  --muted: #8a8a8a;
+  --slate: #4a4a4a; /* body secondary, stronger contrast */
+  --muted: #6b6b6b; /* ≥4.5:1 on white for secondary text */
   --cream: #ffffff;
   --cream-dark: #f4f4f4;
   --paper: #ffffff;
@@ -35,11 +34,11 @@
   --color-gold-bright: var(--gold-bright);
   --color-gold-soft: var(--gold-soft);
   --color-line: var(--line);
-  --font-sans: Inter, system-ui, sans-serif;
-  --font-display: Inter, system-ui, sans-serif;
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-display: var(--font-inter), Inter, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
-  --default-font-family: Inter, system-ui, sans-serif;
+  --default-font-family: var(--font-inter), Inter, system-ui, sans-serif;
   --default-mono-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
     Consolas, "Liberation Mono", "Courier New", monospace;
 }
@@ -52,7 +51,7 @@ html {
   font-feature-settings: "ss01" on, "cv11" on;
   font-variation-settings: normal;
   -webkit-tap-highlight-color: transparent;
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   line-height: 1.5;
   background: #fff;
   overflow-x: clip;
@@ -83,7 +82,7 @@ html {
 body {
   background: #fff;
   color: var(--ink);
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   line-height: inherit;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -98,7 +97,7 @@ body {
 }
 
 .font-display {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: -0.04em;
 }
@@ -115,7 +114,6 @@ body {
 }
 
 .section-pad {
-  /* Tighter on phones, generous on large screens */
   padding-block: clamp(2.75rem, 6.5vw, 8rem);
 }
 
@@ -158,8 +156,6 @@ body {
   box-sizing: border-box;
 }
 
-/* —— Shared page heroes (marketing + learn + home) ——
-   Text always starts at the same top offset; copy spans ~3/5 width. */
 .page-hero {
   --hero-pad-top: max(4.75rem, calc(env(safe-area-inset-top, 0px) + 4.25rem));
   --hero-pad-bottom: max(
@@ -171,13 +167,11 @@ body {
   isolation: isolate;
   overflow: clip;
   background-color: #fff;
-  /* Fixed start height for eyebrow/title across every hero page */
   padding-top: var(--hero-pad-top);
   padding-bottom: var(--hero-pad-bottom);
   box-sizing: border-box;
 }
 
-/* Full viewport — content pinned to top (not vertically centred) */
 .page-hero--full {
   display: flex;
   flex-direction: column;
@@ -187,7 +181,6 @@ body {
   min-height: 100dvh;
 }
 
-/* Editorial media band when full viewport is not used */
 .page-hero--band {
   display: flex;
   flex-direction: column;
@@ -195,12 +188,10 @@ body {
   min-height: clamp(20rem, 48svh, 32rem);
 }
 
-/* Photo / gradient heroes clear the default white fill */
 .page-hero--media {
   background-color: transparent;
 }
 
-/* Mobile: full-viewport media heroes like the landing page */
 @media (max-width: 639px) {
   .page-hero--full.page-hero--media {
     min-height: 100svh;
@@ -211,14 +202,12 @@ body {
   }
 }
 
-/* Constructs page face jump pills */
 .face-jump:hover {
   background-color: var(--face-color) !important;
   border-color: var(--face-color) !important;
   color: #fff !important;
 }
 
-/* Medium: keep top-aligned content block readable over photo */
 @media (min-width: 640px) and (max-width: 1023px) {
   .page-hero--media .page-hero__copy {
     max-width: min(100%, 36rem);
@@ -228,12 +217,10 @@ body {
 .page-hero__inner {
   width: 100%;
   min-width: 0;
-  /* Align content to top so text baseline matches every page */
   margin-top: 0;
   margin-bottom: auto;
 }
 
-/* Text column ≈ 3/5 of the content container (when not in a 3/2 grid) */
 .page-hero__copy {
   width: 100%;
   max-width: 100%;
@@ -241,9 +228,8 @@ body {
 }
 
 @media (min-width: 768px) {
-  /* Direct child of inner = text-only heroes */
   .page-hero__inner > .page-hero__copy {
-    width: 60%; /* 3/5 */
+    width: 60%;
     max-width: 60%;
   }
 }
@@ -256,7 +242,6 @@ body {
   max-width: 100%;
 }
 
-/* Same top offset on all breakpoints so heroes line up page-to-page */
 @media (min-width: 640px) {
   .page-hero {
     --hero-pad-top: max(6.5rem, calc(env(safe-area-inset-top, 0px) + 5.5rem));
@@ -273,7 +258,6 @@ body {
   }
 }
 
-/* Short viewports — keep top alignment, drop forced full height */
 @media (max-height: 560px) {
   .page-hero--full {
     min-height: auto;
@@ -283,9 +267,8 @@ body {
   }
 }
 
-/* Headings — fluid type; slightly restrained on phones so lines wrap cleanly */
 .heading-xl {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-weight: 600;
   font-size: clamp(1.875rem, 4.2vw + 0.85rem, 4.25rem);
   line-height: 1.08;
@@ -297,7 +280,7 @@ body {
 }
 
 .heading-lg {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-weight: 600;
   font-size: clamp(1.5rem, 2.8vw + 0.7rem, 3.25rem);
   line-height: 1.12;
@@ -307,7 +290,7 @@ body {
 }
 
 .heading-md {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-weight: 600;
   font-size: clamp(1.2rem, 1.2vw + 0.85rem, 1.75rem);
   line-height: 1.22;
@@ -340,12 +323,39 @@ button:focus-visible {
   outline-offset: 3px;
 }
 
+/* Skip link — keyboard first, Tier 3 a11y */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  border-radius: 9999px;
+  background: var(--ink);
+  color: #fff;
+  padding: 0.65rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.15s ease;
+}
+.skip-link:focus {
+  top: max(0.75rem, env(safe-area-inset-top, 0px));
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+#main-content:focus {
+  outline: none;
+}
+#main-content:focus-visible {
+  outline: none;
+}
+
 .card-lift {
   transition: border-color 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Only lift on real hover devices — avoids sticky “hover” on touch */
 @media (hover: hover) and (pointer: fine) {
   .card-lift:hover {
     transform: translateY(-2px);
@@ -354,23 +364,19 @@ button:focus-visible {
   }
 }
 
-/* —— Standalone app (PWA / Capacitor): hide marketing chrome —— */
 @media (display-mode: standalone) {
   .site-chrome {
     display: none !important;
   }
   .learn-surface {
-    /* Clear fixed bottom tab bar on mobile */
     padding-bottom: 0;
   }
 }
 
-/* Capacitor injects this class on body when running in native shell */
 body.capacitor-app .site-chrome {
   display: none !important;
 }
 
-/* —— LMS product UI: compact, crisp, bright, coherent —— */
 .learn-surface {
   background: #ffffff;
   color: var(--ink);
@@ -378,7 +384,7 @@ body.capacitor-app .site-chrome {
 }
 
 .learn-title {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-size: 1.25rem;
   font-weight: 600;
   letter-spacing: -0.03em;
@@ -573,7 +579,6 @@ body.capacitor-app .site-chrome {
   border-radius: 9999px;
 }
 
-/* 3D Super-Cube — each face = construct colour + skills */
 .cube-scene {
   perspective: 1100px;
   width: 260px;
@@ -609,7 +614,6 @@ body.capacitor-app .site-chrome {
   animation: cube-spin 36s linear infinite;
 }
 
-/* Manual / drag-controlled cube: no CSS keyframe spin */
 .cube.cube--manual {
   animation: none;
   will-change: transform;
@@ -660,7 +664,7 @@ body.capacitor-app .site-chrome {
 }
 
 .cube-face__name {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -687,7 +691,7 @@ body.capacitor-app .site-chrome {
 }
 
 .cube-face__skills li {
-  font-family: Inter, system-ui, sans-serif;
+  font-family: var(--font-inter), Inter, system-ui, sans-serif;
   font-size: 0.52rem;
   font-weight: 500;
   line-height: 1.2;
@@ -698,7 +702,6 @@ body.capacitor-app .site-chrome {
 
 .cube-scene--sm .cube-face__skills li {
   font-size: 0.42rem;
-  gap: 0.05rem;
 }
 
 .cube-scene--lg .cube-face__skills li {
@@ -791,12 +794,10 @@ body.capacitor-app .site-chrome {
   margin-top: 1.25rem;
 }
 
-/* Subtle surface utility */
 .surface-muted {
   background: #fafafa;
 }
 
-/* Media defaults — prevent overflow on small screens */
 img,
 video,
 svg {
@@ -804,20 +805,17 @@ svg {
   height: auto;
 }
 
-/* Touch-friendly interactive targets on coarse pointers */
 @media (pointer: coarse) {
   .container-site a:not(.cube-ctrl),
   .container-site button:not(.cube-ctrl) {
     min-height: 2.75rem;
   }
-  /* LMS keeps compact, neat controls */
   .learn-surface .learn-btn,
   .learn-surface .learn-choice,
   .learn-surface .learn-chip,
   .learn-surface .learn-chip-solid {
     min-height: 0;
   }
-  /* Cube controls stay compact but tappable */
   .cube-ctrl {
     min-height: 2.25rem !important;
     min-width: 2.25rem;
@@ -825,7 +823,6 @@ svg {
   }
 }
 
-/* Ultra-narrow phones */
 @media (max-width: 379px) {
   .heading-xl {
     font-size: 1.75rem;
@@ -842,7 +839,6 @@ svg {
   }
 }
 
-/* Large / ultrawide: keep content readable */
 @media (min-width: 1440px) {
   .container-site {
     max-width: 1200px;
@@ -851,7 +847,6 @@ svg {
   }
 }
 
-/* Reduce motion for accessibility */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -865,7 +860,6 @@ svg {
   }
 }
 
-/* Cube scaling: phone → tablet → desktop */
 @media (max-width: 639px) {
   .cube-scene,
   .cube-scene--md,
@@ -931,7 +925,6 @@ svg {
   }
 }
 
-/* Tables / wide content: avoid horizontal page scroll */
 .table-scroll {
   width: 100%;
   overflow-x: auto;
@@ -939,7 +932,6 @@ svg {
   overscroll-behavior-x: contain;
 }
 
-/* Responsive media grids helper */
 .resp-grid-2 {
   display: grid;
   gap: 0.75rem;
