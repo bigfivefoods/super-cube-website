@@ -10,6 +10,7 @@ import type {
   OrientationResponses,
   OrientationResult,
 } from "@/lib/lms/orientation";
+import type { FacePulse } from "@/lib/lms/face-tracking";
 
 const KEY = "supercube_lms_v1";
 
@@ -116,6 +117,8 @@ export interface LocalLmsState {
   };
   /** UI locale hint */
   locale?: "en" | "zu" | "af";
+  /** Continuous daily/weekly face pulses for pattern tracking */
+  facePulses?: FacePulse[];
 }
 
 const empty = (): LocalLmsState => ({
@@ -123,6 +126,7 @@ const empty = (): LocalLmsState => ({
   attempts: [],
   reflections: {},
   practiceStreak: { current: 0, best: 0, lastDate: null },
+  facePulses: [],
 });
 
 export function loadLmsState(): LocalLmsState {
@@ -142,6 +146,7 @@ export function loadLmsState(): LocalLmsState {
         best: 0,
         lastDate: null,
       },
+      facePulses: parsed.facePulses ?? [],
     };
   } catch {
     return empty();
@@ -275,6 +280,7 @@ export function importLmsBackup(json: string): LocalLmsState {
     lessonProgress: data.lessonProgress ?? {},
     attempts: data.attempts ?? [],
     reflections: data.reflections ?? {},
+    facePulses: data.facePulses ?? [],
   };
   saveLmsState(merged);
   return merged;
