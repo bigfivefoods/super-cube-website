@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 
 /**
  * Push non-journal progress snapshot for coach dashboards.
- * Body: { orgCode, programmeId, pathwayPct, lessonsCompleted, preOverall, postOverall, growth, certificateId }
+ * Includes optional longitudinal pulse metadata when migration 005 is applied.
  */
 export async function POST(request: Request) {
   try {
@@ -41,7 +41,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unknown org" }, { status: 404 });
     }
 
-    // Consent: client should only call when shareProgressWithCoach is true
     if (body.consent === false) {
       return NextResponse.json({
         ok: false,
@@ -50,7 +49,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Ensure membership
     await supabase.from("org_members").upsert(
       {
         org_id: org.id,
@@ -66,7 +64,7 @@ export async function POST(request: Request) {
         ? body.faceScores
         : {};
 
-    const row = {
+    const fullRow: Record<string, unknown> = {
       org_id: org.id,
       user_id: user.id,
       programme_id: body.programmeId ?? null,
@@ -77,28 +75,56 @@ export async function POST(request: Request) {
       growth: body.growth ?? null,
       certificate_id: body.certificateId ?? null,
       face_scores: faceScores,
+      pulse_count: Number(body.pulseCount) || 0,
+      pulse_consistency: Number(body.pulseConsistency) || 0,
+      last_pulse_at: body.lastPulseAt ?? null,
+      pulse_window_days: Number(body.pulseWindowDays) || 28,
       client_updated_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
-    let { error } = await supabase
-      .from("org_progress_snapshots")
-      .upsert(row, { onConflict: "org_id,user_id" });
+    const attempts: Record<string, unknown>[] = [
+      fullRow,
+      Object.fromEntries(
+        Object.entries(fullRow).filter(
+          ([k]) =>
+            !["pulse_count", "pulse_consistency", "last_pulse_at", "pulse_window_days"].includes(
+              k
+            )
+        )
+      ),
+      Object.fromEntries(
+        Object.entries(fullRow).filter(
+          ([k]) =>
+            ![
+              "face_scores",
+              "pulse_count",
+              "pulse_consistency",
+              "last_pulse_at",
+              "pulse_window_days",
+            ].includes(k)
+        )
+      ),
+    ];
 
-    // Older DBs without face_scores column: retry without it
-    if (error && /face_scores/i.test(error.message)) {
-      const { face_scores: _drop, ...withoutFaces } = row;
-      const retry = await supabase
+    let lastError: string | null = null;
+    for (const row of attempts) {
+      const { error } = await supabase
         .from("org_progress_snapshots")
-        .upsert(withoutFaces, { onConflict: "org_id,user_id" });
-      error = retry.error;
+        .upsert(row, { onConflict: "org_id,user_id" });
+      if (!error) {
+        return NextResponse.json({ ok: true });
+      }
+      lastError = error.message;
+      if (!/column|face_scores|pulse_/i.test(error.message)) {
+        break;
+      }
     }
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-
-    return NextResponse.json({ ok: true });
+    return NextResponse.json(
+      { error: lastError || "Progress push failed" },
+      { status: 400 }
+    );
   } catch (e) {
     return NextResponse.json(
       { error: e instanceof Error ? e.message : "Progress push failed" },
