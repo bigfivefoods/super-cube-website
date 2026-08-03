@@ -115,7 +115,7 @@ export interface LocalLmsState {
     firstWin?: boolean;
   };
   /** UI locale hint */
-  locale?: "en" | "zu";
+  locale?: "en" | "zu" | "af";
 }
 
 const empty = (): LocalLmsState => ({
@@ -425,7 +425,7 @@ export function markFirstRunStep(
   return state;
 }
 
-export function setLmsLocale(locale: "en" | "zu"): LocalLmsState {
+export function setLmsLocale(locale: "en" | "zu" | "af"): LocalLmsState {
   const state = loadLmsState();
   state.locale = locale;
   saveLmsState(state);

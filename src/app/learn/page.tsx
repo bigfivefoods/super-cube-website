@@ -13,6 +13,8 @@ import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { track } from "@/lib/analytics";
 import { getContinueTarget, reflectionCount } from "@/lib/lms/continue";
 import { buildWeeklyPlan } from "@/lib/lms/weekly-plan";
+import { useLocale } from "@/components/LocaleProvider";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import {
   loadLmsState,
   setLmsLocale,
@@ -22,7 +24,6 @@ import {
 } from "@/lib/lms/store";
 import { buildFaceScoresFromState } from "@/lib/lms/face-scores";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
-import { setLocaleInStorage, t, type Locale } from "@/lib/i18n";
 
 const rainbow = constructs.map((c) => c.color).join(", ");
 
@@ -37,11 +38,17 @@ const constructIcons: Record<ConstructId, string> = {
 
 export default function LearnDashboardPage() {
   const journey = useJourney();
+  const { t, locale, setLocale } = useLocale();
   const [state, setState] = useState<LocalLmsState | null>(null);
 
   useEffect(() => {
     setState(loadLmsState());
   }, [journey?.doneCount, journey?.coursePct]);
+
+  useEffect(() => {
+    setLmsLocale(locale);
+    setState(loadLmsState());
+  }, [locale]);
 
   if (!journey) {
     return (
@@ -359,7 +366,7 @@ export default function LearnDashboardPage() {
           />
           <label htmlFor="share-coach" className="text-[0.8125rem] text-slate">
             <span className="font-semibold text-ink">
-              {t("shareCoach", (lms.locale as Locale) || "en")}
+              {t("learn.shareCoach")}
             </span>
             <span className="mt-0.5 block text-[0.75rem] text-muted">
               Scores &amp; completion only—never journal text. Requires a cohort
@@ -372,28 +379,17 @@ export default function LearnDashboardPage() {
           </label>
         </div>
 
-        {/* Locale scaffold + weekly email hook */}
+        {/* Language + weekly email */}
         <div className="mb-4 flex flex-col gap-3 rounded-xl border border-black/[0.06] bg-white px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-[0.8125rem]">
-            <span className="font-semibold text-ink">Language</span>
-            {(["en", "zu"] as Locale[]).map((loc) => (
-              <button
-                key={loc}
-                type="button"
-                className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold ${
-                  (lms.locale || "en") === loc
-                    ? "bg-ink text-white"
-                    : "border border-black/[0.08] text-slate"
-                }`}
-                onClick={() => {
-                  setLmsLocale(loc);
-                  setLocaleInStorage(loc);
-                  setState(loadLmsState());
-                }}
-              >
-                {loc === "en" ? "English" : "isiZulu"}
-              </button>
-            ))}
+          <div className="flex flex-wrap items-center gap-2 text-[0.8125rem]">
+            <span className="font-semibold text-ink">{t("learn.language")}</span>
+            <LanguageSwitcher
+              variant="footer"
+            />
+            {/* Keep LMS store in sync when language changes via switcher */}
+            <span className="sr-only" aria-live="polite">
+              {locale}
+            </span>
           </div>
           {lms.user?.email && weekly && (
             <button

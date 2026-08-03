@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useLocale } from "@/components/LocaleProvider";
 import { track } from "@/lib/analytics";
 import { getContinueTarget } from "@/lib/lms/continue";
 import { loadLmsState, markDoneForToday } from "@/lib/lms/store";
@@ -12,6 +13,7 @@ import { useJourney } from "@/components/learn/JourneyProgress";
  */
 export function StickyContinue() {
   const journey = useJourney();
+  const { t } = useLocale();
   const [ready, setReady] = useState(false);
   const [doneToday, setDoneToday] = useState(false);
 
@@ -40,9 +42,9 @@ export function StickyContinue() {
             className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-ink px-3 text-sm font-semibold text-white"
           >
             {cont.kind === "resume"
-              ? "Continue session"
+              ? t("learn.continueSession")
               : cont.kind === "next_lesson"
-                ? "Next session"
+                ? t("learn.nextSession")
                 : journey.current.cta}
           </Link>
           <button
@@ -55,7 +57,7 @@ export function StickyContinue() {
             }}
             className="min-h-11 shrink-0 rounded-xl border border-black/[0.1] px-3 text-xs font-semibold text-ink disabled:opacity-50"
           >
-            {doneToday ? "Done ✓" : "Done today"}
+            {doneToday ? `${t("learn.doneTodayShort")} ✓` : t("learn.doneTodayShort")}
           </button>
         </div>
       </div>

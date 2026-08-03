@@ -5,6 +5,7 @@ import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { LocaleProvider } from "@/components/LocaleProvider";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
 import { site } from "@/lib/content";
@@ -92,21 +93,23 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth antialiased">
       <body className="flex min-h-full flex-col bg-white text-ink">
-        <PwaRegister />
-        <CapacitorInit />
-        <CapacitorPush />
-        <SentryInit />
-        <AnalyticsProvider />
-        {/* Site chrome hidden when installed as standalone app (PWA / Capacitor) */}
-        <div className="site-chrome contents">
-          <Header />
-        </div>
-        <ErrorBoundary>
-          <main className="flex-1">{children}</main>
-        </ErrorBoundary>
-        <div className="site-chrome contents">
-          <Footer />
-        </div>
+        <LocaleProvider>
+          <PwaRegister />
+          <CapacitorInit />
+          <CapacitorPush />
+          <SentryInit />
+          <AnalyticsProvider />
+          {/* Site chrome hidden when installed as standalone app (PWA / Capacitor) */}
+          <div className="site-chrome contents">
+            <Header />
+          </div>
+          <ErrorBoundary>
+            <main className="flex-1">{children}</main>
+          </ErrorBoundary>
+          <div className="site-chrome contents">
+            <Footer />
+          </div>
+        </LocaleProvider>
       </body>
     </html>
   );
