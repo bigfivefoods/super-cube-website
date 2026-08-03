@@ -28,6 +28,21 @@ Track of learner + marketing upgrades that turn Super-Cube® into a category-def
 | SEO JSON-LD | Organization + Course on home |
 | EN / isiZulu UI scaffold | Learn dashboard locale toggle |
 | a11y: reduced motion + focus-visible | `globals.css` |
+| Face tracking + patterns | `/learn/pulse` |
+| First-pulse delight + PWA install | Learn shell + pulse |
+| Cube-forming dashboard theatre | `/learn` · `CubeTheatre` |
+
+## Tier 3 — visual system, performance, accessibility (Aug 2026)
+
+| Item | Detail |
+|------|--------|
+| Self-hosted Inter | `next/font` in `layout.tsx` — no render-blocking Google CSS |
+| Skip to main content | `.skip-link` → `#main-content` |
+| Contrast tokens | `--slate` / `--muted` darkened for secondary text legibility |
+| Escape closes menus | Header mobile + More menu |
+| Security headers | `next.config.ts` + `vercel.json` (frame, nosniff, referrer, permissions) |
+| Image formats | AVIF/WebP via Next image config + long-cache static assets |
+| poweredByHeader | Disabled |
 
 ## Design principles
 
@@ -46,7 +61,8 @@ Track of learner + marketing upgrades that turn Super-Cube® into a category-def
 - Full isiZulu course content (scaffold only)  
 - Capacitor store builds on Mac  
 - SSO / seat billing when enterprise revenue justifies  
+- Compress oversized hero JPG (`leadership-hero.jpg` ~2.6MB) in asset pipeline  
 
 ## Funnel events
 
-`guided_start_open` → `pre_complete` → `micro_practice_complete` → `lesson_complete` → `post_complete` → `certificate_download` / `report_share` / `weekly_email_request`
+`guided_start_open` → `pre_complete` → `micro_practice_complete` → `lesson_complete` → `post_complete` → `certificate_download` / `report_share` / `weekly_email_request` / `first_pulse_complete`
