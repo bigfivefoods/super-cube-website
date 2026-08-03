@@ -11,11 +11,20 @@ import {
   sdgSources,
 } from "@/lib/sdgs";
 
-export const metadata: Metadata = {
-  title: "Why Leadership Matters",
+import { pageMeta } from "@/lib/seo";
+
+export const metadata: Metadata = pageMeta({
+  title: "Why leadership matters for the UN SDGs",
   description:
-    "Why human-centric leadership is essential for the UN Sustainable Development Goals—and how Super-Cube® develops leaders who can deliver.",
-};
+    "Why human-centric leadership is essential to the UN Sustainable Development Goals—and how Super-Cube® develops leaders who can deliver.",
+  path: "/why-leadership",
+  image: "/images/hero/hero-sdg.jpg",
+  keywords: [
+    "leadership SDGs",
+    "sustainable development leadership",
+    "SDG 4 leadership education",
+  ],
+});
 
 function goalById(id: number) {
   return sdgGoals.find((g) => g.id === id)!;

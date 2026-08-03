@@ -8,12 +8,21 @@ import {
   theoryCategories,
   theoryLiteratureOverview,
 } from "@/lib/content";
+import { pageMeta } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "The Model",
+export const metadata: Metadata = pageMeta({
+  title: "Super-Cube® Leadership Model",
   description:
-    "Understand the Super-Cube® Leadership Model—a multidimensional, human-centric framework with six constructs, grounded in major leadership schools, contemporary topics, skills-development literature, AQAL, I–Thou, and Ubuntu.",
-};
+    "The Super-Cube® Leadership Model: six human-centric constructs (Choices, Principles, Mental, Emotional, Physical, Spiritual), I–Thou and Ubuntu philosophy, and developable leadership from UKZN doctoral research.",
+  path: "/the-model",
+  image: "/images/hero/hero-model.jpg",
+  keywords: [
+    "Super-Cube Leadership Model",
+    "multidimensional leadership framework",
+    "Ubuntu leadership",
+    "I-Thou leadership",
+  ],
+});
 
 export default function TheModelPage() {
   return (

@@ -20,6 +20,7 @@ import {
   setShareProgressConsent,
   type LocalLmsState,
 } from "@/lib/lms/store";
+import { buildFaceScoresFromState } from "@/lib/lms/face-scores";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
 import { setLocaleInStorage, t, type Locale } from "@/lib/i18n";
 
@@ -232,7 +233,7 @@ export default function LearnDashboardPage() {
             </Link>
             <Link
               href="/learn/assessment/mid"
-              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15 sm:col-span-2"
+              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
             >
               <p className="learn-eyebrow">Mid-pathway</p>
               <p className="mt-0.5 font-semibold text-ink">
@@ -240,6 +241,18 @@ export default function LearnDashboardPage() {
               </p>
               <p className="learn-meta mt-0.5">
                 Refresh scores so your weekly plan adapts
+              </p>
+            </Link>
+            <Link
+              href="/learn/pulse"
+              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
+            >
+              <p className="learn-eyebrow">Optional</p>
+              <p className="mt-0.5 font-semibold text-ink">
+                Peer / manager pulse
+              </p>
+              <p className="learn-meta mt-0.5">
+                5-item observation after the programme
               </p>
             </Link>
           </div>
@@ -317,6 +330,8 @@ export default function LearnDashboardPage() {
               setShareProgressConsent(e.target.checked);
               setState(loadLmsState());
               if (e.target.checked && lms.orgCode) {
+                const pre = lms.attempts.find((a) => a.phase === "pre");
+                const post = lms.attempts.find((a) => a.phase === "post");
                 void fetch("/api/org/progress", {
                   method: "POST",
                   headers: { "Content-Type": "application/json" },
@@ -327,11 +342,16 @@ export default function LearnDashboardPage() {
                     lessonsCompleted: Object.values(lms.lessonProgress).filter(
                       (s) => s === "completed"
                     ).length,
-                    preOverall: lms.attempts.find((a) => a.phase === "pre")
-                      ?.result.overall,
-                    postOverall: lms.attempts.find((a) => a.phase === "post")
-                      ?.result.overall,
+                    preOverall: pre?.result.overall,
+                    postOverall: post?.result.overall,
+                    growth:
+                      pre && post
+                        ? Math.round(
+                            (post.result.overall - pre.result.overall) * 10
+                          ) / 10
+                        : null,
                     certificateId: lms.certificateId,
+                    faceScores: buildFaceScoresFromState(lms),
                   }),
                 });
               }

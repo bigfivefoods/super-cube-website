@@ -61,6 +61,11 @@ export async function POST(request: Request) {
       { onConflict: "org_id,user_id" }
     );
 
+    const faceScores =
+      body.faceScores && typeof body.faceScores === "object"
+        ? body.faceScores
+        : {};
+
     const row = {
       org_id: org.id,
       user_id: user.id,
@@ -71,13 +76,23 @@ export async function POST(request: Request) {
       post_overall: body.postOverall ?? null,
       growth: body.growth ?? null,
       certificate_id: body.certificateId ?? null,
+      face_scores: faceScores,
       client_updated_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
 
-    const { error } = await supabase
+    let { error } = await supabase
       .from("org_progress_snapshots")
       .upsert(row, { onConflict: "org_id,user_id" });
+
+    // Older DBs without face_scores column: retry without it
+    if (error && /face_scores/i.test(error.message)) {
+      const { face_scores: _drop, ...withoutFaces } = row;
+      const retry = await supabase
+        .from("org_progress_snapshots")
+        .upsert(withoutFaces, { onConflict: "org_id,user_id" });
+      error = retry.error;
+    }
 
     if (error) {
       return NextResponse.json({ error: error.message }, { status: 400 });

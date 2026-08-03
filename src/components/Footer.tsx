@@ -26,10 +26,10 @@ const columns = [
   {
     title: "Organisations",
     links: [
+      { href: "/pilot-pack", label: "Pilot pack" },
       { href: "/facilitator", label: "Facilitator kit" },
       { href: "/team", label: "Team cube" },
       { href: "/certify", label: "Certification" },
-      { href: "/community", label: "Community" },
       { href: "/pricing#pilot", label: "Book a pilot" },
     ],
   },

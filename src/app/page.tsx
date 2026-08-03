@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FounderVideo } from "@/components/FounderVideo";
+import { SocialProofStrip } from "@/components/SocialProof";
 import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import {
@@ -106,6 +107,8 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      <SocialProofStrip />
 
       {/* Founder / model video (optional embed URL) */}
       <section className="section-pad border-b border-black/[0.06] bg-white">

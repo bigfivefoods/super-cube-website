@@ -6,11 +6,20 @@ import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs } from "@/lib/content";
 import { COURSE_PRICE_USD, programmes } from "@/lib/programmes";
 
-export const metadata: Metadata = {
-  title: "What — Super-Cube® Programmes",
+import { pageMeta } from "@/lib/seo";
+
+export const metadata: Metadata = pageMeta({
+  title: "Leadership programmes for kids, teens & adults",
   description:
-    "What Super-Cube® is: leadership programmes for Kids (5–12), Adolescents (13–21), and Adults (22+)—one model across the lifespan. Holistic, longitudinal, multi-level benefits for people and the UN SDGs.",
-};
+    "Super-Cube® leadership programmes for Kids (5–12), Adolescents (13–21), and Adults (22+). One six-face model across the lifespan—orient, baseline, practise, re-measure.",
+  path: "/what",
+  image: "/images/hero/hero-programs.jpg",
+  keywords: [
+    "youth leadership programme",
+    "adult leadership course",
+    "school leadership curriculum South Africa",
+  ],
+});
 
 const programmeAccents = [
   constructs[0].color,

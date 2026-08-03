@@ -10,6 +10,20 @@ export interface InsightPost {
 
 export const insightPosts: InsightPost[] = [
   {
+    slug: "how-to-measure-leadership-growth",
+    title: "How to measure leadership growth (not attendance)",
+    excerpt:
+      "If you only track hours and completion rates, you are measuring activity. Pre → post six-face scores make Super-Cube® growth visible.",
+    date: "2026-05-02",
+    tags: ["measurement", "seo", "lms"],
+    readingMinutes: 6,
+    body: [
+      "Most leadership programmes report seats filled and certificates printed. Super-Cube® is designed so the product is growth: a baseline across Choices, Principles, Mental, Emotional, Physical, and Spiritual—then deliberate practice—then the same instrument again.",
+      "For schools and companies, that means coach dashboards can show consented pre → post deltas and face heat maps without exposing journals. For learners, the dual radar and PDF report make change discussable with a manager or mentor.",
+      "If you are evaluating Super-Cube® Learn, ask three questions: Did we measure before and after? Did weakest faces get weekly practice? Can we verify certificates publicly? Those answers separate development from theatre.",
+    ],
+  },
+  {
     slug: "leadership-is-learnable",
     title: "Leadership is largely learnable—so measure it",
     excerpt:

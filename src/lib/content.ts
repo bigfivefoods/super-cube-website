@@ -42,6 +42,7 @@ export const moreNavGroups = [
   {
     title: "Organisations",
     links: [
+      { href: "/pilot-pack", label: "Pilot pack" },
       { href: "/facilitator", label: "Facilitator kit" },
       { href: "/team", label: "Team cube" },
       { href: "/certify", label: "Certification" },

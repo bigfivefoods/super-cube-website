@@ -48,10 +48,14 @@ create table if not exists public.org_progress_snapshots (
   post_overall numeric,
   growth numeric,
   certificate_id text,
+  face_scores jsonb not null default '{}'::jsonb,
   client_updated_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   unique (org_id, user_id)
 );
+
+alter table public.org_progress_snapshots
+  add column if not exists face_scores jsonb not null default '{}'::jsonb;
 
 create index if not exists org_progress_org_idx
   on public.org_progress_snapshots (org_id);

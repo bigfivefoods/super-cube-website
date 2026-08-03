@@ -65,15 +65,23 @@ export const metadata: Metadata = {
   },
   keywords: [
     "Super-Cube® Leadership Model",
-    "leadership development",
+    "leadership development South Africa",
     "human-centric leadership",
-    "Africa leadership",
-    "FMCG leadership",
-    "Craig Ross Muller",
-    "leadership skills",
-    "emotional intelligence",
+    "leadership programme Africa",
+    "school leadership curriculum",
+    "corporate leadership development",
+    "emotional intelligence training",
     "principled leadership",
+    "Ubuntu leadership",
+    "Craig Ross Muller UKZN",
+    "leadership skills for SDGs",
+    "youth leadership programme",
   ],
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
+  },
 };
 
 export default function RootLayout({

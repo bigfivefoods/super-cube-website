@@ -3,9 +3,10 @@
 ## 1. Supabase (required for sync + coach)
 
 1. SQL Editor → run **`SUPABASE_RUN_THIS_FULL.sql`** (if not already).
-2. SQL Editor → run **`SUPABASE_RUN_THIS_ORGS_COACH.sql`** (orgs, roster, certificates).
-3. Confirm: `npm run supabase:verify` and `npm run supabase:orgs`.
-4. Auth → URL config:
+2. SQL Editor → run **`SUPABASE_RUN_THIS_ORGS_COACH.sql`** (orgs, roster, certificates, face_scores).
+3. Optional: `supabase/migrations/004_face_scores.sql` if orgs SQL already ran without face_scores.
+4. Confirm: `npm run supabase:verify` and `npm run supabase:orgs`.
+5. Auth → URL config:
    - Site URL: `https://www.super-cube.me`
    - Redirect: `https://www.super-cube.me/auth/callback`
 

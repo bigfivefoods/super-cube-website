@@ -37,6 +37,7 @@ export type FunnelEvent =
   | "micro_practice_complete"
   | "guided_start_open"
   | "guided_start_cta"
+  | "peer_pulse_complete"
   | "client_error";
 
 /** Conversion funnel steps to watch in GA4 + local debug */

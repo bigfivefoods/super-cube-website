@@ -3,11 +3,20 @@ import { ImpactResults } from "@/components/ImpactResults";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs, researchHighlights } from "@/lib/content";
 
-export const metadata: Metadata = {
-  title: "Research",
+import { pageMeta } from "@/lib/seo";
+
+export const metadata: Metadata = pageMeta({
+  title: "Research & validation",
   description:
-    "Empirical validation of the Super-Cube® Leadership Model—mixed-methods research, confirmatory factor analysis, and qualitative findings.",
-};
+    "Empirical validation of the Super-Cube® Leadership Model—mixed-methods research at UKZN, confirmatory factor analysis (CFI≈0.86), and qualitative findings from African FMCG networks.",
+  path: "/research",
+  image: "/images/hero/hero-research.jpg",
+  keywords: [
+    "leadership research South Africa",
+    "confirmatory factor analysis leadership",
+    "UKZN DBA leadership model",
+  ],
+});
 
 export default function ResearchPage() {
   return (

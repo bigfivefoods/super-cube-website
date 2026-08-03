@@ -5,11 +5,21 @@ import { Button, CTABanner, PageHero } from "@/components/ui";
 import { constructs, type ConstructId } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
-export const metadata: Metadata = {
-  title: "Six faces",
+import { pageMeta } from "@/lib/seo";
+
+export const metadata: Metadata = pageMeta({
+  title: "Six faces of leadership",
   description:
-    "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six faces of the Super-Cube® Leadership Model.",
-};
+    "Explore Choices, Principles, Mental, Emotional, Physical, and Spiritual—the six Super-Cube® leadership constructs with overviews, key components, and research-backed development.",
+  path: "/constructs",
+  image: "/images/hero/hero-constructs.jpg",
+  keywords: [
+    "six faces of leadership",
+    "leadership constructs",
+    "emotional intelligence leadership Africa",
+    "principled leadership",
+  ],
+});
 
 const media: Record<
   ConstructId,

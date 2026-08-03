@@ -74,15 +74,29 @@ export async function GET(request: Request) {
       .select("user_id, role, display_name, joined_at")
       .eq("org_id", org.id);
 
-    const { data: progress } = await supabase
-      .from("org_progress_snapshots")
-      .select(
-        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, client_updated_at"
-      )
-      .eq("org_id", org.id);
+    let progress: Record<string, unknown>[] | null = null;
+    {
+      const first = await supabase
+        .from("org_progress_snapshots")
+        .select(
+          "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, face_scores, client_updated_at"
+        )
+        .eq("org_id", org.id);
+      if (first.error && /face_scores/i.test(first.error.message)) {
+        const retry = await supabase
+          .from("org_progress_snapshots")
+          .select(
+            "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, client_updated_at"
+          )
+          .eq("org_id", org.id);
+        progress = (retry.data || []) as Record<string, unknown>[];
+      } else {
+        progress = (first.data || []) as Record<string, unknown>[];
+      }
+    }
 
     const progressByUser = new Map(
-      (progress || []).map((p) => [p.user_id as string, p])
+      (progress || []).map((p) => [String(p.user_id), p])
     );
 
     const roster = (members || []).map((m) => ({

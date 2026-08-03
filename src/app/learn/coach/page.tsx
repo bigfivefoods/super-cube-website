@@ -31,6 +31,10 @@ type RosterRow = {
     post_overall?: number | null;
     growth?: number | null;
     certificate_id?: string | null;
+    face_scores?: Record<
+      string,
+      { pre?: number; post?: number; mid?: number }
+    > | null;
   } | null;
 };
 
@@ -349,46 +353,73 @@ export default function CoachToolsPage() {
                         );
                       })}
                     </div>
-                    {/* Face-level strip: intensity from mean consented pre (proxy until face scores sync) */}
+                    {/* Face-level heat from consented face_scores when present */}
                     <div className="mt-5">
                       <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                        Face intensity · cohort mean pre
+                        Face heat · cohort mean pre
                       </p>
                       <p className="learn-meta mt-0.5">
-                        Uses overall pre as a shared intensity until face-level
-                        snapshots are shared. Stretch faces still guide weekly
-                        plans on the learner device.
+                        Real face scores when learners share progress (requires
+                        face_scores column—run migration 004). Falls back to
+                        overall pre mean if faces not yet synced.
                       </p>
                       <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6">
                         {(() => {
-                          const pres = roster
-                            .map((r) => r.progress?.pre_overall)
-                            .filter((n): n is number => typeof n === "number");
-                          const mean =
-                            pres.length > 0
+                          const faceMaps = roster
+                            .map((r) => r.progress?.face_scores)
+                            .filter(Boolean) as Record<
+                            string,
+                            { pre?: number }
+                          >[];
+                          const hasFaces = faceMaps.length > 0;
+                          const means: Record<string, number> = {};
+                          if (hasFaces) {
+                            for (const c of constructs) {
+                              const vals = faceMaps
+                                .map((m) => m[c.id]?.pre)
+                                .filter(
+                                  (n): n is number => typeof n === "number"
+                                );
+                              if (vals.length)
+                                means[c.id] =
+                                  vals.reduce((a, b) => a + b, 0) /
+                                  vals.length;
+                            }
+                          }
+                          const overallFallback = (() => {
+                            const pres = roster
+                              .map((r) => r.progress?.pre_overall)
+                              .filter(
+                                (n): n is number => typeof n === "number"
+                              );
+                            return pres.length
                               ? pres.reduce((a, b) => a + b, 0) / pres.length
                               : 50;
-                          const intensity = Math.min(
-                            1,
-                            Math.max(0.25, mean / 100)
-                          );
-                          return constructs.map((c) => (
-                            <div
-                              key={c.id}
-                              className="rounded-lg px-1.5 py-2 text-center"
-                              style={{
-                                background: c.color,
-                                opacity: 0.35 + intensity * 0.65,
-                              }}
-                            >
-                              <p className="text-[0.6rem] font-bold text-white">
-                                {c.shortName}
-                              </p>
-                              <p className="text-[0.65rem] tabular-nums text-white/90">
-                                {Math.round(mean)}
-                              </p>
-                            </div>
-                          ));
+                          })();
+                          return constructs.map((c) => {
+                            const mean = means[c.id] ?? overallFallback;
+                            const intensity = Math.min(
+                              1,
+                              Math.max(0.25, mean / 100)
+                            );
+                            return (
+                              <div
+                                key={c.id}
+                                className="rounded-lg px-1.5 py-2 text-center"
+                                style={{
+                                  background: c.color,
+                                  opacity: 0.35 + intensity * 0.65,
+                                }}
+                              >
+                                <p className="text-[0.6rem] font-bold text-white">
+                                  {c.shortName}
+                                </p>
+                                <p className="text-[0.65rem] tabular-nums text-white/90">
+                                  {Math.round(mean)}
+                                </p>
+                              </div>
+                            );
+                          });
                         })()}
                       </div>
                     </div>
