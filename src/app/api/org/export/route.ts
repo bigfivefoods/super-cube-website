@@ -62,7 +62,8 @@ export async function GET(request: Request) {
           .select(sel)
           .eq("org_id", org.id);
         if (!res.error) {
-          progress = (res.data || []) as Record<string, unknown>[];
+          // Cast via unknown — Supabase client types can widen to GenericStringError[]
+          progress = (res.data || []) as unknown as Record<string, unknown>[];
           break;
         }
         if (!/column|face_scores|pulse_/i.test(res.error.message)) {
