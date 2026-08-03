@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
-import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnCourseNav } from "@/components/learn/LearnCourseNav";
 import {
   JourneyRailLive,
@@ -81,7 +80,6 @@ export function LearnShell({
 
   return (
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
-      <InstallAppBanner />
       {hero}
 
       <div
