@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { Inter } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
@@ -11,6 +12,14 @@ import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
 import { site } from "@/lib/content";
 import "./globals.css";
+
+/** Self-hosted Inter via next/font — no render-blocking Google CSS */
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export const viewport: Viewport = {
   themeColor: [
@@ -102,20 +111,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full scroll-smooth antialiased">
-      <body className="flex min-h-full flex-col bg-white text-ink">
+    <html lang="en" className={`h-full scroll-smooth antialiased ${inter.variable}`}>
+      <body
+        className={`${inter.className} flex min-h-full flex-col bg-white text-ink`}
+      >
+        <a href="#main-content" className="skip-link">
+          Skip to main content
+        </a>
         <LocaleProvider>
           <PwaRegister />
           <CapacitorInit />
           <CapacitorPush />
           <SentryInit />
           <AnalyticsProvider />
-          {/* Site chrome hidden when installed as standalone app (PWA / Capacitor) */}
           <div className="site-chrome contents">
             <Header />
           </div>
           <ErrorBoundary>
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1" tabIndex={-1}>
+              {children}
+            </main>
           </ErrorBoundary>
           <div className="site-chrome contents">
             <Footer />
