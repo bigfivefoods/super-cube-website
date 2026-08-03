@@ -82,18 +82,15 @@ export function LearnShell({
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
       {hero}
 
+      {/* Top padding is handled by learn layout (fixed site header). Keep modest spacing only. */}
       <div
         className={`container-site grid min-w-0 gap-5 sm:gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-10 ${
           hero
             ? "pb-8 pt-5 sm:pb-10 sm:pt-6 lg:pb-12 lg:pt-8"
-            : "pb-8 pt-20 sm:pb-10 sm:pt-24 lg:pb-12 lg:pt-24"
+            : "pb-8 pt-4 sm:pb-10 sm:pt-5 lg:pb-12 lg:pt-6"
         }`}
       >
-        <aside
-          className={`min-w-0 lg:sticky lg:self-start ${
-            hero ? "lg:top-6" : "lg:top-20"
-          }`}
-        >
+        <aside className="min-w-0 lg:sticky lg:top-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:self-start">
           <p className="learn-eyebrow mb-2 hidden lg:mb-2.5 lg:block">
             Your journey
           </p>
