@@ -32,11 +32,16 @@ export default function LearnLayout({
   children: React.ReactNode;
 }) {
   return (
-    /* pb clears bottom nav (~3.5rem) + sticky continue bar (~4rem) + safe area */
-    <div className="learn-app min-h-[100svh] bg-[#fafafa] pb-[calc(8.5rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
+    /*
+      pt: clear fixed site header (h-14 / md:h-16 + safe-area)
+      pb: clear bottom nav + sticky continue + safe-area
+    */
+    <div className="learn-app min-h-[100svh] bg-[#fafafa] pt-[calc(3.5rem+env(safe-area-inset-top,0px))] pb-[calc(8.5rem+env(safe-area-inset-bottom,0px))] md:pt-[calc(4rem+env(safe-area-inset-top,0px))] lg:pb-0">
       <LmsSyncProvider>
         <PracticeReminders />
-        <InstallAppBanner />
+        <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 md:top-[calc(4rem+env(safe-area-inset-top,0px))]">
+          <InstallAppBanner />
+        </div>
         {children}
         <StickyContinue />
         <LearnBottomNav />
