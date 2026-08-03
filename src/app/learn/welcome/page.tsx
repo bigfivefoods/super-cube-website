@@ -18,7 +18,7 @@ import {
   type LearningContext,
   type LearnerRole,
 } from "@/lib/lms/profile";
-import { unlockDemo } from "@/lib/lms/store";
+import { setOrgCode as saveOrgCode, unlockDemo } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
 
 type Step = 1 | 2 | 3 | 4;
@@ -35,7 +35,7 @@ export default function WelcomeProfilePage() {
   const [city, setCity] = useState("");
   const [goal, setGoal] = useState("");
   const [cohortKind, setCohortKind] = useState<CohortKind>("solo");
-  const [orgCode, setOrgCode] = useState("");
+  const [codeInput, setCodeInput] = useState("");
 
   useEffect(() => {
     const p = getProfile();
@@ -56,7 +56,7 @@ export default function WelcomeProfilePage() {
   function finish() {
     if (!displayName.trim() || !ageBand || !role || !context) return;
     const band = AGE_BANDS.find((a) => a.id === ageBand)!;
-    const next = saveProfile(
+    saveProfile(
       {
         displayName: displayName.trim(),
         email: email.trim() || undefined,
@@ -72,9 +72,8 @@ export default function WelcomeProfilePage() {
       { complete: true }
     );
     unlockDemo(band.programmeId);
-    if (orgCode.trim()) {
-      const { setOrgCode: setCode } = require("@/lib/lms/store") as typeof import("@/lib/lms/store");
-      setCode(orgCode);
+    if (codeInput.trim()) {
+      saveOrgCode(codeInput);
     }
     track("profile_complete", {
       ageBand,
@@ -83,8 +82,7 @@ export default function WelcomeProfilePage() {
       cohortKind,
       programmeId: band.programmeId,
     });
-    void next;
-    if (cohortKind !== "solo" && !orgCode.trim()) {
+    if (cohortKind !== "solo" && !codeInput.trim()) {
       router.push("/learn/org");
       return;
     }
@@ -176,11 +174,7 @@ export default function WelcomeProfilePage() {
             </p>
           )}
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setStep(1)}
-              className="learn-btn learn-btn-ghost"
-            >
+            <button type="button" onClick={() => setStep(1)} className="learn-btn learn-btn-ghost">
               Back
             </button>
             <button
@@ -260,11 +254,7 @@ export default function WelcomeProfilePage() {
             />
           </label>
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setStep(2)}
-              className="learn-btn learn-btn-ghost"
-            >
+            <button type="button" onClick={() => setStep(2)} className="learn-btn learn-btn-ghost">
               Back
             </button>
             <button
@@ -314,8 +304,8 @@ export default function WelcomeProfilePage() {
               </span>
               <input
                 className="learn-input mt-1.5 w-full"
-                value={orgCode}
-                onChange={(e) => setOrgCode(e.target.value.toUpperCase())}
+                value={codeInput}
+                onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
                 placeholder="e.g. DEMO2026 or FAMILY-ABC"
                 maxLength={24}
               />
@@ -336,18 +326,10 @@ export default function WelcomeProfilePage() {
             </Link>
           </div>
           <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setStep(3)}
-              className="learn-btn learn-btn-ghost"
-            >
+            <button type="button" onClick={() => setStep(3)} className="learn-btn learn-btn-ghost">
               Back
             </button>
-            <button
-              type="button"
-              onClick={finish}
-              className="learn-btn learn-btn-primary flex-1"
-            >
+            <button type="button" onClick={finish} className="learn-btn learn-btn-primary flex-1">
               Save profile & start →
             </button>
           </div>
