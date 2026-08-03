@@ -44,13 +44,41 @@ export default function SampleReportPage() {
         <Button href="/learn/start" variant="primary">
           Start free baseline
         </Button>
-        <Button href="/pricing" variant="ghost">
-          View pricing
+        <Button href="/pricing#pilot" variant="ghost">
+          Run this with your team
         </Button>
       </PageHero>
 
       <section className="section-pad bg-[#fafafa]">
         <div className="container-site max-w-3xl">
+          {/* Conversion band above the fold of the report */}
+          <div className="mb-6 rounded-2xl border border-black/[0.08] bg-ink px-5 py-5 text-white sm:px-6 sm:py-6">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/50">
+              For schools & L&D
+            </p>
+            <p className="mt-1.5 text-lg font-semibold tracking-tight">
+              Baseline 52 → Post 68 after an 8-week pattern
+            </p>
+            <p className="mt-1 text-sm text-white/65">
+              Capacity change you can show a principal or board—not activity
+              completion rates.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <Link
+                href="/pricing#pilot"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-ink"
+              >
+                Book a pilot
+              </Link>
+              <Link
+                href="/facilitator"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/30 px-5 text-sm font-semibold text-white"
+              >
+                Facilitator kit
+              </Link>
+            </div>
+          </div>
+
           <div className="rounded-2xl border border-black/[0.08] bg-white p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Anonymised composite · not a single named learner
@@ -100,7 +128,6 @@ export default function SampleReportPage() {
               })}
             </ul>
 
-            {/* Pre/post radar + longitudinal continuous-tracking chart */}
             <SampleReportCharts
               faces={SAMPLE.faces}
               preOverall={SAMPLE.pre}

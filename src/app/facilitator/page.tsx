@@ -26,6 +26,51 @@ export default function FacilitatorPage() {
         </Button>
       </PageHero>
 
+      {/* Pilot outcome promise */}
+      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+        <div className="container-site py-8 sm:py-10">
+          <p className="text-center text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            What a pilot delivers
+          </p>
+          <div className="mt-5 grid gap-3 sm:grid-cols-3">
+            {[
+              {
+                t: "Measured growth",
+                d: "Pre → post across six faces, not attendance theatre.",
+              },
+              {
+                t: "Coach visibility",
+                d: "Cohort codes, heat map, CSV—journals stay private.",
+              },
+              {
+                t: "Ready-to-run",
+                d: "8-week calendar, practice library, verify certificates.",
+              },
+            ].map((item) => (
+              <div
+                key={item.t}
+                className="rounded-2xl border border-black/[0.07] bg-white p-4 text-center sm:p-5"
+              >
+                <p className="text-sm font-semibold tracking-tight text-ink">
+                  {item.t}
+                </p>
+                <p className="mt-1.5 text-[0.8125rem] leading-relaxed text-slate">
+                  {item.d}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-6 flex flex-col items-center justify-center gap-2.5 sm:flex-row">
+            <Button href="/pilot-pack" variant="primary">
+              Download pilot pack
+            </Button>
+            <Button href="/sample-report" variant="ghost">
+              See sample report
+            </Button>
+          </div>
+        </div>
+      </section>
+
       <section className="border-b border-black/[0.06] bg-white">
         <div className="container-site flex flex-col items-start justify-between gap-4 py-8 sm:flex-row sm:items-center">
           <div>

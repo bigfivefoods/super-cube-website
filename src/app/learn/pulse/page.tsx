@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs, type ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
@@ -16,7 +17,6 @@ import {
   pulseSeries,
   recommendPracticesForFocus,
   saveFacePulse,
-  type FacePulse,
 } from "@/lib/lms/face-tracking";
 import { loadLmsState, saveLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
@@ -35,6 +35,7 @@ export default function PulsePage() {
   const [focusFace, setFocusFace] = useState<ConstructId | undefined>();
   const [note, setNote] = useState("");
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
+  const [firstPulseCelebration, setFirstPulseCelebration] = useState(false);
 
   const [peerResponses, setPeerResponses] = useState<PeerPulseResponses>({});
   const [peerSaved, setPeerSaved] = useState<number | null>(null);
@@ -75,9 +76,12 @@ export default function PulsePage() {
     (c) => typeof scores[c.id] === "number"
   ).length;
   const canSave = ratedCount >= 3;
+  const pulseCountBefore = state?.facePulses?.length ?? 0;
 
   function savePulse(source: "daily" | "weekly" | "quick") {
     if (!canSave) return;
+    const wasFirst =
+      !state?.firstRun?.firstPulse && pulseCountBefore === 0;
     const next = saveFacePulse({
       scores,
       focusFace,
@@ -85,7 +89,14 @@ export default function PulsePage() {
       source,
     });
     setState(next);
-    setSavedMsg("Pulse saved. Patterns update as you log more days.");
+    if (wasFirst) {
+      setFirstPulseCelebration(true);
+      setSavedMsg(null);
+      track("first_pulse_complete", { source, faces: ratedCount });
+    } else {
+      setFirstPulseCelebration(false);
+      setSavedMsg("Pulse saved. Patterns update as you log more days.");
+    }
     track("face_pulse_save", {
       source,
       faces: ratedCount,
@@ -128,6 +139,42 @@ export default function PulsePage() {
       title="Face tracking"
       subtitle="Daily or weekly pulses across the six faces build patterns and guide deliberate practice."
     >
+      {firstPulseCelebration && (
+        <div className="mb-4 overflow-hidden rounded-2xl border border-black/[0.08] bg-ink text-white">
+          <div className="p-5 sm:p-6">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/50">
+              First pulse complete
+            </p>
+            <h2 className="mt-1.5 text-xl font-semibold tracking-tight">
+              Pattern engine is live.
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-white/70">
+              Tomorrow’s nudge will use this baseline. Log a few more days and
+              your weakest faces, trends, and practice plan will sharpen.
+            </p>
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+              <Link
+                href="/learn/practice"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-ink"
+              >
+                Open recommended practice →
+              </Link>
+              <button
+                type="button"
+                onClick={() => {
+                  setFirstPulseCelebration(false);
+                  setTab("patterns");
+                }}
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/30 px-5 text-sm font-semibold text-white"
+              >
+                View patterns
+              </button>
+            </div>
+          </div>
+          <InstallAppBanner />
+        </div>
+      )}
+
       <div className="mb-4 flex gap-1 rounded-xl border border-black/[0.07] bg-[#fafafa] p-1">
         {(
           [
@@ -153,6 +200,19 @@ export default function PulsePage() {
 
       {tab === "track" && (
         <>
+          {pulseCountBefore === 0 && !firstPulseCelebration && (
+            <div className="mb-4 rounded-2xl border border-dashed border-black/[0.12] bg-white p-4">
+              <p className="learn-eyebrow">First pulse</p>
+              <p className="mt-1 text-sm font-semibold text-ink">
+                Rate three or more faces · about 60 seconds
+              </p>
+              <p className="mt-1 text-[0.8125rem] leading-relaxed text-slate">
+                This is how the cube starts forming patterns. Honest ratings beat
+                perfect ones—you can update tomorrow.
+              </p>
+            </div>
+          )}
+
           <div className="learn-card mb-4 !p-4">
             <p className="learn-eyebrow">Growth priority</p>
             <p className="mt-1 text-sm leading-relaxed text-ink">
