@@ -8,6 +8,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
 import { site } from "@/lib/content";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -99,6 +100,7 @@ export default function RootLayout({
         <div className="site-chrome contents">
           <Footer />
         </div>
+        <Analytics />
       </body>
     </html>
   );
