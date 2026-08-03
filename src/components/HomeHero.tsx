@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { FounderVideo } from "@/components/FounderVideo";
 import { useLocale } from "@/components/LocaleProvider";
 import { SocialProofStrip } from "@/components/SocialProof";
 import { SuperCube } from "@/components/SuperCube";
@@ -136,24 +135,6 @@ export function HomeHero() {
       </section>
 
       <SocialProofStrip />
-
-      <section className="section-pad border-b border-black/[0.06] bg-white">
-        <div className="container-site grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-          <div>
-            <SectionHeading
-              eyebrow={t("home.watchEyebrow")}
-              title={t("home.watchTitle")}
-              description={t("home.watchDesc")}
-            />
-            <div className="mt-6">
-              <Button href="/learn/start" variant="primary">
-                {t("cta.tryFree")}
-              </Button>
-            </div>
-          </div>
-          <FounderVideo />
-        </div>
-      </section>
 
       <section className="section-pad bg-white">
         <div className="container-site grid items-center gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12 xl:gap-16">

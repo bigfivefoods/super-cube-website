@@ -136,10 +136,6 @@ const en = {
   "home.proof2": "Pre → post growth measured",
   "home.proof3": "Sample report + verify certificates",
   "home.proof4": "Private journals · consented coach share",
-  "home.watchEyebrow": "Watch",
-  "home.watchTitle": "Understand the model in minutes.",
-  "home.watchDesc":
-    "A short founder explainer builds trust before the free baseline. Add your YouTube/Vimeo embed via NEXT_PUBLIC_FOUNDER_VIDEO_URL.",
   "home.cubeEyebrow": "The Super-Cube®",
   "home.cubeTitle": "Whole-person leadership—not one fad skill.",
   "home.cubeDesc":
@@ -320,10 +316,6 @@ const zu: Record<I18nKey, string> = {
   "home.proof2": "Ukukhula kungaphambi → nangemva kukalwa",
   "home.proof3": "Umbiko wesampula + izitifiketi zokuqinisekisa",
   "home.proof4": "Amadayari ayimfihlo · ukwabelana nomqeqeshi ngemvume",
-  "home.watchEyebrow": "Buka",
-  "home.watchTitle": "Qonda imodeli ngemizuzu.",
-  "home.watchDesc":
-    "Incazelo emfushane yomsunguli yakha ukwethemba ngaphambi kwesisekelo samahhala. Faka i-YouTube/Vimeo nge-NEXT_PUBLIC_FOUNDER_VIDEO_URL.",
   "home.cubeEyebrow": "I-Super-Cube®",
   "home.cubeTitle": "Ubuholi bomuntu wonke—hhayi ikhono elilodwa elidume.",
   "home.cubeDesc":
@@ -500,10 +492,6 @@ const af: Record<I18nKey, string> = {
   "home.proof2": "Pre → post groei gemeet",
   "home.proof3": "Voorbeeldverslag + verifieer sertifikate",
   "home.proof4": "Private joernale · afrigter-deling met toestemming",
-  "home.watchEyebrow": "Kyk",
-  "home.watchTitle": "Verstaan die model in minute.",
-  "home.watchDesc":
-    "’n Kort stigter-verduideliking bou vertroue voor die gratis basislyn. Voeg jou YouTube/Vimeo-inbed via NEXT_PUBLIC_FOUNDER_VIDEO_URL by.",
   "home.cubeEyebrow": "Die Super-Cube®",
   "home.cubeTitle": "Heelpersoon-leierskap—nie een modevaardigheid nie.",
   "home.cubeDesc":
