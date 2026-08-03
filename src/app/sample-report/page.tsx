@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { constructs } from "@/lib/content";
+import { SampleReportCharts } from "@/components/learn/SampleReportCharts";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
 export const metadata: Metadata = {
   title: "Sample growth report",
   description:
-    "See what a Super-Cube® pre → post growth report looks like—six faces, dual comparison, and developmental (not clinical) language.",
+    "See what a Super-Cube® pre → post growth report looks like—six faces, dual radar comparison, longitudinal tracking, and developmental (not clinical) language.",
 };
 
 /**
@@ -38,7 +39,7 @@ export default function SampleReportPage() {
         theme="impact"
         eyebrow="Sample outcome"
         title="What growth looks like on Super-Cube®."
-        description="Illustrative pre → post profile after deliberate practice across the six faces. Real reports are private to the learner; coaches only see shared snapshots with consent."
+        description="Illustrative pre → post profile after deliberate practice across the six faces—plus continuous tracking trends. Real reports are private to the learner; coaches only see shared snapshots with consent."
       >
         <Button href="/learn/start" variant="primary">
           Start free baseline
@@ -99,12 +100,20 @@ export default function SampleReportPage() {
               })}
             </ul>
 
+            {/* Pre/post radar + longitudinal continuous-tracking chart */}
+            <SampleReportCharts
+              faces={SAMPLE.faces}
+              preOverall={SAMPLE.pre}
+              postOverall={SAMPLE.post}
+            />
+
             <p className="mt-6 text-xs leading-relaxed text-muted">
               {SAMPLE.methodology} Developmental profile within the Super-Cube®
               Leadership Model—not a clinical diagnosis or hiring credential.
               Real learners download PDF reports and certificates with verify
               IDs after the post-assessment. Journals never appear on shared
-              snapshots.
+              snapshots. Continuous face pulses (daily/weekly) power the
+              longitudinal trend in Learn.
             </p>
           </div>
 
@@ -112,17 +121,17 @@ export default function SampleReportPage() {
             <SectionHeading
               eyebrow="Why this matters"
               title="Measure before and after—or you’re only counting activity."
-              description="Super-Cube® is built so individuals, coaches, and organisations can see capacity change on human-centric faces—not vanity completion rates."
+              description="Super-Cube® is built so individuals, coaches, and organisations can see capacity change on human-centric faces—not vanity completion rates—and track patterns continuously between assessments."
             />
             <div className="mt-6 flex flex-wrap gap-3">
               <Button href="/learn/start" variant="primary">
                 Start free baseline
               </Button>
+              <Button href="/learn/pulse" variant="ghost">
+                Face tracking
+              </Button>
               <Button href="/impact" variant="ghost">
                 Read a case story
-              </Button>
-              <Button href="/team" variant="ghost">
-                Team cube
               </Button>
               <Link
                 href="/research"
