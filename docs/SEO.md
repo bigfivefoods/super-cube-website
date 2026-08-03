@@ -10,6 +10,8 @@
 | JSON-LD Organization + Course | Homepage |
 | Keyword-rich titles/descriptions | Model, constructs, programmes, research, why, pilot pack |
 | Insights blog | `/insights` + posts (content marketing) |
+| FAQ + FAQPage JSON-LD | `/faq` |
+| hreflang (en / zu / af / x-default) | `src/lib/seo.ts` + root layout |
 
 ## Google Search Console (you)
 

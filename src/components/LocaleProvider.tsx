@@ -20,7 +20,7 @@ import {
 type LocaleContextValue = {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: (key: I18nKey) => string;
+  t: (key: I18nKey, vars?: Record<string, string | number>) => string;
 };
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -44,7 +44,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const t = useCallback(
-    (key: I18nKey) => translate(key, locale),
+    (key: I18nKey, vars?: Record<string, string | number>) =>
+      translate(key, locale, vars),
     [locale]
   );
 
@@ -69,7 +70,8 @@ export function useLocale() {
     return {
       locale: "en" as Locale,
       setLocale: (_: Locale) => {},
-      t: (key: I18nKey) => translate(key, "en"),
+      t: (key: I18nKey, vars?: Record<string, string | number>) =>
+        translate(key, "en", vars),
     };
   }
   return ctx;

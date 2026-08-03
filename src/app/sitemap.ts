@@ -29,6 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/community",
     "/team",
     "/pilot-pack",
+    "/faq",
     "/privacy",
     "/terms",
   ];

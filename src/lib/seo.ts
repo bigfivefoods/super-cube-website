@@ -25,7 +25,17 @@ export function pageMeta(opts: {
     title: opts.title,
     description: opts.description,
     keywords,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      // UI supports en / isiZulu / Afrikaans client-side; same URL (English default SSR)
+      languages: {
+        en: url,
+        "en-ZA": url,
+        zu: url,
+        af: url,
+        "x-default": url,
+      },
+    },
     openGraph: {
       title: `${opts.title} | Super-Cube®`,
       description: opts.description,
@@ -33,6 +43,7 @@ export function pageMeta(opts: {
       siteName: site.name,
       type: "website",
       locale: "en_ZA",
+      alternateLocale: ["zu_ZA", "af_ZA"],
       images: [
         {
           url: image,

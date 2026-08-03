@@ -39,6 +39,7 @@ const columns: {
       { href: "/research", label: "Research", labelKey: "nav.research" },
       { href: "/practices", label: "Practices", labelKey: "nav.practices" },
       { href: "/insights", label: "Insights", labelKey: "nav.insights" },
+      { href: "/faq", label: "FAQ", labelKey: "nav.faq" },
     ],
   },
   {

@@ -22,7 +22,7 @@ import {
   setShareProgressConsent,
   type LocalLmsState,
 } from "@/lib/lms/store";
-import { buildFaceScoresFromState } from "@/lib/lms/face-scores";
+import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
 
 const rainbow = constructs.map((c) => c.color).join(", ");
@@ -149,6 +149,15 @@ export default function LearnDashboardPage() {
                   setNotifyPractice(true);
                   setState(loadLmsState());
                   track("notify_opt_in");
+                  try {
+                    new Notification(t("learn.reminderTitle"), {
+                      body: t("learn.reminderBody"),
+                      icon: "/icons/icon-192.png",
+                      tag: "sc-practice-daily",
+                    });
+                  } catch {
+                    /* ignore */
+                  }
                   return;
                 }
                 const perm = await Notification.requestPermission();
@@ -157,9 +166,10 @@ export default function LearnDashboardPage() {
                   setState(loadLmsState());
                   track("notify_opt_in");
                   try {
-                    new Notification("Super-Cube® Learn", {
-                      body: "We’ll nudge you to keep your practice streak going.",
+                    new Notification(t("learn.reminderTitle"), {
+                      body: t("learn.reminderBody"),
                       icon: "/icons/icon-192.png",
+                      tag: "sc-practice-daily",
                     });
                   } catch {
                     /* ignore */
@@ -168,8 +178,8 @@ export default function LearnDashboardPage() {
               }}
             >
               {lms.notifyPractice
-                ? "Reminders on"
-                : "Enable practice reminders"}
+                ? t("learn.remindersOn")
+                : t("learn.remindersEnable")}
             </button>
           </div>
           <div className="learn-card !p-3.5">
@@ -335,32 +345,10 @@ export default function LearnDashboardPage() {
             checked={Boolean(lms.shareProgressWithCoach)}
             onChange={(e) => {
               setShareProgressConsent(e.target.checked);
-              setState(loadLmsState());
-              if (e.target.checked && lms.orgCode) {
-                const pre = lms.attempts.find((a) => a.phase === "pre");
-                const post = lms.attempts.find((a) => a.phase === "post");
-                void fetch("/api/org/progress", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    orgCode: lms.orgCode,
-                    programmeId: programmeId,
-                    consent: true,
-                    lessonsCompleted: Object.values(lms.lessonProgress).filter(
-                      (s) => s === "completed"
-                    ).length,
-                    preOverall: pre?.result.overall,
-                    postOverall: post?.result.overall,
-                    growth:
-                      pre && post
-                        ? Math.round(
-                            (post.result.overall - pre.result.overall) * 10
-                          ) / 10
-                        : null,
-                    certificateId: lms.certificateId,
-                    faceScores: buildFaceScoresFromState(lms),
-                  }),
-                });
+              const next = loadLmsState();
+              setState(next);
+              if (e.target.checked && next.orgCode) {
+                void pushCoachProgressIfConsented(next);
               }
             }}
           />

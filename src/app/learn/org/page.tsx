@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
+import { buildFaceScoresFromState } from "@/lib/lms/face-scores";
 import { loadLmsState, setOrgCode, type LocalLmsState } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
 
@@ -92,6 +93,8 @@ export default function LearnOrgPage() {
             ? Math.round((post.result.overall - pre.result.overall) * 10) / 10
             : null,
         certificateId: s.certificateId ?? null,
+        faceScores: buildFaceScoresFromState(s),
+        consent: Boolean(s.shareProgressWithCoach),
       }),
     });
   }

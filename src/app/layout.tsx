@@ -28,6 +28,16 @@ export const metadata: Metadata = {
     template: "%s | Super-Cube®",
   },
   description: site.description,
+  alternates: {
+    canonical: site.url,
+    languages: {
+      en: site.url,
+      "en-ZA": site.url,
+      zu: site.url,
+      af: site.url,
+      "x-default": site.url,
+    },
+  },
   applicationName: "Super-Cube® Learn",
   appleWebApp: {
     capable: true,

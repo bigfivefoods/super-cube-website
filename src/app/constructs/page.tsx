@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Button, CTABanner, PageHero } from "@/components/ui";
+import {
+  ConstructFaceLabel,
+  ConstructsHero,
+} from "@/components/ConstructsHero";
+import { Button, CTABanner } from "@/components/ui";
 import { constructs, type ConstructId } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
@@ -86,46 +90,7 @@ const overviews: Record<ConstructId, string> = {
 export default function ConstructsPage() {
   return (
     <>
-      <PageHero
-        theme="constructs"
-        eyebrow="The six faces"
-        title="Human-centric constructs. Developable skills."
-        description="Each face of the Super-Cube® is a full domain of leadership practice—grounded in theory, validated in research, and built for deliberate growth. Scroll each face: full-bleed image, then a clear overview."
-      >
-        <Button href="/learn/start" variant="primary">
-          Start free baseline
-        </Button>
-        <Button href="/the-model" variant="ghost">
-          How the model works
-        </Button>
-      </PageHero>
-
-      {/* Sticky face jump */}
-      <nav
-        className="sticky top-14 z-40 border-b border-black/[0.06] bg-white/95 py-2.5 backdrop-blur-md md:top-16"
-        aria-label="Jump to face"
-      >
-        <div className="container-site flex flex-wrap items-center gap-2">
-          <span className="mr-1 hidden text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted sm:inline">
-            Faces
-          </span>
-          {constructs.map((c) => (
-            <a
-              key={c.id}
-              href={`#${c.id}`}
-              className="face-jump inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-1.5 text-[0.8125rem] font-semibold text-ink transition"
-              style={{ ["--face-color" as string]: c.color }}
-            >
-              <span
-                className="h-1.5 w-1.5 rounded-full"
-                style={{ background: c.color }}
-                aria-hidden
-              />
-              {c.name}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <ConstructsHero />
 
       {constructs.map((c, index) => {
         const m = media[c.id];
@@ -161,13 +126,11 @@ export default function ConstructsPage() {
 
               <div className="container-site relative z-[2] w-full pb-10 pt-[max(6rem,env(safe-area-inset-top))] sm:pb-14 md:pb-16">
                 <div className="max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
-                  <p className="text-[0.7rem] font-bold uppercase tracking-[0.16em] text-white/60">
-                    Face {String(index + 1).padStart(2, "0")} of 06
-                  </p>
-                  <h2 className="heading-xl mt-3 text-white">{c.name}</h2>
-                  <p className="mt-3 text-base font-medium tracking-tight text-white/85 sm:text-lg md:text-xl">
-                    {c.tagline}
-                  </p>
+                  <ConstructFaceLabel
+                    index={index}
+                    constructId={c.id}
+                    tagline={c.tagline}
+                  />
                   {m.quote && (
                     <blockquote className="mt-6 border-l-2 pl-4 sm:mt-8" style={{ borderColor: c.color }}>
                       <p className="text-sm font-medium italic leading-relaxed text-white/90 sm:text-base">

@@ -205,10 +205,15 @@ function AccountPageInner() {
     saveLmsState(next);
     setState(next);
     if (perm === "granted") {
-      new Notification("Super-Cube® Learn", {
-        body: "Practice reminders enabled. Open Learn each day to keep your streak.",
-        icon: "/icons/icon-192.png",
-      });
+      try {
+        new Notification("Super-Cube® practice", {
+          body: "3–5 minutes on your weakest face keeps the streak alive. Open Learn → Practice.",
+          icon: "/icons/icon-192.png",
+          tag: "sc-practice-daily",
+        });
+      } catch {
+        /* ignore */
+      }
       setMsg("Practice reminders enabled.");
     } else {
       setMsg("Notifications were not granted.");

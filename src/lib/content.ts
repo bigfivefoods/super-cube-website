@@ -52,6 +52,7 @@ export const moreNavGroups = [
   {
     title: "Connect",
     links: [
+      { href: "/faq", label: "FAQ" },
       { href: "/contact", label: "Contact" },
       { href: "/media", label: "Media kit" },
       { href: "/login", label: "Sign in" },

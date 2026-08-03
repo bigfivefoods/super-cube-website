@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { PracticeReminders } from "@/components/PracticeReminders";
 import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnBottomNav } from "@/components/learn/LearnBottomNav";
 import { LmsSyncProvider } from "@/components/learn/LmsSyncProvider";
@@ -33,6 +34,7 @@ export default function LearnLayout({
   return (
     <div className="learn-app min-h-[100svh] bg-[#fafafa] pb-28 lg:pb-0">
       <LmsSyncProvider>
+        <PracticeReminders />
         <InstallAppBanner />
         {children}
         <StickyContinue />

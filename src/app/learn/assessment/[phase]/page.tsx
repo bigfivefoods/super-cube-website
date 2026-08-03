@@ -19,6 +19,7 @@ import {
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { constructs } from "@/lib/content";
 import { track } from "@/lib/analytics";
+import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 
 export default function AssessmentRunnerPage() {
   const params = useParams();
@@ -94,6 +95,8 @@ export default function AssessmentRunnerPage() {
     });
     saveLmsState(next);
     clearAssessmentDraft();
+    // Push face scores to coach when cohort consent is on
+    void pushCoachProgressIfConsented(next);
     if (phase === "pre") {
       markFirstRunStep("pre");
       track("pre_complete", { overall: result.overall });
