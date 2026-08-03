@@ -63,7 +63,7 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight transition sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink";
+    "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight transition sm:w-auto sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink touch-manipulation";
   const variants = {
     primary: "bg-ink text-white hover:bg-ink-soft",
     secondary: "bg-ink text-white hover:bg-ink-soft",
@@ -89,24 +89,16 @@ export function PageHero({
   theme = "leadership",
   image,
   imageAlt,
-  /** Media heroes match landing: full viewport. Pass false for shorter band. */
   full,
 }: {
   eyebrow: string;
   title: string;
   description: string;
   children?: ReactNode;
-  /** Optional right-column content (e.g. Super-Cube®) — sits on the media panel */
   visual?: ReactNode;
-  /**
-   * Preset photography for non-home heroes.
-   * Use "none" for plain white (legal / form-heavy pages).
-   */
   theme?: HeroTheme;
-  /** Override theme image */
   image?: string;
   imageAlt?: string;
-  /** Full viewport height (default true for media themes, false for plain) */
   full?: boolean;
 }) {
   const preset =
@@ -120,10 +112,10 @@ export function PageHero({
   const darkTone = isMedia && !lightTone;
 
   const actionsClass = lightTone
-    ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto"
+    ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3"
     : darkTone
-      ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
-      : "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a]:w-full sm:[&>a]:w-auto";
+      ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
+      : "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3";
 
   const eyebrowCls = lightTone
     ? "text-slate before:bg-black/25"
@@ -165,7 +157,6 @@ export function PageHero({
           />
           {lightTone ? (
             <>
-              {/* Soft light overlays — keep grey hero visible under navbar */}
               <div
                 className="absolute inset-0 bg-gradient-to-r from-white/75 via-white/25 to-transparent sm:from-white/55 sm:via-transparent"
                 aria-hidden
@@ -207,7 +198,7 @@ export function PageHero({
               </p>
               {children && <div className={actionsClass}>{children}</div>}
             </div>
-            <div className="animate-fade-up delay-2 relative z-[1] order-1 mx-auto w-full max-w-[13.5rem] min-w-0 xs:max-w-[15rem] sm:max-w-[17rem] md:order-2 md:mx-0 md:max-w-[18rem] lg:max-w-[20rem] lg:justify-self-end">
+            <div className="animate-fade-up delay-2 relative z-[1] order-1 mx-auto w-full max-w-[min(100%,15rem)] min-w-0 sm:max-w-[17rem] md:order-2 md:mx-0 md:max-w-[18rem] lg:max-w-[20rem] lg:justify-self-end">
               {visual}
             </div>
           </div>
@@ -234,7 +225,7 @@ export function PageHero({
 
 export function CTABanner() {
   return (
-    <section className="section-pad pt-0">
+    <section className="section-pad pt-0 pb-[max(2rem,env(safe-area-inset-bottom))]">
       <div className="container-site">
         <div className="relative overflow-hidden rounded-xl bg-ink px-5 py-9 text-white sm:rounded-2xl sm:px-8 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20">
           <div className="relative grid items-center gap-6 sm:gap-8 md:grid-cols-[1.5fr_auto] md:gap-10">
@@ -251,7 +242,7 @@ export function CTABanner() {
             <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:gap-3 md:w-auto md:flex-col">
               <Link
                 href="/learn/start"
-                className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/90 sm:w-auto"
+                className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-ink transition hover:bg-white/90 touch-manipulation sm:w-auto"
               >
                 Start free baseline
               </Link>
