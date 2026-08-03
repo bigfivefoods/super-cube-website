@@ -12,6 +12,7 @@ import {
 import {
   loadLmsState,
   localDayKey,
+  markFirstRunStep,
   saveLmsState,
   touchActivity,
   type LocalLmsState,
@@ -83,7 +84,21 @@ export function saveFacePulse(
   // Keep ~6 months
   state.facePulses = existing.slice(0, 180);
   state = touchActivity(state);
+
+  // First-pulse onboarding step
+  if (!state.firstRun?.firstPulse) {
+    state.firstRun = { ...(state.firstRun ?? {}), firstPulse: true };
+  }
+
   saveLmsState(state);
+
+  // Also mark via helper for consistency with other first-run steps
+  try {
+    markFirstRunStep("firstPulse");
+  } catch {
+    /* ignore */
+  }
+
   return state;
 }
 
