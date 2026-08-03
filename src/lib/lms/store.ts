@@ -11,6 +11,7 @@ import type {
   OrientationResult,
 } from "@/lib/lms/orientation";
 import type { FacePulse } from "@/lib/lms/face-tracking";
+import type { LearnerProfile } from "@/lib/lms/profile";
 
 const KEY = "supercube_lms_v1";
 
@@ -69,6 +70,8 @@ export interface LocalLmsState {
     fullName: string;
     programmeId?: ProgrammeId;
   };
+  /** Demographics + identity captured at start */
+  profile?: LearnerProfile;
   subscription?: LocalSubscription;
   lessonProgress: LocalLessonProgress;
   attempts: LocalAttempt[];
@@ -86,7 +89,7 @@ export interface LocalLmsState {
   certificateEarnedAt?: string;
   /** Public certificate verification id (SC-YYYYMMDD-HEX) */
   certificateId?: string;
-  /** School / company cohort code */
+  /** School / company / family cohort code */
   orgCode?: string;
   /** Free demo unlock (one construct sample) without full paywall */
   demoUnlocked?: boolean;
@@ -157,15 +160,12 @@ export function loadLmsState(): LocalLmsState {
 export function saveLmsState(state: LocalLmsState) {
   if (typeof window === "undefined") return;
   localStorage.setItem(KEY, JSON.stringify(state));
-  // Notify same-tab listeners (dashboard, journey rail)
   try {
     window.dispatchEvent(new CustomEvent("sc-lms-update"));
   } catch {
     /* ignore */
   }
-  // Debounced Supabase push when signed in (no-op if offline / unsigned)
   try {
-    // Dynamic import avoids circular deps at module init
     void import("@/lib/lms/sync").then((m) => m.scheduleCloudPush());
   } catch {
     /* ignore */
@@ -199,7 +199,7 @@ export function touchActivity(state: LocalLmsState): LocalLmsState {
   if (!lastDate) {
     current = 1;
   } else if (lastDate === today) {
-    // same day — keep current
+    // same day
   } else if (daysBetween(lastDate, today) === 1) {
     current += 1;
   } else {
@@ -294,13 +294,11 @@ export function isSupabaseConfigured() {
   );
 }
 
-/** Demo unlock: treat as active if local subscription active OR env DEMO_LMS_OPEN=true */
 export function hasLocalAccess(state: LocalLmsState): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true") return true;
   return state.subscription?.status === "active";
 }
 
-/** Access to full programme or open demo mode */
 export function hasLearnAccess(state: LocalLmsState): boolean {
   if (hasLocalAccess(state)) return true;
   return Boolean(state.demoUnlocked);
@@ -386,7 +384,9 @@ export function markOnboardingSeen(): LocalLmsState {
   return state;
 }
 
-export function saveAssessmentDraft(draft: NonNullable<LocalLmsState["assessmentDraft"]>): LocalLmsState {
+export function saveAssessmentDraft(
+  draft: NonNullable<LocalLmsState["assessmentDraft"]>
+): LocalLmsState {
   const state = loadLmsState();
   state.assessmentDraft = draft;
   saveLmsState(state);
@@ -408,7 +408,6 @@ export function logMicroPractice(practiceId: string): LocalLmsState {
   list.add(practiceId);
   log[day] = [...list];
   state.microPracticeLog = log;
-  // Count as streak activity
   const streak = state.practiceStreak ?? { current: 0, best: 0, lastDate: null };
   if (streak.lastDate !== day) {
     const yesterday = new Date();
