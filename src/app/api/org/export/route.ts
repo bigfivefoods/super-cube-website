@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { constructs } from "@/lib/content";
 
-/** CSV export of org roster + progress for coaches/admins. */
+/** CSV export of org roster + progress for coaches/admins (research-ready). */
 export async function GET(request: Request) {
   try {
     const code = new URL(request.url).searchParams.get("code")?.trim().toUpperCase();
@@ -47,14 +48,37 @@ export async function GET(request: Request) {
       .select("user_id, role, display_name, joined_at")
       .eq("org_id", org.id);
 
-    const { data: progress } = await supabase
-      .from("org_progress_snapshots")
-      .select(
-        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, client_updated_at"
-      )
-      .eq("org_id", org.id);
+    // Prefer full select including pulse + face_scores; graceful degrade
+    let progress: Record<string, unknown>[] = [];
+    {
+      const selects = [
+        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, face_scores, pulse_count, pulse_consistency, last_pulse_at, client_updated_at",
+        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, face_scores, client_updated_at",
+        "user_id, programme_id, pathway_pct, lessons_completed, pre_overall, post_overall, growth, certificate_id, client_updated_at",
+      ];
+      for (const sel of selects) {
+        const res = await supabase
+          .from("org_progress_snapshots")
+          .select(sel)
+          .eq("org_id", org.id);
+        if (!res.error) {
+          progress = (res.data || []) as Record<string, unknown>[];
+          break;
+        }
+        if (!/column|face_scores|pulse_/i.test(res.error.message)) {
+          progress = [];
+          break;
+        }
+      }
+    }
 
-    const byUser = new Map((progress || []).map((p) => [p.user_id as string, p]));
+    const byUser = new Map(progress.map((p) => [String(p.user_id), p]));
+
+    const faceCols = constructs.flatMap((c) => [
+      `face_${c.id}_pre`,
+      `face_${c.id}_post`,
+      `face_${c.id}_pulse`,
+    ]);
 
     const header = [
       "display_name",
@@ -68,12 +92,29 @@ export async function GET(request: Request) {
       "post_overall",
       "growth",
       "certificate_id",
+      "pulse_count",
+      "pulse_consistency",
+      "last_pulse_at",
+      ...faceCols,
       "updated_at",
     ];
 
     const lines = [header.join(",")];
     for (const m of members || []) {
-      const p = byUser.get(m.user_id as string);
+      const p = byUser.get(m.user_id as string) as Record<string, unknown> | undefined;
+      const faces =
+        p?.face_scores && typeof p.face_scores === "object"
+          ? (p.face_scores as Record<
+              string,
+              { pre?: number; post?: number; pulse?: number }
+            >)
+          : {};
+
+      const faceVals = constructs.flatMap((c) => {
+        const f = faces[c.id];
+        return [f?.pre ?? "", f?.post ?? "", f?.pulse ?? ""];
+      });
+
       const row = [
         csv(m.display_name),
         csv(m.user_id),
@@ -86,6 +127,10 @@ export async function GET(request: Request) {
         csv(p?.post_overall),
         csv(p?.growth),
         csv(p?.certificate_id),
+        csv(p?.pulse_count),
+        csv(p?.pulse_consistency),
+        csv(p?.last_pulse_at),
+        ...faceVals.map(csv),
         csv(p?.client_updated_at),
       ];
       lines.push(row.join(","));
