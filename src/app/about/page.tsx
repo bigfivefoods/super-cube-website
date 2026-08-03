@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { TestimonialsSection } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 
@@ -63,29 +62,6 @@ export default function AboutPage() {
         eyebrow="About Super-Cube®"
         title="From doctoral research to a development system."
         description="Super-Cube® was created to strengthen leadership capacity in complex, high-growth environments—beginning with rigorous research and a human-centric philosophy."
-        visual={
-          <figure className="w-full max-w-[min(100%,16rem)] overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-xl backdrop-blur-sm sm:max-w-[18rem] lg:ml-auto lg:max-w-none">
-            <div className="relative aspect-square w-full overflow-hidden">
-              <Image
-                src="/images/hero/steve-jobs.jpg"
-                alt="Inspiration quote visual"
-                fill
-                className="object-cover object-center"
-                sizes="(max-width: 640px) 16rem, (max-width: 1024px) 18rem, 18vw"
-                priority
-              />
-            </div>
-            <figcaption className="p-3.5 sm:p-4">
-              <p className="text-[0.7rem] font-medium italic leading-snug text-white/85">
-                “The ones who are crazy enough to think that they can change
-                the world are the ones who do.”
-              </p>
-              <p className="mt-1 text-[0.65rem] font-semibold tracking-wide text-white/55">
-                — Steve Jobs
-              </p>
-            </figcaption>
-          </figure>
-        }
       >
         <Button href="/learn/start" variant="primary">
           Start free baseline
