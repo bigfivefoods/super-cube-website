@@ -85,7 +85,7 @@ export async function GET(request: Request) {
           .select(sel)
           .eq("org_id", org.id);
         if (!res.error) {
-          progress = (res.data || []) as Record<string, unknown>[];
+          progress = (res.data || []) as unknown as Record<string, unknown>[];
           break;
         }
         if (!/column|face_scores|pulse_/i.test(res.error.message)) {
