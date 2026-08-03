@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
+import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnCourseNav } from "@/components/learn/LearnCourseNav";
 import {
   JourneyRailLive,
@@ -80,6 +81,7 @@ export function LearnShell({
 
   return (
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
+      <InstallAppBanner />
       {hero}
 
       <div
@@ -184,7 +186,6 @@ export function LearnShell({
                         </span>
                       </button>
                     </div>
-                    {/* Desktop: nested under Learn step */}
                     <div className="hidden lg:block">
                       <LearnCourseNav expanded={learnOpen} nested />
                     </div>
@@ -200,7 +201,6 @@ export function LearnShell({
             })}
           </nav>
 
-          {/* Mobile / tablet: full-width expandable course panel under journey pills */}
           {learnOpen && (
             <div className="mt-2 rounded-xl border border-black/[0.07] bg-white p-2.5 shadow-[0_1px_0_rgba(0,0,0,0.02)] lg:hidden">
               <LearnCourseNav
@@ -234,6 +234,12 @@ export function LearnShell({
               className="mt-1 block rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium text-muted transition hover:text-ink"
             >
               Plans & pricing
+            </Link>
+            <Link
+              href="/learn/pulse"
+              className="mt-1 block rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium text-muted transition hover:text-ink"
+            >
+              Face tracking
             </Link>
           </div>
 
