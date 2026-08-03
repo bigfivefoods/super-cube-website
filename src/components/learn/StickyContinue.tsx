@@ -10,6 +10,7 @@ import { useJourney } from "@/components/learn/JourneyProgress";
 
 /**
  * Mobile-friendly sticky continue bar for Learn.
+ * Sits above LearnBottomNav (nav ≈ 3.25rem + safe-area).
  */
 export function StickyContinue() {
   const journey = useJourney();
@@ -33,12 +34,19 @@ export function StickyContinue() {
   );
 
   return (
-    <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))] lg:hidden">
-      <div className="container-site pointer-events-auto">
-        <div className="mb-2 flex items-center gap-2 rounded-2xl border border-black/[0.08] bg-white/95 p-2 shadow-lg backdrop-blur-md">
+    <div
+      className="pointer-events-none fixed inset-x-0 z-40 lg:hidden"
+      style={{
+        bottom: "calc(3.5rem + env(safe-area-inset-bottom, 0px))",
+      }}
+    >
+      <div className="container-site pointer-events-auto pb-2">
+        <div className="flex items-center gap-2 rounded-2xl border border-black/[0.08] bg-white/95 p-2 shadow-lg backdrop-blur-md">
           <Link
             href={cont.href}
-            onClick={() => track("continue_click", { kind: cont.kind, sticky: true })}
+            onClick={() =>
+              track("continue_click", { kind: cont.kind, sticky: true })
+            }
             className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-ink px-3 text-sm font-semibold text-white"
           >
             {cont.kind === "resume"
@@ -57,7 +65,9 @@ export function StickyContinue() {
             }}
             className="min-h-11 shrink-0 rounded-xl border border-black/[0.1] px-3 text-xs font-semibold text-ink disabled:opacity-50"
           >
-            {doneToday ? `${t("learn.doneTodayShort")} ✓` : t("learn.doneTodayShort")}
+            {doneToday
+              ? `${t("learn.doneTodayShort")} ✓`
+              : t("learn.doneTodayShort")}
           </button>
         </div>
       </div>
