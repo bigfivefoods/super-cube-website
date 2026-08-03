@@ -7,7 +7,7 @@ import { Button, PageHero, SectionHeading } from "@/components/ui";
 export const metadata: Metadata = {
   title: "I–Thou practice library",
   description:
-    "Relational leadership exercises grounded in Buber and Super-Cube® whole-person development.",
+    "Relational leadership exercises and continuous face tracking grounded in Buber and Super-Cube® whole-person development.",
 };
 
 export default function PracticesPage() {
@@ -17,15 +17,46 @@ export default function PracticesPage() {
         theme="programs"
         eyebrow="Deliberate practice"
         title="I–Thou practice library"
-        description="Short relational exercises that transfer course content into culture—presence, decision craft, emotion naming, purpose, and more."
+        description="Short relational exercises that transfer course content into culture—plus continuous tracking of the six faces so practice stays matched to your growth priorities."
       >
         <Button href="/learn/practice" variant="primary">
           Today’s micro-practice
         </Button>
-        <Button href="/learn/start" variant="ghost">
-          Start free baseline
+        <Button href="/learn/pulse" variant="ghost">
+          Track your six faces
         </Button>
       </PageHero>
+
+      <section className="section-pad border-b border-black/[0.06] bg-white">
+        <div className="container-site grid gap-8 lg:grid-cols-2 lg:gap-12">
+          <SectionHeading
+            eyebrow="Continuous development"
+            title="Track the six faces. Practise what matters most."
+            description="Daily or weekly pulses build patterns across Choices, Principles, Mental, Emotional, Physical, and Spiritual. Recommendations adapt as your profile shifts."
+          />
+          <div className="space-y-3 text-sm leading-relaxed text-slate">
+            <p>
+              One-off assessments show a snapshot. Continuous face tracking
+              shows trends—which faces need attention this week, which are
+              strengthening, and where deliberate practice will move the needle.
+            </p>
+            <p>
+              Inside Super-Cube® Learn you can log a quick pulse (rate three or
+              more faces), see pattern insights, and open micro-practices aimed
+              at your current stretch faces. Journals and notes stay private by
+              default.
+            </p>
+            <div className="flex flex-wrap gap-2 pt-1">
+              <Button href="/learn/pulse" variant="primary">
+                Open face tracking
+              </Button>
+              <Button href="/learn/start" variant="ghost">
+                Start free baseline
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="section-pad bg-[#fafafa]">
         <div className="container-site">

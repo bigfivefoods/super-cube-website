@@ -9,7 +9,7 @@ import { constructs } from "@/lib/content";
 export const metadata: Metadata = {
   title: "How — Leadership Education",
   description:
-    "How Super-Cube® develops leaders: philosophy to model, orientation, assessment, six construct courses, deliberate practice, and growth reports.",
+    "How Super-Cube® develops leaders: philosophy to model, orientation, assessment, six construct courses, continuous face tracking, deliberate practice, and growth reports.",
 };
 
 const pathway = [
@@ -33,9 +33,9 @@ const pathway = [
   },
   {
     n: "04",
-    title: "Practise deliberately",
-    body: "Every session moves Read → Engage → Apply. Micro-actions turn insight into behaviour in real life and work.",
-    href: "/learn/courses",
+    title: "Track & practise deliberately",
+    body: "Daily or weekly face pulses reveal patterns. Micro-practices and weekly plans adapt to your weakest faces so insight becomes behaviour.",
+    href: "/learn/pulse",
   },
   {
     n: "05",
@@ -59,8 +59,8 @@ const pillars = [
     body: "The six-construct structure was tested in doctoral research (mixed methods, African FMCG network) so education is built on a validated frame.",
   },
   {
-    title: "From centre outward",
-    body: "Development starts with you, then expands through family, friends, colleagues, organisations, and society—capacity that radiates.",
+    title: "Continuous & adaptive",
+    body: "Beyond one-off assessments: track the six faces over days and weeks, see patterns, and receive practice recommendations matched to your growth priorities.",
   },
 ];
 
@@ -71,7 +71,7 @@ export default function HowPage() {
         theme="leadership"
         eyebrow="How Super-Cube® works"
         title="Leadership education that turns insight into practice."
-        description="How we develop leaders: a clear model, honest assessment, six construct courses, deliberate practice, and measured growth—designed for kids, adolescents, and adults."
+        description="How we develop leaders: a clear model, honest assessment, six construct courses, continuous face tracking, deliberate practice, and measured growth—designed for kids, adolescents, and adults."
         visual={
           <figure className="w-full overflow-hidden rounded-2xl border border-white/15 bg-white/10 shadow-xl backdrop-blur-sm">
             <div className="relative aspect-[694/584] w-full overflow-hidden">
@@ -109,19 +109,20 @@ export default function HowPage() {
           <SectionHeading
             eyebrow="The education approach"
             title="Not a lecture. A development system."
-            description="Super-Cube® education is built so learners can understand, practise, and prove growth—not merely consume content."
+            description="Super-Cube® education is built so learners can understand, practise, track, and prove growth—not merely consume content."
           />
           <div className="prose-site space-y-4 text-slate">
             <p>
               Leadership is substantially developable through deliberate
               practice. Our pathway combines a multidimensional model with
-              structured learning loops: orient, assess, learn, apply, and
-              re-measure.
+              structured learning loops: orient, assess, learn, track, apply,
+              and re-measure.
             </p>
             <p>
               Language and scenarios adapt by age, but the six faces stay
               constant—so families, schools, and organisations can share one
-              leadership language.
+              leadership language. Continuous face tracking turns one-time
+              baselines into living patterns that guide weekly practice.
             </p>
           </div>
         </div>
@@ -146,7 +147,7 @@ export default function HowPage() {
           <SectionHeading
             eyebrow="The learning pathway"
             title="Five stages. One coherent journey."
-            description="From first orientation to personal report—the same arc for every Super-Cube® learner."
+            description="From first orientation to personal report—including continuous face tracking so practice stays targeted."
           />
           <ol className="mt-10 space-y-3">
             {pathway.map((step) => (
@@ -181,7 +182,7 @@ export default function HowPage() {
           <SectionHeading
             eyebrow="What learners develop"
             title="Six faces of leadership capacity."
-            description="Each construct is a developable domain—taught, practised, and assessed."
+            description="Each construct is a developable domain—taught, practised, tracked, and assessed."
           />
           <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {constructs.map((c) => (
