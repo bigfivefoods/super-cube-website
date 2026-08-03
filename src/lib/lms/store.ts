@@ -114,6 +114,7 @@ export interface LocalLmsState {
     pre?: boolean;
     firstLesson?: boolean;
     firstWin?: boolean;
+    firstPulse?: boolean;
   };
   /** UI locale hint */
   locale?: "en" | "zu" | "af";
