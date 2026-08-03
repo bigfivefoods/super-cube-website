@@ -32,7 +32,8 @@ export default function LearnLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="learn-app min-h-[100svh] bg-[#fafafa] pb-28 lg:pb-0">
+    /* pb clears bottom nav (~3.5rem) + sticky continue bar (~4rem) + safe area */
+    <div className="learn-app min-h-[100svh] bg-[#fafafa] pb-[calc(8.5rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
       <LmsSyncProvider>
         <PracticeReminders />
         <InstallAppBanner />
