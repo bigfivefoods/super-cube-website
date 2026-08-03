@@ -1,7 +1,9 @@
 import { getLocaleFromStorage, t } from "@/lib/i18n";
+import { getTodayPulse } from "@/lib/lms/face-tracking";
 import { loadLmsState } from "@/lib/lms/store";
 
 const LAST_KEY = "sc_practice_reminder_day";
+const LAST_PULSE_KEY = "sc_pulse_reminder_day";
 const INTERVAL_MS = 15 * 60 * 1000;
 /** Local hour after which we may fire a once-per-day reminder */
 const REMINDER_AFTER_HOUR = 8;
@@ -21,7 +23,6 @@ function practicedToday(state: ReturnType<typeof loadLmsState>): boolean {
 
 /**
  * Fire at most one browser notification per calendar day when reminders are on.
- * Skips if permission missing, already fired today, or before morning window.
  */
 export function maybeFirePracticeReminder(): void {
   if (typeof window === "undefined") return;
@@ -65,20 +66,75 @@ export function maybeFirePracticeReminder(): void {
   }
 }
 
-/** Start a lightweight loop (and check on visibility) for daily practice nudges. */
+/**
+ * Separate once-per-day nudge to log a face pulse when none exists for today.
+ */
+export function maybeFirePulseReminder(): void {
+  if (typeof window === "undefined") return;
+  if (!("Notification" in window)) return;
+  if (Notification.permission !== "granted") return;
+
+  let state;
+  try {
+    state = loadLmsState();
+  } catch {
+    return;
+  }
+  if (!state.notifyPractice) return;
+
+  const hour = new Date().getHours();
+  if (hour < REMINDER_AFTER_HOUR) return;
+
+  const day = todayKey();
+  try {
+    if (localStorage.getItem(LAST_PULSE_KEY) === day) return;
+  } catch {
+    return;
+  }
+
+  if (getTodayPulse(state)) {
+    try {
+      localStorage.setItem(LAST_PULSE_KEY, day);
+    } catch {
+      /* ignore */
+    }
+    return;
+  }
+
+  // Afternoon nudge for pulse so morning is practice-first
+  if (hour < 12) return;
+
+  try {
+    new Notification("Super-Cube® face pulse", {
+      body: "30 seconds: rate 3+ faces so patterns and practice stay aligned.",
+      icon: "/icons/icon-192.png",
+      tag: "sc-pulse-daily",
+    });
+    localStorage.setItem(LAST_PULSE_KEY, day);
+  } catch {
+    /* ignore */
+  }
+}
+
+function tickReminders() {
+  maybeFirePracticeReminder();
+  maybeFirePulseReminder();
+}
+
+/** Start a lightweight loop for daily practice + pulse nudges. */
 export function startPracticeReminderLoop(): () => void {
   if (typeof window === "undefined") return () => {};
   if (started) {
-    maybeFirePracticeReminder();
+    tickReminders();
     return () => {};
   }
   started = true;
 
-  maybeFirePracticeReminder();
-  timer = setInterval(maybeFirePracticeReminder, INTERVAL_MS);
+  tickReminders();
+  timer = setInterval(tickReminders, INTERVAL_MS);
 
   const onVis = () => {
-    if (document.visibilityState === "visible") maybeFirePracticeReminder();
+    if (document.visibilityState === "visible") tickReminders();
   };
   document.addEventListener("visibilitychange", onVis);
 
