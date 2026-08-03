@@ -57,11 +57,11 @@ const buyers: {
 export function HomeHero() {
   const { t } = useLocale();
 
-  const proofStrip = [
-    t("home.proof1"),
-    t("home.proof2"),
-    t("home.proof3"),
-    t("home.proof4"),
+  const trustItems = [
+    { label: t("home.proof1"), detail: "Doctoral thesis" },
+    { label: t("home.proof2"), detail: "Capacity change" },
+    { label: t("home.proof3"), detail: "Public verify IDs" },
+    { label: t("home.proof4"), detail: "Privacy by design" },
   ];
 
   return (
@@ -121,16 +121,25 @@ export function HomeHero() {
         </div>
       </section>
 
+      {/* Trust strip — institutional density under hero */}
       <section className="border-b border-black/[0.06] bg-white">
-        <div className="container-site flex flex-wrap items-center justify-center gap-x-6 gap-y-2 py-3.5 sm:py-4">
-          {proofStrip.map((item) => (
-            <p
-              key={item}
-              className="text-[0.7rem] font-medium tracking-tight text-slate sm:text-xs"
-            >
-              {item}
-            </p>
-          ))}
+        <div className="container-site py-4 sm:py-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            {trustItems.map((item) => (
+              <div key={item.label} className="min-w-0 text-center sm:text-left">
+                <p className="text-[0.7rem] font-semibold tracking-tight text-ink sm:text-xs">
+                  {item.label}
+                </p>
+                <p className="mt-0.5 text-[0.65rem] text-muted sm:text-[0.7rem]">
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-center text-[0.65rem] text-muted sm:mt-4 sm:text-left sm:text-xs">
+            Validated at the University of KwaZulu-Natal · Peer-reviewed in SAJEMS ·
+            Pre→post certificates with public verify IDs
+          </p>
         </div>
       </section>
 
