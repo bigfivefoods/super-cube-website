@@ -24,6 +24,7 @@ import {
 } from "@/lib/lms/store";
 import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 import { COURSE_PRICE_USD } from "@/lib/programmes";
+import { CubeTheatre } from "@/components/learn/CubeTheatre";
 
 const rainbow = constructs.map((c) => c.color).join(", ");
 
@@ -131,7 +132,6 @@ export default function LearnDashboardPage() {
   return (
     <LearnShell hero={hero} hideJourneyRail>
       <div id="your-path" className="mx-auto max-w-2xl scroll-mt-6">
-        {/* Momentum: streak + continue + reflections */}
         <div className="mb-4 grid gap-2 sm:grid-cols-3">
           <div className="learn-card !p-3.5">
             <p className="learn-eyebrow">Practice streak</p>
@@ -200,7 +200,8 @@ export default function LearnDashboardPage() {
           </div>
         </div>
 
-        {/* Smart continue — session-level when learning */}
+        <CubeTheatre lms={lms} />
+
         {(cont.kind === "resume" || cont.kind === "next_lesson") && (
           <Link
             href={cont.href}
@@ -225,7 +226,6 @@ export default function LearnDashboardPage() {
           </Link>
         )}
 
-        {/* Micro-practice + feedback shortcuts */}
         {journey.preDone && (
           <div className="mb-4 grid gap-2 sm:grid-cols-2">
             <Link
@@ -264,18 +264,17 @@ export default function LearnDashboardPage() {
               href="/learn/pulse"
               className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
             >
-              <p className="learn-eyebrow">Optional</p>
+              <p className="learn-eyebrow">Continuous</p>
               <p className="mt-0.5 font-semibold text-ink">
-                Peer / manager pulse
+                Face tracking + peer pulse
               </p>
               <p className="learn-meta mt-0.5">
-                5-item observation after the programme
+                Daily patterns · optional 5-item observation
               </p>
             </Link>
           </div>
         )}
 
-        {/* Weakest-face weekly plan */}
         {weekly && weekly.items.length > 0 && (
           <section className="mb-5 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
             <div className="flex flex-wrap items-start justify-between gap-2">
@@ -336,7 +335,6 @@ export default function LearnDashboardPage() {
           </section>
         )}
 
-        {/* Coach progress consent */}
         <div className="mb-4 flex items-start gap-3 rounded-xl border border-black/[0.06] bg-white px-3 py-3">
           <input
             id="share-coach"
@@ -357,7 +355,7 @@ export default function LearnDashboardPage() {
               {t("learn.shareCoach")}
             </span>
             <span className="mt-0.5 block text-[0.75rem] text-muted">
-              Scores &amp; completion only—never journal text. Requires a cohort
+              Scores & completion only—never journal text. Requires a cohort
               code on{" "}
               <Link href="/learn/org" className="font-semibold text-ink">
                 /learn/org
@@ -367,14 +365,10 @@ export default function LearnDashboardPage() {
           </label>
         </div>
 
-        {/* Language + weekly email */}
         <div className="mb-4 flex flex-col gap-3 rounded-xl border border-black/[0.06] bg-white px-3 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-2 text-[0.8125rem]">
             <span className="font-semibold text-ink">{t("learn.language")}</span>
-            <LanguageSwitcher
-              variant="footer"
-            />
-            {/* Keep LMS store in sync when language changes via switcher */}
+            <LanguageSwitcher variant="footer" />
             <span className="sr-only" aria-live="polite">
               {locale}
             </span>
