@@ -102,11 +102,12 @@ export function TestimonialsStrip() {
               What leaders say
             </p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-              Proven in practice
+              Named voices from real programmes
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-slate sm:text-right">
-            Voices from Imana Foods and Kerry Foods programme participants.
+            Leaders at Imana Foods and Kerry Foods—developmental feedback, not
+            paid endorsements.
           </p>
         </div>
         <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3">

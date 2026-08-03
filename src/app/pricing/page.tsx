@@ -64,24 +64,45 @@ export default function PricingPage() {
         theme="leadership"
         eyebrow="Pricing"
         title="Start free. Go deep for $6."
-        description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Try Super-Cube® free on this device, then unlock full paid access for $${COURSE_PRICE_USD} once—assessment, six faces, practice, report, and certificate.`}
+        description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Try Super-Cube® free on this device—then unlock the full pathway for $${COURSE_PRICE_USD} once. No subscription.`}
       />
 
-      {/* Separate band so pricing content never sits “on” the hero */}
       <section className="relative z-0 border-t border-black/[0.06] bg-[#fafafa]">
         <div className="section-pad">
           <div className="container-site">
+            {/* Risk reversal */}
+            <div className="mx-auto mb-8 max-w-2xl rounded-2xl border border-black/[0.08] bg-white px-5 py-5 sm:mb-10 sm:px-8 sm:py-6">
+              <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                Simple terms
+              </p>
+              <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate sm:text-[0.9375rem]">
+                <li>
+                  <strong className="text-ink">Free on this device</strong> —
+                  baseline, practice, and the Learn path without paying.
+                </li>
+                <li>
+                  <strong className="text-ink">${COURSE_PRICE_USD} USD one-time</strong> —
+                  full programme access, report, and certificate. Not a monthly
+                  plan.
+                </li>
+                <li>
+                  <strong className="text-ink">Pay when you are ready</strong> —
+                  cloud sync, verify certificate, and paid unlock only after you
+                  choose checkout.
+                </li>
+              </ul>
+            </div>
+
             <div className="mx-auto mb-8 max-w-xl rounded-2xl border border-black/[0.08] bg-white px-6 py-6 text-center shadow-sm sm:mb-10 sm:px-10 sm:py-8">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                Launch price
+                Launch price · one-time
               </p>
               <p className="mt-2 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
                 ${COURSE_PRICE_USD}
                 <span className="text-lg font-medium text-muted"> USD</span>
               </p>
               <p className="mt-2 text-sm text-slate">
-                One-time access per programme · Paystack checkout when keys are
-                configured
+                Per programme · no subscription · Paystack when keys are configured
               </p>
             </div>
 
@@ -133,14 +154,13 @@ export default function PricingPage() {
                       onClick={() => startDemo(p.id)}
                       className="text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
                     >
-                      Start demo access (no payment)
+                      Start free on this device (no payment)
                     </button>
                   </div>
                 </article>
               ))}
             </div>
 
-            {/* Schools / teams */}
             <div
               id="pilot"
               className="mx-auto mt-10 max-w-3xl scroll-mt-24 rounded-2xl border border-black/[0.08] bg-white p-6 sm:mt-12 sm:p-8"

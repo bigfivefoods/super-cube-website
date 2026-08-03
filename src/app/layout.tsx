@@ -6,6 +6,7 @@ import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { LocaleProvider } from "@/components/LocaleProvider";
+import { MobileStickyCta } from "@/components/MobileStickyCta";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
 import { site } from "@/lib/content";
@@ -118,6 +119,7 @@ export default function RootLayout({
           </ErrorBoundary>
           <div className="site-chrome contents">
             <Footer />
+            <MobileStickyCta />
           </div>
         </LocaleProvider>
       </body>
