@@ -13,11 +13,14 @@ import {
 import {
   deriveFacePattern,
   getTodayPulse,
+  pulseSeries,
   recommendPracticesForFocus,
   saveFacePulse,
   type FacePulse,
 } from "@/lib/lms/face-tracking";
 import { loadLmsState, saveLmsState, type LocalLmsState } from "@/lib/lms/store";
+import { FaceSparkline } from "@/components/learn/FaceSparkline";
+import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 
 const SCALE = [1, 2, 3, 4, 5] as const;
 
@@ -33,7 +36,6 @@ export default function PulsePage() {
   const [note, setNote] = useState("");
   const [savedMsg, setSavedMsg] = useState<string | null>(null);
 
-  // Peer pulse
   const [peerResponses, setPeerResponses] = useState<PeerPulseResponses>({});
   const [peerSaved, setPeerSaved] = useState<number | null>(null);
   const [observer, setObserver] = useState("");
@@ -56,6 +58,11 @@ export default function PulsePage() {
 
   const pattern = useMemo(
     () => deriveFacePattern(state ?? undefined),
+    [state]
+  );
+
+  const series = useMemo(
+    () => pulseSeries(state ?? undefined, 14).map((d) => d.overall),
     [state]
   );
 
@@ -84,6 +91,9 @@ export default function PulsePage() {
       faces: ratedCount,
       focus: focusFace ?? null,
     });
+    if (next.shareProgressWithCoach && next.orgCode) {
+      void pushCoachProgressIfConsented(next);
+    }
   }
 
   function submitPeer() {
@@ -277,6 +287,16 @@ export default function PulsePage() {
             <p className="mt-1 text-sm text-ink">{pattern.insight}</p>
           </div>
 
+          <div className="learn-card mb-4 !p-4">
+            <p className="learn-eyebrow">14-day overall trend</p>
+            <div className="mt-2">
+              <FaceSparkline values={series} />
+            </div>
+            <p className="learn-meta mt-1">
+              From daily face pulses (gaps = days without a log).
+            </p>
+          </div>
+
           <ul className="space-y-2">
             {constructs.map((c) => {
               const avg = pattern.averages[c.id];
@@ -344,7 +364,7 @@ export default function PulsePage() {
                 href="/learn/practice"
                 className="mt-3 inline-flex text-sm font-semibold text-ink underline-offset-2 hover:underline"
               >
-                Open today’s micro-practice →
+                Open today&apos;s micro-practice →
               </Link>
             </section>
           )}
