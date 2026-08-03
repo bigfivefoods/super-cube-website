@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { DownloadReportButton } from "@/components/learn/DownloadReportButton";
+import { ReportMeta } from "@/components/learn/ReportMeta";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { RadarChart } from "@/components/learn/RadarChart";
 import { Button } from "@/components/ui";
@@ -45,9 +46,7 @@ export default function ReportPage() {
     return compareAttempts(pre.result, post?.result);
   }, [pre, post]);
 
-  const recs = pre
-    ? recommendations(post?.result ?? pre.result)
-    : [];
+  const recs = pre ? recommendations(post?.result ?? pre.result) : [];
 
   if (!state) {
     return (
@@ -108,6 +107,8 @@ export default function ReportPage() {
           : "—baseline view. Complete all courses, then the post-assessment, to see full growth."
       }`}
     >
+      <ReportMeta state={state} />
+
       <div className="mb-4 flex flex-wrap gap-2">
         <Button
           href="/learn/feedback"
@@ -122,6 +123,13 @@ export default function ReportPage() {
           className="!min-h-9 !py-1.5 !text-[0.8125rem]"
         >
           Micro-practice
+        </Button>
+        <Button
+          href="/learn/account"
+          variant="ghost"
+          className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+        >
+          You / profile
         </Button>
       </div>
 
@@ -147,7 +155,6 @@ export default function ReportPage() {
         </div>
       )}
 
-      {/* Overall pre / post / growth */}
       <section className="mb-4 grid gap-2 sm:mb-5 sm:grid-cols-3">
         <div className="learn-card !p-4">
           <p className="learn-eyebrow">Pre · baseline</p>
@@ -164,9 +171,7 @@ export default function ReportPage() {
             {post ? post.result.overall : "—"}
           </p>
           <p className="learn-meta mt-0.5">
-            {post
-              ? new Date(post.completedAt).toLocaleDateString()
-              : "Not taken yet"}
+            {post ? new Date(post.completedAt).toLocaleDateString() : "Not taken yet"}
           </p>
         </div>
         <div className="learn-card !p-4">
@@ -176,9 +181,7 @@ export default function ReportPage() {
               growth !== null && growth >= 0 ? "text-ink" : "text-slate"
             }`}
           >
-            {growth === null
-              ? "—"
-              : `${growth > 0 ? "+" : ""}${growth}`}
+            {growth === null ? "—" : `${growth > 0 ? "+" : ""}${growth}`}
             {growth !== null && (
               <span className="ml-1 text-sm font-medium text-muted">pts</span>
             )}
@@ -225,9 +228,8 @@ export default function ReportPage() {
                   preOverall: pre.result.overall,
                   postOverall: post.result.overall,
                   growth:
-                    Math.round(
-                      (post.result.overall - pre.result.overall) * 10
-                    ) / 10,
+                    Math.round((post.result.overall - pre.result.overall) * 10) /
+                    10,
                   orgCode: next.orgCode,
                 }),
               });
@@ -238,15 +240,11 @@ export default function ReportPage() {
         </div>
       )}
 
-      {/* Coach-shareable growth link */}
       <div className="mb-4 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
         <p className="learn-eyebrow">Share with a coach (consent)</p>
-        <p className="mt-1 text-sm font-semibold text-ink">
-          Private growth summary link
-        </p>
+        <p className="mt-1 text-sm font-semibold text-ink">Private growth summary link</p>
         <p className="learn-meta mt-0.5">
-          Pre/post scores only—journals stay on this device. Only share with
-          someone you trust.
+          Pre/post scores only—journals stay on this device.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -260,11 +258,8 @@ export default function ReportPage() {
                 setCertificateMeta(certId);
                 payload.certificateId = certId;
               }
-              const url = shareReportUrl(encodeShareToken(payload));
-              setShareUrl(url);
-              track("report_share", {
-                hasPost: post != null,
-              });
+              setShareUrl(shareReportUrl(encodeShareToken(payload)));
+              track("report_share", { hasPost: post != null });
             }}
           >
             Generate share link
@@ -286,11 +281,7 @@ export default function ReportPage() {
               {shareCopied ? "Copied" : "Copy link"}
             </button>
           )}
-          <Button
-            href="/learn/coach"
-            variant="ghost"
-            className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-          >
+          <Button href="/learn/coach" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
             Coach tools
           </Button>
         </div>
@@ -312,9 +303,7 @@ export default function ReportPage() {
 
       <div className="mb-4 flex flex-col gap-3 sm:mb-5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div className="flex flex-wrap items-center gap-1.5">
-          {orientation && (
-            <span className="learn-chip">{orientation.result.label}</span>
-          )}
+          {orientation && <span className="learn-chip">{orientation.result.label}</span>}
           <span className="learn-chip-solid">
             Pre {pre.result.overall}
             {post ? ` · Post ${post.result.overall}` : ""}
@@ -324,17 +313,6 @@ export default function ReportPage() {
           </span>
         </div>
         <DownloadReportButton state={state} pre={pre} post={post} />
-      </div>
-
-      <div className="mb-4 rounded-2xl border border-black/[0.07] bg-[#f8f9fb] px-4 py-3 sm:px-5">
-        <p className="text-[0.8125rem] font-semibold text-ink">
-          Share your results
-        </p>
-        <p className="learn-meta mt-0.5">
-          {post
-            ? "Download a PDF with overall and construct pre/post scores, growth, and recommendations."
-            : "Download a baseline PDF now. After the post-assessment, download again for full pre → post growth."}
-        </p>
       </div>
 
       {orientation && (
@@ -360,15 +338,12 @@ export default function ReportPage() {
       )}
 
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-2">
-        {/* Growth radar */}
         <div className="learn-card">
-          <h2 className="learn-card-title">
-            {post ? "Growth radar" : "Profile radar"}
-          </h2>
+          <h2 className="learn-card-title">{post ? "Growth radar" : "Profile radar"}</h2>
           <p className="learn-meta mt-1">
             {post
-              ? "Grey dashed = pre · Coloured solid = post · Choices top · Principles bottom"
-              : "Choices at top · Principles at bottom · colours = constructs"}
+              ? "Grey dashed = pre · Coloured solid = post"
+              : "Colours = constructs"}
           </p>
           <div className="mt-3">
             <RadarChart
@@ -378,37 +353,12 @@ export default function ReportPage() {
               postLabel="Post"
             />
           </div>
-          {post && (
-            <div className="mt-3 flex flex-wrap items-center justify-center gap-4 text-[0.7rem] font-semibold">
-              <span className="inline-flex items-center gap-1.5 text-muted">
-                <span
-                  className="inline-block h-0.5 w-5 border-t-2 border-dashed border-neutral-400"
-                  aria-hidden
-                />
-                Pre (baseline)
-              </span>
-              <span className="inline-flex items-center gap-1.5 text-ink">
-                <span
-                  className="inline-block h-0.5 w-5 bg-ink"
-                  aria-hidden
-                />
-                Post (after programme)
-              </span>
-            </div>
-          )}
         </div>
 
-        {/* Construct pre / post / growth table */}
         <div className="learn-card">
           <h2 className="learn-card-title">
             {post ? "Scores by construct" : "Baseline construct scores"}
           </h2>
-          <p className="learn-meta mt-1">
-            {post
-              ? "Pre, post, and growth for every Super-Cube® face"
-              : "Complete the post-assessment to unlock growth columns"}
-          </p>
-
           <div className="mt-3 overflow-x-auto">
             <table className="w-full min-w-[16rem] text-left text-[0.8125rem]">
               <thead>
@@ -417,48 +367,28 @@ export default function ReportPage() {
                   <th className="py-2 px-1 text-right font-semibold">Pre</th>
                   {post && (
                     <>
-                      <th className="py-2 px-1 text-right font-semibold">
-                        Post
-                      </th>
-                      <th className="py-2 pl-1 text-right font-semibold">
-                        Growth
-                      </th>
+                      <th className="py-2 px-1 text-right font-semibold">Post</th>
+                      <th className="py-2 pl-1 text-right font-semibold">Growth</th>
                     </>
                   )}
                 </tr>
               </thead>
               <tbody>
                 {comparison?.map((row) => (
-                  <tr
-                    key={row.constructId}
-                    className="border-b border-black/[0.05] last:border-0"
-                  >
+                  <tr key={row.constructId} className="border-b border-black/[0.05] last:border-0">
                     <td className="py-2.5 pr-2">
                       <span className="inline-flex items-center gap-1.5 font-semibold text-ink">
-                        <span
-                          className="h-2 w-2 shrink-0 rounded-full"
-                          style={{ background: row.color }}
-                        />
+                        <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: row.color }} />
                         {row.name}
                       </span>
                     </td>
-                    <td className="py-2.5 px-1 text-right tabular-nums text-slate">
-                      {row.pre}
-                    </td>
+                    <td className="py-2.5 px-1 text-right tabular-nums text-slate">{row.pre}</td>
                     {post && (
                       <>
                         <td className="py-2.5 px-1 text-right font-semibold tabular-nums text-ink">
                           {row.post ?? "—"}
                         </td>
-                        <td
-                          className={`py-2.5 pl-1 text-right font-semibold tabular-nums ${
-                            row.delta !== null && row.delta > 0
-                              ? "text-ink"
-                              : row.delta !== null && row.delta < 0
-                                ? "text-slate"
-                                : "text-muted"
-                          }`}
-                        >
+                        <td className="py-2.5 pl-1 text-right font-semibold tabular-nums text-ink">
                           {row.delta === null
                             ? "—"
                             : `${row.delta > 0 ? "+" : ""}${row.delta}`}
@@ -467,11 +397,8 @@ export default function ReportPage() {
                     )}
                   </tr>
                 ))}
-                {/* Overall row */}
                 <tr className="border-t border-black/[0.1] bg-[#fafafa]">
-                  <td className="py-2.5 pr-2 font-semibold text-ink">
-                    Overall
-                  </td>
+                  <td className="py-2.5 pr-2 font-semibold text-ink">Overall</td>
                   <td className="py-2.5 px-1 text-right font-semibold tabular-nums text-ink">
                     {pre.result.overall}
                   </td>
@@ -481,9 +408,7 @@ export default function ReportPage() {
                         {post.result.overall}
                       </td>
                       <td className="py-2.5 pl-1 text-right font-semibold tabular-nums text-ink">
-                        {growth === null
-                          ? "—"
-                          : `${growth > 0 ? "+" : ""}${growth}`}
+                        {growth === null ? "—" : `${growth > 0 ? "+" : ""}${growth}`}
                       </td>
                     </>
                   )}
@@ -491,43 +416,6 @@ export default function ReportPage() {
               </tbody>
             </table>
           </div>
-
-          {/* Dual progress bars when post exists */}
-          {post && comparison && (
-            <ul className="mt-4 space-y-2.5 border-t border-black/[0.06] pt-3.5">
-              {comparison.map((row) => (
-                <li key={`bar-${row.constructId}`}>
-                  <div className="mb-1 flex items-center justify-between text-[0.7rem]">
-                    <span className="font-semibold text-ink">{row.name}</span>
-                    <span className="tabular-nums text-muted">
-                      {row.pre}
-                      {row.post !== null ? ` → ${row.post}` : ""}
-                      {row.delta !== null
-                        ? ` (${row.delta > 0 ? "+" : ""}${row.delta})`
-                        : ""}
-                    </span>
-                  </div>
-                  <div className="relative h-2 overflow-hidden rounded-full bg-black/[0.06]">
-                    {/* Pre grey track fill */}
-                    <div
-                      className="absolute inset-y-0 left-0 rounded-full bg-neutral-400/50"
-                      style={{ width: `${row.pre}%` }}
-                    />
-                    {/* Post colour fill */}
-                    {row.post !== null && (
-                      <div
-                        className="absolute inset-y-0 left-0 rounded-full opacity-90"
-                        style={{
-                          width: `${row.post}%`,
-                          background: row.color,
-                        }}
-                      />
-                    )}
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
       </div>
 
@@ -548,38 +436,17 @@ export default function ReportPage() {
           <DownloadReportButton state={state} pre={pre} post={post} />
           {!post ? (
             <>
-              <Button
-                href="/learn/assessment/post"
-                variant="ghost"
-                className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-              >
+              <Button href="/learn/assessment/post" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
                 Take post-assessment
               </Button>
-              <Button
-                href="/learn/courses"
-                variant="ghost"
-                className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-              >
+              <Button href="/learn/courses" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
                 Continue courses
               </Button>
             </>
           ) : (
-            <>
-              <Button
-                href="/learn/courses"
-                variant="ghost"
-                className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-              >
-                Revisit courses
-              </Button>
-              <Button
-                href="/learn/assessment/post"
-                variant="ghost"
-                className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-              >
-                Retake post-assessment
-              </Button>
-            </>
+            <Button href="/learn/courses" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+              Revisit courses
+            </Button>
           )}
         </div>
       </section>
