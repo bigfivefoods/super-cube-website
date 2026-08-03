@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs, type ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
@@ -171,7 +170,6 @@ export default function PulsePage() {
               </button>
             </div>
           </div>
-          <InstallAppBanner />
         </div>
       )}
 
@@ -424,7 +422,7 @@ export default function PulsePage() {
                 href="/learn/practice"
                 className="mt-3 inline-flex text-sm font-semibold text-ink underline-offset-2 hover:underline"
               >
-                Open today&apos;s micro-practice →
+                Open today's micro-practice →
               </Link>
             </section>
           )}
