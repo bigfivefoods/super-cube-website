@@ -33,8 +33,11 @@ type RosterRow = {
     certificate_id?: string | null;
     face_scores?: Record<
       string,
-      { pre?: number; post?: number; mid?: number }
+      { pre?: number; post?: number; mid?: number; pulse?: number }
     > | null;
+    pulse_count?: number;
+    pulse_consistency?: number;
+    last_pulse_at?: string | null;
   } | null;
 };
 
@@ -155,6 +158,35 @@ export default function CoachToolsPage() {
 
   const pre = state?.attempts.find((a) => a.phase === "pre");
   const post = state?.attempts.find((a) => a.phase === "post");
+
+  // Cohort pulse summary (consented snapshots only)
+  const pulseStats = (() => {
+    const withPulse = roster.filter(
+      (r) => (r.progress?.pulse_count ?? 0) > 0
+    );
+    const consistencies = withPulse
+      .map((r) => r.progress?.pulse_consistency)
+      .filter((n): n is number => typeof n === "number");
+    const meanConsistency =
+      consistencies.length > 0
+        ? Math.round(
+            consistencies.reduce((a, b) => a + b, 0) / consistencies.length
+          )
+        : null;
+    const recentlyPulsed = roster.filter((r) => {
+      const at = r.progress?.last_pulse_at;
+      if (!at) return false;
+      const days =
+        (Date.now() - Date.parse(at)) / (1000 * 60 * 60 * 24);
+      return days <= 7;
+    }).length;
+    return {
+      withPulse: withPulse.length,
+      total: roster.length,
+      meanConsistency,
+      recentlyPulsed,
+    };
+  })();
 
   return (
     <LearnShell
@@ -312,6 +344,39 @@ export default function CoachToolsPage() {
                 </p>
               ) : (
                 <>
+                  {/* Cohort pulse trend summary */}
+                  <div className="mt-4 rounded-xl border border-black/[0.06] bg-[#fafafa] p-3">
+                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                      Cohort pulse trends
+                    </p>
+                    <p className="learn-meta mt-0.5">
+                      Continuous face tracking (migration 005). Shows habit
+                      formation, not ranking.
+                    </p>
+                    <div className="mt-2 flex flex-wrap gap-4 text-[0.8125rem]">
+                      <div>
+                        <span className="font-semibold text-ink">
+                          {pulseStats.withPulse}/{pulseStats.total}
+                        </span>{" "}
+                        <span className="text-slate">with pulses</span>
+                      </div>
+                      <div>
+                        <span className="font-semibold text-ink">
+                          {pulseStats.recentlyPulsed}
+                        </span>{" "}
+                        <span className="text-slate">pulsed in last 7d</span>
+                      </div>
+                      {pulseStats.meanConsistency != null && (
+                        <div>
+                          <span className="font-semibold text-ink">
+                            {pulseStats.meanConsistency}%
+                          </span>{" "}
+                          <span className="text-slate">mean consistency</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   {/* Heat map: completion + growth bands (no ranking language) */}
                   <div className="mt-4">
                     <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
@@ -465,6 +530,12 @@ export default function CoachToolsPage() {
                               : ""}
                             {r.progress.growth != null
                               ? ` · Δ ${r.progress.growth}`
+                              : ""}
+                            {(r.progress.pulse_count ?? 0) > 0
+                              ? ` · ${r.progress.pulse_count} pulses`
+                              : ""}
+                            {r.progress.pulse_consistency != null
+                              ? ` · ${r.progress.pulse_consistency}% consistent`
                               : ""}
                           </p>
                         ) : (
