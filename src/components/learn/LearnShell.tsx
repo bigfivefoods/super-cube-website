@@ -20,6 +20,8 @@ export function LearnShell({
   subtitle,
   hero,
   hideJourneyRail = false,
+  /** Full-width content (Today hub) — no side rail clutter */
+  wide = false,
 }: {
   children: ReactNode;
   title?: string;
@@ -27,6 +29,7 @@ export function LearnShell({
   hero?: ReactNode;
   /** Hide compact journey rail (dashboard uses its own progress) */
   hideJourneyRail?: boolean;
+  wide?: boolean;
 }) {
   const pathname = usePathname();
   const journey = useJourney();
@@ -37,6 +40,27 @@ export function LearnShell({
   useEffect(() => {
     if (onCourses) setLearnOpen(true);
   }, [onCourses]);
+
+  if (wide) {
+    return (
+      <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
+        {hero}
+        <div
+          className={`container-site mx-auto max-w-3xl min-w-0 pb-10 ${
+            hero ? "pt-5 sm:pt-6" : "pt-4 sm:pt-5"
+          }`}
+        >
+          {(title || subtitle) && (
+            <header className="mb-5 sm:mb-6">
+              {title && <h1 className="learn-title">{title}</h1>}
+              {subtitle && <p className="learn-subtitle">{subtitle}</p>}
+            </header>
+          )}
+          {children}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">

@@ -17,16 +17,16 @@ const icons: Record<LearnNavId, (p: { active: boolean }) => ReactNode> = {
   you: YouIcon,
 };
 
-/** Mobile app-style bottom navigation — 5 clear destinations only. */
+/** Mobile bottom nav — pill dock, 5 destinations. */
 export function LearnBottomNav() {
   const pathname = usePathname();
 
   return (
     <nav
-      className="fixed inset-x-0 bottom-0 z-40 border-t border-black/[0.08] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 lg:hidden"
       aria-label="Learn app navigation"
     >
-      <ul className="mx-auto flex max-w-lg items-stretch justify-between px-0.5 pt-1">
+      <ul className="mx-auto flex max-w-md items-stretch justify-between rounded-2xl border border-black/[0.08] bg-white/95 px-1.5 py-1.5 shadow-[0_12px_40px_-12px_rgba(10,10,10,0.35)] backdrop-blur-xl">
         {LEARN_PRIMARY_NAV.map((tab) => {
           const active = isLearnNavActive(pathname, tab);
           const Icon = icons[tab.id];
@@ -34,8 +34,10 @@ export function LearnBottomNav() {
             <li key={tab.id} className="flex-1">
               <Link
                 href={tab.href}
-                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
-                  active ? "text-ink" : "text-muted hover:text-ink"
+                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
+                  active
+                    ? "bg-ink text-white"
+                    : "text-muted hover:bg-black/[0.04] hover:text-ink"
                 }`}
                 aria-current={active ? "page" : undefined}
               >

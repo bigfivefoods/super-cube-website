@@ -22,7 +22,9 @@ export type PulseSource = "daily" | "weekly" | "quick";
 
 export interface FacePulse {
   date: string; // YYYY-MM-DD
-  scores: Partial<Record<ConstructId, number>>; // 1–5 scale
+  scores: Partial<Record<ConstructId, number>>; // 1–5 scale (mean of questions when present)
+  /** Optional 3 slider answers per face (1–5 each) for rich daily journal */
+  questions?: Partial<Record<ConstructId, number[]>>;
   focusFace?: ConstructId;
   note?: string;
   source: PulseSource;
@@ -73,6 +75,7 @@ export function saveFacePulse(
   const pulse: FacePulse = {
     date,
     scores: input.scores,
+    questions: input.questions,
     focusFace: input.focusFace,
     note: input.note?.trim() || undefined,
     source: input.source,
