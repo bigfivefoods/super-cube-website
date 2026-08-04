@@ -2,21 +2,22 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import type { ReactNode } from "react";
+import {
+  isLearnNavActive,
+  LEARN_PRIMARY_NAV,
+  type LearnNavId,
+} from "@/lib/lms/nav";
 
-const tabs = [
-  { href: "/learn", label: "Home", exact: true, icon: HomeIcon },
-  { href: "/learn/courses", label: "Courses", exact: false, icon: CoursesIcon },
-  {
-    href: "/learn/assessment",
-    label: "Assess",
-    exact: false,
-    icon: AssessIcon,
-  },
-  { href: "/learn/report", label: "Report", exact: false, icon: ReportIcon },
-  { href: "/learn/account", label: "You", exact: false, icon: YouIcon },
-] as const;
+const icons: Record<LearnNavId, (p: { active: boolean }) => ReactNode> = {
+  today: HomeIcon,
+  learn: CoursesIcon,
+  checkin: CheckInIcon,
+  progress: ProgressIcon,
+  you: YouIcon,
+};
 
-/** Mobile app-style bottom navigation for the Learn LMS. */
+/** Mobile app-style bottom navigation — 5 clear destinations only. */
 export function LearnBottomNav() {
   const pathname = usePathname();
 
@@ -25,19 +26,18 @@ export function LearnBottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 border-t border-black/[0.08] bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
       aria-label="Learn app navigation"
     >
-      <ul className="mx-auto flex max-w-lg items-stretch justify-between px-1 pt-1">
-        {tabs.map((tab) => {
-          const active = tab.exact
-            ? pathname === tab.href
-            : pathname === tab.href || pathname.startsWith(`${tab.href}/`);
-          const Icon = tab.icon;
+      <ul className="mx-auto flex max-w-lg items-stretch justify-between px-0.5 pt-1">
+        {LEARN_PRIMARY_NAV.map((tab) => {
+          const active = isLearnNavActive(pathname, tab);
+          const Icon = icons[tab.id];
           return (
-            <li key={tab.href} className="flex-1">
+            <li key={tab.id} className="flex-1">
               <Link
                 href={tab.href}
-                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 px-1 text-[0.625rem] font-semibold tracking-tight transition ${
+                className={`flex min-h-12 flex-col items-center justify-center gap-0.5 px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
                   active ? "text-ink" : "text-muted hover:text-ink"
                 }`}
+                aria-current={active ? "page" : undefined}
               >
                 <Icon active={active} />
                 {tab.label}
@@ -88,7 +88,7 @@ function CoursesIcon({ active }: { active: boolean }) {
   );
 }
 
-function AssessIcon({ active }: { active: boolean }) {
+function CheckInIcon({ active }: { active: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -101,13 +101,13 @@ function AssessIcon({ active }: { active: boolean }) {
       <path
         strokeLinecap="round"
         strokeLinejoin="round"
-        d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9 2 2 4-4"
+        d="M12 8v4l2.5 1.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"
       />
     </svg>
   );
 }
 
-function ReportIcon({ active }: { active: boolean }) {
+function ProgressIcon({ active }: { active: boolean }) {
   return (
     <svg
       viewBox="0 0 24 24"

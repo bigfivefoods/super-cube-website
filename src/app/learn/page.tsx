@@ -8,10 +8,13 @@ import {
   JourneyTimeline,
   useJourney,
 } from "@/components/learn/JourneyProgress";
+import { NextBestActionCard } from "@/components/learn/NextBestAction";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { track } from "@/lib/analytics";
 import { getContinueTarget, reflectionCount } from "@/lib/lms/continue";
+import { getTodayPulse } from "@/lib/lms/face-tracking";
+import { getNextBestAction } from "@/lib/lms/next-action";
 import { buildWeeklyPlan } from "@/lib/lms/weekly-plan";
 import { useLocale } from "@/components/LocaleProvider";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -53,7 +56,7 @@ export default function LearnDashboardPage() {
 
   if (!journey) {
     return (
-      <LearnShell title="Dashboard" hideJourneyRail>
+      <LearnShell title="Today" hideJourneyRail>
         <p className="learn-meta">Loading your pathway…</p>
       </LearnShell>
     );
@@ -65,25 +68,31 @@ export default function LearnDashboardPage() {
   const showFaces = journey.preDone;
   const lms = state ?? loadLmsState();
   const cont = getContinueTarget(lms, next.href, next.title);
+  const nextAction = getNextBestAction(lms);
   const streak = lms.practiceStreak?.current ?? 0;
   const streakBest = lms.practiceStreak?.best ?? 0;
   const reflections = reflectionCount(lms);
   const weekly = buildWeeklyPlan(lms);
+  const pulseToday = Boolean(getTodayPulse(lms));
+  const dayKey = new Date().toISOString().slice(0, 10);
+  const practicedToday = Boolean(
+    lms.microPracticeLog?.[dayKey]?.length
+  );
 
   const hero = (
-    <section className="page-hero page-hero--full border-b border-black/[0.06] bg-white">
+    <section className="page-hero page-hero--band border-b border-black/[0.06] bg-white">
       <div className="container-site page-hero__inner relative z-[1] w-full">
         <div className="page-hero__copy min-w-0">
-          <p className="eyebrow animate-fade-up">Super-Cube® learning</p>
+          <p className="eyebrow animate-fade-up">Today · Super-Cube® Learn</p>
           <h1 className="page-hero__title heading-xl mt-3 animate-fade-up delay-1 text-ink sm:mt-4">
             {journey.doneCount === journey.total
-              ? "You’ve completed the pathway."
-              : "Your leadership journey, one clear step at a time."}
+              ? "Pathway complete—keep practicing."
+              : "One clear next step. A short daily check-in."}
           </h1>
-          <p className="page-hero__lede mt-4 animate-fade-up delay-2 text-sm leading-relaxed tracking-tight text-slate sm:mt-5 sm:text-base md:text-lg lg:text-xl">
+          <p className="page-hero__lede mt-4 animate-fade-up delay-2 text-sm leading-relaxed tracking-tight text-slate sm:mt-5 sm:text-base md:text-lg">
             {journey.doneCount === journey.total
-              ? "Return to your report anytime—or deepen a face with more practice."
-              : "Six simple steps—including a post-assessment after the full programme so you can see how you’ve grown."}
+              ? "Use Check-in and Progress anytime. Leadership is a practice, not a finish line."
+              : "Bottom nav: Today · Learn · Check-in · Progress · You. Start with the action below—ignore the rest until you need it."}
           </p>
 
           {journey.programmeName && (
@@ -95,27 +104,31 @@ export default function LearnDashboardPage() {
 
           <div className="mt-6 flex w-full animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap sm:gap-3">
             <Link
-              href={cont.href}
+              href={nextAction.href}
               onClick={() =>
                 track("continue_click", {
-                  kind: cont.kind,
-                  href: cont.href,
+                  kind: nextAction.kind,
+                  href: nextAction.href,
+                  source: "today_hero",
                 })
               }
               className="inline-flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-6 py-3 text-sm font-semibold tracking-tight text-white transition hover:bg-ink-soft sm:w-auto sm:min-h-11 sm:py-2.5"
             >
-              {cont.kind === "resume"
-                ? "Continue where you left off"
-                : cont.kind === "next_lesson"
-                  ? "Continue next session"
-                  : next.cta}{" "}
-              →
+              {nextAction.cta}
             </Link>
+            {journey.preDone && (
+              <Link
+                href="/learn/pulse"
+                className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 py-2.5 text-sm font-semibold tracking-tight text-ink transition hover:border-black/25 hover:bg-black/[0.02] sm:px-6"
+              >
+                {pulseToday ? "Check-in done ✓" : "Daily check-in"}
+              </Link>
+            )}
             <a
               href="#your-path"
-              className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 py-2.5 text-sm font-semibold tracking-tight text-ink transition hover:border-black/25 hover:bg-black/[0.02] sm:px-6"
+              className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.08] bg-transparent px-5 py-2.5 text-sm font-semibold tracking-tight text-slate transition hover:text-ink sm:px-6"
             >
-              See full pathway
+              Full pathway
             </a>
           </div>
           {(cont.kind === "resume" || cont.kind === "next_lesson") && (
@@ -132,14 +145,59 @@ export default function LearnDashboardPage() {
   return (
     <LearnShell hero={hero} hideJourneyRail>
       <div id="your-path" className="mx-auto max-w-2xl scroll-mt-6">
+        {/* Single recommended action */}
+        <NextBestActionCard action={nextAction} />
+
+        {/* Daily habits — only two, high clarity */}
+        {journey.preDone && (
+          <div className="mb-4 grid gap-2 sm:grid-cols-2">
+            <Link
+              href="/learn/pulse"
+              className={`rounded-2xl border p-4 transition hover:border-black/15 ${
+                pulseToday
+                  ? "border-emerald-200 bg-emerald-50/60"
+                  : "border-ink bg-white shadow-[0_8px_24px_-16px_rgba(10,10,10,0.35)]"
+              }`}
+            >
+              <p className="learn-eyebrow">
+                {pulseToday ? "Done today" : "Daily · 30–60 sec"}
+              </p>
+              <p className="mt-0.5 font-semibold text-ink">
+                {pulseToday ? "Check-in logged ✓" : "Daily check-in"}
+              </p>
+              <p className="learn-meta mt-0.5">
+                Rate your six faces · builds trends
+              </p>
+            </Link>
+            <Link
+              href="/learn/practice"
+              className={`rounded-2xl border p-4 transition hover:border-black/15 ${
+                practicedToday
+                  ? "border-emerald-200 bg-emerald-50/60"
+                  : "border-black/[0.07] bg-white"
+              }`}
+            >
+              <p className="learn-eyebrow">
+                {practicedToday ? "Done today" : "3–5 min"}
+              </p>
+              <p className="mt-0.5 font-semibold text-ink">
+                {practicedToday ? "Practice done ✓" : "Micro-practice"}
+              </p>
+              <p className="learn-meta mt-0.5">
+                Streak {streak} day{streak === 1 ? "" : "s"}
+                {streakBest ? ` · best ${streakBest}` : ""}
+              </p>
+            </Link>
+          </div>
+        )}
+
         <div className="mb-4 grid gap-2 sm:grid-cols-3">
           <div className="learn-card !p-3.5">
-            <p className="learn-eyebrow">Practice streak</p>
+            <p className="learn-eyebrow">Streak</p>
             <p className="mt-1 text-xl font-semibold tabular-nums text-ink">
               {streak}
               <span className="ml-1 text-sm font-medium text-muted">days</span>
             </p>
-            <p className="learn-meta mt-0.5">Best {streakBest}</p>
             <button
               type="button"
               className="mt-2 text-[0.7rem] font-semibold text-ink underline-offset-2 hover:underline"
@@ -149,15 +207,6 @@ export default function LearnDashboardPage() {
                   setNotifyPractice(true);
                   setState(loadLmsState());
                   track("notify_opt_in");
-                  try {
-                    new Notification(t("learn.reminderTitle"), {
-                      body: t("learn.reminderBody"),
-                      icon: "/icons/icon-192.png",
-                      tag: "sc-practice-daily",
-                    });
-                  } catch {
-                    /* ignore */
-                  }
                   return;
                 }
                 const perm = await Notification.requestPermission();
@@ -165,15 +214,6 @@ export default function LearnDashboardPage() {
                   setNotifyPractice(true);
                   setState(loadLmsState());
                   track("notify_opt_in");
-                  try {
-                    new Notification(t("learn.reminderTitle"), {
-                      body: t("learn.reminderBody"),
-                      icon: "/icons/icon-192.png",
-                      tag: "sc-practice-daily",
-                    });
-                  } catch {
-                    /* ignore */
-                  }
                 }
               }}
             >
@@ -183,11 +223,11 @@ export default function LearnDashboardPage() {
             </button>
           </div>
           <div className="learn-card !p-3.5">
-            <p className="learn-eyebrow">Journal entries</p>
+            <p className="learn-eyebrow">Journal</p>
             <p className="mt-1 text-xl font-semibold tabular-nums text-ink">
               {reflections}
             </p>
-            <p className="learn-meta mt-0.5">Reflections saved</p>
+            <p className="learn-meta mt-0.5">Reflections</p>
           </div>
           <div className="learn-card !p-3.5">
             <p className="learn-eyebrow">Pathway</p>
@@ -215,64 +255,56 @@ export default function LearnDashboardPage() {
           >
             <div className="min-w-0 flex-1">
               <p className="learn-eyebrow">
-                {cont.kind === "resume" ? "Pick up where you left off" : "Your next session"}
+                {cont.kind === "resume"
+                  ? "Pick up where you left off"
+                  : "Your next session"}
               </p>
               <p className="mt-0.5 truncate text-[0.9375rem] font-semibold text-ink">
                 {cont.title}
               </p>
               <p className="learn-meta mt-0.5">{cont.detail}</p>
             </div>
-            <span className="shrink-0 text-sm font-semibold text-ink">Open →</span>
+            <span className="shrink-0 text-sm font-semibold text-ink">
+              Open →
+            </span>
           </Link>
         )}
 
         {journey.preDone && (
-          <div className="mb-4 grid gap-2 sm:grid-cols-2">
-            <Link
-              href="/learn/practice"
-              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
-            >
-              <p className="learn-eyebrow">3–5 min</p>
-              <p className="mt-0.5 font-semibold text-ink">
-                Today’s micro-practice
-              </p>
-              <p className="learn-meta mt-0.5">Weakest-face first · streak</p>
-            </Link>
-            <Link
-              href="/learn/feedback"
-              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
-            >
-              <p className="learn-eyebrow">Baseline</p>
-              <p className="mt-0.5 font-semibold text-ink">
+          <details className="mb-4 rounded-2xl border border-black/[0.07] bg-white">
+            <summary className="cursor-pointer list-none px-4 py-3 text-[0.8125rem] font-semibold text-ink marker:content-none [&::-webkit-details-marker]:hidden">
+              More tools
+              <span className="ml-2 font-normal text-muted">
+                mid check-in · narrative · peer pulse
+              </span>
+            </summary>
+            <div className="grid gap-2 border-t border-black/[0.06] p-3 sm:grid-cols-2">
+              <Link
+                href="/learn/feedback"
+                className="rounded-xl bg-[#fafafa] px-3 py-2.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
+              >
                 Narrative + lit cube
-              </p>
-              <p className="learn-meta mt-0.5">Strengths · stretch · practices</p>
-            </Link>
-            <Link
-              href="/learn/assessment/mid"
-              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
-            >
-              <p className="learn-eyebrow">Mid-pathway</p>
-              <p className="mt-0.5 font-semibold text-ink">
-                Check-in re-measure
-              </p>
-              <p className="learn-meta mt-0.5">
-                Refresh scores so your weekly plan adapts
-              </p>
-            </Link>
-            <Link
-              href="/learn/pulse"
-              className="rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15"
-            >
-              <p className="learn-eyebrow">Continuous</p>
-              <p className="mt-0.5 font-semibold text-ink">
-                Face tracking + peer pulse
-              </p>
-              <p className="learn-meta mt-0.5">
-                Daily patterns · optional 5-item observation
-              </p>
-            </Link>
-          </div>
+              </Link>
+              <Link
+                href="/learn/assessment/mid"
+                className="rounded-xl bg-[#fafafa] px-3 py-2.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
+              >
+                Mid-pathway re-measure
+              </Link>
+              <Link
+                href="/learn/pulse"
+                className="rounded-xl bg-[#fafafa] px-3 py-2.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
+              >
+                Patterns & peer pulse
+              </Link>
+              <Link
+                href="/learn/report"
+                className="rounded-xl bg-[#fafafa] px-3 py-2.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
+              >
+                Full progress report
+              </Link>
+            </div>
+          </details>
         )}
 
         {weekly && weekly.items.length > 0 && (
@@ -477,9 +509,9 @@ export default function LearnDashboardPage() {
 
         <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="learn-eyebrow">The process</p>
+            <p className="learn-eyebrow">Programme pathway</p>
             <h2 className="mt-1 text-base font-semibold tracking-tight text-ink sm:text-lg">
-              Six steps. One clear order.
+              Six steps in order (not daily tabs)
             </h2>
           </div>
           <p className="learn-meta">

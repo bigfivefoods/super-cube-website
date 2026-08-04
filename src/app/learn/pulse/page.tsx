@@ -135,8 +135,8 @@ export default function PulsePage() {
 
   return (
     <LearnShell
-      title="Face tracking"
-      subtitle="Daily or weekly pulses across the six faces build patterns and guide deliberate practice."
+      title="Daily check-in"
+      subtitle="Rate how you show up across the six faces (30–60 seconds). Patterns guide practice. Optional peer observation is on the Peer tab."
     >
       {firstPulseCelebration && (
         <div className="mb-4 overflow-hidden rounded-2xl border border-black/[0.08] bg-ink text-white">
@@ -176,7 +176,7 @@ export default function PulsePage() {
       <div className="mb-4 flex gap-1 rounded-xl border border-black/[0.07] bg-[#fafafa] p-1">
         {(
           [
-            ["track", "Track"],
+            ["track", "Check-in"],
             ["patterns", "Patterns"],
             ["peer", "Peer pulse"],
           ] as const
