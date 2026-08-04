@@ -3,6 +3,7 @@ import { PracticeReminders } from "@/components/PracticeReminders";
 import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnBottomNav } from "@/components/learn/LearnBottomNav";
 import { LmsSyncProvider } from "@/components/learn/LmsSyncProvider";
+import { ProfileGate } from "@/components/learn/ProfileGate";
 import { StickyContinue } from "@/components/learn/StickyContinue";
 
 export const metadata: Metadata = {
@@ -38,13 +39,15 @@ export default function LearnLayout({
     */
     <div className="learn-app min-h-[100svh] bg-[#fafafa] pt-[calc(3.5rem+env(safe-area-inset-top,0px))] pb-[calc(8.5rem+env(safe-area-inset-bottom,0px))] md:pt-[calc(4rem+env(safe-area-inset-top,0px))] lg:pb-0">
       <LmsSyncProvider>
-        <PracticeReminders />
-        <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 md:top-[calc(4rem+env(safe-area-inset-top,0px))]">
-          <InstallAppBanner />
-        </div>
-        {children}
-        <StickyContinue />
-        <LearnBottomNav />
+        <ProfileGate>
+          <PracticeReminders />
+          <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 md:top-[calc(4rem+env(safe-area-inset-top,0px))]">
+            <InstallAppBanner />
+          </div>
+          {children}
+          <StickyContinue />
+          <LearnBottomNav />
+        </ProfileGate>
       </LmsSyncProvider>
     </div>
   );
