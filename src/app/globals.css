@@ -1,1 +1,243 @@
-PLACEHOLDER
+/* Inter via next/font (layout.tsx) — no render-blocking Google CSS */
+@import "tailwindcss";
+
+:root {
+  /* Bright white system — black / white / cool gray */
+  --ink: #0a0a0a;
+  --ink-soft: #1a1a1a;
+  --slate: #4a4a4a;
+  --muted: #6b6b6b;
+  --cream: #ffffff;
+  --cream-dark: #f4f4f4;
+  --paper: #ffffff;
+  --gold: #3b82f6;
+  --gold-bright: #2563eb;
+  --gold-soft: #eff6ff;
+  --line: rgba(0, 0, 0, 0.08);
+  --line-strong: rgba(0, 0, 0, 0.12);
+  --shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.18);
+  --shadow-sm: 0 4px 16px -6px rgba(0, 0, 0, 0.1);
+  --radius: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+@theme inline {
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-slate: var(--slate);
+  --color-muted: var(--muted);
+  --color-cream: var(--cream);
+  --color-cream-dark: var(--cream-dark);
+  --color-paper: var(--paper);
+  --color-gold: var(--gold);
+  --color-gold-bright: var(--gold-bright);
+  --color-gold-soft: var(--gold-soft);
+  --color-line: var(--line);
+  --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-display: var(--font-inter), Inter, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --default-font-family: var(--font-inter), Inter, system-ui, sans-serif;
+  --default-mono-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+body {
+  background: #ffffff;
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: #0a0a0a;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.skip-link:focus {
+  left: 0.75rem;
+  top: 0.75rem;
+}
+
+.container-site {
+  width: 100%;
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: max(1rem, env(safe-area-inset-left, 0px));
+  padding-right: max(1rem, env(safe-area-inset-right, 0px));
+}
+@media (min-width: 640px) {
+  .container-site {
+    padding-left: max(1.5rem, env(safe-area-inset-left, 0px));
+    padding-right: max(1.5rem, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* Learn design tokens */
+.learn-surface { color: var(--ink); }
+.learn-title {
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 650;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+.learn-subtitle {
+  margin-top: 0.35rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--slate);
+}
+.learn-eyebrow {
+  font-size: 0.65rem;
+  font-weight: 650;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.learn-card {
+  border-radius: 1rem;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  background: #fff;
+  padding: 1rem 1.1rem;
+}
+@media (min-width: 640px) {
+  .learn-card { padding: 1.15rem 1.25rem; }
+}
+.learn-card-title {
+  font-size: 0.9375rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.learn-card-muted {
+  border-radius: 0.75rem;
+  background: #fafafa;
+  padding: 0.75rem 0.85rem;
+}
+.learn-body {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--slate);
+}
+.learn-meta {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.learn-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.learn-input {
+  border-radius: 0.75rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: #fff;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--ink);
+  outline: none;
+}
+.learn-input:focus {
+  border-color: rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+}
+.learn-btn {
+  display: inline-flex;
+  min-height: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+.learn-btn-primary { background: #0a0a0a; color: #fff; }
+.learn-btn-primary:hover { background: #171717; }
+.learn-btn-ghost {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  background: transparent;
+  color: var(--ink);
+}
+.learn-btn-ghost:hover { background: rgba(0, 0, 0, 0.04); }
+.learn-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 0.2rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--slate);
+}
+.learn-chip-solid {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  background: #0a0a0a;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+}
+
+.resp-grid-2 {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: 1fr;
+}
+@media (min-width: 480px) {
+  .resp-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.875rem;
+  }
+}
+@media (min-width: 1024px) {
+  .resp-grid-2 { gap: 1rem; }
+}
+
+/* Report / facilitator print layout */
+@media print {
+  .learn-app header,
+  .learn-app nav,
+  .sticky,
+  .print\:hidden {
+    display: none !important;
+  }
+  .learn-app {
+    padding: 0 !important;
+  }
+  .report-print-root {
+    max-width: 100%;
+  }
+  .print\:break-inside-avoid {
+    break-inside: avoid;
+  }
+  body {
+    background: white !important;
+  }
+}
