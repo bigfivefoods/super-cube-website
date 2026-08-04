@@ -3,16 +3,72 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-/** Consistent LMS page frame — clean, single-column, page-by-page. */
+/**
+ * LMS content column — sits next to the sidebar.
+ * Use LearnScreen for each neat “page” you scroll through.
+ */
 export function LearnPage({
   children,
   className = "",
+  /** Stack full-viewport screens that snap on scroll */
+  snap = false,
 }: {
   children: ReactNode;
   className?: string;
+  snap?: boolean;
+}) {
+  if (snap) {
+    return (
+      <div
+        className={`learn-snap-root flex w-full max-w-2xl flex-col gap-4 sm:gap-5 ${className}`}
+      >
+        {children}
+      </div>
+    );
+  }
+  return (
+    <div
+      className={`mx-auto w-full max-w-2xl space-y-5 sm:space-y-6 ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
+/**
+ * One neat screenful of content. Scroll down to the next LearnScreen.
+ * min-height keeps primary content in the first viewport; overflow scrolls inside if needed.
+ */
+export function LearnScreen({
+  children,
+  id,
+  className = "",
+  pageLabel,
+}: {
+  children: ReactNode;
+  id?: string;
+  className?: string;
+  /** e.g. "1 / 3" shown top-right */
+  pageLabel?: string;
 }) {
   return (
-    <div className={`mx-auto w-full max-w-lg space-y-5 sm:max-w-xl sm:space-y-6 ${className}`}>
+    <section
+      id={id}
+      className={`learn-screen relative flex min-h-[min(70svh,36rem)] flex-col justify-between rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:min-h-[min(72svh,40rem)] sm:p-6 lg:min-h-[min(68svh,38rem)] ${className}`}
+    >
+      {pageLabel && (
+        <p className="absolute right-4 top-4 text-[0.65rem] font-semibold tabular-nums text-muted sm:right-5 sm:top-5">
+          {pageLabel}
+        </p>
+      )}
+      <div className="flex min-h-0 flex-1 flex-col">{children}</div>
+    </section>
+  );
+}
+
+export function LearnScreenFooter({ children }: { children: ReactNode }) {
+  return (
+    <div className="mt-5 shrink-0 border-t border-black/[0.06] pt-4">
       {children}
     </div>
   );

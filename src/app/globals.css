@@ -565,6 +565,21 @@ body.capacitor-app .site-chrome {
   color: #fff;
 }
 
+/* Stacked LMS screens — scroll main column for the next “page” */
+.learn-snap-root {
+  scroll-margin-top: 5rem;
+}
+
+.learn-screen {
+  scroll-margin-top: 5.5rem;
+}
+
+@media (min-width: 1024px) {
+  .learn-screen {
+    scroll-margin-top: 5rem;
+  }
+}
+
 .learn-progress {
   height: 0.3rem;
   overflow: hidden;

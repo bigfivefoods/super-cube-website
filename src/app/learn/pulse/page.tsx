@@ -97,8 +97,8 @@ export default function PulsePage() {
   return (
     <LearnShell>
       <LearnPage>
-        {/* Mode switcher — discrete pages within Check-in */}
-        <div className="flex gap-1 rounded-2xl border border-black/[0.07] bg-white p-1">
+        {/* Mode switcher — sidebar also lists Check-in */}
+        <div className="flex gap-1 rounded-2xl border border-black/[0.07] bg-white p-1 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
           {(
             [
               ["checkin", "Check-in"],

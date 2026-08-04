@@ -1,35 +1,40 @@
-# Learn UX — page-by-page
+# Learn UX
 
-## Principle
+## Layout
 
-Clear-cut **pages**, not one infinite scroll. Each screen has:
+```
+┌────────────┬──────────────────────────┐
+│  Sidebar   │  Main content            │
+│  Today     │  Screen / page 1         │
+│  Learn     │  (fits neatly)           │
+│  Check-in  │  ↓ scroll                │
+│  Progress  │  Screen / page 2         │
+│  You       │  …                       │
+│  Pathway   │                          │
+│  More…     │                          │
+└────────────┴──────────────────────────┘
+```
 
-1. Header (kicker · title · optional page steps)  
-2. One job (card content)  
-3. Primary / secondary actions at the bottom  
+- **Sidebar always on** (sticky desktop; horizontal chips on small screens)
+- **Main column**: stacked `LearnScreen` blocks — each is roughly one viewport “page”
+- Scroll down in main for the **next page** of information
 
-Shared components: `LearnPage`, `LearnPageHeader`, `LearnCard`, `LearnPageActions`, `LearnNavTile`.
+## Bottom tabs (mobile)
 
-## Bottom tabs (primary map)
+Same five destinations as the sidebar: Today · Learn · Check-in · Progress · You
 
-| Tab | Route | Job |
-|-----|--------|-----|
-| **Today** | `/learn` | Status + next action + links to other pages |
-| **Learn** | `/learn/courses` | Courses & sessions |
-| **Check-in** | `/learn/pulse` | 4-step daily pulse wizard |
-| **Progress** | `/learn/report` | Growth report |
-| **You** | `/learn/account` | Profile & tools |
+## Today screens
 
-## Check-in wizard (page-by-page)
+1. Status + cube + pathway  
+2. Do this next  
+3. Destination map  
 
-1. **Day** — week strip + calendar  
-2. **Faces** — one construct at a time, 3 sliders each  
-3. **Journal** — optional note + save  
-4. **Done** — next pages (practice / learn / today)  
+## Check-in wizard
 
-## Coherence rules
+Day → Faces (one at a time) → Journal → Done  
 
-- Soft grey canvas `#f7f7f8`, white cards, ink CTAs  
-- Max content width ~ `max-w-lg` / `max-w-xl`  
-- No competing side journey rail except on **Courses** (session tree)  
-- Sticky mobile CTA only when not already on a focused flow  
+## Components
+
+- `LearnShell` — sidebar + main  
+- `LearnPage` / `LearnScreen` — neat scroll pages  
+- `LearnPageHeader`, `LearnCard`, `LearnPageActions`, `LearnNavTile`  
