@@ -37,7 +37,7 @@ export default function LearnLayout({
       pt: clear fixed site header (h-14 / md:h-16 + safe-area)
       pb: clear bottom nav + sticky continue + safe-area
     */
-    <div className="learn-app min-h-[100svh] bg-[#fafafa] pt-[calc(3.5rem+env(safe-area-inset-top,0px))] pb-[calc(8.5rem+env(safe-area-inset-bottom,0px))] md:pt-[calc(4rem+env(safe-area-inset-top,0px))] lg:pb-0">
+    <div className="learn-app min-h-[100svh] bg-[#f7f7f8] pt-[calc(3.5rem+env(safe-area-inset-top,0px))] pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:pt-[calc(4rem+env(safe-area-inset-top,0px))] lg:pb-8">
       <LmsSyncProvider>
         <ProfileGate>
           <PracticeReminders />

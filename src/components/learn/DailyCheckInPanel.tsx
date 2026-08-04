@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { constructs, type ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
 import {
@@ -14,13 +15,19 @@ import {
 } from "@/lib/lms/daily-checkin";
 import {
   getFacePulses,
-  getTodayPulse,
   saveFacePulse,
 } from "@/lib/lms/face-tracking";
 import { localDayKey, loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
+import {
+  LearnCard,
+  LearnCardBody,
+  LearnPageActions,
+  LearnPageHeader,
+} from "@/components/learn/LearnPage";
 
 type Answers = Partial<Record<ConstructId, (number | undefined)[]>>;
+type Step = "day" | "faces" | "note" | "done";
 
 function emptyAnswers(): Answers {
   const a: Answers = {};
@@ -35,13 +42,10 @@ function loadAnswersForDay(state: LocalLmsState, day: string): Answers {
   if (pulse.questions) {
     for (const c of constructs) {
       const q = pulse.questions[c.id];
-      if (q?.length) {
-        base[c.id] = [q[0], q[1], q[2]];
-      }
+      if (q?.length) base[c.id] = [q[0], q[1], q[2]];
     }
     return base;
   }
-  // Legacy: single score → prefill all three
   for (const c of constructs) {
     const s = pulse.scores[c.id];
     if (typeof s === "number") base[c.id] = [s, s, s];
@@ -57,13 +61,13 @@ export function DailyCheckInPanel({
   onSaved?: (next: LocalLmsState) => void;
 }) {
   const today = localDayKey();
+  const [step, setStep] = useState<Step>("day");
   const [selectedDay, setSelectedDay] = useState(today);
+  const [faceIndex, setFaceIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>(() =>
     loadAnswersForDay(state, today)
   );
   const [note, setNote] = useState("");
-  const [openFace, setOpenFace] = useState<ConstructId | "all" | null>("all");
-  const [msg, setMsg] = useState<string | null>(null);
   const [showMonth, setShowMonth] = useState(false);
   const [calCursor, setCalCursor] = useState(() => {
     const d = new Date();
@@ -71,47 +75,44 @@ export function DailyCheckInPanel({
   });
 
   const pulses = useMemo(() => getFacePulses(state), [state]);
-  const pulseDates = useMemo(
-    () => new Set(pulses.map((p) => p.date)),
-    [pulses]
-  );
+  const pulseDates = useMemo(() => new Set(pulses.map((p) => p.date)), [pulses]);
   const week = useMemo(() => weekDaysAround(new Date(), 6, 0), []);
+  const monthCells = monthGrid(calCursor.y, calCursor.m);
 
   useEffect(() => {
     const s = loadLmsState();
     setAnswers(loadAnswersForDay(s, selectedDay));
     const p = getFacePulses(s).find((x) => x.date === selectedDay);
     setNote(p?.note ?? "");
-    setMsg(null);
   }, [selectedDay]);
 
   const answeredFaces = countAnsweredFaces(answers);
   const canSave = answeredFaces >= 3;
-  const isToday = selectedDay === today;
-  const existing = pulseDates.has(selectedDay);
+  const face = constructs[faceIndex]!;
+  const row = answers[face.id] ?? [];
+  const faceQsDone = row.filter(
+    (v) => typeof v === "number" && v >= 1 && v <= 5
+  ).length;
+  const stepNum = step === "day" ? 1 : step === "faces" ? 2 : step === "note" ? 3 : 4;
 
-  function setAnswer(face: ConstructId, qi: number, value: number) {
+  function setAnswer(qi: number, value: number) {
     setAnswers((prev) => {
-      const row = [...(prev[face] ?? [undefined, undefined, undefined])];
-      row[qi] = value;
-      return { ...prev, [face]: row };
+      const r = [...(prev[face.id] ?? [undefined, undefined, undefined])];
+      r[qi] = value;
+      return { ...prev, [face.id]: r };
     });
   }
 
   function save() {
-    if (!canSave) {
-      setMsg("Rate at least 3 faces (2+ sliders each) to save.");
-      return;
-    }
+    if (!canSave) return;
     const scores = scoresFromAnswers(answers);
     const questions: Partial<Record<ConstructId, number[]>> = {};
     for (const c of constructs) {
-      const row = (answers[c.id] ?? []).filter(
+      const r = (answers[c.id] ?? []).filter(
         (v): v is number => typeof v === "number"
       );
-      if (row.length) questions[c.id] = row;
+      if (r.length) questions[c.id] = r;
     }
-    // Focus = lowest mean face
     let focusFace: ConstructId | undefined;
     let lowest = 99;
     for (const [id, sc] of Object.entries(scores)) {
@@ -129,343 +130,387 @@ export function DailyCheckInPanel({
       source: "daily",
     });
     onSaved?.(next);
-    setMsg(
-      isToday
-        ? "Today’s check-in saved. Patterns and practice will use this."
-        : `Check-in for ${selectedDay} saved.`
-    );
+    setStep("done");
     track("face_pulse_save", {
       source: "daily",
       faces: answeredFaces,
       day: selectedDay,
       rich: true,
+      wizard: true,
     });
     if (next.shareProgressWithCoach && next.orgCode) {
       void pushCoachProgressIfConsented(next);
     }
   }
 
-  const monthCells = monthGrid(calCursor.y, calCursor.m);
-
-  return (
-    <section
-      id="check-in"
-      className="scroll-mt-28 overflow-hidden rounded-3xl border border-black/[0.07] bg-white shadow-[0_20px_50px_-32px_rgba(10,10,10,0.35)]"
-    >
-      {/* Header */}
-      <div className="relative overflow-hidden border-b border-black/[0.06] bg-gradient-to-br from-[#0a0a0a] via-[#1a1a1a] to-[#2a2a2a] px-5 py-6 text-white sm:px-7 sm:py-8">
-        <div
-          className="pointer-events-none absolute -right-8 -top-8 h-40 w-40 rounded-full opacity-30 blur-2xl"
-          style={{
-            background: `conic-gradient(${constructs.map((c) => c.color).join(",")})`,
-          }}
-          aria-hidden
+  /* ── Page 1: pick day ── */
+  if (step === "day") {
+    return (
+      <div className="space-y-5">
+        <LearnPageHeader
+          kicker="Check-in"
+          title="Which day are you logging?"
+          description="Tap a day on the week strip, or open the full calendar. Then rate the six faces."
+          step={1}
+          stepTotal={4}
         />
-        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/50">
-          Daily check-in
-        </p>
-        <h2 className="mt-1.5 text-xl font-semibold tracking-tight sm:text-2xl">
-          How did you lead today?
-        </h2>
-        <p className="mt-2 max-w-lg text-sm leading-relaxed text-white/65">
-          Three quick sliders per face · optional free text. Pick a day on the
-          calendar, rate honestly, save in under two minutes.
-        </p>
-        <div className="mt-4 flex flex-wrap gap-2 text-[0.75rem]">
-          <span className="rounded-full bg-white/10 px-3 py-1 font-medium text-white/90">
-            {answeredFaces}/6 faces rated
-          </span>
-          {existing && (
-            <span className="rounded-full bg-emerald-400/20 px-3 py-1 font-medium text-emerald-200">
-              Saved for this day
-            </span>
-          )}
-          {!isToday && (
-            <span className="rounded-full bg-white/10 px-3 py-1 font-medium text-white/70">
-              Editing {selectedDay}
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Week strip */}
-      <div className="border-b border-black/[0.06] px-4 py-4 sm:px-6">
-        <div className="mb-3 flex items-center justify-between gap-2">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-            This week
-          </p>
-          <button
-            type="button"
-            onClick={() => setShowMonth((v) => !v)}
-            className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-          >
-            {showMonth ? "Hide calendar" : "Full calendar"}
-          </button>
-        </div>
-        <div className="grid grid-cols-7 gap-1.5">
-          {week.map((d) => {
-            const key = localDayKey(d);
-            const selected = key === selectedDay;
-            const logged = pulseDates.has(key);
-            const isTod = key === today;
-            return (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setSelectedDay(key)}
-                className={`flex flex-col items-center rounded-2xl px-1 py-2.5 text-center transition ${
-                  selected
-                    ? "bg-ink text-white shadow-md"
-                    : "bg-[#f6f6f6] text-ink hover:bg-black/[0.06]"
-                }`}
-              >
-                <span
-                  className={`text-[0.6rem] font-semibold uppercase ${
-                    selected ? "text-white/55" : "text-muted"
-                  }`}
-                >
-                  {WEEKDAY_SHORT[d.getDay()]}
-                </span>
-                <span className="mt-0.5 text-sm font-semibold tabular-nums">
-                  {d.getDate()}
-                </span>
-                <span
-                  className={`mt-1 h-1.5 w-1.5 rounded-full ${
-                    logged
-                      ? selected
-                        ? "bg-emerald-300"
-                        : "bg-emerald-500"
-                      : selected
-                        ? "bg-white/25"
-                        : "bg-black/10"
-                  }`}
-                  title={logged ? "Logged" : isTod ? "Today" : "Empty"}
-                />
-              </button>
-            );
-          })}
-        </div>
-
-        {showMonth && (
-          <div className="mt-4 rounded-2xl border border-black/[0.07] bg-[#fafafa] p-3 sm:p-4">
+        <LearnCard>
+          <LearnCardBody>
             <div className="mb-3 flex items-center justify-between">
-              <button
-                type="button"
-                className="rounded-lg px-2 py-1 text-sm font-semibold text-ink hover:bg-black/[0.05]"
-                onClick={() =>
-                  setCalCursor((c) => {
-                    const m = c.m - 1;
-                    return m < 0 ? { y: c.y - 1, m: 11 } : { y: c.y, m };
-                  })
-                }
-              >
-                ←
-              </button>
-              <p className="text-sm font-semibold text-ink">
-                {new Date(calCursor.y, calCursor.m).toLocaleString(undefined, {
-                  month: "long",
-                  year: "numeric",
-                })}
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                This week
               </p>
               <button
                 type="button"
-                className="rounded-lg px-2 py-1 text-sm font-semibold text-ink hover:bg-black/[0.05]"
-                onClick={() =>
-                  setCalCursor((c) => {
-                    const m = c.m + 1;
-                    return m > 11 ? { y: c.y + 1, m: 0 } : { y: c.y, m };
-                  })
-                }
+                onClick={() => setShowMonth((v) => !v)}
+                className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
               >
-                →
+                {showMonth ? "Hide calendar" : "Full calendar"}
               </button>
             </div>
-            <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[0.6rem] font-semibold text-muted">
-              {WEEKDAY_SHORT.map((w, i) => (
-                <span key={`${w}-${i}`}>{w}</span>
-              ))}
-            </div>
-            <div className="grid grid-cols-7 gap-1">
-              {monthCells.map((d, i) => {
-                if (!d) return <span key={`e-${i}`} />;
+            <div className="grid grid-cols-7 gap-1.5">
+              {week.map((d) => {
                 const key = localDayKey(d);
                 const selected = key === selectedDay;
                 const logged = pulseDates.has(key);
-                const future = key > today;
                 return (
                   <button
                     key={key}
                     type="button"
-                    disabled={future}
-                    onClick={() => {
-                      setSelectedDay(key);
-                      setShowMonth(false);
-                    }}
-                    className={`relative aspect-square rounded-xl text-[0.75rem] font-semibold transition disabled:opacity-30 ${
+                    onClick={() => setSelectedDay(key)}
+                    className={`flex flex-col items-center rounded-2xl px-1 py-2.5 transition ${
                       selected
-                        ? "bg-ink text-white"
-                        : logged
-                          ? "bg-emerald-50 text-ink ring-1 ring-emerald-200"
-                          : "bg-white text-ink hover:bg-black/[0.04]"
+                        ? "bg-ink text-white shadow-md"
+                        : "bg-[#f4f4f4] text-ink hover:bg-black/[0.06]"
                     }`}
                   >
-                    {d.getDate()}
+                    <span
+                      className={`text-[0.6rem] font-semibold uppercase ${
+                        selected ? "text-white/55" : "text-muted"
+                      }`}
+                    >
+                      {WEEKDAY_SHORT[d.getDay()]}
+                    </span>
+                    <span className="mt-0.5 text-sm font-semibold tabular-nums">
+                      {d.getDate()}
+                    </span>
+                    <span
+                      className={`mt-1 h-1.5 w-1.5 rounded-full ${
+                        logged
+                          ? selected
+                            ? "bg-emerald-300"
+                            : "bg-emerald-500"
+                          : selected
+                            ? "bg-white/25"
+                            : "bg-black/10"
+                      }`}
+                    />
                   </button>
                 );
               })}
             </div>
-          </div>
-        )}
-      </div>
 
-      {/* Faces + sliders */}
-      <div className="space-y-2 px-4 py-4 sm:px-6 sm:py-5">
-        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-            Six faces · 3 questions each
-          </p>
-          <button
-            type="button"
-            className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-            onClick={() =>
-              setOpenFace((v) => (v === "all" ? null : "all"))
-            }
-          >
-            {openFace === "all" ? "Collapse all" : "Expand all"}
-          </button>
-        </div>
-
-        {constructs.map((c) => {
-          const open = openFace === "all" || openFace === c.id;
-          const row = answers[c.id] ?? [];
-          const filled = row.filter(
-            (v) => typeof v === "number" && v >= 1 && v <= 5
-          ).length;
-          const filledVals = row.filter(
-            (v): v is number => typeof v === "number" && v >= 1 && v <= 5
-          );
-          const mean =
-            filledVals.length > 0
-              ? Math.round(
-                  (filledVals.reduce((a, b) => a + b, 0) / filledVals.length) *
-                    10
-                ) / 10
-              : null;
-
-          return (
-            <div
-              key={c.id}
-              className="overflow-hidden rounded-2xl border border-black/[0.07] bg-[#fafafa]"
-              style={{ boxShadow: open ? `inset 3px 0 0 ${c.color}` : undefined }}
-            >
-              <button
-                type="button"
-                onClick={() =>
-                  setOpenFace((v) =>
-                    v === c.id ? null : openFace === "all" ? c.id : c.id
-                  )
-                }
-                className="flex w-full items-center gap-3 px-3.5 py-3 text-left sm:px-4"
-              >
-                <span
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-[0.7rem] font-bold text-white"
-                  style={{ background: c.color }}
-                >
-                  {c.shortName.slice(0, 1)}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-ink">
-                    {c.name}
-                  </span>
-                  <span className="block text-[0.7rem] text-muted">
-                    {filled}/3 answered
-                    {mean != null ? ` · avg ${mean.toFixed(1)}` : ""}
-                  </span>
-                </span>
-                <span className="text-muted" aria-hidden>
-                  {open ? "−" : "+"}
-                </span>
-              </button>
-
-              {open && (
-                <div className="space-y-4 border-t border-black/[0.05] bg-white px-3.5 py-4 sm:px-4">
-                  {CHECKIN_QUESTIONS[c.id].map((q, qi) => {
-                    const val = row[qi];
+            {showMonth && (
+              <div className="mt-4 rounded-2xl border border-black/[0.07] bg-[#fafafa] p-3">
+                <div className="mb-3 flex items-center justify-between">
+                  <button
+                    type="button"
+                    className="rounded-lg px-2 py-1 text-sm font-semibold"
+                    onClick={() =>
+                      setCalCursor((c) => {
+                        const m = c.m - 1;
+                        return m < 0 ? { y: c.y - 1, m: 11 } : { y: c.y, m };
+                      })
+                    }
+                  >
+                    ←
+                  </button>
+                  <p className="text-sm font-semibold">
+                    {new Date(calCursor.y, calCursor.m).toLocaleString(
+                      undefined,
+                      { month: "long", year: "numeric" }
+                    )}
+                  </p>
+                  <button
+                    type="button"
+                    className="rounded-lg px-2 py-1 text-sm font-semibold"
+                    onClick={() =>
+                      setCalCursor((c) => {
+                        const m = c.m + 1;
+                        return m > 11 ? { y: c.y + 1, m: 0 } : { y: c.y, m };
+                      })
+                    }
+                  >
+                    →
+                  </button>
+                </div>
+                <div className="mb-1 grid grid-cols-7 gap-1 text-center text-[0.6rem] font-semibold text-muted">
+                  {WEEKDAY_SHORT.map((w, i) => (
+                    <span key={`${w}${i}`}>{w}</span>
+                  ))}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {monthCells.map((d, i) => {
+                    if (!d) return <span key={`e${i}`} />;
+                    const key = localDayKey(d);
+                    const selected = key === selectedDay;
+                    const logged = pulseDates.has(key);
+                    const future = key > today;
                     return (
-                      <div key={q.id}>
-                        <div className="flex items-start justify-between gap-3">
-                          <p className="text-[0.8125rem] font-medium leading-snug text-ink">
-                            {q.prompt}
-                          </p>
-                          <span className="shrink-0 rounded-full bg-[#f4f4f4] px-2 py-0.5 text-[0.7rem] font-semibold tabular-nums text-ink">
-                            {typeof val === "number" ? val : "—"}
-                          </span>
-                        </div>
-                        <input
-                          type="range"
-                          min={1}
-                          max={5}
-                          step={1}
-                          value={typeof val === "number" ? val : 3}
-                          onChange={(e) =>
-                            setAnswer(c.id, qi, Number(e.target.value))
-                          }
-                          className="mt-2 w-full accent-current"
-                          style={{ accentColor: c.color }}
-                          aria-label={q.prompt}
-                        />
-                        <div className="mt-1 flex justify-between text-[0.6rem] text-muted">
-                          <span>{SCALE_LABELS[0]}</span>
-                          <span>{SCALE_LABELS[4]}</span>
-                        </div>
-                      </div>
+                      <button
+                        key={key}
+                        type="button"
+                        disabled={future}
+                        onClick={() => {
+                          setSelectedDay(key);
+                          setShowMonth(false);
+                        }}
+                        className={`aspect-square rounded-xl text-[0.75rem] font-semibold disabled:opacity-30 ${
+                          selected
+                            ? "bg-ink text-white"
+                            : logged
+                              ? "bg-emerald-50 ring-1 ring-emerald-200"
+                              : "bg-white hover:bg-black/[0.04]"
+                        }`}
+                      >
+                        {d.getDate()}
+                      </button>
                     );
                   })}
                 </div>
-              )}
-            </div>
-          );
-        })}
+              </div>
+            )}
+          </LearnCardBody>
+        </LearnCard>
+        <LearnPageActions
+          primary={{
+            label: "Next · rate faces →",
+            onClick: () => {
+              setFaceIndex(0);
+              setStep("faces");
+            },
+          }}
+          tertiary={{ href: "/learn", label: "Back to Today" }}
+        />
       </div>
+    );
+  }
 
-      {/* Free text */}
-      <div className="border-t border-black/[0.06] px-4 py-4 sm:px-6">
-        <label className="block">
-          <span className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-            Journal note (optional)
-          </span>
-          <textarea
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            rows={3}
-            placeholder="What mattered most about how you led today? Wins, friction, one intention for tomorrow…"
-            className="learn-input mt-2 w-full resize-y text-sm"
+  /* ── Page 2: one face at a time ── */
+  if (step === "faces") {
+    return (
+      <div className="space-y-5">
+        <LearnPageHeader
+          kicker={`${face.name} · face ${faceIndex + 1} of 6`}
+          title="Rate this face"
+          description="Three quick sliders. Be honest—this is developmental, not a test."
+          step={2}
+          stepTotal={4}
+        />
+
+        <LearnCard>
+          <div
+            className="h-1.5 w-full"
+            style={{ background: face.color }}
+            aria-hidden
           />
-        </label>
-      </div>
+          <LearnCardBody>
+            <div className="mb-4 flex items-center gap-3">
+              <span
+                className="flex h-11 w-11 items-center justify-center rounded-2xl text-sm font-bold text-white"
+                style={{ background: face.color }}
+              >
+                {face.shortName.slice(0, 1)}
+              </span>
+              <div>
+                <p className="text-base font-semibold text-ink">{face.name}</p>
+                <p className="text-[0.75rem] text-muted">
+                  {faceQsDone}/3 answered · {answeredFaces}/6 faces ready
+                </p>
+              </div>
+            </div>
 
-      {/* Save */}
-      <div className="flex flex-col gap-3 border-t border-black/[0.06] bg-[#fafafa] px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-        <p className="text-[0.75rem] leading-relaxed text-muted">
-          Private on this device. Coach only sees scores if you opt in.
-          {getTodayPulse(state) && isToday
-            ? " Saving again updates today’s entry."
-            : ""}
-        </p>
+            <div className="space-y-5">
+              {CHECKIN_QUESTIONS[face.id].map((q, qi) => {
+                const val = row[qi];
+                return (
+                  <div key={q.id}>
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="text-[0.875rem] font-medium leading-snug text-ink">
+                        {q.prompt}
+                      </p>
+                      <span className="shrink-0 rounded-full bg-[#f4f4f4] px-2.5 py-0.5 text-[0.75rem] font-semibold tabular-nums">
+                        {typeof val === "number" ? val : "—"}
+                      </span>
+                    </div>
+                    <input
+                      type="range"
+                      min={1}
+                      max={5}
+                      step={1}
+                      value={typeof val === "number" ? val : 3}
+                      onChange={(e) => setAnswer(qi, Number(e.target.value))}
+                      onPointerDown={() => {
+                        if (typeof val !== "number") setAnswer(qi, 3);
+                      }}
+                      className="mt-3 w-full"
+                      style={{ accentColor: face.color }}
+                      aria-label={q.prompt}
+                    />
+                    <div className="mt-1 flex justify-between text-[0.6rem] text-muted">
+                      <span>{SCALE_LABELS[0]}</span>
+                      <span>{SCALE_LABELS[4]}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Face jump dots */}
+            <div className="mt-6 flex justify-center gap-1.5">
+              {constructs.map((c, i) => {
+                const done =
+                  (answers[c.id] ?? []).filter(
+                    (v) => typeof v === "number"
+                  ).length >= 2;
+                return (
+                  <button
+                    key={c.id}
+                    type="button"
+                    onClick={() => setFaceIndex(i)}
+                    className={`h-2 rounded-full transition-all ${
+                      i === faceIndex ? "w-6 bg-ink" : done ? "w-2 bg-ink/40" : "w-2 bg-black/15"
+                    }`}
+                    aria-label={c.name}
+                  />
+                );
+              })}
+            </div>
+          </LearnCardBody>
+        </LearnCard>
+
+        <LearnPageActions
+          primary={{
+            label:
+              faceIndex < constructs.length - 1
+                ? "Next face →"
+                : "Next · journal →",
+            onClick: () => {
+              if (faceIndex < constructs.length - 1) {
+                setFaceIndex((i) => i + 1);
+              } else {
+                setStep("note");
+              }
+            },
+          }}
+          secondary={{
+            label: faceIndex === 0 ? "Back · day" : "Previous face",
+            onClick: () => {
+              if (faceIndex === 0) setStep("day");
+              else setFaceIndex((i) => i - 1);
+            },
+          }}
+        />
+      </div>
+    );
+  }
+
+  /* ── Page 3: note + save ── */
+  if (step === "note") {
+    return (
+      <div className="space-y-5">
+        <LearnPageHeader
+          kicker="Journal"
+          title="Anything to capture?"
+          description="Optional free text. Private on this device. Then save your check-in."
+          step={3}
+          stepTotal={4}
+        />
+        <LearnCard>
+          <LearnCardBody>
+            <p className="text-sm text-slate">
+              <span className="font-semibold text-ink">{answeredFaces} faces</span>{" "}
+              rated for{" "}
+              <span className="font-semibold text-ink">{selectedDay}</span>
+              {!canSave && (
+                <span className="mt-1 block text-amber-800">
+                  Rate at least 3 faces (2+ sliders each) before saving.
+                </span>
+              )}
+            </p>
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              rows={4}
+              placeholder="What mattered most about how you led? One win, one friction, one intention…"
+              className="learn-input mt-4 w-full resize-y text-sm"
+            />
+          </LearnCardBody>
+        </LearnCard>
+        <LearnPageActions
+          primary={{
+            label: pulseDates.has(selectedDay)
+              ? "Update check-in"
+              : "Save check-in",
+            onClick: save,
+            disabled: !canSave,
+          }}
+          secondary={{
+            label: "Back · faces",
+            onClick: () => {
+              setFaceIndex(constructs.length - 1);
+              setStep("faces");
+            },
+          }}
+        />
+      </div>
+    );
+  }
+
+  /* ── Page 4: done ── */
+  return (
+    <div className="space-y-5">
+      <LearnPageHeader
+        kicker="Complete"
+        title="Check-in saved"
+        description="Patterns will sharpen as you log more days. Choose your next page."
+        step={4}
+        stepTotal={4}
+      />
+      <LearnCard tone="ink">
+        <LearnCardBody>
+          <p className="text-sm leading-relaxed text-white/75">
+            Logged for <span className="font-semibold text-white">{selectedDay}</span>
+            . {answeredFaces} faces captured
+            {note ? " with a journal note" : ""}.
+          </p>
+        </LearnCardBody>
+      </LearnCard>
+      <LearnPageActions
+        primary={{ href: "/learn/practice", label: "Micro-practice →" }}
+        secondary={{ href: "/learn/courses", label: "Continue learning" }}
+        tertiary={{ href: "/learn", label: "Back to Today" }}
+      />
+      <p className="text-center">
         <button
           type="button"
-          onClick={save}
-          disabled={!canSave}
-          className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-6 text-sm font-semibold text-white transition hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-40"
+          className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+          onClick={() => {
+            setStep("day");
+            setFaceIndex(0);
+          }}
         >
-          {existing ? "Update check-in" : "Save check-in"}
+          Log another day
         </button>
-      </div>
-      {msg && (
-        <p className="border-t border-emerald-100 bg-emerald-50 px-4 py-3 text-center text-sm font-medium text-emerald-900 sm:px-6">
-          {msg}
-        </p>
-      )}
-    </section>
+      </p>
+      <p className="text-center">
+        <Link
+          href="/learn/report"
+          className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+        >
+          View progress report
+        </Link>
+      </p>
+    </div>
   );
 }

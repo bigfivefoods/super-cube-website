@@ -4,31 +4,30 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { LearnCourseNav } from "@/components/learn/LearnCourseNav";
-import {
-  JourneyRailLive,
-  useJourney,
-} from "@/components/learn/JourneyProgress";
+import { useJourney } from "@/components/learn/JourneyProgress";
 import {
   isLearnNavActive,
   LEARN_PRIMARY_NAV,
   LEARN_SECONDARY_LINKS,
 } from "@/lib/lms/nav";
 
+/**
+ * LMS shell — single-column page-by-page for most routes.
+ * Courses keep a desktop side tree for session navigation.
+ */
 export function LearnShell({
   children,
   title,
   subtitle,
   hero,
-  hideJourneyRail = false,
-  /** Full-width content (Today hub) — no side rail clutter */
-  wide = false,
 }: {
   children: ReactNode;
   title?: string;
   subtitle?: string;
   hero?: ReactNode;
-  /** Hide compact journey rail (dashboard uses its own progress) */
+  /** @deprecated unused — journey lives on Today page tiles */
   hideJourneyRail?: boolean;
+  /** @deprecated single-column is default */
   wide?: boolean;
 }) {
   const pathname = usePathname();
@@ -41,19 +40,23 @@ export function LearnShell({
     if (onCourses) setLearnOpen(true);
   }, [onCourses]);
 
-  if (wide) {
+  if (!onCourses) {
     return (
-      <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
+      <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#f7f7f8]">
         {hero}
-        <div
-          className={`container-site mx-auto max-w-3xl min-w-0 pb-10 ${
-            hero ? "pt-5 sm:pt-6" : "pt-4 sm:pt-5"
-          }`}
-        >
+        <div className="container-site mx-auto min-w-0 px-4 pb-8 pt-4 sm:px-5 sm:pb-10 sm:pt-5">
           {(title || subtitle) && (
-            <header className="mb-5 sm:mb-6">
-              {title && <h1 className="learn-title">{title}</h1>}
-              {subtitle && <p className="learn-subtitle">{subtitle}</p>}
+            <header className="mx-auto mb-5 max-w-lg sm:mb-6 sm:max-w-xl">
+              {title && (
+                <h1 className="text-[1.5rem] font-semibold tracking-tight text-ink sm:text-[1.75rem]">
+                  {title}
+                </h1>
+              )}
+              {subtitle && (
+                <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-slate">
+                  {subtitle}
+                </p>
+              )}
             </header>
           )}
           {children}
@@ -63,20 +66,13 @@ export function LearnShell({
   }
 
   return (
-    <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#fafafa]">
+    <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#f7f7f8]">
       {hero}
-
-      <div
-        className={`container-site grid min-w-0 gap-5 sm:gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-10 ${
-          hero
-            ? "pb-8 pt-5 sm:pb-10 sm:pt-6 lg:pb-12 lg:pt-8"
-            : "pb-8 pt-4 sm:pb-10 sm:pt-5 lg:pb-12 lg:pt-6"
-        }`}
-      >
+      <div className="container-site grid min-w-0 gap-5 pb-8 pt-4 sm:gap-6 sm:pb-10 sm:pt-5 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 xl:grid-cols-[240px_minmax(0,1fr)]">
         <aside className="min-w-0 lg:sticky lg:top-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:self-start">
-          <p className="learn-eyebrow mb-2 hidden lg:block">Learn</p>
-
-          {/* Primary destinations — same 5 as mobile bottom nav */}
+          <p className="mb-2 hidden text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted lg:block">
+            Learn
+          </p>
           <nav
             className="-mx-1 flex gap-0.5 overflow-x-auto px-1 pb-1.5 [scrollbar-width:none] lg:mx-0 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:px-0 lg:pb-0 [&::-webkit-scrollbar]:hidden"
             aria-label="Learn primary"
@@ -101,27 +97,18 @@ export function LearnShell({
                         aria-current={active ? "page" : undefined}
                       >
                         <span className="truncate">{item.label}</span>
-                        <span
-                          className={`ml-auto hidden text-[0.65rem] font-normal lg:inline ${
-                            active ? "text-white/55" : "text-muted"
-                          }`}
-                        >
-                          {item.hint}
-                        </span>
                       </Link>
                       <button
                         type="button"
                         onClick={() => setLearnOpen((v) => !v)}
                         className={`flex shrink-0 items-center justify-center rounded-xl px-2.5 text-[0.7rem] font-semibold transition ${
                           active
-                            ? "bg-ink text-white hover:bg-ink-soft"
-                            : "text-muted hover:bg-black/[0.04] hover:text-ink"
+                            ? "bg-ink text-white"
+                            : "text-muted hover:bg-black/[0.04]"
                         }`}
                         aria-expanded={learnOpen}
                         aria-label={
-                          learnOpen
-                            ? "Collapse courses"
-                            : "Expand courses and sessions"
+                          learnOpen ? "Collapse courses" : "Expand courses"
                         }
                       >
                         <span
@@ -149,28 +136,17 @@ export function LearnShell({
                   aria-current={active ? "page" : undefined}
                 >
                   <span className="truncate">{item.label}</span>
-                  <span
-                    className={`ml-auto hidden text-[0.65rem] font-normal lg:inline ${
-                      active ? "text-white/55" : "text-muted"
-                    }`}
-                  >
-                    {item.hint}
-                  </span>
                 </Link>
               );
             })}
           </nav>
 
           {learnOpen && (
-            <div className="mt-2 rounded-xl border border-black/[0.07] bg-white p-2.5 shadow-[0_1px_0_rgba(0,0,0,0.02)] lg:hidden">
-              <LearnCourseNav
-                expanded
-                onToggle={() => setLearnOpen(false)}
-              />
+            <div className="mt-2 rounded-xl border border-black/[0.07] bg-white p-2.5 lg:hidden">
+              <LearnCourseNav expanded onToggle={() => setLearnOpen(false)} />
             </div>
           )}
 
-          {/* Compact pathway progress — not primary nav */}
           {journey && (
             <div className="mt-4 hidden rounded-xl border border-black/[0.07] bg-white p-3 lg:block">
               <div className="flex items-center justify-between gap-2">
@@ -183,27 +159,19 @@ export function LearnShell({
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
                 <div
-                  className="h-full rounded-full bg-ink transition-all"
+                  className="h-full rounded-full bg-ink"
                   style={{ width: `${Math.max(journey.pct, 4)}%` }}
                 />
               </div>
-              <p className="mt-2 text-[0.75rem] font-medium text-ink">
-                {journey.current.short}
-                <span className="font-normal text-muted">
-                  {" "}
-                  · step {journey.current.n}
-                </span>
-              </p>
               <Link
-                href={journey.current.href}
+                href="/learn"
                 className="mt-2 inline-flex text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
               >
-                Continue pathway →
+                Back to Today →
               </Link>
             </div>
           )}
 
-          {/* More tools — collapsible secondary */}
           <div className="mt-3 hidden border-t border-black/[0.06] pt-3 lg:block">
             <button
               type="button"
@@ -216,37 +184,34 @@ export function LearnShell({
             </button>
             {moreOpen && (
               <ul className="mt-1 space-y-0.5">
-                {LEARN_SECONDARY_LINKS.map((link) => {
-                  const active =
-                    pathname === link.href ||
-                    pathname.startsWith(`${link.href}/`);
-                  return (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className={`block rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium transition ${
-                          active
-                            ? "font-semibold text-ink"
-                            : "text-muted hover:text-ink"
-                        }`}
-                      >
-                        {link.label}
-                      </Link>
-                    </li>
-                  );
-                })}
+                {LEARN_SECONDARY_LINKS.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="block rounded-lg px-2.5 py-1.5 text-[0.75rem] font-medium text-muted hover:text-ink"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             )}
           </div>
         </aside>
 
         <div className="min-w-0">
-          {!hideJourneyRail && !hero && <JourneyRailLive />}
-
           {(title || subtitle) && (
             <header className="mb-5 sm:mb-6">
-              {title && <h1 className="learn-title">{title}</h1>}
-              {subtitle && <p className="learn-subtitle">{subtitle}</p>}
+              {title && (
+                <h1 className="text-[1.5rem] font-semibold tracking-tight text-ink sm:text-[1.75rem]">
+                  {title}
+                </h1>
+              )}
+              {subtitle && (
+                <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-slate">
+                  {subtitle}
+                </p>
+              )}
             </header>
           )}
           {children}
