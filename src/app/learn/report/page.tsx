@@ -101,11 +101,14 @@ export default function ReportPage() {
       ? Math.round((post.result.overall - pre.result.overall) * 10) / 10
       : null;
 
+  // Capture after null guards so nested handlers satisfy LocalLmsState (not null)
+  const liveState = state;
+
   function generateShare() {
-    const payload = buildReportSharePayload(state);
+    const payload = buildReportSharePayload(liveState);
     if (!payload) return;
     if (post) {
-      const certId = ensureCertificateId(state);
+      const certId = ensureCertificateId(liveState);
       setCertificateMeta(certId);
       payload.certificateId = certId;
     }
@@ -246,7 +249,7 @@ export default function ReportPage() {
               type="button"
               className="learn-btn learn-btn-primary mt-3 sm:mt-0"
               onClick={() => {
-                const certId = ensureCertificateId(state);
+                const certId = ensureCertificateId(liveState);
                 const next = setCertificateMeta(certId);
                 setState(next);
                 downloadCompletionCertificate({
