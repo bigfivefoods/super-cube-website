@@ -3,11 +3,17 @@
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { FaceMomentum } from "@/components/learn/FaceMomentum";
+import { InlineProfileEdit } from "@/components/learn/InlineProfileEdit";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { MilestonesStrip } from "@/components/learn/MilestonesStrip";
+import { NextBestActionCard } from "@/components/learn/NextBestAction";
 import { RadarChart } from "@/components/learn/RadarChart";
+import { WeeklyReviewCard } from "@/components/learn/WeeklyReviewCard";
 import { Button } from "@/components/ui";
 import { track } from "@/lib/analytics";
 import { reflectionCount } from "@/lib/lms/continue";
+import { getNextBestAction } from "@/lib/lms/next-action";
 import {
   AGE_BANDS,
   COHORT_KINDS,
@@ -51,6 +57,7 @@ function AccountPageInner() {
   const [msg, setMsg] = useState<string | null>(null);
   const [syncing, setSyncing] = useState(false);
   const [signedInEmail, setSignedInEmail] = useState<string | null>(null);
+  const [showSample, setShowSample] = useState(false);
   const cloudReady = isSupabaseConfigured();
   const paidHandled = useRef(false);
 
@@ -247,6 +254,7 @@ function AccountPageInner() {
   const cohortLabel = profile?.cohortKind
     ? COHORT_KINDS.find((c) => c.id === profile.cohortKind)?.label
     : null;
+  const nextAction = getNextBestAction(state);
 
   return (
     <LearnShell
@@ -258,6 +266,8 @@ function AccountPageInner() {
           {msg}
         </p>
       )}
+
+      <NextBestActionCard action={nextAction} />
 
       <section className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] bg-ink text-white">
         <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
@@ -316,11 +326,15 @@ function AccountPageInner() {
         </div>
       </section>
 
+      <WeeklyReviewCard state={state} />
+      <FaceMomentum state={state} />
+      <MilestonesStrip state={state} />
+
       <section className="learn-card mb-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <h2 className="learn-card-title">About you</h2>
           <Link href="/learn/welcome" className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline">
-            Update →
+            Full editor →
           </Link>
         </div>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -340,6 +354,9 @@ function AccountPageInner() {
             </div>
           ))}
         </dl>
+        <div className="mt-3">
+          <InlineProfileEdit state={state} onSaved={setState} />
+        </div>
       </section>
 
       <section className="mb-4 grid gap-3 lg:grid-cols-2">
@@ -353,9 +370,24 @@ function AccountPageInner() {
           {!pre ? (
             <div className="mt-3">
               <p className="learn-body">No baseline yet. Take the pre-assessment to see your six-face profile.</p>
-              <Link href="/learn/assessment/pre" className="learn-btn learn-btn-primary mt-3 inline-flex">
-                Start baseline →
-              </Link>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Link href="/learn/assessment/pre" className="learn-btn learn-btn-primary inline-flex">
+                  Start baseline →
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => setShowSample((v) => !v)}
+                  className="learn-btn learn-btn-ghost"
+                >
+                  {showSample ? "Hide example" : "Show example profile"}
+                </button>
+              </div>
+              {showSample && (
+                <p className="mt-3 rounded-xl bg-[#fafafa] px-3 py-2 text-[0.8125rem] text-slate">
+                  Example: Pre overall 58 · Strength Emotional · Focus Physical.
+                  After the programme, learners typically see multi-point lifts on stretch faces.
+                </p>
+              )}
             </div>
           ) : (
             <>
