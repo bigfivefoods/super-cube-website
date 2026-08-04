@@ -18,7 +18,11 @@ import {
   type LearningContext,
   type LearnerRole,
 } from "@/lib/lms/profile";
-import { setOrgCode as saveOrgCode, unlockDemo } from "@/lib/lms/store";
+import {
+  loadLmsState,
+  setOrgCode as saveOrgCode,
+  unlockDemo,
+} from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
 
 type Step = 1 | 2 | 3 | 4;
@@ -84,6 +88,12 @@ export default function WelcomeProfilePage() {
     });
     if (cohortKind !== "solo" && !codeInput.trim()) {
       router.push("/learn/org");
+      return;
+    }
+    // First-pulse onboarding: charts never start empty when possible
+    const s = loadLmsState();
+    if (!s.firstRun?.firstPulse && !(s.facePulses?.length)) {
+      router.push("/learn/pulse?first=1");
       return;
     }
     router.push("/learn/start");
@@ -315,8 +325,7 @@ export default function WelcomeProfilePage() {
             </label>
           )}
           <div className="rounded-xl border border-black/[0.06] bg-[#fafafa] p-3 text-[0.8125rem] text-slate">
-            Next: create a free account to sync across devices, or continue on this
-            device only.{" "}
+            After profile: optional first face pulse so charts start with real data.{" "}
             <Link href="/signup" className="font-semibold text-ink underline">
               Sign up
             </Link>{" "}
