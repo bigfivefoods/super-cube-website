@@ -29,6 +29,25 @@
 - Events: `charge.success`
 - Callback URL is set per transaction (account page)
 
+## Apple Pay domain verification
+
+Paystack requires the Apple merchant domain association file to be publicly reachable so Apple Pay can be enabled for the site domain.
+
+| Item | Value |
+|------|--------|
+| **URL** | `https://www.super-cube.me/.well-known/apple-developer-merchantid-domain-association` |
+| **File** | `public/.well-known/apple-developer-merchantid-domain-association` (no extension) |
+| **Content-Type** | `text/plain` (set in `next.config.ts` + `vercel.json`) |
+| **Source** | Payload from Paystack (hex → UTF-8 JSON with `pspId`, `version`, `createdOn`, `signature`) |
+
+### Checklist
+
+1. After deploy, open the URL above — body should start with `{"pspId":…` and `Content-Type` should be `text/plain`.
+2. In Paystack Dashboard → Settings → Apple Pay (or domain verification), verify/register `www.super-cube.me` (and apex if used).
+3. Re-verify if you replace the association file or change the production domain.
+
+This file is **public by design** (not a secret).
+
 ## Test checklist
 
 1. Test keys on Vercel Preview or Production  
