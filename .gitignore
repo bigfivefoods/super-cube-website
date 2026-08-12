@@ -48,6 +48,9 @@ ios/
 android/
 .capacitor/
 
+# Generated PPTX assets (rainbow header PNG, etc.)
+scripts/.pptx-assets/
+
 # Large generated video intermediates (not needed on Vercel)
 public/videos/courses/_raw/
 public/videos/courses/_silent/
