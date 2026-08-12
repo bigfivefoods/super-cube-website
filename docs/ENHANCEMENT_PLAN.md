@@ -14,11 +14,14 @@
 
 **Your ops:** add live/test keys on Vercel, set webhook, run test card, then set `NEXT_PUBLIC_DEMO_LMS_OPEN=false` when ready.
 
-## Phase 2 — School pilots
+## Phase 2 — School pilots (implemented in product code)
 
-- Seat packs (10/20/50) via Paystack metadata  
-- Auto cohort code after pack purchase  
-- Coach roster heat map + CSV  
+- [x] Seat packs (10/20/50) via Paystack metadata  
+- [x] Auto cohort code after pack purchase  
+- [x] Coach roster + CSV export + consent UX  
+- [x] Docs: `docs/SEAT_PACKS.md` + migration `006_seat_packs.sql`  
+
+**Your ops:** run org SQL + `006_seat_packs.sql`; coach signs in with checkout email before/after pay.
 
 ## Phase 3 — Daily habit
 

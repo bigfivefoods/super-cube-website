@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { paystackConfigured, verifyTransaction } from "@/lib/paystack";
 import { activateSubscriptionInSupabase } from "@/lib/lms/activate-subscription-server";
+import { createOrgFromSeatPayment } from "@/lib/org/create-from-payment";
 import { programmes } from "@/lib/programmes";
 import { sendEmail } from "@/lib/email";
 
 /**
- * Verify Paystack transaction after redirect (?reference=...).
- * Always returns activateLocal for device unlock; cloud when user exists.
+ * Verify Paystack transaction after redirect.
+ * Handles single-learner unlock and seat-pack → auto cohort code.
  */
 export async function POST(request: Request) {
   try {
@@ -28,8 +29,12 @@ export async function POST(request: Request) {
     const data = result.data;
     const paid = data.status === "success";
     const meta = data.metadata || {};
+    const productType =
+      String(meta.product_type || body.productType || "single") === "seat_pack"
+        ? "seat_pack"
+        : "single";
     const programmeId = String(
-      meta.programme_id || body.programmeId || ""
+      meta.programme_id || body.programmeId || "adults"
     );
     const planId = String(meta.plan_id || `${programmeId}_once`);
     const programme = programmes.find((p) => p.id === programmeId);
@@ -46,6 +51,85 @@ export async function POST(request: Request) {
       });
     }
 
+    // ── Seat pack → create org + cohort code ─────────────────────
+    if (productType === "seat_pack") {
+      const seats = Number(meta.seats || body.seats || 0);
+      const packId = String(meta.pack_id || body.packId || "");
+      const orgName = String(meta.org_name || body.orgName || "Cohort");
+
+      const orgResult = await createOrgFromSeatPayment({
+        email,
+        orgName,
+        seats: seats || 10,
+        packId: packId || "seats_10",
+        paystackReference: reference,
+        programmeId,
+        kind: "school",
+      });
+
+      // Buyer also gets personal unlock for coaching
+      const cloud = await activateSubscriptionInSupabase({
+        email,
+        programmeId,
+        planId: planId || `pack_${packId}_${programmeId}`,
+        paystackReference: reference,
+        paystackCustomerCode: data.customer?.customer_code,
+        amountCents: data.amount,
+        currency: data.currency,
+      });
+
+      if (email) {
+        const amountMajor = (data.amount / 100).toFixed(2);
+        const code = orgResult.org?.code;
+        void sendEmail({
+          to: email,
+          subject: code
+            ? `Cohort ready · Super-Cube® code ${code}`
+            : `Payment confirmed · Super-Cube® seat pack`,
+          html: `
+            <p>Thank you for your seat pack purchase.</p>
+            ${
+              code
+                ? `<p><strong>Cohort code: ${code}</strong><br/>Share this code with learners (Learn → Org).</p>`
+                : `<p>We could not auto-create a cohort because no signed-in Super-Cube account matches <strong>${email}</strong>. Sign up / sign in with this email, then contact hello@super-cube.me with reference ${reference}.</p>`
+            }
+            <p>Seats: ${seats || "—"} · Amount: ${data.currency} ${amountMajor}<br/>Reference: ${reference}</p>
+            <p><a href="${(process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me").replace(/\/$/, "")}/learn/coach">Open coach tools →</a></p>
+          `,
+          text: code
+            ? `Cohort code ${code}. Share with learners. Reference ${reference}.`
+            : `Seat pack paid. Sign in with ${email} to claim cohort. Reference ${reference}.`,
+          tags: ["paystack-seat-pack"],
+        });
+      }
+
+      return NextResponse.json({
+        paid: true,
+        productType: "seat_pack",
+        reference,
+        programmeId,
+        planId,
+        amount: data.amount,
+        currency: data.currency,
+        email,
+        seats,
+        packId,
+        org: orgResult.org || null,
+        orgOk: orgResult.ok,
+        orgReason: orgResult.reason,
+        subscriptionSaved: cloud.saved,
+        activateLocal: {
+          programmeId,
+          planId: planId || `pack_${packId}_${programmeId}`,
+          status: "active" as const,
+          paystackReference: reference,
+          orgCode: orgResult.org?.code,
+          seats,
+        },
+      });
+    }
+
+    // ── Single learner ───────────────────────────────────────────
     const cloud = await activateSubscriptionInSupabase({
       email,
       programmeId,
@@ -56,7 +140,6 @@ export async function POST(request: Request) {
       currency: data.currency,
     });
 
-    // Receipt email (best-effort)
     if (email && programme) {
       const amountMajor = (data.amount / 100).toFixed(2);
       void sendEmail({
@@ -68,13 +151,14 @@ export async function POST(request: Request) {
           <p>Amount: ${data.currency} ${amountMajor}<br/>Reference: ${reference}</p>
           <p><a href="${(process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me").replace(/\/$/, "")}/learn">Open Learn →</a></p>
         `,
-        text: `Payment confirmed for ${programme.name}. Reference ${reference}. Open Learn to continue.`,
+        text: `Payment confirmed for ${programme.name}. Reference ${reference}.`,
         tags: ["paystack-receipt"],
       });
     }
 
     return NextResponse.json({
       paid: true,
+      productType: "single",
       reference,
       programmeId,
       planId,
@@ -110,6 +194,7 @@ export async function GET(request: Request) {
         reference,
         programmeId: url.searchParams.get("programme") || undefined,
         email: url.searchParams.get("email") || undefined,
+        productType: url.searchParams.get("pack") === "1" ? "seat_pack" : undefined,
       }),
     })
   );

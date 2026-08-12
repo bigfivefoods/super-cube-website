@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { PaystackCheckout } from "@/components/PaystackCheckout";
+import { SeatPackCheckout } from "@/components/SeatPackCheckout";
 import { PageHero, Button } from "@/components/ui";
 import { track } from "@/lib/analytics";
 import { loadLmsState, unlockDemo, hasPaidAccess } from "@/lib/lms/store";
@@ -199,36 +200,44 @@ export default function PricingPage() {
               className="mx-auto mt-10 max-w-3xl scroll-mt-24 rounded-2xl border border-black/[0.08] bg-white p-6 sm:mt-12 sm:p-8"
             >
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                Schools · companies · cohorts
+                Schools · companies · cohorts · Phase 2
               </p>
               <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-                Team & school pilots
+                Seat packs — pay once, get a cohort code
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
-                Cohort codes, facilitator guidance, and consented growth
-                summaries—without exposing private journals. Multi-seat packs
-                land in Phase 2; for now book a pilot.
+                Buy 10, 20, or 50 learner seats. We create a cohort code after
+                payment. Learners join under Learn → Org. Coaches see scores and
+                completion only when learners consent—never journal text.
+              </p>
+              <div className="mt-6 rounded-2xl border border-black/[0.06] bg-[#fafafa] p-4 sm:p-5">
+                <SeatPackCheckout />
+              </div>
+              <p className="mt-4 text-[0.75rem] leading-relaxed text-muted">
+                Tip: <strong className="text-ink">sign up / sign in</strong> with
+                the same email before paying so admin rights attach to your
+                account. Then open Learn → Coach tools.
               </p>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+                <Button href="/learn/coach" variant="ghost">
+                  Coach tools
+                </Button>
+                <Button href="/facilitator" variant="ghost">
+                  Facilitator kit
+                </Button>
+                <Button href="/signup" variant="ghost">
+                  Create coach account
+                </Button>
                 <a
                   href={
                     process.env.NEXT_PUBLIC_PILOT_CALENDAR_URL?.trim() ||
                     "mailto:hello@super-cube.me?subject=Book%20a%20Super-Cube%20pilot"
                   }
                   onClick={() => track("pilot_click", { source: "pricing" })}
-                  className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white transition hover:bg-ink-soft"
+                  className="inline-flex min-h-11 items-center text-sm font-semibold text-ink underline-offset-2 hover:underline"
                 >
-                  Book a pilot
+                  Prefer a guided pilot call →
                 </a>
-                <Button href="/contact" variant="ghost">
-                  Contact
-                </Button>
-                <Button href="/facilitator" variant="ghost">
-                  Facilitator kit
-                </Button>
-                <Button href="/learn/start" variant="ghost">
-                  Try free baseline
-                </Button>
               </div>
             </div>
 

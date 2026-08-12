@@ -77,6 +77,14 @@ export interface LocalLmsState {
   subscription?: LocalSubscription;
   /** Last successful Paystack payment reference */
   paystackReference?: string;
+  /** Seat pack purchase (school pilot) */
+  seatPack?: {
+    packId: string;
+    seats: number;
+    orgCode?: string;
+    orgName?: string;
+    purchasedAt: string;
+  };
   lessonProgress: LocalLessonProgress;
   attempts: LocalAttempt[];
   orientation?: LocalOrientation;

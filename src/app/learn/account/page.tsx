@@ -102,20 +102,45 @@ function AccountPageInner() {
           const data = await res.json();
           if (data.paid && data.activateLocal?.programmeId) {
             const pid = data.activateLocal.programmeId as ProgrammeId;
+            const isPack =
+              data.productType === "seat_pack" ||
+              searchParams.get("pack") === "1";
             const next = activatePaidSubscription({
               programmeId: pid,
               planId: data.activateLocal.planId || `${pid}_once`,
               email: data.email || checkoutEmail,
               paystackReference:
                 data.activateLocal.paystackReference || reference,
+              orgCode: data.activateLocal.orgCode || data.org?.code,
+              seats: data.seats || data.activateLocal.seats,
+              packId: data.packId,
+              orgName: data.org?.name,
             });
             setState(next);
-            setMsg("Payment verified — full pathway unlocked.");
             track("purchase_complete", {
               programmeId: pid,
               reference,
               currency: data.currency,
+              productType: data.productType || "single",
+              seats: data.seats,
             });
+            if (isPack) {
+              const code = data.org?.code || data.activateLocal.orgCode;
+              if (code) {
+                setMsg(
+                  `Seat pack paid. Cohort code ${code} — open Coach tools to share it.`
+                );
+                window.location.href = `/learn/coach?code=${encodeURIComponent(code)}&pack=1`;
+              } else {
+                setMsg(
+                  data.orgReason === "user_not_found_sign_up_first"
+                    ? "Payment OK. Sign up with the same email, then open Coach tools — or email hello@super-cube.me with your reference."
+                    : "Payment OK but cohort code was not created. Contact support with your Paystack reference."
+                );
+              }
+              return;
+            }
+            setMsg("Payment verified — full pathway unlocked.");
             window.location.href = `/learn/onboarding?mode=purchase&programme=${pid}`;
             return;
           }

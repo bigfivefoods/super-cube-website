@@ -102,7 +102,7 @@ export default function LearnOrgPage() {
   return (
     <LearnShell
       title="Family, school or company cohort"
-      subtitle="Join with a short code—family circle, classroom, or workplace pilot. Local save always works; signed-in users appear on the coach roster."
+      subtitle="Join with a short code—family circle, classroom, or workplace pilot. Local save always works; signed-in users appear on the coach roster. Journals stay private; scores only if you consent on Today / Coach."
     >
       {profile?.cohortKind && profile.cohortKind !== "solo" && (
         <p className="mb-4 rounded-xl border border-black/[0.06] bg-white px-3 py-2 text-[0.8125rem] text-slate">

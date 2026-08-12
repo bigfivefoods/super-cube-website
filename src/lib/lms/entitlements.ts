@@ -60,6 +60,11 @@ export type ActivatePaidInput = {
   paystackReference?: string;
   currency?: string;
   amountCents?: number;
+  /** Seat pack fields */
+  orgCode?: string;
+  seats?: number;
+  packId?: string;
+  orgName?: string;
 };
 
 /** Activate paid (or verified) subscription on this device */
@@ -75,11 +80,24 @@ export function activatePaidSubscription(
     planId,
     status: "active",
     activatedAt: state.subscription?.activatedAt || new Date().toISOString(),
+    paystackReference: input.paystackReference,
   };
   state.subscription = sub;
   state.demoUnlocked = true; // paid includes full device path
   if (input.paystackReference) {
     state.paystackReference = input.paystackReference;
+  }
+  if (input.orgCode) {
+    state.orgCode = input.orgCode;
+  }
+  if (input.seats && input.packId) {
+    state.seatPack = {
+      packId: input.packId,
+      seats: input.seats,
+      orgCode: input.orgCode,
+      orgName: input.orgName,
+      purchasedAt: new Date().toISOString(),
+    };
   }
   state.user = {
     email:

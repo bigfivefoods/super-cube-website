@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs } from "@/lib/content";
 import { track } from "@/lib/analytics";
@@ -14,6 +15,8 @@ import {
 import {
   loadLmsState,
   setCertificateMeta,
+  setOrgCode,
+  setShareProgressConsent,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
@@ -42,6 +45,21 @@ type RosterRow = {
 };
 
 export default function CoachToolsPage() {
+  return (
+    <Suspense
+      fallback={
+        <LearnShell title="Coach tools">
+          <p className="learn-meta">Loading…</p>
+        </LearnShell>
+      }
+    >
+      <CoachToolsInner />
+    </Suspense>
+  );
+}
+
+function CoachToolsInner() {
+  const searchParams = useSearchParams();
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [link, setLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -53,17 +71,31 @@ export default function CoachToolsPage() {
   const [orgCode, setOrgCodeState] = useState("");
   const [createName, setCreateName] = useState("");
   const [createMsg, setCreateMsg] = useState<string | null>(null);
+  const [packBanner, setPackBanner] = useState<string | null>(null);
 
   useEffect(() => {
     const s = loadLmsState();
     setState(s);
-    setOrgCodeState(s.orgCode || "DEMO2026");
+    const qCode = searchParams.get("code");
+    const fromPack = searchParams.get("pack") === "1";
+    const code =
+      qCode || s.seatPack?.orgCode || s.orgCode || "DEMO2026";
+    setOrgCodeState(code);
+    if (qCode) {
+      setOrgCode(qCode);
+    }
+    if (fromPack && (qCode || s.seatPack?.orgCode)) {
+      const c = qCode || s.seatPack?.orgCode;
+      setPackBanner(
+        `Seat pack active. Share cohort code ${c} with learners (Learn → Org). Seats: ${s.seatPack?.seats ?? "—"}.`
+      );
+    }
     const supabase = createClient();
     if (!supabase) return;
     void supabase.auth.getUser().then(({ data }) => {
       setEmail(data.user?.email ?? null);
     });
-  }, []);
+  }, [searchParams]);
 
   function loadRoster(code: string) {
     void fetch(`/api/org/roster?code=${encodeURIComponent(code)}`)
@@ -193,6 +225,54 @@ export default function CoachToolsPage() {
       title="Coach & facilitator tools"
       subtitle="Share consented growth summaries and view cloud cohort roster when signed in as coach."
     >
+      {packBanner && (
+        <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-emerald-900/70">
+            Seat pack
+          </p>
+          <p className="mt-1 text-sm font-semibold text-ink">{packBanner}</p>
+          <p className="mt-2 text-[0.8125rem] text-slate">
+            Code:{" "}
+            <strong className="font-mono text-ink">{orgCode}</strong>
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <a
+              href={`/api/org/export?code=${encodeURIComponent(orgCode)}`}
+              className="learn-btn learn-btn-primary !min-h-9"
+            >
+              Export CSV
+            </a>
+            <Link href="/pricing#pilot" className="learn-btn learn-btn-ghost !min-h-9">
+              Buy more seats
+            </Link>
+          </div>
+        </div>
+      )}
+
+      <section className="learn-card mb-4">
+        <h2 className="learn-card-title">Consent & privacy</h2>
+        <p className="learn-body mt-2">
+          Coaches only see scores and completion when learners turn on{" "}
+          <strong className="text-ink">share progress with coach</strong> on
+          their dashboard. Journal reflections never leave the learner’s device.
+        </p>
+        <label className="mt-3 flex items-start gap-2 text-[0.8125rem] text-slate">
+          <input
+            type="checkbox"
+            className="mt-1"
+            checked={Boolean(state?.shareProgressWithCoach)}
+            onChange={(e) => {
+              setShareProgressConsent(e.target.checked);
+              setState(loadLmsState());
+            }}
+          />
+          <span>
+            As a learner on this device, I consent to share my scores (not
+            journals) with my cohort coach.
+          </span>
+        </label>
+      </section>
+
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="learn-card">
           <h2 className="learn-card-title">Share this learner’s growth</h2>

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { verifyPaystackSignature } from "@/lib/paystack";
 import { activateSubscriptionInSupabase } from "@/lib/lms/activate-subscription-server";
+import { createOrgFromSeatPayment } from "@/lib/org/create-from-payment";
 
 /**
- * Paystack webhook — charge.success activates cloud subscription when possible.
- * Dashboard: https://www.super-cube.me/api/paystack/webhook
+ * Paystack webhook — charge.success for single + seat packs.
  */
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -35,12 +35,43 @@ export async function POST(request: Request) {
         return NextResponse.json({ received: true, skipped: true });
       }
       const meta = data.metadata || {};
-      const programmeId = String(meta.programme_id || "");
+      const productType = String(meta.product_type || "single");
+      const programmeId = String(meta.programme_id || "adults");
       const planId = String(meta.plan_id || `${programmeId}_once`);
       const reference = String(data.reference || "");
       const email = data.customer?.email;
 
-      if (programmeId && reference) {
+      if (!reference) {
+        return NextResponse.json({ received: true, skipped: "no_ref" });
+      }
+
+      if (productType === "seat_pack") {
+        const seats = Number(meta.seats || 10);
+        const packId = String(meta.pack_id || "seats_10");
+        const orgName = String(meta.org_name || "Cohort");
+        const orgResult = await createOrgFromSeatPayment({
+          email,
+          orgName,
+          seats,
+          packId,
+          paystackReference: reference,
+          programmeId,
+          kind: "school",
+        });
+        const sub = await activateSubscriptionInSupabase({
+          email,
+          programmeId,
+          planId,
+          paystackReference: reference,
+          paystackCustomerCode: data.customer?.customer_code,
+          amountCents: data.amount,
+          currency: data.currency,
+        });
+        console.info("[paystack webhook] seat_pack", {
+          org: orgResult,
+          sub,
+        });
+      } else if (programmeId) {
         const result = await activateSubscriptionInSupabase({
           email,
           programmeId,
@@ -50,7 +81,7 @@ export async function POST(request: Request) {
           amountCents: data.amount,
           currency: data.currency,
         });
-        console.info("[paystack webhook] activate", result);
+        console.info("[paystack webhook] single", result);
       }
     }
 
