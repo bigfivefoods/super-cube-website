@@ -189,6 +189,78 @@ export default function WhatPage() {
       <section className="section-pad border-b border-black/[0.06] bg-white">
         <div className="container-site">
           <SectionHeading
+            eyebrow="Programmes"
+            title="Kids · Adolescents · Adults"
+            description="One model across the lifespan. Choose the pathway for this season—the six faces stay with you as your world gets larger."
+          />
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-3">
+            {programmes.map((p, i) => {
+              const color = programmeAccents[i % programmeAccents.length];
+              return (
+                <article
+                  key={p.id}
+                  id={p.id}
+                  className="flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-sm"
+                >
+                  <div
+                    className="h-1.5 w-full"
+                    style={{ background: color }}
+                    aria-hidden
+                  />
+                  <div className="flex flex-1 flex-col p-6 sm:p-7">
+                    <p
+                      className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
+                      style={{ color }}
+                    >
+                      {p.ageLabel}
+                    </p>
+                    <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">
+                      {p.name.replace("Super-Cube® ", "")}
+                    </h2>
+                    <p className="mt-2 text-sm font-medium text-slate">
+                      {p.tagline}
+                    </p>
+                    <p className="mt-4 flex-1 text-sm leading-relaxed text-slate">
+                      {p.description}
+                    </p>
+                    <p className="mt-4 text-xs text-muted">{p.audienceNote}</p>
+
+                    <div className="mt-6 border-t border-black/[0.06] pt-5">
+                      <p className="text-2xl font-semibold tracking-tight text-ink">
+                        ${p.priceUsd}
+                        <span className="text-sm font-medium text-muted">
+                          {" "}
+                          USD once
+                        </span>
+                      </p>
+                    </div>
+
+                    <div className="mt-5 flex flex-col gap-2">
+                      <Link
+                        href={`/pricing#${p.id}`}
+                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-soft"
+                      >
+                        Get access
+                      </Link>
+                      <Link
+                        href="/learn/programmes"
+                        className="text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+                      >
+                        Explore in Learn
+                      </Link>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad border-b border-black/[0.06] bg-white">
+        <div className="container-site">
+          <SectionHeading
             eyebrow="The offer"
             title="What you get with Super-Cube®."
             description="A complete individual pathway: orient, assess, learn, practise, and report—built for real development, not one-off workshops."
@@ -415,78 +487,6 @@ export default function WhatPage() {
                 </Button>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="section-pad border-b border-black/[0.06] bg-white">
-        <div className="container-site">
-          <SectionHeading
-            eyebrow="Programmes"
-            title="Kids · Adolescents · Adults"
-            description="One model across the lifespan. Choose the pathway for this season—the six faces stay with you as your world gets larger."
-          />
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {programmes.map((p, i) => {
-              const color = programmeAccents[i % programmeAccents.length];
-              return (
-                <article
-                  key={p.id}
-                  id={p.id}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-sm"
-                >
-                  <div
-                    className="h-1.5 w-full"
-                    style={{ background: color }}
-                    aria-hidden
-                  />
-                  <div className="flex flex-1 flex-col p-6 sm:p-7">
-                    <p
-                      className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
-                      style={{ color }}
-                    >
-                      {p.ageLabel}
-                    </p>
-                    <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">
-                      {p.name.replace("Super-Cube® ", "")}
-                    </h2>
-                    <p className="mt-2 text-sm font-medium text-slate">
-                      {p.tagline}
-                    </p>
-                    <p className="mt-4 flex-1 text-sm leading-relaxed text-slate">
-                      {p.description}
-                    </p>
-                    <p className="mt-4 text-xs text-muted">{p.audienceNote}</p>
-
-                    <div className="mt-6 border-t border-black/[0.06] pt-5">
-                      <p className="text-2xl font-semibold tracking-tight text-ink">
-                        ${p.priceUsd}
-                        <span className="text-sm font-medium text-muted">
-                          {" "}
-                          USD once
-                        </span>
-                      </p>
-                    </div>
-
-                    <div className="mt-5 flex flex-col gap-2">
-                      <Link
-                        href={`/pricing#${p.id}`}
-                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-soft"
-                      >
-                        Get access
-                      </Link>
-                      <Link
-                        href="/learn/programmes"
-                        className="text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
-                      >
-                        Explore in Learn
-                      </Link>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
           </div>
         </div>
       </section>
