@@ -30,7 +30,13 @@ export default function PilotPackPage() {
         description="Everything a principal, L&D lead, or coach needs to run an 8-week Super-Cube® pilot—without inventing process from scratch."
       >
         <Button href="/pricing#pilot" variant="primary">
-          Book a pilot
+          Buy seat pack
+        </Button>
+        <Button
+          href="/downloads/super-cube-overview.pptx"
+          variant="ghost"
+        >
+          Download overview deck
         </Button>
         <Button href="/learn/coach" variant="ghost">
           Coach tools
@@ -46,8 +52,22 @@ export default function PilotPackPage() {
             />
             <ul className="mt-6 space-y-3 text-sm leading-relaxed text-slate">
               <li>
+                · <strong className="text-ink">Overview deck:</strong>{" "}
+                <a
+                  href="/downloads/super-cube-overview.pptx"
+                  download
+                  className="font-semibold text-ink underline-offset-2 hover:underline"
+                >
+                  Super-Cube® overview (.pptx)
+                </a>{" "}
+                — 12 slides for leave-behinds and parent/board meetings
+              </li>
+              <li>
                 · <strong className="text-ink">Pricing:</strong> from $
-                {COURSE_PRICE_USD} USD per learner; custom for 20+ seats
+                {COURSE_PRICE_USD} USD per learner; seat packs 10/20/50 on{" "}
+                <a href="/pricing#pilot" className="font-semibold text-ink underline-offset-2 hover:underline">
+                  pricing
+                </a>
               </li>
               <li>
                 · <strong className="text-ink">Pathway:</strong> orient →

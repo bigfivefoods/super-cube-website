@@ -16,9 +16,15 @@ export default function MediaKitPage() {
         theme="about"
         eyebrow="Press & partners"
         title="Media kit"
-        description="Logos, model description, research abstract, and how to credit Super-Cube®. For interviews and features: hello@super-cube.me."
+        description="Logos, model description, research abstract, overview slides, and how to credit Super-Cube®. For interviews and features: hello@super-cube.me."
       >
-        <Button href={`mailto:${site.email}?subject=Media%20enquiry`} variant="primary">
+        <Button
+          href="/downloads/super-cube-overview.pptx"
+          variant="primary"
+        >
+          Download overview deck (.pptx)
+        </Button>
+        <Button href={`mailto:${site.email}?subject=Media%20enquiry`} variant="ghost">
           Email media
         </Button>
         <Button href="/research" variant="ghost">
@@ -60,6 +66,21 @@ export default function MediaKitPage() {
             </div>
           </div>
           <div className="space-y-6">
+            <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+              <SectionHeading title="Overview presentation" />
+              <p className="mt-3 text-sm leading-relaxed text-slate">
+                A 12-slide Super-Cube® overview for schools, companies, and
+                partners—model, research, Learn pathway, seat packs, and pricing.
+                Widescreen PowerPoint (.pptx).
+              </p>
+              <a
+                href="/downloads/super-cube-overview.pptx"
+                download
+                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-soft"
+              >
+                Download Super-Cube overview (.pptx)
+              </a>
+            </div>
             <div>
               <SectionHeading title="One-page abstract" />
               <p className="mt-4 text-sm leading-relaxed text-slate">
