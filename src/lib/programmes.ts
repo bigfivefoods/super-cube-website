@@ -15,10 +15,36 @@ export interface Programme {
   sortOrder: number;
   /** One-time course price in whole USD */
   priceUsd: number;
+  /** One-time course price in whole ZAR (Paystack default) */
+  priceZar: number;
 }
 
-/** Single launch price for every Super-Cube® programme */
+/** Single launch price for every Super-Cube® programme (USD display) */
 export const COURSE_PRICE_USD = 6;
+
+/**
+ * South African launch price (ZAR, whole rands).
+ * Override with NEXT_PUBLIC_COURSE_PRICE_ZAR if needed.
+ */
+export const COURSE_PRICE_ZAR = Number(
+  process.env.NEXT_PUBLIC_COURSE_PRICE_ZAR || 99
+);
+
+/** Amount in smallest currency unit for Paystack */
+export function courseAmountCents(
+  currency: "ZAR" | "USD",
+  programme?: Programme
+): number {
+  if (currency === "USD") {
+    return (programme?.priceUsd ?? COURSE_PRICE_USD) * 100;
+  }
+  return (programme?.priceZar ?? COURSE_PRICE_ZAR) * 100;
+}
+
+export function formatCoursePrice(currency: "ZAR" | "USD" = "ZAR"): string {
+  if (currency === "USD") return `$${COURSE_PRICE_USD} USD`;
+  return `R${COURSE_PRICE_ZAR}`;
+}
 
 export const programmes: Programme[] = [
   {
@@ -34,6 +60,7 @@ export const programmes: Programme[] = [
     tone: "playful, visual, short sessions",
     sortOrder: 1,
     priceUsd: COURSE_PRICE_USD,
+    priceZar: COURSE_PRICE_ZAR,
   },
   {
     id: "adolescents",
@@ -49,6 +76,7 @@ export const programmes: Programme[] = [
     tone: "relatable, scenario-led, peer-ready",
     sortOrder: 2,
     priceUsd: COURSE_PRICE_USD,
+    priceZar: COURSE_PRICE_ZAR,
   },
   {
     id: "adults",
@@ -63,6 +91,7 @@ export const programmes: Programme[] = [
     tone: "professional, evidence-informed, workplace-applied",
     sortOrder: 3,
     priceUsd: COURSE_PRICE_USD,
+    priceZar: COURSE_PRICE_ZAR,
   },
 ];
 

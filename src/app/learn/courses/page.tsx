@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { CourseVideo } from "@/components/learn/CourseVideo";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { PaywallCard } from "@/components/learn/PaywallCard";
 import { constructs } from "@/lib/content";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
@@ -24,6 +25,7 @@ export default function CoursesPage() {
       title="Step 4 · Develop the six faces"
       subtitle={`${programme?.name ?? "Programme"} · Work through each construct with Read · Engage · Apply. Small sessions that compound into real capacity.`}
     >
+      <PaywallCard />
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-3.5 xl:grid-cols-3">
         {courses.map((course) => {
           const construct = constructs.find((c) => c.id === course.constructId);

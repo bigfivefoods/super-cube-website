@@ -21,6 +21,9 @@
 | `SUPABASE_SERVICE_ROLE_KEY` | from Supabase (server only) |
 | `PAYSTACK_SECRET_KEY` | `sk_live_…` or `sk_test_…` |
 | `NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY` | `pk_live_…` or `pk_test_…` |
+| `PAYSTACK_CURRENCY` | `ZAR` (default) or `USD` |
+| `NEXT_PUBLIC_COURSE_PRICE_ZAR` | optional launch price (default 99) |
+| `NEXT_PUBLIC_DEMO_LMS_OPEN` | `true` open free LMS; `false` enforce paywall for full path |
 | `NEXT_PUBLIC_VIDEO_CDN` | after upload (see §3) |
 | `NEXT_PUBLIC_GA_ID` | optional `G-…` — see `docs/ANALYTICS.md` |
 | `NEXT_PUBLIC_FOUNDER_VIDEO_URL` | optional YouTube/Vimeo **embed** URL |
@@ -34,8 +37,9 @@ Redeploy after saving env.
 
 ### Paystack dashboard
 
-- Webhook: `https://www.super-cube.me/api/paystack/webhook`
-- Callback uses `/learn/account?paid=1&programme=…` + `reference`
+- Webhook: `https://www.super-cube.me/api/paystack/webhook` (`charge.success`)
+- Callback: `/learn/account?paid=1&programme=…` + Paystack `reference`
+- Full guide: **`docs/PAYSTACK.md`** (Phase 1)
 
 ## 3. Session videos → Supabase Storage CDN
 

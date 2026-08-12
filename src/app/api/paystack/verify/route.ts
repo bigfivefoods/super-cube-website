@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import { paystackConfigured, paystackRequest } from "@/lib/paystack";
-import { createAdminClient } from "@/lib/supabase/admin";
+import { paystackConfigured, verifyTransaction } from "@/lib/paystack";
+import { activateSubscriptionInSupabase } from "@/lib/lms/activate-subscription-server";
 import { programmes } from "@/lib/programmes";
+import { sendEmail } from "@/lib/email";
 
 /**
- * Verify a Paystack transaction after redirect (?reference=...).
- * Activates subscription in Supabase when service role is configured.
+ * Verify Paystack transaction after redirect (?reference=...).
+ * Always returns activateLocal for device unlock; cloud when user exists.
  */
 export async function POST(request: Request) {
   try {
@@ -18,28 +19,24 @@ export async function POST(request: Request) {
     if (!paystackConfigured()) {
       return NextResponse.json({
         demo: true,
+        paid: false,
         message: "Paystack not configured",
       });
     }
 
-    const result = await paystackRequest<{
-      status: boolean;
-      data: {
-        status: string;
-        reference: string;
-        amount: number;
-        currency: string;
-        customer: { email?: string; customer_code?: string };
-        metadata?: Record<string, unknown>;
-      };
-    }>(`/transaction/verify/${encodeURIComponent(reference)}`);
-
+    const result = await verifyTransaction(reference);
     const data = result.data;
     const paid = data.status === "success";
     const meta = data.metadata || {};
-    const programmeId = String(meta.programme_id || body.programmeId || "");
+    const programmeId = String(
+      meta.programme_id || body.programmeId || ""
+    );
     const planId = String(meta.plan_id || `${programmeId}_once`);
     const programme = programmes.find((p) => p.id === programmeId);
+    const email =
+      data.customer?.email ||
+      (typeof body.email === "string" ? body.email : "") ||
+      "";
 
     if (!paid) {
       return NextResponse.json({
@@ -49,62 +46,31 @@ export async function POST(request: Request) {
       });
     }
 
-    const admin = createAdminClient();
-    let subscriptionSaved = false;
+    const cloud = await activateSubscriptionInSupabase({
+      email,
+      programmeId,
+      planId,
+      paystackReference: reference,
+      paystackCustomerCode: data.customer?.customer_code,
+      amountCents: data.amount,
+      currency: data.currency,
+    });
 
-    if (admin && programme) {
-      // Prefer linking by email when user already exists in Auth
-      const email = data.customer?.email || String(body.email || "");
-      let userId: string | null = null;
-
-      if (email) {
-        const { data: listed } = await admin.auth.admin.listUsers({
-          page: 1,
-          perPage: 200,
-        });
-        const found = listed?.users?.find(
-          (u) => u.email?.toLowerCase() === email.toLowerCase()
-        );
-        userId = found?.id ?? null;
-      }
-
-      if (userId) {
-        await admin.from("profiles").upsert({
-          id: userId,
-          email: email || null,
-          programme_id: programmeId,
-          updated_at: new Date().toISOString(),
-        });
-
-        // Ensure plan row exists (once plans)
-        await admin.from("subscription_plans").upsert(
-          {
-            id: planId,
-            programme_id: programmeId,
-            name: `${programme.name} · one-time`,
-            price_zar: programme.priceUsd * 100,
-            interval: "once",
-            active: true,
-            features: ["full_pathway", "report", "certificate"],
-          },
-          { onConflict: "id" }
-        );
-
-        const { error } = await admin.from("subscriptions").insert({
-          user_id: userId,
-          plan_id: planId,
-          programme_id: programmeId,
-          status: "active",
-          paystack_customer_code: data.customer?.customer_code ?? null,
-          current_period_end: null,
-          updated_at: new Date().toISOString(),
-        });
-
-        subscriptionSaved = !error;
-        if (error) {
-          console.warn("[paystack verify] subscription insert", error.message);
-        }
-      }
+    // Receipt email (best-effort)
+    if (email && programme) {
+      const amountMajor = (data.amount / 100).toFixed(2);
+      void sendEmail({
+        to: email,
+        subject: `Payment confirmed · Super-Cube® ${programme.name}`,
+        html: `
+          <p>Thank you for your payment.</p>
+          <p><strong>${programme.name}</strong> is unlocked on Super-Cube® Learn.</p>
+          <p>Amount: ${data.currency} ${amountMajor}<br/>Reference: ${reference}</p>
+          <p><a href="${(process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me").replace(/\/$/, "")}/learn">Open Learn →</a></p>
+        `,
+        text: `Payment confirmed for ${programme.name}. Reference ${reference}. Open Learn to continue.`,
+        tags: ["paystack-receipt"],
+      });
     }
 
     return NextResponse.json({
@@ -114,12 +80,14 @@ export async function POST(request: Request) {
       planId,
       amount: data.amount,
       currency: data.currency,
-      email: data.customer?.email,
-      subscriptionSaved,
+      email: email || data.customer?.email,
+      subscriptionSaved: cloud.saved,
+      cloudReason: cloud.reason,
       activateLocal: {
-        programmeId,
+        programmeId: programmeId || "adults",
         planId,
         status: "active" as const,
+        paystackReference: reference,
       },
     });
   } catch (e) {
@@ -134,8 +102,7 @@ export async function GET(request: Request) {
   if (!reference) {
     return NextResponse.json({ error: "Missing reference" }, { status: 400 });
   }
-  // Reuse POST logic
-  const res = await POST(
+  return POST(
     new Request(request.url, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -146,5 +113,4 @@ export async function GET(request: Request) {
       }),
     })
   );
-  return res;
 }

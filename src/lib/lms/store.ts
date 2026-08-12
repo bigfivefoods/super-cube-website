@@ -20,6 +20,8 @@ export interface LocalSubscription {
   planId: string;
   status: "active" | "incomplete" | "cancelled";
   activatedAt: string;
+  /** Last verified Paystack reference (idempotency) */
+  paystackReference?: string;
 }
 
 export interface LocalLessonProgress {
@@ -73,6 +75,8 @@ export interface LocalLmsState {
   /** Demographics + identity captured at start */
   profile?: LearnerProfile;
   subscription?: LocalSubscription;
+  /** Last successful Paystack payment reference */
+  paystackReference?: string;
   lessonProgress: LocalLessonProgress;
   attempts: LocalAttempt[];
   orientation?: LocalOrientation;
@@ -295,6 +299,7 @@ export function isSupabaseConfigured() {
 }
 
 export function hasLocalAccess(state: LocalLmsState): boolean {
+  // Open demo mode: entire LMS free (set false in production for paywall)
   if (process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true") return true;
   return state.subscription?.status === "active";
 }
@@ -302,6 +307,19 @@ export function hasLocalAccess(state: LocalLmsState): boolean {
 export function hasLearnAccess(state: LocalLmsState): boolean {
   if (hasLocalAccess(state)) return true;
   return Boolean(state.demoUnlocked);
+}
+
+/** Paid via Paystack (not free demo plan) */
+export function hasPaidAccess(state: LocalLmsState): boolean {
+  if (state.paystackReference) return true;
+  if (
+    state.subscription?.status === "active" &&
+    state.subscription.planId &&
+    !state.subscription.planId.includes("_demo")
+  ) {
+    return true;
+  }
+  return false;
 }
 
 export function setOrgCode(code: string): LocalLmsState {

@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
 import { verifyPaystackSignature } from "@/lib/paystack";
-import { createAdminClient } from "@/lib/supabase/admin";
-import { programmes } from "@/lib/programmes";
+import { activateSubscriptionInSupabase } from "@/lib/lms/activate-subscription-server";
 
 /**
- * Paystack webhook — charge.success activates subscription when possible.
- * Configure URL in Paystack dashboard:
- *   https://www.super-cube.me/api/paystack/webhook
+ * Paystack webhook — charge.success activates cloud subscription when possible.
+ * Dashboard: https://www.super-cube.me/api/paystack/webhook
  */
 export async function POST(request: Request) {
   const rawBody = await request.text();
@@ -23,6 +21,7 @@ export async function POST(request: Request) {
         reference?: string;
         status?: string;
         amount?: number;
+        currency?: string;
         customer?: { email?: string; customer_code?: string };
         metadata?: Record<string, unknown>;
       };
@@ -30,57 +29,28 @@ export async function POST(request: Request) {
 
     console.info("[paystack webhook]", event.event, event.data?.reference);
 
-    if (
-      event.event === "charge.success" ||
-      event.event === "subscription.create"
-    ) {
+    if (event.event === "charge.success") {
       const data = event.data;
+      if (data.status && data.status !== "success") {
+        return NextResponse.json({ received: true, skipped: true });
+      }
       const meta = data.metadata || {};
       const programmeId = String(meta.programme_id || "");
       const planId = String(meta.plan_id || `${programmeId}_once`);
-      const programme = programmes.find((p) => p.id === programmeId);
+      const reference = String(data.reference || "");
       const email = data.customer?.email;
-      const admin = createAdminClient();
 
-      if (admin && programme && email) {
-        const { data: listed } = await admin.auth.admin.listUsers({
-          page: 1,
-          perPage: 200,
+      if (programmeId && reference) {
+        const result = await activateSubscriptionInSupabase({
+          email,
+          programmeId,
+          planId,
+          paystackReference: reference,
+          paystackCustomerCode: data.customer?.customer_code,
+          amountCents: data.amount,
+          currency: data.currency,
         });
-        const user = listed?.users?.find(
-          (u) => u.email?.toLowerCase() === email.toLowerCase()
-        );
-
-        if (user) {
-          await admin.from("profiles").upsert({
-            id: user.id,
-            email,
-            programme_id: programmeId,
-            updated_at: new Date().toISOString(),
-          });
-
-          await admin.from("subscription_plans").upsert(
-            {
-              id: planId,
-              programme_id: programmeId,
-              name: `${programme.name} · one-time`,
-              price_zar: programme.priceUsd * 100,
-              interval: "once",
-              active: true,
-              features: ["full_pathway", "report", "certificate"],
-            },
-            { onConflict: "id" }
-          );
-
-          await admin.from("subscriptions").insert({
-            user_id: user.id,
-            plan_id: planId,
-            programme_id: programmeId,
-            status: "active",
-            paystack_customer_code: data.customer?.customer_code ?? null,
-            updated_at: new Date().toISOString(),
-          });
-        }
+        console.info("[paystack webhook] activate", result);
       }
     }
 

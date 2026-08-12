@@ -25,6 +25,7 @@ import {
 } from "@/lib/lms/profile";
 import { compareAttempts } from "@/lib/lms/scoring";
 import { syncLearnerState } from "@/lib/lms/sync";
+import { activatePaidSubscription } from "@/lib/lms/entitlements";
 import {
   exportLmsBackup,
   importLmsBackup,
@@ -79,6 +80,14 @@ function AccountPageInner() {
     if (paid !== "1" && !reference) return;
     paidHandled.current = true;
     void (async () => {
+      let checkoutEmail: string | undefined;
+      try {
+        checkoutEmail =
+          localStorage.getItem("sc_checkout_email") || undefined;
+      } catch {
+        /* ignore */
+      }
+
       if (reference) {
         try {
           const res = await fetch("/api/paystack/verify", {
@@ -87,50 +96,45 @@ function AccountPageInner() {
             body: JSON.stringify({
               reference,
               programmeId: programme || undefined,
+              email: checkoutEmail,
             }),
           });
           const data = await res.json();
           if (data.paid && data.activateLocal?.programmeId) {
-            const next = loadLmsState();
             const pid = data.activateLocal.programmeId as ProgrammeId;
-            next.subscription = {
+            const next = activatePaidSubscription({
               programmeId: pid,
               planId: data.activateLocal.planId || `${pid}_once`,
-              status: "active",
-              activatedAt: new Date().toISOString(),
-            };
-            next.user = {
-              email: data.email || next.user?.email || "learner@super-cube.me",
-              fullName:
-                next.user?.fullName || next.profile?.displayName || "Learner",
-              programmeId: pid,
-            };
-            saveLmsState(next);
+              email: data.email || checkoutEmail,
+              paystackReference:
+                data.activateLocal.paystackReference || reference,
+            });
             setState(next);
-            track("checkout_start", { programmeId: pid, verified: true });
+            setMsg("Payment verified — full pathway unlocked.");
+            track("purchase_complete", {
+              programmeId: pid,
+              reference,
+              currency: data.currency,
+            });
             window.location.href = `/learn/onboarding?mode=purchase&programme=${pid}`;
             return;
           }
+          if (data.error || data.paid === false) {
+            setMsg(
+              data.error ||
+                "Payment could not be verified. Contact hello@super-cube.me with your reference."
+            );
+          }
         } catch {
-          /* fall through */
+          setMsg("Verification failed. You can retry from Pricing.");
         }
       }
-      if (programme) {
-        const next = loadLmsState();
-        next.subscription = {
-          programmeId: programme,
-          planId: `${programme}_once`,
-          status: "active",
-          activatedAt: new Date().toISOString(),
-        };
-        next.user = {
-          email: next.user?.email || "learner@super-cube.me",
-          fullName: next.user?.fullName || "Learner",
-          programmeId: programme,
-        };
-        saveLmsState(next);
-        setState(next);
-        window.location.href = `/learn/onboarding?mode=purchase&programme=${programme}`;
+      // Do NOT unlock without a verified Paystack reference
+      if (!reference) {
+        setMsg(
+          "Missing payment reference. If you paid, return from Paystack or contact hello@super-cube.me with your receipt."
+        );
+        setState(loadLmsState());
       }
     })();
   }, [searchParams]);
