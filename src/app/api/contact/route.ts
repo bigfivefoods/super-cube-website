@@ -6,6 +6,7 @@ type Body = {
   organisation?: string;
   message?: string;
   intent?: string;
+  source?: string;
 };
 
 /**
@@ -25,6 +26,7 @@ export async function POST(req: Request) {
   const organisation = String(body.organisation ?? "").trim().slice(0, 160);
   const message = String(body.message ?? "").trim().slice(0, 4000);
   const intent = String(body.intent ?? "general").trim().slice(0, 80);
+  const clientSource = String(body.source ?? "").trim().slice(0, 40);
 
   if (!name || !email || !message) {
     return NextResponse.json(
@@ -36,6 +38,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid email." }, { status: 400 });
   }
 
+  const source =
+    clientSource === "footer"
+      ? "super-cube.me/footer"
+      : clientSource
+        ? `super-cube.me/${clientSource}`
+        : "super-cube.me/contact";
+
   const payload = {
     name,
     email,
@@ -43,7 +52,7 @@ export async function POST(req: Request) {
     message,
     intent,
     receivedAt: new Date().toISOString(),
-    source: "super-cube.me/contact",
+    source,
   };
 
   const webhook =

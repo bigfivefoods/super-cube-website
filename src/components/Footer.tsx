@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { BrandWordmark } from "@/components/BrandLogo";
+import { ContactForm } from "@/components/ContactForm";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
 import { constructs, footerColumns } from "@/lib/content";
@@ -18,87 +19,89 @@ export function Footer() {
   return (
     <footer className="border-t border-line bg-surface text-ink">
       <div className="container-site section-pad pb-[max(2rem,env(safe-area-inset-bottom))]">
-        <div className="flex flex-col gap-6 border-b border-line pb-12 lg:flex-row lg:items-start lg:justify-between">
-          <div className="max-w-sm">
-            <BrandWordmark
-              height={24}
-              className="dark:brightness-0 dark:invert"
-            />
-            <p className="mt-3 text-sm leading-relaxed tracking-tight text-slate">
-              {t("footer.tagline")}
-            </p>
-            <p className="mt-2 text-xs text-muted">{t("footer.credit")}</p>
-            <div className="mt-5">
-              <LanguageSwitcher variant="footer" />
+        <div className="grid items-start gap-10 lg:grid-cols-[1fr_minmax(17rem,22rem)] lg:gap-12">
+          <div className="min-w-0">
+            <div className="flex flex-col gap-6 border-b border-line pb-10 sm:flex-row sm:items-start sm:justify-between">
+              <div className="max-w-sm">
+                <BrandWordmark
+                  height={24}
+                  className="dark:brightness-0 dark:invert"
+                />
+                <p className="mt-3 text-sm leading-relaxed tracking-tight text-slate">
+                  {t("footer.tagline")}
+                </p>
+                <p className="mt-2 text-xs text-muted">{t("footer.credit")}</p>
+                <div className="mt-5">
+                  <LanguageSwitcher variant="footer" />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2.5">
+                <Link
+                  href="/learn/start"
+                  className="sc-btn-primary inline-flex min-h-10 items-center justify-center rounded-full px-5 text-sm font-semibold tracking-tight"
+                >
+                  {t("footer.startFree")}
+                </Link>
+              </div>
             </div>
-          </div>
-          <div className="flex flex-wrap gap-2.5">
-            <Link
-              href="/learn/start"
-              className="sc-btn-primary inline-flex min-h-10 items-center justify-center rounded-full px-5 text-sm font-semibold tracking-tight"
-            >
-              {t("footer.startFree")}
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex min-h-10 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold tracking-tight text-ink hover:border-black/25 dark:hover:border-white/25"
-            >
-              {t("footer.contact")}
-            </Link>
-          </div>
-        </div>
 
-        <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-12 lg:grid-cols-4 lg:gap-x-14">
-          {footerColumns.map((col) => (
-            <div key={col.title}>
-              <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                {t(footerColI18n[col.title] || "footer.product")}
-              </h3>
-              <ul className="mt-4 space-y-2.5">
-                {col.links.map((item) => (
-                  <li key={item.href + item.label}>
+            <div className="mt-10 grid grid-cols-2 gap-x-8 gap-y-10 sm:gap-x-12 lg:grid-cols-4 lg:gap-x-10">
+              {footerColumns.map((col) => (
+                <div key={col.title}>
+                  <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                    {t(footerColI18n[col.title] || "footer.product")}
+                  </h3>
+                  <ul className="mt-4 space-y-2.5">
+                    {col.links.map((item) => (
+                      <li key={item.href + item.label}>
+                        <Link
+                          href={item.href}
+                          className="text-sm tracking-tight text-slate transition hover:text-ink"
+                        >
+                          {linkLabel(item.href, item.label)}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-10 border-t border-line pt-8">
+              <div className="mb-3.5 flex items-baseline justify-between gap-3">
+                <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                  {t("footer.sixFaces")}
+                </h3>
+                <Link
+                  href="/constructs"
+                  className="text-xs font-semibold tracking-tight text-ink underline-offset-2 hover:underline"
+                >
+                  {t("footer.allConstructs")}
+                </Link>
+              </div>
+              <ul className="flex flex-wrap gap-2">
+                {constructs.map((c) => (
+                  <li key={c.id}>
                     <Link
-                      href={item.href}
-                      className="text-sm tracking-tight text-slate transition hover:text-ink"
+                      href={`/constructs#${c.id}`}
+                      className="inline-flex items-center gap-1.5 rounded-full border border-line bg-elevated px-3 py-1.5 text-[0.8125rem] font-medium tracking-tight text-ink transition hover:border-black/15 dark:hover:border-white/20"
                     >
-                      {linkLabel(item.href, item.label)}
+                      <span
+                        className="h-1.5 w-1.5 rounded-full"
+                        style={{ background: c.color }}
+                        aria-hidden
+                      />
+                      {t(faceI18n[c.id] || "nav.sixFaces")}
                     </Link>
                   </li>
                 ))}
               </ul>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-12 border-t border-line pt-8">
-          <div className="mb-3.5 flex items-baseline justify-between gap-3">
-            <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              {t("footer.sixFaces")}
-            </h3>
-            <Link
-              href="/constructs"
-              className="text-xs font-semibold tracking-tight text-ink underline-offset-2 hover:underline"
-            >
-              {t("footer.allConstructs")}
-            </Link>
           </div>
-          <ul className="flex flex-wrap gap-2">
-            {constructs.map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={`/constructs#${c.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-line bg-elevated px-3 py-1.5 text-[0.8125rem] font-medium tracking-tight text-ink transition hover:border-black/15 dark:hover:border-white/20"
-                >
-                  <span
-                    className="h-1.5 w-1.5 rounded-full"
-                    style={{ background: c.color }}
-                    aria-hidden
-                  />
-                  {t(faceI18n[c.id] || "nav.sixFaces")}
-                </Link>
-              </li>
-            ))}
-          </ul>
+
+          <div className="min-w-0 lg:sticky lg:top-24">
+            <ContactForm variant="footer" />
+          </div>
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:text-sm">
