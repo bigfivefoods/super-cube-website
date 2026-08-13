@@ -98,7 +98,7 @@ export default function PulsePage() {
   return (
     <LearnShell>
       <LearnPage>
-        {/* Mode switcher — sidebar also lists Check-in */}
+        {/* Mode switcher — Journal process (primary nav → Journal) */}
         <div className="flex gap-1 rounded-2xl border border-line bg-elevated p-1 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
           {(
             [

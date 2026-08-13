@@ -1,18 +1,21 @@
 /**
- * Super-Cube® Learn primary navigation.
+ * Super-Cube® Learn primary navigation — dual-process model.
  *
- * Mental model (5 destinations only):
- * 1. Today     — what to do now (dashboard)
- * 2. Learn     — courses / lessons
- * 3. Check-in  — daily face pulse
- * 4. Progress  — scores, growth report, pathway
- * 5. You       — profile, settings, cohort tools
+ * Two distinct tracks (never mixed without labels):
+ * 1. Learning   — course/programme pathway, assessments, progress
+ * 2. Journaling — daily pulse, micro-practice, reflection
  *
- * Formal pathway steps (Choose → … → Report) live as a compact progress
- * strip, not as competing primary tabs.
+ * Hub destinations:
+ * · Today — both processes at a glance
+ * · You   — profile & tools
+ *
+ * Formal pathway steps live as a compact progress strip, not primary tabs.
  */
 
-export type LearnNavId = "today" | "learn" | "checkin" | "progress" | "you";
+export type LearnNavId = "today" | "learn" | "journal" | "progress" | "you";
+
+/** Which process a nav item belongs to (hub/account sit outside both). */
+export type LearnProcess = "learning" | "journaling" | "hub" | "account";
 
 export type LearnNavItem = {
   id: LearnNavId;
@@ -21,6 +24,7 @@ export type LearnNavItem = {
   /** Short helper under label on desktop */
   hint: string;
   exact?: boolean;
+  process?: LearnProcess;
 };
 
 export const LEARN_PRIMARY_NAV: LearnNavItem[] = [
@@ -28,56 +32,96 @@ export const LEARN_PRIMARY_NAV: LearnNavItem[] = [
     id: "today",
     href: "/learn",
     label: "Today",
-    hint: "Next action & plan",
+    hint: "Both processes at a glance",
     exact: true,
+    process: "hub",
   },
   {
     id: "learn",
     href: "/learn/courses",
     label: "Learn",
-    hint: "Six faces · sessions",
+    hint: "Your course pathway",
+    process: "learning",
   },
   {
-    id: "checkin",
+    id: "journal",
     href: "/learn/pulse",
-    label: "Check-in",
-    hint: "Daily face pulse",
+    label: "Journal",
+    hint: "Daily check-in & practice",
+    process: "journaling",
   },
   {
     id: "progress",
     href: "/learn/report",
     label: "Progress",
-    hint: "Scores & report",
+    hint: "Scores & growth report",
+    process: "learning",
   },
   {
     id: "you",
     href: "/learn/account",
     label: "You",
     hint: "Profile & tools",
+    process: "account",
   },
 ];
 
-/** Secondary destinations grouped under You / More */
+/** Sidebar-only journaling shortcut (Practice also under Journal active match). */
+export const LEARN_JOURNAL_PRACTICE = {
+  href: "/learn/practice",
+  label: "Practice",
+  hint: "Micro-practice",
+} as const;
+
+/** Secondary destinations grouped by process under More tools */
+export type SecondaryGroup = "learning" | "journaling" | "account";
+
 export const LEARN_SECONDARY_LINKS: {
   href: string;
   label: string;
-  group: "daily" | "pathway" | "org";
+  group: SecondaryGroup;
 }[] = [
-  { href: "/learn/practice", label: "Micro-practice", group: "daily" },
-  { href: "/learn/feedback", label: "Narrative + cube", group: "daily" },
-  { href: "/learn/assessment/mid", label: "Mid check-in", group: "pathway" },
+  // Learning process
   {
     href: "/learn/assessment/orientation",
     label: "Orientation",
-    group: "pathway",
+    group: "learning",
   },
-  { href: "/learn/assessment/pre", label: "Baseline assessment", group: "pathway" },
-  { href: "/learn/assessment/post", label: "Post assessment", group: "pathway" },
-  { href: "/learn/programmes", label: "Programme", group: "pathway" },
-  { href: "/learn/org", label: "Cohort / coach code", group: "org" },
-  { href: "/learn/coach", label: "Coach tools", group: "org" },
-  { href: "/pricing", label: "Plans & pricing", group: "org" },
+  {
+    href: "/learn/assessment/pre",
+    label: "Baseline assessment",
+    group: "learning",
+  },
+  { href: "/learn/assessment/mid", label: "Mid check-in", group: "learning" },
+  {
+    href: "/learn/assessment/post",
+    label: "Post assessment",
+    group: "learning",
+  },
+  { href: "/learn/programmes", label: "Programme", group: "learning" },
+  // Journaling process
+  { href: "/learn/practice", label: "Micro-practice", group: "journaling" },
+  { href: "/learn/feedback", label: "Narrative + cube", group: "journaling" },
+  // Account
+  { href: "/learn/org", label: "Cohort / coach code", group: "account" },
+  { href: "/learn/coach", label: "Coach tools", group: "account" },
+  { href: "/pricing", label: "Plans & pricing", group: "account" },
 ];
+
+export const SECONDARY_GROUP_LABELS: Record<SecondaryGroup, string> = {
+  learning: "Learning",
+  journaling: "Journaling",
+  account: "Account",
+};
+
+/** Subtle process accents (construct teal vs blue). */
+export const LEARN_PROCESS_ACCENT: Record<
+  "learning" | "journaling",
+  { color: string; label: string }
+> = {
+  learning: { color: "#26408C", label: "Learning" },
+  journaling: { color: "#16979A", label: "Journaling" },
+};
 
 export function isLearnNavActive(
   pathname: string,
@@ -89,7 +133,7 @@ export function isLearnNavActive(
   if (item.id === "learn") {
     return pathname.startsWith("/learn/courses");
   }
-  if (item.id === "checkin") {
+  if (item.id === "journal") {
     return (
       pathname.startsWith("/learn/pulse") ||
       pathname.startsWith("/learn/practice")
@@ -98,7 +142,6 @@ export function isLearnNavActive(
   if (item.id === "progress") {
     return (
       pathname.startsWith("/learn/report") ||
-      pathname.startsWith("/learn/feedback") ||
       pathname.startsWith("/learn/analytics") ||
       pathname.startsWith("/learn/assessment")
     );
@@ -109,8 +152,13 @@ export function isLearnNavActive(
       pathname.startsWith("/learn/org") ||
       pathname.startsWith("/learn/coach") ||
       pathname.startsWith("/learn/welcome") ||
-      pathname.startsWith("/learn/programmes")
+      pathname.startsWith("/learn/programmes") ||
+      pathname.startsWith("/learn/feedback")
     );
   }
   return pathname === item.href || pathname.startsWith(`${item.href}/`);
+}
+
+export function getNavItem(id: LearnNavId): LearnNavItem {
+  return LEARN_PRIMARY_NAV.find((n) => n.id === id)!;
 }

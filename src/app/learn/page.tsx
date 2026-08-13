@@ -17,12 +17,17 @@ import { constructs, type ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
 import { getContinueTarget } from "@/lib/lms/continue";
 import { getTodayPulse } from "@/lib/lms/face-tracking";
-import { getNextBestAction } from "@/lib/lms/next-action";
+import {
+  getJournalAction,
+  getLearningAction,
+  getNextBestAction,
+  processLabel,
+} from "@/lib/lms/next-action";
+import { LEARN_PROCESS_ACCENT } from "@/lib/lms/nav";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 
 /**
- * Today — neat stacked pages next to the LMS sidebar.
- * Scroll down for the next page of content.
+ * Today — dual-process hub: Learning pathway + Journaling loop side by side.
  */
 export default function LearnDashboardPage() {
   const journey = useJourney();
@@ -44,7 +49,9 @@ export default function LearnDashboardPage() {
   }
 
   const lms = state ?? loadLmsState();
-  const nextAction = getNextBestAction(lms);
+  const learningAction = getLearningAction(lms);
+  const journalAction = getJournalAction(lms);
+  const suggested = getNextBestAction(lms);
   const cont = getContinueTarget(
     lms,
     journey.current.href,
@@ -61,7 +68,32 @@ export default function LearnDashboardPage() {
     }
   }
 
-  const checkInUnlocked = journey.preDone || journey.orientationDone;
+  const journalUnlocked = journey.preDone || journey.orientationDone;
+
+  // Learning CTA: pathway/continue only — never pulse
+  const learningHref =
+    learningAction?.href ??
+    (cont.kind === "resume" || cont.kind === "next_lesson"
+      ? cont.href
+      : journey.current.href);
+  const learningTitle =
+    learningAction?.title ?? journey.current.title;
+  const learningDetail =
+    learningAction?.detail ?? journey.current.promise;
+  const learningCta =
+    learningAction?.cta ?? "Continue pathway →";
+
+  const journalHref = journalAction?.href ?? "/learn/pulse";
+  const journalTitle =
+    journalAction?.title ??
+    (pulseToday ? "Pulse logged today" : "Daily face pulse");
+  const journalDetail =
+    journalAction?.detail ??
+    (pulseToday
+      ? `Streak ${streak}d · open practice or review faces`
+      : "Rate faces, then micro-practice");
+  const journalCta =
+    journalAction?.cta ?? (pulseToday ? "Open practice →" : "Log pulse →");
 
   return (
     <LearnShell>
@@ -77,8 +109,8 @@ export default function LearnDashboardPage() {
             }
             description={
               journey.programmeName
-                ? `${journey.programmeName}${journey.programmeAge ? ` · ${journey.programmeAge}` : ""}. Sidebar stays for navigation — scroll for the next page.`
-                : "Use the sidebar to move around. Scroll down for the next page on this screen."
+                ? `${journey.programmeName}${journey.programmeAge ? ` · ${journey.programmeAge}` : ""}. Two processes: Learning (course pathway) and Journaling (daily pulse).`
+                : "Two processes side by side — Learning (courses) and Journaling (daily check-in)."
             }
           />
 
@@ -107,7 +139,7 @@ export default function LearnDashboardPage() {
                   Streak {streak}d
                 </span>
                 <span className="rounded-full bg-white/10 px-2.5 py-1">
-                  {pulseToday ? "Checked in" : "No check-in yet"}
+                  {pulseToday ? "Journal done" : "Journal open"}
                 </span>
               </div>
             </div>
@@ -122,13 +154,22 @@ export default function LearnDashboardPage() {
             </div>
           </div>
 
+          {suggested && (
+            <p className="mt-4 text-center text-[0.8125rem] text-muted">
+              <span className="font-semibold text-ink">
+                Suggested · {processLabel(suggested.process)}:
+              </span>{" "}
+              {suggested.title}
+            </p>
+          )}
+
           <LearnScreenFooter>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <a
-                href="#today-next"
+                href="#today-processes"
                 className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
               >
-                Next page · do this next ↓
+                Next page · two processes ↓
               </a>
               <p className="text-center text-[0.75rem] text-muted sm:text-right">
                 Scroll down or use the sidebar
@@ -137,28 +178,101 @@ export default function LearnDashboardPage() {
           </LearnScreenFooter>
         </LearnScreen>
 
-        {/* ── Screen 2: Next action ── */}
-        <LearnScreen id="today-next" pageLabel="2 / 3">
+        {/* ── Screen 2: Dual process cards ── */}
+        <LearnScreen id="today-processes" pageLabel="2 / 3">
           <LearnPageHeader
             kicker="Do this next"
-            title={nextAction.title}
-            description={nextAction.detail}
+            title="Learning and Journaling"
+            description="Two equal tracks — pick one. Labels never mix them into a single ambiguous list."
           />
-          <div className="mt-6 flex flex-1 flex-col justify-center">
-            <LearnPageActions
-              primary={{ href: nextAction.href, label: nextAction.cta }}
-              secondary={
-                checkInUnlocked
-                  ? {
-                      href: "/learn/pulse",
-                      label: pulseToday
-                        ? "Review check-in"
-                        : "Open daily check-in",
-                    }
-                  : undefined
-              }
-            />
+
+          <div className="mt-5 grid flex-1 content-start gap-3 md:grid-cols-2 md:gap-4">
+            {/* Learning process card */}
+            <section
+              className="flex flex-col rounded-2xl border border-line bg-elevated p-4 sm:p-5"
+              style={{
+                borderTopWidth: 3,
+                borderTopColor: LEARN_PROCESS_ACCENT.learning.color,
+              }}
+            >
+              <p
+                className="text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+                style={{ color: LEARN_PROCESS_ACCENT.learning.color }}
+              >
+                Learning
+              </p>
+              <h3 className="mt-1.5 text-base font-semibold tracking-tight text-ink sm:text-lg">
+                {learningTitle}
+              </h3>
+              <p className="mt-1.5 flex-1 text-[0.8125rem] leading-relaxed text-muted">
+                {learningDetail}
+              </p>
+              <p className="mt-2 text-[0.7rem] text-muted">
+                Step {journey.current.n}/{journey.total} · {journey.current.short}
+              </p>
+              <Link
+                href={learningHref}
+                onClick={() =>
+                  track("continue_click", {
+                    kind: learningAction?.kind ?? "lesson",
+                    process: "learning",
+                    surface: "today_card",
+                  })
+                }
+                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-4 text-sm font-semibold"
+              >
+                {learningCta}
+              </Link>
+            </section>
+
+            {/* Journaling process card */}
+            <section
+              className="flex flex-col rounded-2xl border border-line bg-elevated p-4 sm:p-5"
+              style={{
+                borderTopWidth: 3,
+                borderTopColor: LEARN_PROCESS_ACCENT.journaling.color,
+              }}
+            >
+              <p
+                className="text-[0.65rem] font-semibold uppercase tracking-[0.14em]"
+                style={{ color: LEARN_PROCESS_ACCENT.journaling.color }}
+              >
+                Journaling
+              </p>
+              <h3 className="mt-1.5 text-base font-semibold tracking-tight text-ink sm:text-lg">
+                {journalUnlocked
+                  ? journalTitle
+                  : "Unlock after orientation"}
+              </h3>
+              <p className="mt-1.5 flex-1 text-[0.8125rem] leading-relaxed text-muted">
+                {journalUnlocked
+                  ? journalDetail
+                  : "Finish orientation or baseline, then daily face pulse starts here."}
+              </p>
+              <p className="mt-2 text-[0.7rem] text-muted">
+                {pulseToday ? "Checked in today" : "No pulse yet today"}
+                {streak > 0 ? ` · streak ${streak}d` : ""}
+              </p>
+              <Link
+                href={
+                  journalUnlocked
+                    ? journalHref
+                    : learningAction?.href ?? journey.current.href
+                }
+                onClick={() =>
+                  track("continue_click", {
+                    kind: journalAction?.kind ?? "pulse_today",
+                    process: "journaling",
+                    surface: "today_card",
+                  })
+                }
+                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-surface px-4 text-sm font-semibold text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+              >
+                {journalUnlocked ? journalCta : "Continue setup →"}
+              </Link>
+            </section>
           </div>
+
           <LearnScreenFooter>
             <a
               href="#today-pages"
@@ -174,45 +288,46 @@ export default function LearnDashboardPage() {
           <LearnPageHeader
             kicker="Pages"
             title="Where do you want to go?"
-            description="Open a destination. The sidebar always stays available."
+            description="Destinations grouped by process. Sidebar always stays available."
           />
           <div className="mt-5 grid flex-1 content-start gap-2.5 sm:grid-cols-2">
             <LearnNavTile
-              href={journey.current.href}
-              kicker="Journey"
-              title={journey.current.short}
-              detail={journey.current.detail || journey.current.description}
-              status={`${journey.current.n}/${journey.total}`}
-            />
-            <LearnNavTile
-              href={checkInUnlocked ? "/learn/pulse" : nextAction.href}
-              kicker="Check-in"
-              title={pulseToday ? "Pulse logged" : "Daily check-in"}
-              detail="Calendar · 3 sliders per face · journal"
-              status={pulseToday ? "Done" : "Open"}
-              accent={constructs[0].color}
-            />
-            <LearnNavTile
-              href={
-                cont.kind === "resume" || cont.kind === "next_lesson"
-                  ? cont.href
-                  : "/learn/courses"
-              }
-              kicker="Learn"
+              href={learningHref}
+              kicker="Learning"
               title={
                 cont.kind === "resume" || cont.kind === "next_lesson"
                   ? cont.title
-                  : "Six faces · courses"
+                  : journey.current.short
               }
-              detail={cont.detail || "Sessions across all Super-Cube® faces"}
+              detail={
+                cont.detail ||
+                journey.current.detail ||
+                journey.current.description
+              }
+              status={`${journey.current.n}/${journey.total}`}
+              accent={LEARN_PROCESS_ACCENT.learning.color}
+            />
+            <LearnNavTile
+              href={journalUnlocked ? "/learn/pulse" : learningHref}
+              kicker="Journaling"
+              title={pulseToday ? "Pulse logged" : "Daily check-in"}
+              detail="Calendar · faces · journal · practice"
+              status={pulseToday ? "Done" : "Open"}
+              accent={LEARN_PROCESS_ACCENT.journaling.color}
+            />
+            <LearnNavTile
+              href="/learn/courses"
+              kicker="Learning"
+              title="Six faces · courses"
+              detail="Sessions across all Super-Cube® faces"
               accent={constructs[2].color}
             />
             <LearnNavTile
               href="/learn/report"
-              kicker="Progress"
+              kicker="Learning"
               title="Growth report"
               detail="Scores, patterns, certificate"
-              accent={constructs[3].color}
+              accent={constructs[5].color}
             />
           </div>
           <LearnScreenFooter>

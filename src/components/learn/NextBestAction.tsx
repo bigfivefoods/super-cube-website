@@ -1,7 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import type { NextBestAction as Action } from "@/lib/lms/next-action";
+import {
+  processLabel,
+  type NextBestAction as Action,
+} from "@/lib/lms/next-action";
 
 export function NextBestActionCard({ action }: { action: Action }) {
   const border =
@@ -11,6 +14,7 @@ export function NextBestActionCard({ action }: { action: Action }) {
   const muted = action.urgency === "high" ? "text-white/65" : "text-muted";
   const btn =
     action.urgency === "high" ? "bg-white text-ink" : "bg-void text-void-fg";
+  const process = processLabel(action.process);
 
   return (
     <section className={`mb-4 overflow-hidden rounded-2xl border ${border}`}>
@@ -21,8 +25,8 @@ export function NextBestActionCard({ action }: { action: Action }) {
               action.urgency === "high" ? "text-white/45" : "text-muted"
             }`}
           >
-            Next best action
-            {action.urgency === "high" ? " · priority" : ""}
+            {process}
+            {action.urgency === "high" ? " · priority" : " · next"}
           </p>
           <div className="mt-1 flex items-center gap-2">
             {action.color && (

@@ -1,5 +1,6 @@
 /**
- * Single “next best action” for You / sticky coach — closed-loop pathway.
+ * Process-aware next actions — Learning pathway vs Journaling loop.
+ * Never interleave without a process label.
  */
 
 import { constructs, type ConstructId } from "@/lib/content";
@@ -26,6 +27,9 @@ export type NextActionKind =
   | "weekly_review"
   | "celebrate";
 
+/** Which track this action belongs to. */
+export type ActionProcess = "learning" | "journaling" | "setup";
+
 export interface NextBestAction {
   kind: NextActionKind;
   title: string;
@@ -36,6 +40,8 @@ export interface NextBestAction {
   color?: string;
   constructId?: ConstructId;
   urgency: "high" | "medium" | "low";
+  /** Dual-process label for CTAs and cards */
+  process: ActionProcess;
 }
 
 function yesterdayKey(): string {
@@ -48,10 +54,15 @@ function isSundayLocal(): boolean {
   return new Date().getDay() === 0;
 }
 
+const URGENCY_RANK = { high: 0, medium: 1, low: 2 } as const;
+
 /**
- * Priority-ordered next action from current LMS state.
+ * Learning process only — pathway, lessons, assessments, report.
+ * Excludes pulse / practice / weekly review.
  */
-export function getNextBestAction(state: LocalLmsState): NextBestAction {
+export function getLearningAction(
+  state: LocalLmsState
+): NextBestAction | null {
   const profile = getProfile(state);
   if (!profileComplete(profile)) {
     return {
@@ -61,6 +72,7 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       href: "/learn/welcome",
       cta: "Complete profile →",
       urgency: "high",
+      process: "setup",
     };
   }
 
@@ -72,6 +84,7 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       href: "/learn/assessment/orientation",
       cta: "Start orientation →",
       urgency: "high",
+      process: "learning",
     };
   }
 
@@ -84,8 +97,74 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       href: "/learn/assessment/pre",
       cta: "Start baseline →",
       urgency: "high",
+      process: "learning",
     };
   }
+
+  const post = state.attempts.find((a) => a.phase === "post");
+  const lessonsDone = Object.values(state.lessonProgress).filter(
+    (s) => s === "completed"
+  ).length;
+
+  if (pre && !post && lessonsDone >= 6) {
+    return {
+      kind: "post",
+      title: "Re-measure your growth",
+      detail:
+        "You’ve practised enough — take the post-assessment for pre→post proof.",
+      href: "/learn/assessment/post",
+      cta: "Start post-assessment →",
+      urgency: "medium",
+      process: "learning",
+    };
+  }
+
+  const cont = getContinueTarget(state, "/learn/courses", "Continue learning");
+  if (cont.kind === "resume" || cont.kind === "next_lesson") {
+    return {
+      kind: "lesson",
+      title: cont.title,
+      detail: cont.detail,
+      href: cont.href,
+      cta: cont.kind === "resume" ? "Resume session →" : "Next session →",
+      color: cont.constructColor,
+      constructId: cont.constructId,
+      urgency: "medium",
+      process: "learning",
+    };
+  }
+
+  if (post) {
+    return {
+      kind: "report",
+      title: "Open your growth report",
+      detail: "Pre→post radar, story, and shareable PDF.",
+      href: "/learn/report",
+      cta: "View report →",
+      urgency: "low",
+      process: "learning",
+    };
+  }
+
+  return {
+    kind: "celebrate",
+    title: "Pathway on track",
+    detail: "Browse courses or open Progress when you want a deeper look.",
+    href: "/learn/courses",
+    cta: "Open courses →",
+    urgency: "low",
+    process: "learning",
+  };
+}
+
+/**
+ * Journaling process only — pulse, practice, weekly review.
+ * Never returns pathway / assessment / lesson targets.
+ */
+export function getJournalAction(state: LocalLmsState): NextBestAction | null {
+  const profile = getProfile(state);
+  // Journaling needs a minimal setup floor; otherwise defer to learning setup.
+  if (!profileComplete(profile)) return null;
 
   if (!state.firstRun?.firstPulse && !(state.facePulses?.length)) {
     return {
@@ -95,6 +174,7 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       href: "/learn/pulse",
       cta: "First pulse →",
       urgency: "high",
+      process: "journaling",
     };
   }
 
@@ -114,6 +194,7 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       href: "/learn/pulse",
       cta: "Pulse now →",
       urgency: "high",
+      process: "journaling",
     };
   }
 
@@ -130,6 +211,7 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       color: face?.color,
       constructId: focus,
       urgency: "medium",
+      process: "journaling",
     };
   }
 
@@ -141,36 +223,7 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       href: "/learn/pulse",
       cta: "Review week →",
       urgency: "medium",
-    };
-  }
-
-  const post = state.attempts.find((a) => a.phase === "post");
-  const lessonsDone = Object.values(state.lessonProgress).filter(
-    (s) => s === "completed"
-  ).length;
-
-  if (pre && !post && lessonsDone >= 6) {
-    return {
-      kind: "post",
-      title: "Re-measure your growth",
-      detail: "You’ve practised enough — take the post-assessment for pre→post proof.",
-      href: "/learn/assessment/post",
-      cta: "Start post-assessment →",
-      urgency: "medium",
-    };
-  }
-
-  const cont = getContinueTarget(state, "/learn/courses", "Continue learning");
-  if (cont.kind === "resume" || cont.kind === "next_lesson") {
-    return {
-      kind: "lesson",
-      title: cont.title,
-      detail: cont.detail,
-      href: cont.href,
-      cta: cont.kind === "resume" ? "Resume session →" : "Next session →",
-      color: cont.constructColor,
-      constructId: cont.constructId,
-      urgency: "medium",
+      process: "journaling",
     };
   }
 
@@ -187,26 +240,66 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
       color: face.color,
       constructId: face.id,
       urgency: "low",
-    };
-  }
-
-  if (post) {
-    return {
-      kind: "report",
-      title: "Open your growth report",
-      detail: "Pre→post radar, story, and shareable PDF.",
-      href: "/learn/report",
-      cta: "View report →",
-      urgency: "low",
+      process: "journaling",
     };
   }
 
   return {
     kind: "celebrate",
-    title: "You’re on track",
+    title: "Journal up to date",
     detail: "Pulse logged. Keep deliberate practice on your stretch faces.",
-    href: "/learn/courses",
-    cta: "Open courses →",
+    href: "/learn/practice",
+    cta: "Open practice →",
     urgency: "low",
+    process: "journaling",
   };
+}
+
+/** Human label for process-prefixed CTAs. */
+export function processLabel(process: ActionProcess): string {
+  if (process === "journaling") return "Journal";
+  if (process === "setup") return "Setup";
+  return "Learning";
+}
+
+/**
+ * Single next-best action for sticky coach / account card.
+ * Prefers highest urgency; ties break Learning before Journal when equal.
+ */
+export function getNextBestAction(state: LocalLmsState): NextBestAction {
+  const learning = getLearningAction(state);
+  const journal = getJournalAction(state);
+
+  if (!learning && !journal) {
+    return {
+      kind: "celebrate",
+      title: "You’re on track",
+      detail: "Both processes look good — pick Learn or Journal when ready.",
+      href: "/learn",
+      cta: "Open Today →",
+      urgency: "low",
+      process: "learning",
+    };
+  }
+  if (!learning) return journal!;
+  if (!journal) return learning;
+
+  // Setup / high learning always wins over soft journal celebrate
+  if (learning.process === "setup") return learning;
+
+  if (URGENCY_RANK[learning.urgency] < URGENCY_RANK[journal.urgency]) {
+    return learning;
+  }
+  if (URGENCY_RANK[journal.urgency] < URGENCY_RANK[learning.urgency]) {
+    return journal;
+  }
+  // Equal urgency: prefer journal if pulse missing (daily habit), else learning
+  if (
+    journal.kind === "pulse_today" ||
+    journal.kind === "first_pulse" ||
+    journal.kind === "streak_recover"
+  ) {
+    return journal;
+  }
+  return learning;
 }
