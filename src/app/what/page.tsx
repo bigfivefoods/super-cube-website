@@ -27,13 +27,75 @@ const programmeAccents = [
   constructs[5].color,
 ];
 
-const includes = [
-  "Pre-pre orientation (philosophy · theory · model)",
-  "Pre-assessment across six constructs",
-  "Age-adapted courses for every Super-Cube® face",
-  "Practice labs and quick checks",
-  "Post-assessment and personal development report",
-];
+const offerPathway = [
+  {
+    step: "01",
+    title: "Orient",
+    body: "Philosophy → theory → model so you know why Super-Cube exists before you score yourself.",
+  },
+  {
+    step: "02",
+    title: "Assess",
+    body: "Baseline across all six faces—Choices, Principles, Mental, Emotional, Physical, Spiritual.",
+  },
+  {
+    step: "03",
+    title: "Learn",
+    body: "Age-adapted courses for every face (Kids · Adolescents · Adults language).",
+  },
+  {
+    step: "04",
+    title: "Practise",
+    body: "Labs, daily journal/check-in, and micro-practices so insight becomes behaviour.",
+  },
+  {
+    step: "05",
+    title: "Report",
+    body: "Post-assessment, growth radar, personal development report, and verifiable certificate path.",
+  },
+] as const;
+
+const offerIncludes = [
+  {
+    title: "Orientation that grounds the work",
+    body: "Philosophy, theory, and the Super-Cube® model up front—so assessment is meaningful, not a quiz without context.",
+  },
+  {
+    title: "Six-face courses, age-adapted",
+    body: "Structured learning for Choices, Principles, Mental, Emotional, Physical, and Spiritual—with language matched to Kids, Adolescents, or Adults.",
+  },
+  {
+    title: "Journal loop & daily check-in",
+    body: "Micro-practices, labs, and a living check-in rhythm that turn classroom insight into habits you can keep.",
+  },
+  {
+    title: "Pre- and post-assessment",
+    body: "Honest six-face baselines and re-measures so growth is visible, discussable, and improvable—not assumed from attendance.",
+  },
+  {
+    title: "Growth report & certificate path",
+    body: "Personal development report with radar, narrative, and a verifiable certificate route when you complete the pathway.",
+  },
+  {
+    title: "Coach & organisation options",
+    body: "Seat packs, facilitator kit, and coach roster tools when you run Super-Cube® for a team, school, or cohort—not only solo learners.",
+  },
+] as const;
+
+const offerDifferentiators = [
+  {
+    title: "Measured pre → post",
+    body: "You leave with evidence of change across six faces—not a certificate of presence.",
+  },
+  {
+    title: "Continuous practice",
+    body: "Daily check-ins and micro-practices keep development alive between modules.",
+  },
+  {
+    title: "Whole-person model",
+    body: "One cube for ethics, mind, emotion, body, and purpose—not a single soft-skill fad.",
+  },
+] as const;
 
 /** Icons live at public root: cube.png · longitudinal.svg · multilevel.svg */
 const benefitIcons = {
@@ -263,18 +325,150 @@ export default function WhatPage() {
           <SectionHeading
             eyebrow="The offer"
             title="What you get with Super-Cube®."
-            description="A complete individual pathway: orient, assess, learn, practise, and report—built for real development, not one-off workshops."
+            description="A complete development pathway—not a one-day workshop. Orient, assess, learn, practise, and report so growth is measured and practised, not assumed."
           />
-          <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {includes.map((item) => (
-              <li
-                key={item}
-                className="rounded-2xl border border-line bg-surface px-5 py-4 text-sm font-medium leading-relaxed text-ink"
-              >
-                {item}
-              </li>
-            ))}
-          </ul>
+
+          {/* Pathway journey: Orient → Assess → Learn → Practise → Report */}
+          <ol className="mt-10 lg:grid lg:grid-cols-5 lg:gap-0">
+            {offerPathway.map((step, i) => {
+              const accent = constructs[i % constructs.length].color;
+              const isLast = i === offerPathway.length - 1;
+              return (
+                <li key={step.step} className="relative flex lg:flex-col">
+                  <div
+                    className="relative mr-4 flex w-10 shrink-0 flex-col items-center lg:mb-4 lg:mr-0 lg:w-auto lg:flex-row lg:items-center lg:pr-3"
+                    aria-hidden
+                  >
+                    <span
+                      className="z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line bg-elevated font-display text-sm font-semibold tracking-tight text-ink"
+                      style={{ boxShadow: `inset 0 0 0 2px ${accent}33` }}
+                    >
+                      {step.step}
+                    </span>
+                    {!isLast && (
+                      <>
+                        <span className="mt-1 w-px flex-1 bg-line lg:hidden" />
+                        <span
+                          className="ml-2 hidden h-px min-w-0 flex-1 lg:block"
+                          style={{
+                            background: `linear-gradient(90deg, ${accent}66, color-mix(in srgb, ${accent} 12%, transparent))`,
+                          }}
+                        />
+                      </>
+                    )}
+                  </div>
+
+                  <div
+                    className={`min-w-0 flex-1 lg:pr-4 ${
+                      isLast
+                        ? "pb-0"
+                        : "border-b border-line pb-7 lg:border-b-0 lg:pb-0"
+                    }`}
+                  >
+                    <div
+                      className="mb-2.5 h-1 w-8 rounded-full"
+                      style={{ background: accent }}
+                      aria-hidden
+                    />
+                    <h3 className="text-base font-semibold tracking-tight text-ink">
+                      {step.title}
+                    </h3>
+                    <p className="mt-1.5 text-sm leading-relaxed text-slate">
+                      {step.body}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+
+          {/* Deliverables */}
+          <div className="mt-14">
+            <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
+              Included in every programme
+            </p>
+            <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {offerIncludes.map((item, i) => {
+                const accent = constructs[i % constructs.length].color;
+                return (
+                  <li
+                    key={item.title}
+                    className="flex flex-col rounded-2xl border border-line bg-surface p-5 sm:p-6"
+                  >
+                    <span
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-elevated text-xs font-bold tabular-nums text-ink"
+                      style={{ color: accent }}
+                      aria-hidden
+                    >
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <h3 className="mt-4 text-base font-semibold tracking-tight text-ink">
+                      {item.title}
+                    </h3>
+                    <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
+                      {item.body}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+
+          {/* Differentiation callout */}
+          <div className="mt-12 overflow-hidden rounded-2xl border border-line bg-elevated">
+            <div className="grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
+              <div className="border-b border-line bg-void px-6 py-7 text-void-fg sm:px-8 sm:py-9 lg:border-b-0 lg:border-r">
+                <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-void-fg/50">
+                  Why it&apos;s different
+                </p>
+                <h3 className="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
+                  Built for real development, not one-off workshops.
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-void-fg/65">
+                  Workshops inspire for a day. Super-Cube® is a closed loop:
+                  understand the model, measure the six faces, learn and
+                  practise, then re-measure—so you can prove growth and keep
+                  practising after the room empties.
+                </p>
+              </div>
+              <ul className="grid gap-0 sm:grid-cols-3 sm:divide-x sm:divide-line">
+                {offerDifferentiators.map((d) => (
+                  <li
+                    key={d.title}
+                    className="border-b border-line px-5 py-6 last:border-b-0 sm:border-b-0 sm:px-6 sm:py-8"
+                  >
+                    <p className="text-sm font-semibold tracking-tight text-ink">
+                      {d.title}
+                    </p>
+                    <p className="mt-2 text-sm leading-relaxed text-slate">
+                      {d.body}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+
+          {/* CTA strip */}
+          <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-2xl border border-line bg-surface px-5 py-6 sm:flex-row sm:items-center sm:px-8 sm:py-7">
+            <div className="max-w-xl">
+              <p className="text-base font-semibold tracking-tight text-ink">
+                Ready to see your six-face baseline?
+              </p>
+              <p className="mt-1 text-sm leading-relaxed text-slate">
+                Start free on this device, or review pricing for full pathway
+                access—report and certificate included.
+              </p>
+            </div>
+            <div className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row">
+              <Button href="/learn/start" variant="primary">
+                Start free baseline
+              </Button>
+              <Button href="/pricing" variant="ghost">
+                See pricing
+              </Button>
+            </div>
+          </div>
         </div>
       </section>
 
