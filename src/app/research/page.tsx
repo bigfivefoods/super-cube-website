@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 import { ImpactResults } from "@/components/ImpactResults";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
-import { constructs, publications, researchHighlights } from "@/lib/content";
+import {
+  constructs,
+  publications,
+  researchGateUrl,
+  researchHighlights,
+} from "@/lib/content";
 
 import { pageMeta } from "@/lib/seo";
 
@@ -342,11 +347,17 @@ export default function ResearchPage() {
           <SectionHeading
             eyebrow="Primary sources"
             title="Where to go deeper."
-            description="Doctoral thesis plus peer-reviewed journal articles. PDFs open in a new tab or download to your device."
+            description="Doctoral thesis plus peer-reviewed journal articles. Download open PDFs or follow DOI links; more work is on ResearchGate."
           />
           <ul className="mt-8 space-y-4">
-            <li className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5">
-              <p className="font-semibold text-ink">
+            <li className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5 sm:p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
+                  Thesis
+                </span>
+                <span className="text-xs text-muted">2020</span>
+              </div>
+              <p className="mt-2 font-semibold text-ink">
                 A Leadership Skills Development Model for the Kwaden Group: A
                 Case Study of an African FMCG Business-Network
               </p>
@@ -354,11 +365,21 @@ export default function ResearchPage() {
                 Craig Ross Muller · DBA thesis · University of KwaZulu-Natal ·
                 2020
               </p>
+              <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+                <a
+                  href={researchGateUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
+                >
+                  Available via ResearchGate
+                </a>
+              </div>
             </li>
             {publications.map((pub) => (
               <li
                 key={pub.id}
-                className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5"
+                className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5 sm:p-6"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
@@ -368,15 +389,15 @@ export default function ResearchPage() {
                 </div>
                 <p className="mt-2 font-semibold text-ink">{pub.title}</p>
                 <p className="mt-1 text-sm text-muted">
-                  {pub.authors} · {pub.journal}
+                  {pub.authors} · {pub.journal} · {pub.year}
                 </p>
-                <div className="mt-3 flex flex-wrap gap-3 text-sm font-semibold">
+                <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                   <a
                     href={pub.pdf}
                     download
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-ink underline-offset-2 hover:underline"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
                   >
                     Download PDF
                   </a>
@@ -384,14 +405,38 @@ export default function ResearchPage() {
                     href={pub.doi}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-slate underline-offset-2 hover:underline"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink hover:border-black/25 hover:bg-black/[0.02] dark:hover:border-white/25 dark:hover:bg-white/[0.04]"
                   >
-                    DOI
+                    View DOI
                   </a>
                 </div>
               </li>
             ))}
           </ul>
+
+          <a
+            href={researchGateUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 flex flex-col gap-3 rounded-[var(--radius)] border border-[var(--line)] bg-elevated p-5 shadow-[var(--shadow-sm)] transition-colors hover:border-black/20 dark:hover:border-white/20 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                ResearchGate
+              </p>
+              <p className="mt-1 font-display text-lg font-semibold text-ink">
+                View full profile &amp; publications
+              </p>
+              <p className="mt-1 max-w-xl text-sm leading-relaxed text-slate">
+                Peer-reviewed Super-Cube® papers and related research by Craig
+                Muller are listed on ResearchGate.
+              </p>
+            </div>
+            <span className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90">
+              Open ResearchGate
+            </span>
+          </a>
+
           <p className="mt-6 text-sm text-muted">
             Public summaries of the model are also available via scholarly
             repositories and reference encyclopaedias such as Grokipedia.

@@ -5,7 +5,11 @@ export const site = {
     "The Super-Cube® Leadership Model is an empirically validated, multidimensional framework for developing leadership capacity at personal, organisational, and network levels.",
   url: "https://www.super-cube.me",
   email: "hello@super-cube.me",
+  researchGateUrl: "https://www.researchgate.net/profile/Craig-Muller",
 };
+
+/** Craig Muller’s ResearchGate profile (thesis, papers, related work). */
+export const researchGateUrl = site.researchGateUrl;
 
 /**
  * Desktop primary bar — journey order left → right.
