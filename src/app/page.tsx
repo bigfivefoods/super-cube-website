@@ -6,8 +6,8 @@ import {
   organizationJsonLd,
 } from "@/components/JsonLd";
 import { TestimonialsStrip } from "@/components/Testimonials";
-import { Button, CTABanner, Eyebrow, SectionHeading } from "@/components/ui";
-import { levels, site, theories } from "@/lib/content";
+import { Button, CTABanner, SectionHeading } from "@/components/ui";
+import { site } from "@/lib/content";
 
 export default function HomePage() {
   return (
@@ -15,97 +15,14 @@ export default function HomePage() {
       <JsonLd data={organizationJsonLd(site.url)} />
       <JsonLd data={courseJsonLd(site.url)} />
 
+      {/*
+        Narrative order (HomeHero client):
+        1 hero → 2 cube → 3 programmes → 4 philosophy/theory/model
+        → 5 constructs → 6 benefits → 7 trust + social → 8 stats
+      */}
       <HomeHero />
 
-      {/* Developable thesis */}
-      <section className="section-pad bg-white">
-        <div className="container-site">
-          <div className="grid gap-0 overflow-hidden rounded-xl border border-black/[0.08] sm:rounded-2xl md:grid-cols-2">
-            <div className="bg-ink p-6 text-white sm:p-8 md:p-10 lg:p-12">
-              <Eyebrow>Core belief</Eyebrow>
-              <h2 className="heading-lg mt-3 text-white sm:mt-4">
-                Leadership is largely learnable.
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-white/65 sm:mt-5 sm:text-lg">
-                Super-Cube® holds that roughly{" "}
-                <strong className="font-semibold text-white">
-                  70–76% of leadership capacity
-                </strong>{" "}
-                is developable through deliberate practice, experience, and
-                structured intervention—not fixed by heredity alone.
-              </p>
-              <p className="mt-3 text-sm leading-relaxed text-white/45 sm:mt-4 sm:text-base">
-                Development follows Illeris’s three-dimensional learning
-                theory: content, incentive, and interaction.
-              </p>
-            </div>
-            <div className="flex flex-col justify-center gap-0 bg-white p-1 sm:p-2 md:p-4">
-              <p className="px-4 pt-3 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted sm:px-6">
-                Theory map (summary)
-              </p>
-              {theories.map((th, i) => (
-                <div
-                  key={th.name}
-                  className={`flex items-start gap-3 px-4 py-3.5 sm:px-6 sm:py-4 ${
-                    i < theories.length - 1 ? "border-b border-black/[0.06]" : ""
-                  }`}
-                >
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink" />
-                  <div>
-                    <p className="font-semibold tracking-tight text-ink">
-                      {th.name}
-                    </p>
-                    <p className="text-sm text-muted">{th.note}</p>
-                  </div>
-                </div>
-              ))}
-              <div className="border-t border-black/[0.06] px-4 py-3 sm:px-6">
-                <a
-                  href="/the-model#theory"
-                  className="text-sm font-semibold text-ink underline-offset-4 hover:underline"
-                >
-                  Open full literature map →
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Progressive levels */}
-      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
-        <div className="container-site">
-          <SectionHeading
-            eyebrow="Scale of impact"
-            title="From personal plans to industry reach."
-            description="Capacity building radiates outward—strong individuals first, then organisations, networks, and sectors."
-          />
-
-          <ol className="mt-8 grid gap-3 sm:mt-12 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 xl:grid-cols-5">
-            {levels.map((level) => (
-              <li
-                key={level.level}
-                className="relative rounded-xl border border-black/[0.08] bg-white p-4 sm:p-5"
-              >
-                <span className="text-xl font-semibold tracking-tight text-muted sm:text-2xl">
-                  {String(level.level).padStart(2, "0")}
-                </span>
-                <h3 className="mt-2.5 text-[0.975rem] font-semibold tracking-tight text-ink sm:mt-3 sm:text-base">
-                  {level.title}
-                </h3>
-                <p className="mt-1 text-[0.65rem] font-medium uppercase tracking-wider text-muted sm:text-[0.6875rem]">
-                  {level.subtitle}
-                </p>
-                <p className="mt-2.5 text-sm leading-relaxed text-slate sm:mt-3">
-                  {level.description}
-                </p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* Research strip */}
+      {/* 9. Research strip */}
       <section className="section-pad bg-white">
         <div className="container-site grid gap-8 sm:gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-12">
           <SectionHeading
@@ -161,7 +78,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Proof + try free */}
+      {/* 10. Proof of growth */}
       <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
         <div className="container-site grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
@@ -225,8 +142,10 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* 11. Testimonials */}
       <TestimonialsStrip />
 
+      {/* 12. CTA banner */}
       <CTABanner />
     </>
   );

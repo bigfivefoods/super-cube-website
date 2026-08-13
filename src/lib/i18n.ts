@@ -146,6 +146,57 @@ const en = {
   "home.cubeTitle": "Whole-person leadership—not one fad skill.",
   "home.cubeDesc":
     "Six developable faces with you at the centre. After your baseline, the cube lights by your scores so growth priorities are visible.",
+  "home.cubeBody":
+    "Rotate the model. Each face is a domain you can practise—choices, principles, mind, emotion, body, and purpose—so growth priorities stay visible, not abstract.",
+  "home.programmesEyebrow": "Who the programme is for",
+  "home.programmesTitle": "Kids · Adolescents · Adults.",
+  "home.programmesDesc":
+    "One model across the lifespan. Choose the pathway for this season—the six faces stay with you as your world gets larger.",
+  "home.programmesCta": "Explore programmes",
+  "home.ptmEyebrow": "Philosophy · Theory · Model",
+  "home.ptmTitle": "From human relation to a practiceable cube.",
+  "home.ptmDesc":
+    "Super-Cube® sits on clear philosophy, development theory, and a six-face model you can measure and train.",
+  "home.philosophyTitle": "Philosophy",
+  "home.philosophyBody":
+    "Grounded in Buber’s I–Thou, the African philosophy of Ubuntu, and Wilber’s AQAL integral frame—people as subjects-in-relation, never objects of control.",
+  "home.theoryTitle": "Theory",
+  "home.theoryBody":
+    "Illeris’s three-dimensional learning (content, incentive, interaction) plus major leadership literature strands. Roughly 70–76% of leadership capacity is developable through deliberate practice.",
+  "home.modelTitle": "Model",
+  "home.modelBody":
+    "Super-Cube® makes that philosophy and theory practiceable: you at the centre, six interdependent faces, pre→post measurement, and deliberate growth.",
+  "home.coreBeliefEyebrow": "Core belief",
+  "home.coreBelief": "Leadership is largely learnable.",
+  "home.coreBeliefBody":
+    "Super-Cube® holds that roughly 70–76% of leadership capacity is developable through deliberate practice, experience, and structured intervention—not fixed by heredity alone. Development follows Illeris’s content, incentive, and interaction.",
+  "home.theoryMapLabel": "Theory map (summary)",
+  "home.ptmTheoryMap": "Open full literature map",
+  "home.ptmHow": "How development works",
+  "home.facesEyebrow": "Six constructs",
+  "home.facesTitle": "Develop leadership across every face of the cube.",
+  "home.facesDesc":
+    "Each construct is a developable set of capabilities—validated in practice and designed for deliberate growth.",
+  "home.benefitsEyebrow": "Why Super-Cube®",
+  "home.benefitsTitle": "Benefits of the model.",
+  "home.benefitsDesc":
+    "Three design strengths: holistic across the whole person; longitudinal across a whole life; multi-level from one person to wider systems.",
+  "home.benefit.holistic": "Holistic",
+  "home.benefit.holisticTag": "The whole leader—not a single skill.",
+  "home.benefit.holisticBody":
+    "Six interdependent faces so growth in one domain strengthens the others. You stand at the centre: agency first, then impact outward.",
+  "home.benefit.longitudinal": "Longitudinal",
+  "home.benefit.longitudinalTag": "One model for a whole life.",
+  "home.benefit.longitudinalBody":
+    "From Kids to Adolescents to Adults, the architecture stays continuous. Language deepens with age; context expands from family to work and society.",
+  "home.benefit.multilevel": "Multi-level",
+  "home.benefit.multilevelTag": "From one person to whole systems.",
+  "home.benefit.multilevelBody":
+    "Capacity begins with the individual and can extend through organisations, networks, and industries—leadership development as infrastructure.",
+  "home.benefitsCta": "Explore programmes & benefits",
+  "home.trustFooter":
+    "Validated at the University of KwaZulu-Natal · Peer-reviewed in SAJEMS · Pre→post certificates with public verify IDs",
+  // Legacy buyer keys (kept for type stability / other surfaces)
   "home.buyersEyebrow": "Who it’s for",
   "home.buyersTitle": "One model. Clear paths for every buyer.",
   "home.buyersDesc":
@@ -166,10 +217,6 @@ const en = {
   "home.buyer.coachDesc":
     "Share links, verify IDs, community clinic, certification ladder.",
   "home.buyer.coachCta": "Certification",
-  "home.facesEyebrow": "Six constructs",
-  "home.facesTitle": "Develop leadership across every face of the cube.",
-  "home.facesDesc":
-    "Each construct is a developable set of capabilities—validated in practice and designed for deliberate growth.",
 
   // Constructs page hero
   "constructs.eyebrow": "The six faces",
@@ -332,6 +379,56 @@ const zu: Record<I18nKey, string> = {
   "home.cubeTitle": "Ubuholi bomuntu wonke—hhayi ikhono elilodwa elidume.",
   "home.cubeDesc":
     "Ubuso obuyisithupha obungakhuliswa wena phakathi. Ngemva kwesisekelo, ikhyubhu ikhanya ngamanani akho ukuze izinto eziphambili zibonakale.",
+  "home.cubeBody":
+    "Jikelezisa imodeli. Ubuso ngabunye buyindawo ongayilolonga—izinketho, izimiso, ingqondo, imizwa, umzimba, nenjongo—ukuze izinto ezibalulekile zokukhula zibonakale.",
+  "home.programmesEyebrow": "Iqondene nobani uhlelo",
+  "home.programmesTitle": "Izingane · Intsha · Abadala.",
+  "home.programmesDesc":
+    "Imodeli eyodwa empilweni yonke. Khetha indlela yalesi sikhathi—ubuso obuyisithupha buhlala nawe njengoba umhlaba wakho ukhula.",
+  "home.programmesCta": "Hlola izinhlelo",
+  "home.ptmEyebrow": "Ifilosofi · Ithiyori · Imodeli",
+  "home.ptmTitle": "Kusuka ebudlelwaneni bomuntu kuya ekhyubhini engasetshenziswa.",
+  "home.ptmDesc":
+    "I-Super-Cube® imi phezukwefilosofi ecacile, ithiyori yokuthuthuka, nemodeli yobuso obuyisithupha ongayikala futhi uyilolonge.",
+  "home.philosophyTitle": "Ifilosofi",
+  "home.philosophyBody":
+    "Isuselwa ku-I–Thou ka-Buber, ifilosofi yase-Afrika ye-Ubuntu, nohlaka lwe-AQAL luka-Wilber—abantu njengezinto ezisebudlelwaneni, hhayi izinto zokulawula.",
+  "home.theoryTitle": "Ithiyori",
+  "home.theoryBody":
+    "Ukufunda kwezinhlangothi ezintathu kuka-Illeris (okuqukethwe, isisusa, ukuxhumana) kanye nemikhakha emikhulu yobuholi. Cishe u-70–76% wamandla obuholi ungathuthukiswa ngokuzilolonga ngamabomu.",
+  "home.modelTitle": "Imodeli",
+  "home.modelBody":
+    "I-Super-Cube® yenza leyo filosofi nethiyori isebenze: wena phakathi, ubuso obuyisithupha obuxhumene, ukukala kwangaphambi → nangemva, nokukhula ngamabomu.",
+  "home.coreBeliefEyebrow": "Inkolelo eyinhloko",
+  "home.coreBelief": "Ubuholi bungafundwa kakhulu.",
+  "home.coreBeliefBody":
+    "I-Super-Cube® ithi cishe u-70–76% wamandla obuholi ungathuthukiswa ngokuzilolonga ngamabomu, isipiliyoni, nokungenelela okuhleliwe—hhayi nje ifa lodwa. Ukuthuthuka kulandela okuqukethwe, isisusa, nokuxhumana kuka-Illeris.",
+  "home.theoryMapLabel": "Imephu yethiyori (isifinyezo)",
+  "home.ptmTheoryMap": "Vula imephu ephelele yezincwadi",
+  "home.ptmHow": "Ukuthuthuka kusebenza kanjani",
+  "home.facesEyebrow": "Izakhi eziyisithupha",
+  "home.facesTitle": "Thuthukisa ubuholi ebusweni bonke bekhyubhu.",
+  "home.facesDesc":
+    "Isakhi ngasinye siyiqoqo lamakhono angakhuliswa—aqinisekiswe ekusebenzeni asungulelwe ukukhula okucabangiwe.",
+  "home.benefitsEyebrow": "Kungani i-Super-Cube®",
+  "home.benefitsTitle": "Izinzuzo zemodeli.",
+  "home.benefitsDesc":
+    "Amandla amathathu: aphelele kuwo wonke umuntu; aqhubekayo empilweni yonke; ahlukahlukene kusuka kumuntu oyedwa kuya ezinhlelweni ezibanzi.",
+  "home.benefit.holistic": "Okuphelele",
+  "home.benefit.holisticTag": "Umholi wonke—hhayi ikhono elilodwa.",
+  "home.benefit.holisticBody":
+    "Ubuso obuyisithupha obuxhumene ukuze ukukhula kwendawo eyodwa kuqinise ezinye. Uma phakathi: amandla kuqala, bese umthelela ngaphandle.",
+  "home.benefit.longitudinal": "Okuqhubekayo",
+  "home.benefit.longitudinalTag": "Imodeli eyodwa yempilo yonke.",
+  "home.benefit.longitudinalBody":
+    "Kusuka ezinganeni kuya entsheni nabadala, ukwakheka kuhlala kufana. Ulimi lujula ngeminyaka; umongo ukhula kusuka emndenini kuya emsebenzini nomphakathi.",
+  "home.benefit.multilevel": "Amazinga amaningi",
+  "home.benefit.multilevelTag": "Kusuka kumuntu oyedwa kuya ezinhlelweni.",
+  "home.benefit.multilevelBody":
+    "Amandla aqala kumuntu futhi angadlulela ezinhlanganweni, amanethiwekhi, nezimboni—ukuthuthukiswa kobuholi njengengqalasizinda.",
+  "home.benefitsCta": "Hlola izinhlelo nezinzuzo",
+  "home.trustFooter":
+    "Kuqinisekisiwe eNyuvesi yaKwaZulu-Natal · Kuhlolwe ontanga e-SAJEMS · Izitifiketi zangaphambi→nangemva ezinama-ID okuqinisekisa omphakathi",
   "home.buyersEyebrow": "Iqondene nobani",
   "home.buyersTitle": "Imodeli eyodwa. Izindlela ezicacile kubathengi bonke.",
   "home.buyersDesc":
@@ -352,10 +449,6 @@ const zu: Record<I18nKey, string> = {
   "home.buyer.coachDesc":
     "Izixhumanisi zokwabelana, ama-ID okuqinisekisa, umphakathi, isitifiketi.",
   "home.buyer.coachCta": "Isitifiketi",
-  "home.facesEyebrow": "Izakhi eziyisithupha",
-  "home.facesTitle": "Thuthukisa ubuholi ebusweni bonke bekhyubhu.",
-  "home.facesDesc":
-    "Isakhi ngasinye siyiqoqo lamakhono angakhuliswa—aqinisekiswe ekusebenzeni asungulelwe ukukhula okucabangiwe.",
 
   "constructs.eyebrow": "Ubuso obuyisithupha",
   "constructs.title": "Izakhi ezigxile kumuntu. Amakhono angakhuliswa.",
@@ -514,6 +607,56 @@ const af: Record<I18nKey, string> = {
   "home.cubeTitle": "Heelpersoon-leierskap—nie een modevaardigheid nie.",
   "home.cubeDesc":
     "Ses ontwikkelbare vlakke met jou in die middel. Ná jou basislyn lig die kubus volgens jou tellings sodat groeiprioriteite sigbaar is.",
+  "home.cubeBody":
+    "Draai die model. Elke vlak is ’n domein wat jy kan oefen—keuses, beginsels, verstand, emosie, liggaam en doel—sodat groeiprioriteite sigbaar bly.",
+  "home.programmesEyebrow": "Vir wie die program is",
+  "home.programmesTitle": "Kinders · Adolessente · Volwassenes.",
+  "home.programmesDesc":
+    "Een model oor ’n leeftyd. Kies die pad vir hierdie seisoen—die ses vlakke bly by jou soos jou wêreld groter word.",
+  "home.programmesCta": "Verken programme",
+  "home.ptmEyebrow": "Filosofie · Teorie · Model",
+  "home.ptmTitle": "Van menslike verhouding tot ’n beoefenbare kubus.",
+  "home.ptmDesc":
+    "Super-Cube® rus op duidelike filosofie, ontwikkelingsteorie, en ’n ses-vlak model wat jy kan meet en oefen.",
+  "home.philosophyTitle": "Filosofie",
+  "home.philosophyBody":
+    "Gegrond in Buber se I–Thou, die Afrika-filosofie van Ubuntu, en Wilber se AQAL-integrale raam—mense as subjekte-in-verhouding, nooit voorwerpe van beheer nie.",
+  "home.theoryTitle": "Teorie",
+  "home.theoryBody":
+    "Illeris se driedimensionele leer (inhoud, dryfveer, interaksie) plus groot leierskap-literatuur. Ongeveer 70–76% van leierskapvermoë is ontwikkelbaar deur doelbewuste oefening.",
+  "home.modelTitle": "Model",
+  "home.modelBody":
+    "Super-Cube® maak daardie filosofie en teorie beoefenbaar: jy in die middel, ses onderlinge vlakke, pre→post meting, en doelbewuste groei.",
+  "home.coreBeliefEyebrow": "Kernooruiging",
+  "home.coreBelief": "Leierskap is grootliks leerbaar.",
+  "home.coreBeliefBody":
+    "Super-Cube® hou dat ongeveer 70–76% van leierskapvermoë ontwikkelbaar is deur doelbewuste oefening, ervaring en gestruktureerde intervensie—nie net erflikheid nie. Ontwikkeling volg Illeris se inhoud, dryfveer en interaksie.",
+  "home.theoryMapLabel": "Teoriekaart (opsomming)",
+  "home.ptmTheoryMap": "Maak volle literatuurkaart oop",
+  "home.ptmHow": "Hoe ontwikkeling werk",
+  "home.facesEyebrow": "Ses konstrukte",
+  "home.facesTitle": "Ontwikkel leierskap oor elke vlak van die kubus.",
+  "home.facesDesc":
+    "Elke konstruk is ’n ontwikkelbare stel vermoëns—bevestig in praktyk en ontwerp vir doelbewuste groei.",
+  "home.benefitsEyebrow": "Hoekom Super-Cube®",
+  "home.benefitsTitle": "Voordele van die model.",
+  "home.benefitsDesc":
+    "Drie ontwerpstertkes: holisties oor die hele persoon; longitudinaal oor ’n hele lewe; multi-vlak van een persoon tot wyer stelsels.",
+  "home.benefit.holistic": "Holisties",
+  "home.benefit.holisticTag": "Die hele leier—nie een vaardigheid nie.",
+  "home.benefit.holisticBody":
+    "Ses onderlinge vlakke sodat groei in een domein die ander versterk. Jy staan in die middel: agentskap eers, dan impak na buite.",
+  "home.benefit.longitudinal": "Longitudinaal",
+  "home.benefit.longitudinalTag": "Een model vir ’n hele lewe.",
+  "home.benefit.longitudinalBody":
+    "Van Kinders tot Adolessente tot Volwassenes bly die argitektuur deurlopend. Taal verdiep met ouderdom; konteks brei uit van gesin tot werk en samelewing.",
+  "home.benefit.multilevel": "Multi-vlak",
+  "home.benefit.multilevelTag": "Van een persoon tot hele stelsels.",
+  "home.benefit.multilevelBody":
+    "Kapasiteit begin by die individu en kan uitbrei deur organisasies, netwerke en nywerhede—leierskapsontwikkeling as infrastruktuur.",
+  "home.benefitsCta": "Verken programme & voordele",
+  "home.trustFooter":
+    "Geldig by die Universiteit van KwaZulu-Natal · Portuurbeoordeel in SAJEMS · Pre→post sertifikate met openbare verifieer-IDs",
   "home.buyersEyebrow": "Vir wie dit is",
   "home.buyersTitle": "Een model. Duidelike paaie vir elke koper.",
   "home.buyersDesc":
@@ -534,10 +677,6 @@ const af: Record<I18nKey, string> = {
   "home.buyer.coachDesc":
     "Deel-skakels, verifieer-IDs, gemeenskapskliniek, sertifiseringsleer.",
   "home.buyer.coachCta": "Sertifisering",
-  "home.facesEyebrow": "Ses konstrukte",
-  "home.facesTitle": "Ontwikkel leierskap oor elke vlak van die kubus.",
-  "home.facesDesc":
-    "Elke konstruk is ’n ontwikkelbare stel vermoëns—bevestig in praktyk en ontwerp vir doelbewuste groei.",
 
   "constructs.eyebrow": "Die ses vlakke",
   "constructs.title": "Mensgesentreerde konstrukte. Ontwikkelbare vaardighede.",

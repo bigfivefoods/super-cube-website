@@ -6,8 +6,9 @@ import { useLocale } from "@/components/LocaleProvider";
 import { SocialProofStrip } from "@/components/SocialProof";
 import { SuperCube } from "@/components/SuperCube";
 import { Button, SectionHeading } from "@/components/ui";
-import { constructs, stats } from "@/lib/content";
+import { constructs, stats, theories } from "@/lib/content";
 import { faceI18n, type I18nKey } from "@/lib/i18n";
+import { programmes } from "@/lib/programmes";
 
 const constructIcons: Record<string, string> = {
   choices: "/images/constructs/choices-icon.png",
@@ -18,41 +19,52 @@ const constructIcons: Record<string, string> = {
   spiritual: "/images/constructs/spiritual-icon.png",
 };
 
-const buyers: {
+const programmeAccents = [
+  constructs[0].color,
+  constructs[2].color,
+  constructs[5].color,
+];
+
+const benefits: {
+  id: "holistic" | "longitudinal" | "multi-level";
   titleKey: I18nKey;
-  descKey: I18nKey;
-  ctaKey: I18nKey;
-  href: string;
+  tagKey: I18nKey;
+  bodyKey: I18nKey;
+  icon: { src: string; alt: string };
 }[] = [
   {
-    titleKey: "home.buyer.individual",
-    descKey: "home.buyer.individualDesc",
-    ctaKey: "home.buyer.individualCta",
-    href: "/learn/start",
+    id: "holistic",
+    titleKey: "home.benefit.holistic",
+    tagKey: "home.benefit.holisticTag",
+    bodyKey: "home.benefit.holisticBody",
+    icon: { src: "/cube.png", alt: "Super-Cube® — holistic" },
   },
   {
-    titleKey: "home.buyer.school",
-    descKey: "home.buyer.schoolDesc",
-    ctaKey: "home.buyer.schoolCta",
-    href: "/facilitator",
+    id: "longitudinal",
+    titleKey: "home.benefit.longitudinal",
+    tagKey: "home.benefit.longitudinalTag",
+    bodyKey: "home.benefit.longitudinalBody",
+    icon: {
+      src: "/longitudinal.svg",
+      alt: "Longitudinal lifespan development",
+    },
   },
   {
-    titleKey: "home.buyer.corp",
-    descKey: "home.buyer.corpDesc",
-    ctaKey: "home.buyer.corpCta",
-    href: "/impact",
-  },
-  {
-    titleKey: "home.buyer.coach",
-    descKey: "home.buyer.coachDesc",
-    ctaKey: "home.buyer.coachCta",
-    href: "/certify",
+    id: "multi-level",
+    titleKey: "home.benefit.multilevel",
+    tagKey: "home.benefit.multilevelTag",
+    bodyKey: "home.benefit.multilevelBody",
+    icon: {
+      src: "/multilevel.svg",
+      alt: "Multi-level leadership capacity",
+    },
   },
 ];
 
 /**
- * Localised home hero through faces grid.
- * Theory thesis / levels / research strips stay English on the server page.
+ * Landing narrative (client, i18n):
+ * hero → cube → programmes → philosophy/theory/model → constructs → benefits
+ * → trust + social proof → stats
  */
 export function HomeHero() {
   const { t } = useLocale();
@@ -66,6 +78,7 @@ export function HomeHero() {
 
   return (
     <>
+      {/* 1. Hero — media + title/lede/CTAs only (no cube) */}
       <section className="page-hero page-hero--full page-hero--media relative isolate flex w-full overflow-hidden bg-ink">
         <Image
           src="/images/hero/leadership-hero.jpg"
@@ -121,30 +134,7 @@ export function HomeHero() {
         </div>
       </section>
 
-      {/* Trust strip — institutional density under hero */}
-      <section className="border-b border-black/[0.06] bg-white">
-        <div className="container-site py-4 sm:py-5">
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
-            {trustItems.map((item) => (
-              <div key={item.label} className="min-w-0 text-center sm:text-left">
-                <p className="text-[0.7rem] font-semibold tracking-tight text-ink sm:text-xs">
-                  {item.label}
-                </p>
-                <p className="mt-0.5 text-[0.65rem] text-muted sm:text-[0.7rem]">
-                  {item.detail}
-                </p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-3 text-center text-[0.65rem] text-muted sm:mt-4 sm:text-left sm:text-xs">
-            Validated at the University of KwaZulu-Natal · Peer-reviewed in SAJEMS ·
-            Pre→post certificates with public verify IDs
-          </p>
-        </div>
-      </section>
-
-      <SocialProofStrip />
-
+      {/* 2. Rotating model — interactive SuperCube */}
       <section className="section-pad bg-white">
         <div className="container-site grid items-center gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12 xl:gap-16">
           <div className="min-w-0 order-2 md:order-1">
@@ -153,28 +143,16 @@ export function HomeHero() {
               title={t("home.cubeTitle")}
               description={t("home.cubeDesc")}
             />
-            <div className="prose-site mt-5 space-y-4 sm:mt-6">
-              <p>
-                Born from doctoral research in an African FMCG business-network,
-                Super-Cube® synthesises the major leadership schools—from trait
-                and contingency through relational, shared, evolutionary, and
-                neuroscientific perspectives—plus contemporary topics and
-                skills-development debates into one practical system.
-              </p>
-              <p>
-                Philosophically grounded in Buber’s <em>I–Thou</em>, Wilber’s
-                AQAL integral frame, and the African philosophy of{" "}
-                <strong>Ubuntu</strong>—people as subjects-in-relation, never
-                objects of control.
-              </p>
-            </div>
+            <p className="mt-5 text-sm leading-relaxed text-slate sm:mt-6 sm:text-base">
+              {t("home.cubeBody")}
+            </p>
             <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap">
               <Button
-                href="/the-model#theory"
+                href="/the-model"
                 variant="ghost"
                 className="w-full sm:w-auto"
               >
-                Full theory map →
+                {t("cta.exploreModel")} →
               </Button>
               <Button
                 href="/learn/start"
@@ -193,58 +171,156 @@ export function HomeHero() {
         </div>
       </section>
 
-      <section className="border-y border-black/[0.06] bg-[#fafafa]">
-        <div className="container-site grid grid-cols-2 gap-px bg-black/[0.06] md:grid-cols-4">
-          {stats.map((stat) => (
-            <div
-              key={stat.label}
-              className="bg-[#fafafa] px-3 py-6 sm:px-5 sm:py-10 md:px-6 md:py-12"
-            >
-              <p className="text-xl font-semibold tracking-tight text-ink sm:text-3xl md:text-4xl">
-                {stat.value}
-              </p>
-              <p className="mt-1.5 text-xs font-semibold text-ink sm:mt-2 sm:text-sm">
-                {stat.label}
-              </p>
-              <p className="mt-1 text-[0.75rem] leading-snug text-muted sm:text-sm">
-                {stat.detail}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section-pad bg-white">
+      {/* 3. Who the programme is for — Kids / Adolescents / Adults */}
+      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
         <div className="container-site">
           <SectionHeading
-            eyebrow={t("home.buyersEyebrow")}
-            title={t("home.buyersTitle")}
-            description={t("home.buyersDesc")}
+            eyebrow={t("home.programmesEyebrow")}
+            title={t("home.programmesTitle")}
+            description={t("home.programmesDesc")}
           />
-          <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
-            {buyers.map((card) => (
-              <div
-                key={card.titleKey}
-                className="flex flex-col rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5"
-              >
-                <h3 className="text-base font-semibold tracking-tight text-ink">
-                  {t(card.titleKey)}
-                </h3>
-                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
-                  {t(card.descKey)}
-                </p>
+          <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            {programmes.map((p, i) => {
+              const color = programmeAccents[i % programmeAccents.length];
+              const shortName = p.name.replace("Super-Cube® ", "");
+              return (
                 <Link
-                  href={card.href}
-                  className="mt-4 text-sm font-semibold text-ink underline-offset-4 hover:underline"
+                  key={p.id}
+                  href={`/what#${p.id}`}
+                  className="card-lift group flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white"
                 >
-                  {t(card.ctaKey)} →
+                  <div
+                    className="h-1.5 w-full"
+                    style={{ background: color }}
+                    aria-hidden
+                  />
+                  <div className="flex flex-1 flex-col p-5 sm:p-6">
+                    <p
+                      className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
+                      style={{ color }}
+                    >
+                      {p.ageLabel}
+                    </p>
+                    <h3 className="mt-2 text-lg font-semibold tracking-tight text-ink sm:text-xl">
+                      {shortName}
+                    </h3>
+                    <p className="mt-1.5 text-sm font-medium text-slate">
+                      {p.tagline}
+                    </p>
+                    <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+                      {p.description}
+                    </p>
+                    <span className="mt-5 inline-flex text-sm font-semibold text-ink opacity-60 transition group-hover:opacity-100">
+                      {t("cta.learnMore")} →
+                    </span>
+                  </div>
                 </Link>
-              </div>
-            ))}
+              );
+            })}
+          </div>
+          <div className="mt-8 flex justify-center sm:mt-10">
+            <Button href="/what" variant="primary">
+              {t("home.programmesCta")}
+            </Button>
           </div>
         </div>
       </section>
 
+      {/* 4. Philosophy → theory → model */}
+      <section className="section-pad bg-white">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("home.ptmEyebrow")}
+            title={t("home.ptmTitle")}
+            description={t("home.ptmDesc")}
+          />
+
+          <div className="mt-8 grid gap-3 sm:mt-10 sm:grid-cols-3 sm:gap-4">
+            {(
+              [
+                {
+                  titleKey: "home.philosophyTitle" as const,
+                  bodyKey: "home.philosophyBody" as const,
+                },
+                {
+                  titleKey: "home.theoryTitle" as const,
+                  bodyKey: "home.theoryBody" as const,
+                },
+                {
+                  titleKey: "home.modelTitle" as const,
+                  bodyKey: "home.modelBody" as const,
+                },
+              ] as const
+            ).map((card) => (
+              <div
+                key={card.titleKey}
+                className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6"
+              >
+                <h3 className="text-base font-semibold tracking-tight text-ink sm:text-lg">
+                  {t(card.titleKey)}
+                </h3>
+                <p className="mt-2.5 text-sm leading-relaxed text-slate">
+                  {t(card.bodyKey)}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-6 grid gap-0 overflow-hidden rounded-xl border border-black/[0.08] sm:mt-8 sm:rounded-2xl md:grid-cols-2">
+            <div className="bg-ink p-6 text-white sm:p-8 md:p-10">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/50">
+                {t("home.coreBeliefEyebrow")}
+              </p>
+              <h3 className="heading-lg mt-3 text-white">
+                {t("home.coreBelief")}
+              </h3>
+              <p className="mt-4 text-base leading-relaxed text-white/65">
+                {t("home.coreBeliefBody")}
+              </p>
+            </div>
+            <div className="flex flex-col justify-center gap-0 bg-white p-1 sm:p-2 md:p-4">
+              <p className="px-4 pt-3 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted sm:px-6">
+                {t("home.theoryMapLabel")}
+              </p>
+              {theories.slice(0, 4).map((th, i) => (
+                <div
+                  key={th.name}
+                  className={`flex items-start gap-3 px-4 py-3.5 sm:px-6 sm:py-4 ${
+                    i < 3 ? "border-b border-black/[0.06]" : ""
+                  }`}
+                >
+                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink" />
+                  <div>
+                    <p className="font-semibold tracking-tight text-ink">
+                      {th.name}
+                    </p>
+                    <p className="text-sm text-muted">{th.note}</p>
+                  </div>
+                </div>
+              ))}
+              <div className="border-t border-black/[0.06] px-4 py-3 sm:px-6">
+                <Link
+                  href="/the-model#theory"
+                  className="text-sm font-semibold text-ink underline-offset-4 hover:underline"
+                >
+                  {t("home.ptmTheoryMap")} →
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap">
+            <Button href="/the-model" variant="primary" className="w-full sm:w-auto">
+              {t("cta.exploreModel")}
+            </Button>
+            <Button href="/how" variant="ghost" className="w-full sm:w-auto">
+              {t("home.ptmHow")} →
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* 5. Six constructs */}
       <section className="section-pad border-y border-black/[0.06] bg-[#fafafa]">
         <div className="container-site">
           <SectionHeading
@@ -284,6 +360,97 @@ export function HomeHero() {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* 6. Benefits — Holistic / Longitudinal / Multi-level */}
+      <section className="section-pad bg-white">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("home.benefitsEyebrow")}
+            title={t("home.benefitsTitle")}
+            description={t("home.benefitsDesc")}
+          />
+          <div className="mt-8 grid gap-4 sm:mt-10 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+            {benefits.map((b) => (
+              <article
+                key={b.id}
+                className="flex flex-col rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6"
+              >
+                <div className="relative h-12 w-12 sm:h-14 sm:w-14">
+                  <Image
+                    src={b.icon.src}
+                    alt={b.icon.alt}
+                    fill
+                    className="object-contain"
+                    sizes="56px"
+                  />
+                </div>
+                <h3 className="mt-4 text-lg font-semibold tracking-tight text-ink">
+                  {t(b.titleKey)}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-slate">
+                  {t(b.tagKey)}
+                </p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted">
+                  {t(b.bodyKey)}
+                </p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-8 flex flex-col gap-2.5 sm:mt-10 sm:flex-row sm:flex-wrap">
+            <Button href="/what" variant="primary" className="w-full sm:w-auto">
+              {t("home.benefitsCta")}
+            </Button>
+            <Button href="/why" variant="ghost" className="w-full sm:w-auto">
+              {t("nav.why")} →
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Trust strip + social proof */}
+      <section className="border-y border-black/[0.06] bg-white">
+        <div className="container-site py-4 sm:py-5">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+            {trustItems.map((item) => (
+              <div key={item.label} className="min-w-0 text-center sm:text-left">
+                <p className="text-[0.7rem] font-semibold tracking-tight text-ink sm:text-xs">
+                  {item.label}
+                </p>
+                <p className="mt-0.5 text-[0.65rem] text-muted sm:text-[0.7rem]">
+                  {item.detail}
+                </p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-center text-[0.65rem] text-muted sm:mt-4 sm:text-left sm:text-xs">
+            {t("home.trustFooter")}
+          </p>
+        </div>
+      </section>
+
+      <SocialProofStrip />
+
+      {/* 8. Stats strip */}
+      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+        <div className="container-site grid grid-cols-2 gap-px bg-black/[0.06] md:grid-cols-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="bg-[#fafafa] px-3 py-6 sm:px-5 sm:py-10 md:px-6 md:py-12"
+            >
+              <p className="text-xl font-semibold tracking-tight text-ink sm:text-3xl md:text-4xl">
+                {stat.value}
+              </p>
+              <p className="mt-1.5 text-xs font-semibold text-ink sm:mt-2 sm:text-sm">
+                {stat.label}
+              </p>
+              <p className="mt-1 text-[0.75rem] leading-snug text-muted sm:text-sm">
+                {stat.detail}
+              </p>
+            </div>
+          ))}
         </div>
       </section>
     </>
