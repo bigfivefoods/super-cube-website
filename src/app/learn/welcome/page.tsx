@@ -172,7 +172,7 @@ export default function WelcomeProfilePage() {
                 className={`rounded-xl border px-3 py-3 text-left text-sm font-semibold ${
                   ageBand === a.id
                     ? "border-ink bg-void text-void-fg"
-                    : "border-black/[0.08] bg-white text-ink"
+                    : "border-line bg-elevated text-ink"
                 }`}
               >
                 {a.label}
@@ -180,7 +180,7 @@ export default function WelcomeProfilePage() {
             ))}
           </div>
           {programme && (
-            <p className="rounded-xl bg-[#fafafa] px-3 py-2 text-[0.8125rem] text-slate">
+            <p className="rounded-xl bg-surface px-3 py-2 text-[0.8125rem] text-slate">
               Matched programme:{" "}
               <strong className="text-ink">{programme.name}</strong> (
               {programme.ageLabel})
@@ -219,7 +219,7 @@ export default function WelcomeProfilePage() {
                 className={`rounded-full border px-3 py-1.5 text-[0.75rem] font-semibold ${
                   role === r.id
                     ? "border-ink bg-void text-void-fg"
-                    : "border-black/[0.1] text-ink"
+                    : "border-line-strong text-ink"
                 }`}
               >
                 {r.label}
@@ -236,7 +236,7 @@ export default function WelcomeProfilePage() {
                 className={`rounded-full border px-3 py-1.5 text-[0.75rem] font-semibold ${
                   context === c.id
                     ? "border-ink bg-void text-void-fg"
-                    : "border-black/[0.1] text-ink"
+                    : "border-line-strong text-ink"
                 }`}
               >
                 {c.label}
@@ -302,7 +302,7 @@ export default function WelcomeProfilePage() {
                 className={`rounded-xl border p-3 text-left ${
                   cohortKind === c.id
                     ? "border-ink bg-void text-void-fg"
-                    : "border-black/[0.08] bg-white"
+                    : "border-line bg-elevated"
                 }`}
               >
                 <p className="text-sm font-semibold">{c.label}</p>
@@ -335,7 +335,7 @@ export default function WelcomeProfilePage() {
               </p>
             </label>
           )}
-          <div className="rounded-xl border border-black/[0.06] bg-[#fafafa] p-3 text-[0.8125rem] text-slate">
+          <div className="rounded-xl border border-line bg-surface p-3 text-[0.8125rem] text-slate">
             After profile: optional first face pulse so charts start with real
             data.{" "}
             <Link href="/signup" className="font-semibold text-ink underline">

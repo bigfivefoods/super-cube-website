@@ -86,7 +86,7 @@ export function ThemeToggle({
 
   const surface = overDark
     ? "border-white/25 bg-white/10 text-white hover:bg-white/15"
-    : "border-black/[0.1] bg-elevated/80 text-ink hover:bg-black/[0.04] dark:border-white/15 dark:bg-elevated dark:hover:bg-white/10";
+    : "border-line-strong bg-elevated/80 text-ink hover:bg-black/[0.04] dark:border-white/15 dark:bg-elevated dark:hover:bg-white/10";
 
   return (
     <button

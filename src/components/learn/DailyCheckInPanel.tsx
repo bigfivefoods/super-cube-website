@@ -182,7 +182,7 @@ export function DailyCheckInPanel({
                     className={`flex flex-col items-center rounded-2xl px-1 py-2.5 transition ${
                       selected
                         ? "bg-void text-void-fg shadow-md"
-                        : "bg-[#f4f4f4] text-ink hover:bg-black/[0.06]"
+                        : "bg-cream-dark text-ink hover:bg-black/[0.06] dark:hover:bg-white/[0.08]"
                     }`}
                   >
                     <span
@@ -203,7 +203,7 @@ export function DailyCheckInPanel({
                             : "bg-emerald-500"
                           : selected
                             ? "bg-white/25"
-                            : "bg-black/10"
+                            : "bg-black/10 dark:bg-white/15"
                       }`}
                     />
                   </button>
@@ -212,7 +212,7 @@ export function DailyCheckInPanel({
             </div>
 
             {showMonth && (
-              <div className="mt-4 rounded-2xl border border-black/[0.07] bg-[#fafafa] p-3">
+              <div className="mt-4 rounded-2xl border border-line bg-surface p-3">
                 <div className="mb-3 flex items-center justify-between">
                   <button
                     type="button"
@@ -271,7 +271,7 @@ export function DailyCheckInPanel({
                             ? "bg-void text-void-fg"
                             : logged
                               ? "bg-emerald-50 ring-1 ring-emerald-200"
-                              : "bg-white hover:bg-black/[0.04]"
+                              : "bg-elevated hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
                         }`}
                       >
                         {d.getDate()}
@@ -340,7 +340,7 @@ export function DailyCheckInPanel({
                       <p className="text-[0.875rem] font-medium leading-snug text-ink">
                         {q.prompt}
                       </p>
-                      <span className="shrink-0 rounded-full bg-[#f4f4f4] px-2.5 py-0.5 text-[0.75rem] font-semibold tabular-nums">
+                      <span className="shrink-0 rounded-full bg-cream-dark px-2.5 py-0.5 text-[0.75rem] font-semibold tabular-nums">
                         {typeof val === "number" ? val : "—"}
                       </span>
                     </div>

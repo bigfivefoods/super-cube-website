@@ -39,13 +39,13 @@ export function LearnShell({
   }, [onCourses]);
 
   return (
-    <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-[#f7f7f8]">
+    <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-surface">
       {hero}
 
       <div className="container-site grid min-w-0 gap-4 pb-8 pt-3 sm:gap-5 sm:pb-10 sm:pt-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:pt-5 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-10">
         {/* ── Sidebar navigation (always on) ── */}
         <aside className="min-w-0 lg:sticky lg:top-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:self-start lg:max-h-[calc(100svh-5.5rem)] lg:overflow-y-auto">
-          <div className="rounded-2xl border border-black/[0.07] bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5">
+          <div className="rounded-2xl border border-line bg-elevated p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5">
             <p className="mb-2 hidden text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted lg:block">
               Navigate
             </p>
@@ -60,7 +60,7 @@ export function LearnShell({
                 const cls = `flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[0.8125rem] font-medium tracking-tight transition lg:w-full ${
                   active
                     ? "bg-void text-void-fg"
-                    : "text-slate hover:bg-black/[0.04] hover:text-ink"
+                    : "text-slate hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
                 }`;
 
                 if (isLearn) {
@@ -88,7 +88,7 @@ export function LearnShell({
                           className={`flex shrink-0 items-center justify-center rounded-xl px-2 text-[0.7rem] font-semibold transition ${
                             active
                               ? "bg-void text-void-fg hover:opacity-90"
-                              : "text-muted hover:bg-black/[0.04] hover:text-ink"
+                              : "text-muted hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
                           }`}
                           aria-expanded={learnOpen}
                           aria-label={
@@ -133,14 +133,14 @@ export function LearnShell({
             </nav>
 
             {learnOpen && (
-              <div className="mt-2 rounded-xl border border-black/[0.07] bg-[#fafafa] p-2.5 lg:hidden">
+              <div className="mt-2 rounded-xl border border-line bg-surface p-2.5 lg:hidden">
                 <LearnCourseNav expanded onToggle={() => setLearnOpen(false)} />
               </div>
             )}
 
             {/* Pathway progress */}
             {journey && (
-              <div className="mt-3 border-t border-black/[0.06] pt-3">
+              <div className="mt-3 border-t border-line pt-3">
                 <div className="flex items-center justify-between gap-2">
                   <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
                     Pathway
@@ -172,7 +172,7 @@ export function LearnShell({
             )}
 
             {/* More tools */}
-            <div className="mt-3 border-t border-black/[0.06] pt-2">
+            <div className="mt-3 border-t border-line pt-2">
               <button
                 type="button"
                 onClick={() => setMoreOpen((v) => !v)}

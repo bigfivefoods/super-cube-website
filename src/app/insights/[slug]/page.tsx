@@ -33,7 +33,7 @@ export default async function InsightPostPage({
 
   return (
     <article>
-      <header className="border-b border-black/[0.06] bg-white">
+      <header className="border-b border-line bg-bg">
         <div className="container-site max-w-3xl py-12 sm:py-16">
           <p className="eyebrow">Insights</p>
           <h1 className="heading-lg mt-3 text-ink">{post.title}</h1>
@@ -46,7 +46,7 @@ export default async function InsightPostPage({
           </p>
         </div>
       </header>
-      <div className="section-pad bg-[#fafafa]">
+      <div className="section-pad bg-surface">
         <div className="container-site prose-site max-w-3xl space-y-5">
           {post.body.map((para) => (
             <p key={para.slice(0, 40)}>{para}</p>

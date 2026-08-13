@@ -27,7 +27,7 @@ export default function ImpactPage() {
         </Button>
       </PageHero>
 
-      <section className="border-b border-black/[0.06] bg-white">
+      <section className="border-b border-line bg-bg">
         <div className="container-site max-w-3xl py-10">
           <SectionHeading
             eyebrow="SDG-linked impact certificate"
@@ -59,7 +59,7 @@ export default function ImpactPage() {
 
       <section className="section-pad">
         <div className="container-site max-w-3xl space-y-12">
-          <article className="rounded-2xl border border-black/[0.08] bg-white p-6 sm:p-8">
+          <article className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Case · FMCG network (anonymised composite)
             </p>
@@ -81,7 +81,7 @@ export default function ImpactPage() {
               ].map((s) => (
                 <div
                   key={s.v}
-                  className="rounded-xl bg-[#fafafa] px-3 py-3 text-center"
+                  className="rounded-xl bg-surface px-3 py-3 text-center"
                 >
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {s.k}
@@ -111,7 +111,7 @@ export default function ImpactPage() {
             </p>
           </article>
 
-          <article className="rounded-2xl border border-black/[0.08] bg-white p-6 sm:p-8">
+          <article className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Case · School pilot pattern
             </p>

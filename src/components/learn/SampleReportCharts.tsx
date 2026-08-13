@@ -77,7 +77,7 @@ export function SampleReportCharts({
           Baseline in grey; post in construct colours. Choices at top,
           Principles at bottom—matching the Super-Cube® face layout.
         </p>
-        <div className="mt-4 flex justify-center rounded-2xl border border-black/[0.06] bg-[#fafafa] px-2 py-4 sm:px-4">
+        <div className="mt-4 flex justify-center rounded-2xl border border-line bg-surface px-2 py-4 sm:px-4">
           <RadarChart
             scores={preScores}
             compareScores={postScores}
@@ -97,7 +97,7 @@ export function SampleReportCharts({
           pulses—the same continuous tracking available in Learn after baseline.
           Gaps show days without a log.
         </p>
-        <div className="mt-3 rounded-2xl border border-black/[0.06] bg-[#fafafa] px-4 py-4">
+        <div className="mt-3 rounded-2xl border border-line bg-surface px-4 py-4">
           <div className="flex items-end justify-between gap-3">
             <div>
               <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">

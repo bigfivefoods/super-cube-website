@@ -44,7 +44,7 @@ export default function LearnProgrammesPage() {
               className={`flex flex-col rounded-2xl border p-4 sm:p-5 ${
                 active
                   ? "border-ink bg-void text-void-fg shadow-sm"
-                  : "border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+                  : "border-line bg-elevated shadow-[0_1px_0_rgba(0,0,0,0.02)]"
               }`}
             >
               <p className={`learn-eyebrow ${active ? "!text-white/50" : ""}`}>
@@ -105,7 +105,7 @@ export default function LearnProgrammesPage() {
       </div>
 
       {selected && (
-        <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-ink bg-white p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-ink bg-elevated p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div>
             <p className="learn-eyebrow">Step 1 complete</p>
             <p className="mt-1 text-sm font-semibold text-ink">

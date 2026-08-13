@@ -24,7 +24,7 @@ export default function TermsPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site max-w-3xl space-y-8 text-slate">
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-ink">

@@ -28,7 +28,7 @@ export default function CommunityPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site max-w-3xl space-y-8">
           <SectionHeading
             title="What we cover"
@@ -40,7 +40,7 @@ export default function CommunityPage() {
             <li>Weakest-face weekly plans and micro-practices</li>
             <li>Roadmap preview (apps, languages, enterprise SSO)</li>
           </ul>
-          <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+          <div className="rounded-2xl border border-line bg-elevated p-5">
             <p className="text-sm font-semibold text-ink">Next clinic</p>
             <p className="mt-1 text-sm text-slate">
               Published via email to active coaches. Prefer calendar booking?

@@ -35,7 +35,7 @@ export function LearnSectionNav() {
 
   return (
     <nav
-      className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-30 -mx-1 mb-5 border-b border-black/[0.06] bg-[#fafafa]/95 px-1 py-2 backdrop-blur-md md:top-[calc(4rem+env(safe-area-inset-top,0px))] lg:top-20"
+      className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-30 -mx-1 mb-5 border-b border-line bg-surface/95 px-1 py-2 backdrop-blur-md md:top-[calc(4rem+env(safe-area-inset-top,0px))] lg:top-20"
       aria-label="Today sections"
     >
       <ul className="flex gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
@@ -48,7 +48,7 @@ export function LearnSectionNav() {
                 className={`inline-flex min-h-9 items-center rounded-full px-3.5 text-[0.75rem] font-semibold transition ${
                   on
                     ? "bg-void text-void-fg shadow-sm"
-                    : "bg-white text-slate ring-1 ring-black/[0.08] hover:text-ink"
+                    : "bg-elevated text-slate ring-1 ring-line hover:text-ink"
                 }`}
               >
                 {s.label}

@@ -110,7 +110,7 @@ export default function ProgramsPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site">
           <SectionHeading
             eyebrow="Course library"
@@ -122,9 +122,9 @@ export default function ProgramsPage() {
               <a
                 key={book.id}
                 href={`/constructs#${book.id}`}
-                className="card-lift group block overflow-hidden rounded-xl border border-black/[0.08] bg-white"
+                className="card-lift group block overflow-hidden rounded-xl border border-line bg-elevated"
               >
-                <div className="relative aspect-[3/4] w-full bg-[#f4f4f4]">
+                <div className="relative aspect-[3/4] w-full bg-cream-dark">
                   <Image
                     src={book.src}
                     alt={`${book.title} course cover`}
@@ -153,7 +153,7 @@ export default function ProgramsPage() {
             {modalities.map((m) => (
               <article
                 key={m.title}
-                className="rounded-xl border border-black/[0.08] bg-white p-6"
+                className="rounded-xl border border-line bg-elevated p-6"
               >
                 <h3 className="font-semibold text-ink">{m.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-slate">

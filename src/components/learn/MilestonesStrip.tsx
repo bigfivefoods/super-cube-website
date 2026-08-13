@@ -23,7 +23,7 @@ export function MilestonesStrip({ state }: { state: LocalLmsState }) {
             className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.7rem] font-semibold ${
               m.earned
                 ? "border-emerald-600/30 bg-emerald-50 text-emerald-800"
-                : "border-black/[0.08] bg-[#fafafa] text-muted"
+                : "border-line bg-surface text-muted"
             }`}
           >
             <span aria-hidden>{m.earned ? "✓" : "○"}</span>

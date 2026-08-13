@@ -57,7 +57,7 @@ export function LongitudinalPanel({ state }: { state: LocalLmsState }) {
               return (
                 <div
                   key={c.id}
-                  className="rounded-xl border border-black/[0.05] bg-[#fafafa] p-3"
+                  className="rounded-xl border border-line bg-surface p-3"
                 >
                   <div className="flex items-center justify-between gap-2">
                     <span className="inline-flex items-center gap-1.5 text-[0.75rem] font-semibold text-ink">

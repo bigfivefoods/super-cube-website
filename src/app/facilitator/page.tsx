@@ -27,7 +27,7 @@ export default function FacilitatorPage() {
       </PageHero>
 
       {/* Pilot outcome promise */}
-      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="border-b border-line bg-surface">
         <div className="container-site py-8 sm:py-10">
           <p className="text-center text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-muted">
             What a pilot delivers
@@ -49,7 +49,7 @@ export default function FacilitatorPage() {
             ].map((item) => (
               <div
                 key={item.t}
-                className="rounded-2xl border border-black/[0.07] bg-white p-4 text-center sm:p-5"
+                className="rounded-2xl border border-line bg-elevated p-4 text-center sm:p-5"
               >
                 <p className="text-sm font-semibold tracking-tight text-ink">
                   {item.t}
@@ -71,7 +71,7 @@ export default function FacilitatorPage() {
         </div>
       </section>
 
-      <section className="border-b border-black/[0.06] bg-white">
+      <section className="border-b border-line bg-bg">
         <div className="container-site flex flex-col items-start justify-between gap-4 py-8 sm:flex-row sm:items-center">
           <div>
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
@@ -85,7 +85,7 @@ export default function FacilitatorPage() {
         </div>
       </section>
 
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-bg">
         <div className="container-site">
           <SectionHeading
             eyebrow="Calendar"
@@ -96,7 +96,7 @@ export default function FacilitatorPage() {
             {cohortCalendar.map((w) => (
               <li
                 key={w.week}
-                className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6"
+                className="rounded-2xl border border-line bg-surface p-5 sm:p-6"
               >
                 <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-muted">
                   Week {w.week}
@@ -133,7 +133,7 @@ export default function FacilitatorPage() {
         </div>
       </section>
 
-      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-t border-line bg-surface">
         <div className="container-site max-w-3xl">
           <SectionHeading eyebrow="Safeguarding" title="Kids & adolescents" />
           <ul className="mt-6 list-disc space-y-2 pl-5 text-slate">

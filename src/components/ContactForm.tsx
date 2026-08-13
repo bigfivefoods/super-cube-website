@@ -46,7 +46,7 @@ export function ContactForm() {
 
   if (submitted) {
     return (
-      <div className="rounded-2xl border border-black/[0.08] bg-white p-8 md:p-10">
+      <div className="rounded-2xl border border-line bg-elevated p-8 md:p-10">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
           Message received
         </p>
@@ -77,7 +77,7 @@ export function ContactForm() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-2xl border border-black/[0.08] bg-white p-6 md:p-8"
+      className="rounded-2xl border border-line bg-elevated p-6 md:p-8"
       noValidate={false}
     >
       <div className="grid gap-5 sm:grid-cols-2">
@@ -88,7 +88,7 @@ export function ContactForm() {
             name="name"
             type="text"
             autoComplete="name"
-            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
+            className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
             placeholder="Your name"
           />
         </label>
@@ -99,7 +99,7 @@ export function ContactForm() {
             name="email"
             type="email"
             autoComplete="email"
-            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
+            className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
             placeholder="you@organisation.com"
           />
         </label>
@@ -109,7 +109,7 @@ export function ContactForm() {
             name="organisation"
             type="text"
             autoComplete="organization"
-            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
+            className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
             placeholder="Optional — school, company, or network"
           />
         </label>
@@ -117,7 +117,7 @@ export function ContactForm() {
           <span className="text-sm font-semibold text-ink">Interest</span>
           <select
             name="interest"
-            className="mt-2 w-full rounded-lg border border-black/[0.12] bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
+            className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
             defaultValue="personal"
           >
             <option value="personal">Personal Super-Cube® plan</option>
@@ -134,7 +134,7 @@ export function ContactForm() {
             required
             name="message"
             rows={5}
-            className="mt-2 w-full resize-y rounded-lg border border-black/[0.12] bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
+            className="mt-2 w-full resize-y rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink"
             placeholder="Tell us about your context and goals…"
           />
         </label>

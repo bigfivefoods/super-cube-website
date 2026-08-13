@@ -104,7 +104,7 @@ export default function HowPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site grid gap-10 lg:grid-cols-2 lg:gap-16">
           <SectionHeading
             eyebrow="The education approach"
@@ -131,7 +131,7 @@ export default function HowPage() {
           {pillars.map((p) => (
             <article
               key={p.title}
-              className="rounded-2xl border border-black/[0.07] bg-[#fafafa] p-5 sm:p-6"
+              className="rounded-2xl border border-line bg-surface p-5 sm:p-6"
             >
               <h3 className="text-base font-semibold tracking-tight text-ink">
                 {p.title}
@@ -144,7 +144,7 @@ export default function HowPage() {
         </div>
       </section>
 
-      <section className="section-pad border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-b border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow="The learning pathway"
@@ -156,7 +156,7 @@ export default function HowPage() {
               <li key={step.n}>
                 <Link
                   href={step.href}
-                  className="grid gap-2 rounded-2xl border border-black/[0.07] bg-white p-5 transition hover:border-black/15 hover:shadow-sm sm:grid-cols-[4rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
+                  className="grid gap-2 rounded-2xl border border-line bg-elevated p-5 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-sm sm:grid-cols-[4rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
                 >
                   <span className="font-display text-2xl text-muted">
                     {step.n}
@@ -179,7 +179,7 @@ export default function HowPage() {
         </div>
       </section>
 
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site">
           <SectionHeading
             eyebrow="What learners develop"
@@ -191,7 +191,7 @@ export default function HowPage() {
               <Link
                 key={c.id}
                 href={`/constructs#${c.id}`}
-                className="rounded-2xl border border-black/[0.07] bg-white p-5 transition hover:shadow-sm"
+                className="rounded-2xl border border-line bg-elevated p-5 transition hover:shadow-sm"
                 style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
               >
                 <p

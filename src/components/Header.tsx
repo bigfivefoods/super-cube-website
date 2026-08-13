@@ -88,7 +88,7 @@ export function Header() {
       return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
         active
           ? "bg-void text-void-fg"
-          : "text-ink/80 hover:bg-black/[0.06] hover:text-ink"
+          : "text-ink/80 hover:bg-black/[0.06] dark:hover:bg-white/[0.08] hover:text-ink"
       }`;
     }
     return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
@@ -114,7 +114,7 @@ export function Header() {
       ? "border-b border-transparent bg-[#e8e8e8]/90 backdrop-blur-md dark:bg-black/70 dark:border-white/10"
       : chromeDark
         ? "border-b border-white/10 bg-black/80 shadow-[0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl"
-        : "border-b border-black/[0.06] bg-paper/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl";
+        : "border-b border-line bg-paper/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl";
 
   function navLabel(href: string, fallback: string) {
     const key = mainNavI18n[href] || moreLinkI18n[href];
@@ -218,7 +218,7 @@ export function Header() {
             className={`ml-1 flex items-center gap-2 border-l pl-3 ${
               chromeDark && !overLight
                 ? "border-white/20"
-                : "border-black/[0.08] dark:border-white/15"
+                : "border-line dark:border-white/15"
             }`}
           >
             <ThemeToggle overDark={chromeDark && !overLight} />
@@ -253,7 +253,7 @@ export function Header() {
             className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border touch-manipulation ${
               chromeDark && !overLight
                 ? "border-white/25 bg-white/10 text-white"
-                : "border-black/[0.1] bg-paper/80 text-ink dark:border-white/15 dark:bg-elevated"
+                : "border-line-strong bg-paper/80 text-ink dark:border-white/15 dark:bg-elevated"
             }`}
             aria-expanded={open}
             aria-controls="mobile-nav"

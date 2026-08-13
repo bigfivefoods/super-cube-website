@@ -137,7 +137,7 @@ export function InstallAppBanner() {
 
   return (
     <>
-      <div className="border-b border-black/[0.08] bg-void text-void-fg">
+      <div className="border-b border-line bg-void text-void-fg">
         <div className="container-site flex items-center gap-3 py-3">
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-white/10">
             <Image
@@ -202,8 +202,8 @@ export function InstallAppBanner() {
             if (e.target === e.currentTarget) setShowGuide(false);
           }}
         >
-          <div className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
-            <div className="border-b border-black/[0.06] px-5 py-4">
+          <div className="w-full max-w-md overflow-hidden rounded-2xl bg-elevated shadow-2xl">
+            <div className="border-b border-line px-5 py-4">
               <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Install app
               </p>
@@ -265,7 +265,7 @@ export function InstallAppBanner() {
               </li>
             </ol>
 
-            <div className="flex gap-2 border-t border-black/[0.06] px-5 py-4">
+            <div className="flex gap-2 border-t border-line px-5 py-4">
               <button
                 type="button"
                 onClick={() => setShowGuide(false)}
@@ -276,7 +276,7 @@ export function InstallAppBanner() {
               <button
                 type="button"
                 onClick={dismiss}
-                className="min-h-11 shrink-0 rounded-full border border-black/[0.1] px-4 text-sm font-semibold text-ink"
+                className="min-h-11 shrink-0 rounded-full border border-line-strong px-4 text-sm font-semibold text-ink"
               >
                 Not now
               </button>

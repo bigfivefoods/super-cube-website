@@ -79,7 +79,7 @@ export function ConstructBanner({
       </div>
 
       {quote && (
-        <figcaption className="rounded-xl border border-black/[0.06] bg-white px-4 py-3 sm:px-5 sm:py-4">
+        <figcaption className="rounded-xl border border-line bg-elevated px-4 py-3 sm:px-5 sm:py-4">
           <div className="flex gap-3">
             <span
               className="mt-1 h-8 w-1 shrink-0 rounded-full"

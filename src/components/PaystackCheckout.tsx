@@ -140,7 +140,7 @@ export function PaystackCheckout({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@school.co.za"
-          className="mt-1 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-3 py-2.5 text-sm text-ink outline-none focus:border-ink/40"
+          className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-ink/40"
         />
       </div>
       <div>
@@ -153,7 +153,7 @@ export function PaystackCheckout({
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Your name"
-          className="mt-1 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-3 py-2.5 text-sm text-ink outline-none focus:border-ink/40"
+          className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-ink/40"
         />
       </div>
 

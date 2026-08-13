@@ -312,7 +312,7 @@ function CoachToolsInner() {
             <p className="mt-3 text-[0.8125rem] text-amber-800">{error}</p>
           )}
           {link && (
-            <div className="mt-4 rounded-xl bg-[#f4f4f4] p-3">
+            <div className="mt-4 rounded-xl bg-cream-dark p-3">
               <p className="break-all text-[0.7rem] text-slate">{link}</p>
               <button
                 type="button"
@@ -425,7 +425,7 @@ function CoachToolsInner() {
               ) : (
                 <>
                   {/* Cohort pulse trend summary */}
-                  <div className="mt-4 rounded-xl border border-black/[0.06] bg-[#fafafa] p-3">
+                  <div className="mt-4 rounded-xl border border-line bg-surface p-3">
                     <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
                       Cohort pulse trends
                     </p>
@@ -590,7 +590,7 @@ function CoachToolsInner() {
                     {roster.map((r) => (
                       <li
                         key={r.userId}
-                        className="rounded-lg border border-black/[0.06] bg-[#fafafa] px-3 py-2 text-[0.75rem]"
+                        className="rounded-lg border border-line bg-surface px-3 py-2 text-[0.75rem]"
                       >
                         <p className="font-semibold text-ink">
                           {r.displayName || r.userId.slice(0, 8)}

@@ -49,7 +49,7 @@ export default function SampleReportPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site max-w-3xl">
           {/* Conversion band above the fold of the report */}
           <div className="mb-6 rounded-2xl border border-line bg-void px-5 py-5 text-void-fg sm:px-6 sm:py-6">
@@ -79,7 +79,7 @@ export default function SampleReportPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-black/[0.08] bg-white p-6 sm:p-8">
+          <div className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Anonymised composite · not a single named learner
             </p>
@@ -105,7 +105,7 @@ export default function SampleReportPage() {
                 return (
                   <li
                     key={row.id}
-                    className="flex items-center gap-3 rounded-xl border border-black/[0.06] px-3 py-2.5"
+                    className="flex items-center gap-3 rounded-xl border border-line px-3 py-2.5"
                   >
                     <span
                       className="h-2.5 w-2.5 rounded-full"
@@ -173,7 +173,7 @@ export default function SampleReportPage() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl bg-[#fafafa] px-3 py-3">
+    <div className="rounded-xl bg-surface px-3 py-3">
       <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
         {label}
       </p>

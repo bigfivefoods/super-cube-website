@@ -54,7 +54,7 @@ export function LearnScreen({
   return (
     <section
       id={id}
-      className={`learn-screen relative flex min-h-[min(70svh,36rem)] flex-col justify-between rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:min-h-[min(72svh,40rem)] sm:p-6 lg:min-h-[min(68svh,38rem)] ${className}`}
+      className={`learn-screen relative flex min-h-[min(70svh,36rem)] flex-col justify-between rounded-2xl border border-line bg-elevated p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:min-h-[min(72svh,40rem)] sm:p-6 lg:min-h-[min(68svh,38rem)] ${className}`}
     >
       {pageLabel && (
         <p className="absolute right-4 top-4 text-[0.65rem] font-semibold tabular-nums text-muted sm:right-5 sm:top-5">
@@ -68,7 +68,7 @@ export function LearnScreen({
 
 export function LearnScreenFooter({ children }: { children: ReactNode }) {
   return (
-    <div className="mt-5 shrink-0 border-t border-black/[0.06] pt-4">
+    <div className="mt-5 shrink-0 border-t border-line pt-4">
       {children}
     </div>
   );
@@ -136,9 +136,9 @@ export function LearnCard({
   tone?: "default" | "ink" | "soft";
 }) {
   const tones = {
-    default: "border-black/[0.07] bg-white",
+    default: "border-line bg-elevated",
     ink: "border-transparent bg-void text-void-fg",
-    soft: "border-black/[0.06] bg-[#f6f6f6]",
+    soft: "border-line bg-surface",
   };
   return (
     <section
@@ -202,7 +202,7 @@ export function LearnPageActions({
         (secondary.href && !secondary.onClick ? (
           <Link
             href={secondary.href}
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 text-sm font-semibold text-ink transition hover:border-black/25"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink transition hover:border-black/25 dark:hover:border-white/25"
           >
             {secondary.label}
           </Link>
@@ -210,7 +210,7 @@ export function LearnPageActions({
           <button
             type="button"
             onClick={secondary.onClick}
-            className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 text-sm font-semibold text-ink transition hover:border-black/25"
+            className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink transition hover:border-black/25 dark:hover:border-white/25"
           >
             {secondary.label}
           </button>
@@ -246,7 +246,7 @@ export function LearnNavTile({
   return (
     <Link
       href={href}
-      className="group flex flex-col rounded-2xl border border-black/[0.07] bg-white p-4 transition hover:border-black/15 hover:shadow-[0_12px_32px_-20px_rgba(10,10,10,0.35)]"
+      className="group flex flex-col rounded-2xl border border-line bg-elevated p-4 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-[0_12px_32px_-20px_rgba(10,10,10,0.35)]"
       style={accent ? { boxShadow: `inset 3px 0 0 ${accent}` } : undefined}
     >
       <div className="flex items-start justify-between gap-2">
@@ -254,7 +254,7 @@ export function LearnNavTile({
           {kicker}
         </p>
         {status && (
-          <span className="rounded-full bg-[#f4f4f4] px-2 py-0.5 text-[0.65rem] font-semibold text-ink">
+          <span className="rounded-full bg-cream-dark px-2 py-0.5 text-[0.65rem] font-semibold text-ink">
             {status}
           </span>
         )}

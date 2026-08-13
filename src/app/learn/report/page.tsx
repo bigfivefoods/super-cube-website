@@ -167,7 +167,7 @@ export default function ReportPage() {
         </div>
 
         {shareUrl && (
-          <div className="mb-4 rounded-xl border border-black/[0.08] bg-white px-3 py-2 print:hidden">
+          <div className="mb-4 rounded-xl border border-line bg-elevated px-3 py-2 print:hidden">
             <p className="text-[0.7rem] text-muted">
               Share link (scores only — journals stay private)
             </p>
@@ -191,7 +191,7 @@ export default function ReportPage() {
         )}
 
         {!post && (
-          <div className="mb-4 rounded-2xl border border-ink bg-white p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
+          <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
             <div>
               <p className="learn-eyebrow">Step 5 · After the full programme</p>
               <p className="mt-1 text-sm font-semibold text-ink">
@@ -252,7 +252,7 @@ export default function ReportPage() {
         </section>
 
         {post && (
-          <div className="mb-4 rounded-2xl border border-ink bg-white p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
+          <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
             <div>
               <p className="learn-eyebrow">Pathway complete</p>
               <p className="mt-1 text-sm font-semibold text-ink">
@@ -349,7 +349,7 @@ export default function ReportPage() {
             <div className="mt-3 overflow-x-auto">
               <table className="w-full min-w-[16rem] text-left text-[0.8125rem]">
                 <thead>
-                  <tr className="border-b border-black/[0.08] text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-muted">
+                  <tr className="border-b border-line text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-muted">
                     <th className="py-2 pr-2 font-semibold">Construct</th>
                     <th className="py-2 px-1 text-right font-semibold">Pre</th>
                     {post && (
@@ -368,7 +368,7 @@ export default function ReportPage() {
                   {comparison?.map((row) => (
                     <tr
                       key={row.constructId}
-                      className="border-b border-black/[0.05] last:border-0"
+                      className="border-b border-line last:border-0"
                     >
                       <td className="py-2.5 pr-2">
                         <span className="inline-flex items-center gap-1.5 font-semibold text-ink">
@@ -396,7 +396,7 @@ export default function ReportPage() {
                       )}
                     </tr>
                   ))}
-                  <tr className="border-t border-black/[0.1] bg-[#fafafa]">
+                  <tr className="border-t border-line-strong bg-surface">
                     <td className="py-2.5 pr-2 font-semibold text-ink">
                       Overall
                     </td>

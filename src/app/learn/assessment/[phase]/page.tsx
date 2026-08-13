@@ -132,7 +132,7 @@ export default function AssessmentRunnerPage() {
       }
     >
       {/* Progress + credibility */}
-      <div className="mb-4 rounded-xl border border-black/[0.07] bg-white p-3 sm:p-4">
+      <div className="mb-4 rounded-xl border border-line bg-elevated p-3 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[0.75rem] font-semibold text-ink">
             Progress · {answered}/{items.length} items ({pct}%)
@@ -172,7 +172,7 @@ export default function AssessmentRunnerPage() {
             className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold transition ${
               i === step
                 ? "bg-void text-void-fg"
-                : "border border-black/[0.08] bg-white text-slate hover:text-ink"
+                : "border border-line bg-elevated text-slate hover:text-ink"
             }`}
           >
             {c.name}
@@ -196,7 +196,7 @@ export default function AssessmentRunnerPage() {
           {stepItems.map((item) => (
             <fieldset
               key={item.id}
-              className="border-b border-black/[0.05] pb-5 last:border-0 last:pb-0"
+              className="border-b border-line pb-5 last:border-0 last:pb-0"
             >
               <legend className="text-[0.8125rem] font-medium leading-relaxed text-ink">
                 {item.prompt}
@@ -212,7 +212,7 @@ export default function AssessmentRunnerPage() {
                       className={`rounded-lg border px-1 py-2.5 text-center text-[0.75rem] font-semibold transition sm:text-[0.8125rem] ${
                         selected
                           ? "border-ink bg-void text-void-fg"
-                          : "border-black/[0.09] bg-[#f8f9fb] text-slate hover:border-ink/40"
+                          : "border-line-strong bg-surface text-slate hover:border-ink/40"
                       }`}
                       title={LIKERT_LABELS[v - 1]}
                       aria-pressed={selected}

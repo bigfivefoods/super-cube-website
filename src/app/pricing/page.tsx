@@ -58,7 +58,7 @@ export default function PricingPage() {
         description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Free baseline on this device—then pay once with Paystack (R${COURSE_PRICE_ZAR} / $${COURSE_PRICE_USD} USD). No subscription.`}
       />
 
-      <section className="relative z-0 border-t border-black/[0.06] bg-[#fafafa]">
+      <section className="relative z-0 border-t border-line bg-surface">
         <div className="section-pad">
           <div className="container-site">
             {alreadyPaid && (
@@ -75,7 +75,7 @@ export default function PricingPage() {
               </div>
             )}
 
-            <div className="mx-auto mb-8 max-w-2xl rounded-2xl border border-black/[0.08] bg-white px-5 py-5 sm:mb-10 sm:px-8 sm:py-6">
+            <div className="mx-auto mb-8 max-w-2xl rounded-2xl border border-line bg-elevated px-5 py-5 sm:mb-10 sm:px-8 sm:py-6">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Simple terms
               </p>
@@ -98,7 +98,7 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            <div className="mx-auto mb-8 max-w-xl rounded-2xl border border-black/[0.08] bg-white px-6 py-6 text-center shadow-sm sm:mb-10 sm:px-10 sm:py-8">
+            <div className="mx-auto mb-8 max-w-xl rounded-2xl border border-line bg-elevated px-6 py-6 text-center shadow-sm sm:mb-10 sm:px-10 sm:py-8">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Launch price · one-time · Paystack
               </p>
@@ -119,7 +119,7 @@ export default function PricingPage() {
                   <article
                     key={p.id}
                     id={p.id}
-                    className="flex flex-col rounded-2xl border border-black/[0.08] bg-white p-6 shadow-sm sm:p-8"
+                    className="flex flex-col rounded-2xl border border-line bg-elevated p-6 shadow-sm sm:p-8"
                   >
                     <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                       {p.ageLabel}
@@ -134,7 +134,7 @@ export default function PricingPage() {
                       {p.description}
                     </p>
 
-                    <div className="mt-6 border-t border-black/[0.06] pt-6">
+                    <div className="mt-6 border-t border-line pt-6">
                       <p className="text-3xl font-semibold tracking-tight text-ink">
                         R{p.priceZar}
                         <span className="text-sm font-medium text-muted">
@@ -161,7 +161,7 @@ export default function PricingPage() {
                           Buy with Paystack · R{COURSE_PRICE_ZAR}
                         </button>
                       ) : (
-                        <div className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-4">
+                        <div className="rounded-2xl border border-line bg-surface p-4">
                           <p className="mb-3 text-[0.75rem] font-semibold text-ink">
                             Checkout · {p.name}
                           </p>
@@ -194,7 +194,7 @@ export default function PricingPage() {
 
             <div
               id="pilot"
-              className="mx-auto mt-10 max-w-3xl scroll-mt-24 rounded-2xl border border-black/[0.08] bg-white p-6 sm:mt-12 sm:p-8"
+              className="mx-auto mt-10 max-w-3xl scroll-mt-24 rounded-2xl border border-line bg-elevated p-6 sm:mt-12 sm:p-8"
             >
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Schools · companies · cohorts · Phase 2
@@ -207,7 +207,7 @@ export default function PricingPage() {
                 payment. Learners join under Learn → Org. Coaches see scores and
                 completion only when learners consent—never journal text.
               </p>
-              <div className="mt-6 rounded-2xl border border-black/[0.06] bg-[#fafafa] p-4 sm:p-5">
+              <div className="mt-6 rounded-2xl border border-line bg-surface p-4 sm:p-5">
                 <SeatPackCheckout />
               </div>
               <p className="mt-4 text-[0.75rem] leading-relaxed text-muted">

@@ -96,7 +96,7 @@ export function TestimonialsSection({
 /** Compact home / conversion strip */
 export function TestimonialsStrip() {
   return (
-    <section className="border-y border-black/[0.06] bg-white py-10 sm:py-14 md:py-16">
+    <section className="border-y border-line bg-bg py-10 sm:py-14 md:py-16">
       <div className="container-site">
         <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="min-w-0">

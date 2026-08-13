@@ -112,7 +112,7 @@ export default function LearnDashboardPage() {
               </div>
             </div>
             <div className="mx-auto w-[10rem] sm:w-[12rem]">
-              <div className="rounded-2xl border border-black/[0.06] bg-[#fafafa] p-3">
+              <div className="rounded-2xl border border-line bg-surface p-3">
                 <SuperCube
                   size="sm"
                   showSkills={false}
@@ -162,7 +162,7 @@ export default function LearnDashboardPage() {
           <LearnScreenFooter>
             <a
               href="#today-pages"
-              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-black/[0.12] bg-[#fafafa] px-5 text-sm font-semibold text-ink hover:bg-black/[0.04]"
+              className="inline-flex min-h-11 w-full items-center justify-center rounded-full border border-line-strong bg-surface px-5 text-sm font-semibold text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
             >
               Next page · all destinations ↓
             </a>

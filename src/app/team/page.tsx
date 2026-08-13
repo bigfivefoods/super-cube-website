@@ -39,7 +39,7 @@ export default function TeamCubePage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-start">
           <div>
             <SectionHeading
@@ -73,7 +73,7 @@ export default function TeamCubePage() {
               ))}
             </ul>
           </div>
-          <div className="flex flex-col items-center rounded-2xl border border-black/[0.08] bg-white p-6">
+          <div className="flex flex-col items-center rounded-2xl border border-line bg-elevated p-6">
             <SuperCube
               size="lg"
               showSkills={false}

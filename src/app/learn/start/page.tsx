@@ -132,10 +132,10 @@ export default function GuidedStartPage() {
             key={step.n}
             className={`flex gap-3 rounded-2xl border p-4 ${
               step.done
-                ? "border-black/[0.06] bg-[#fafafa]"
+                ? "border-line bg-surface"
                 : step.n === next.n
-                  ? "border-ink bg-white"
-                  : "border-black/[0.08] bg-white"
+                  ? "border-ink bg-elevated"
+                  : "border-line bg-elevated"
             }`}
           >
             <span

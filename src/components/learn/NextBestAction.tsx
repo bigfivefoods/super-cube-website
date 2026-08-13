@@ -7,7 +7,7 @@ export function NextBestActionCard({ action }: { action: Action }) {
   const border =
     action.urgency === "high"
       ? "border-ink bg-void text-void-fg"
-      : "border-black/[0.08] bg-white text-ink";
+      : "border-line bg-elevated text-ink";
   const muted = action.urgency === "high" ? "text-white/65" : "text-muted";
   const btn =
     action.urgency === "high" ? "bg-white text-ink" : "bg-void text-void-fg";

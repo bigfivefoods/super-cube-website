@@ -27,7 +27,7 @@ export default function PracticesPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site grid gap-8 lg:grid-cols-2 lg:gap-12">
           <SectionHeading
             eyebrow="Continuous development"
@@ -58,7 +58,7 @@ export default function PracticesPage() {
         </div>
       </section>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site">
           <SectionHeading
             title="Exercises"
@@ -73,7 +73,7 @@ export default function PracticesPage() {
               return (
                 <article
                   key={p.id}
-                  className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6"
+                  className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
                   style={
                     color ? { boxShadow: `inset 3px 0 0 ${color}` } : undefined
                   }

@@ -47,7 +47,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
 
   return (
     <div className="mb-4 space-y-3">
-      <section className="rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <p className="learn-eyebrow">Report for</p>
@@ -83,7 +83,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
             ["Sessions done", String(sessions)],
             ["Face pulses", String(pulseCount)],
           ].map(([k, v]) => (
-            <div key={k} className="rounded-xl bg-[#fafafa] px-3 py-2.5">
+            <div key={k} className="rounded-xl bg-surface px-3 py-2.5">
               <dt className="text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-muted">
                 {k}
               </dt>
@@ -95,14 +95,14 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
         </dl>
 
         {profile?.goal && (
-          <p className="mt-3 rounded-xl border border-black/[0.05] bg-[#f8f9fb] px-3 py-2 text-[0.8125rem] text-slate">
+          <p className="mt-3 rounded-xl border border-line bg-surface px-3 py-2 text-[0.8125rem] text-slate">
             <span className="font-semibold text-ink">Goal · </span>
             {profile.goal}
           </p>
         )}
       </section>
 
-      <section className="rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
+      <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <h3 className="text-sm font-semibold text-ink">Assessment history</h3>
         <ol className="mt-3 space-y-2">
           {[
@@ -129,14 +129,14 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
           ].map((row) => (
             <li
               key={row.label}
-              className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.05] px-3 py-2"
+              className="flex items-center justify-between gap-3 rounded-xl border border-line px-3 py-2"
             >
               <div className="flex items-center gap-2.5">
                 <span
                   className={`flex h-6 w-6 items-center justify-center rounded-full text-[0.65rem] font-bold ${
                     row.at
                       ? "bg-emerald-600 text-white"
-                      : "border border-black/[0.12] text-muted"
+                      : "border border-line-strong text-muted"
                   }`}
                 >
                   {row.at ? "✓" : "·"}

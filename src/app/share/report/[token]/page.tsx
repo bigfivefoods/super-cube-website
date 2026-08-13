@@ -39,8 +39,8 @@ export default function SharedReportPage() {
   }
 
   return (
-    <main className="min-h-[100svh] bg-[#fafafa]">
-      <div className="border-b border-black/[0.06] bg-white">
+    <main className="min-h-[100svh] bg-surface">
+      <div className="border-b border-line bg-bg">
         <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
             Shared growth summary · Super-Cube®
@@ -92,7 +92,7 @@ export default function SharedReportPage() {
             return (
               <li
                 key={row.id}
-                className="flex items-center gap-3 rounded-xl border border-black/[0.07] bg-white px-3 py-3"
+                className="flex items-center gap-3 rounded-xl border border-line bg-elevated px-3 py-3"
               >
                 <span
                   className="h-2.5 w-2.5 shrink-0 rounded-full"
@@ -151,7 +151,7 @@ export default function SharedReportPage() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-black/[0.07] bg-white px-3 py-3">
+    <div className="rounded-xl border border-line bg-elevated px-3 py-3">
       <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
         {label}
       </p>

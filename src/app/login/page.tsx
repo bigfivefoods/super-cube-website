@@ -97,7 +97,7 @@ function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@organisation.com"
-          className="mt-1.5 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-4 py-3 text-[0.9375rem] text-ink outline-none transition placeholder:text-muted/80 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10"
+          className="mt-1.5 w-full rounded-xl border border-line-strong bg-surface px-4 py-3 text-[0.9375rem] text-ink outline-none transition placeholder:text-muted/80 focus:border-ink focus:bg-elevated focus:ring-2 focus:ring-ink/10"
         />
       </div>
 
@@ -119,7 +119,7 @@ function LoginForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Your password"
-            className="w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-4 py-3 pr-12 text-[0.9375rem] text-ink outline-none transition placeholder:text-muted/80 focus:border-ink focus:bg-white focus:ring-2 focus:ring-ink/10"
+            className="w-full rounded-xl border border-line-strong bg-surface px-4 py-3 pr-12 text-[0.9375rem] text-ink outline-none transition placeholder:text-muted/80 focus:border-ink focus:bg-elevated focus:ring-2 focus:ring-ink/10"
           />
           <button
             type="button"
@@ -166,7 +166,7 @@ function LoginForm() {
         </Link>
       </p>
 
-      <div className="rounded-xl border border-black/[0.06] bg-[#f8f9fb] px-3.5 py-3 text-center text-[0.7rem] leading-relaxed text-muted">
+      <div className="rounded-xl border border-line bg-surface px-3.5 py-3 text-center text-[0.7rem] leading-relaxed text-muted">
         {cloudReady ? (
           <>
             Signed-in progress syncs across devices via Supabase—lessons,
@@ -190,7 +190,7 @@ function LoginForm() {
 
 function LoginShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="relative min-h-[calc(100svh-3.5rem)] bg-[#fafafa] md:min-h-[calc(100svh-4rem)]">
+    <div className="relative min-h-[calc(100svh-3.5rem)] bg-surface md:min-h-[calc(100svh-4rem)]">
       {/* Soft brand wash */}
       <div
         className="pointer-events-none absolute inset-x-0 top-0 h-40 opacity-40"
@@ -207,7 +207,7 @@ function LoginShell({ children }: { children: React.ReactNode }) {
 
       <div className="container-site relative grid gap-8 py-10 sm:py-12 lg:grid-cols-2 lg:items-stretch lg:gap-0 lg:py-16">
         {/* Brand / value panel */}
-        <aside className="flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.07] bg-void p-7 text-white shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] sm:p-9 lg:rounded-r-none lg:border-r-0">
+        <aside className="flex flex-col justify-between overflow-hidden rounded-3xl border border-line bg-void p-7 text-white shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] sm:p-9 lg:rounded-r-none lg:border-r-0">
           <div>
             <Link
               href="/"
@@ -290,7 +290,7 @@ function LoginShell({ children }: { children: React.ReactNode }) {
         </aside>
 
         {/* Form panel */}
-        <div className="flex flex-col justify-center rounded-3xl border border-black/[0.07] border-t-0 bg-white p-7 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.2)] sm:p-9 lg:rounded-l-none lg:border-t lg:border-l-0">
+        <div className="flex flex-col justify-center rounded-3xl border border-line border-t-0 bg-elevated p-7 shadow-[0_12px_40px_-24px_rgba(0,0,0,0.2)] sm:p-9 lg:rounded-l-none lg:border-t lg:border-l-0">
           <div className="mb-7 lg:hidden">
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Account
@@ -320,7 +320,7 @@ function LoginShell({ children }: { children: React.ReactNode }) {
             >
               ← Back to site
             </Link>
-            <span className="mx-2 text-black/15">·</span>
+            <span className="mx-2 text-ink/15">·</span>
             <Link
               href="/learn"
               className="font-medium hover:text-ink hover:underline"

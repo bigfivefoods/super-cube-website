@@ -76,7 +76,7 @@ export default function AboutPage() {
       </PageHero>
 
       {/* Founder bio */}
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site">
           <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12 xl:gap-16">
             <div className="min-w-0">
@@ -112,7 +112,7 @@ export default function AboutPage() {
                   (v) => (
                     <span
                       key={v}
-                      className="inline-flex rounded-full border border-black/[0.08] bg-[#fafafa] px-3 py-1.5 text-[0.75rem] font-semibold text-ink"
+                      className="inline-flex rounded-full border border-line bg-surface px-3 py-1.5 text-[0.75rem] font-semibold text-ink"
                     >
                       {v}
                     </span>
@@ -125,7 +125,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="min-w-0 rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6 md:p-7">
+            <div className="min-w-0 rounded-2xl border border-line bg-surface p-5 sm:p-6 md:p-7">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Education
               </p>
@@ -133,7 +133,7 @@ export default function AboutPage() {
                 {education.map((ed) => (
                   <li
                     key={ed.degree}
-                    className="border-b border-black/[0.06] pb-4 last:border-0 last:pb-0"
+                    className="border-b border-line pb-4 last:border-0 last:pb-0"
                   >
                     <p className="text-sm font-semibold tracking-tight text-ink">
                       {ed.degree}
@@ -160,7 +160,7 @@ export default function AboutPage() {
             {pillars.map((p) => (
               <article
                 key={p.label}
-                className="rounded-2xl border border-black/[0.08] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+                className="rounded-2xl border border-line bg-elevated p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
               >
                 <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
                   {p.label}
@@ -213,7 +213,7 @@ export default function AboutPage() {
               leadership development.
             </p>
           </div>
-          <div className="min-w-0 rounded-2xl border border-black/[0.08] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-6 md:p-8">
+          <div className="min-w-0 rounded-2xl border border-line bg-elevated p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-6 md:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               At a glance
             </p>
@@ -221,7 +221,7 @@ export default function AboutPage() {
               {glance.map(([k, v]) => (
                 <div
                   key={k}
-                  className="grid grid-cols-1 gap-1 border-b border-black/[0.06] pb-4 last:border-0 last:pb-0 sm:grid-cols-[minmax(6.5rem,30%)_1fr] sm:gap-3"
+                  className="grid grid-cols-1 gap-1 border-b border-line pb-4 last:border-0 last:pb-0 sm:grid-cols-[minmax(6.5rem,30%)_1fr] sm:gap-3"
                 >
                   <dt className="text-xs font-medium text-muted sm:text-sm">
                     {k}
@@ -234,7 +234,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <section className="section-pad border-y border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-y border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow="Why it matters"
@@ -258,7 +258,7 @@ export default function AboutPage() {
             ].map((card) => (
               <article
                 key={card.title}
-                className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6"
+                className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
               >
                 <h3 className="text-base font-semibold tracking-tight text-ink sm:text-lg">
                   {card.title}

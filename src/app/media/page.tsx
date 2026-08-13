@@ -32,7 +32,7 @@ export default function MediaKitPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site grid gap-10 lg:grid-cols-2">
           <div>
             <SectionHeading title="Brand assets" />
@@ -47,7 +47,7 @@ export default function MediaKitPage() {
                   key={a.src}
                   href={a.src}
                   download
-                  className="flex flex-col items-center rounded-xl border border-black/[0.08] bg-white p-4 transition hover:border-black/15"
+                  className="flex flex-col items-center rounded-xl border border-line bg-elevated p-4 transition hover:border-black/15 dark:hover:border-white/20"
                 >
                   <div className="relative h-16 w-full">
                     <Image
@@ -66,7 +66,7 @@ export default function MediaKitPage() {
             </div>
           </div>
           <div className="space-y-6">
-            <div className="rounded-2xl border border-black/[0.08] bg-white p-5">
+            <div className="rounded-2xl border border-line bg-elevated p-5">
               <SectionHeading title="Overview presentation" />
               <p className="mt-3 text-sm leading-relaxed text-slate">
                 A 12-slide Super-Cube® overview for schools, companies, and
@@ -97,7 +97,7 @@ export default function MediaKitPage() {
               <h3 className="text-base font-semibold text-ink">
                 Suggested citation
               </h3>
-              <p className="mt-2 rounded-xl border border-black/[0.08] bg-white p-4 font-mono text-xs leading-relaxed text-slate">
+              <p className="mt-2 rounded-xl border border-line bg-elevated p-4 font-mono text-xs leading-relaxed text-slate">
                 Muller, C. R. (2020). A Leadership Skills Development Model for
                 the Kwaden Group: A Case Study of an African FMCG
                 Business-Network. Doctor of Business Administration thesis,

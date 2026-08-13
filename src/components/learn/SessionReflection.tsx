@@ -49,11 +49,11 @@ export function SessionReflection({
 
   return (
     <section
-      className="mt-6 overflow-hidden rounded-2xl border border-black/[0.07] bg-white"
+      className="mt-6 overflow-hidden rounded-2xl border border-line bg-elevated"
       style={{ boxShadow: `inset 3px 0 0 ${color}` }}
       aria-labelledby={`reflect-title-${lessonId}`}
     >
-      <div className="border-b border-black/[0.05] px-4 py-3 sm:px-5">
+      <div className="border-b border-line px-4 py-3 sm:px-5">
         <p className="learn-eyebrow" style={{ color }}>
           Leadership journal
         </p>

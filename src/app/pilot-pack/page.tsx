@@ -40,7 +40,7 @@ export default function PilotPackPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-bg">
         <div className="container-site grid gap-10 lg:grid-cols-2">
           <div>
             <SectionHeading
@@ -91,7 +91,7 @@ export default function PilotPackPage() {
               <FacilitatorDownloadButton />
             </div>
           </div>
-          <div className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6">
+          <div className="rounded-2xl border border-line bg-surface p-5 sm:p-6">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
               Consent language (draft)
             </p>
@@ -109,14 +109,14 @@ export default function PilotPackPage() {
         </div>
       </section>
 
-      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-t border-line bg-surface">
         <div className="container-site">
           <SectionHeading title="8-week calendar" />
           <ol className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {cohortCalendar.map((w) => (
               <li
                 key={w.week}
-                className="rounded-2xl border border-black/[0.07] bg-white p-4"
+                className="rounded-2xl border border-line bg-elevated p-4"
               >
                 <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted">
                   Week {w.week}

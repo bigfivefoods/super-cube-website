@@ -51,7 +51,7 @@ export default function MicroPracticePage() {
       subtitle="3–5 minutes. Guided by your face patterns and baseline. Streak counts."
     >
       {pattern.insight && (
-        <p className="mb-3 rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 text-[0.8125rem] text-slate">
+        <p className="mb-3 rounded-xl border border-line bg-surface px-3 py-2.5 text-[0.8125rem] text-slate">
           {pattern.insight}{" "}
           <Link
             href="/learn/pulse"
@@ -63,7 +63,7 @@ export default function MicroPracticePage() {
       )}
 
       <section
-        className="rounded-2xl border border-ink bg-white p-5 sm:p-6"
+        className="rounded-2xl border border-ink bg-elevated p-5 sm:p-6"
         style={meta ? { boxShadow: `inset 4px 0 0 ${meta.color}` } : undefined}
       >
         <p className="learn-eyebrow">
@@ -109,7 +109,7 @@ export default function MicroPracticePage() {
             {more.map((p) => (
               <li
                 key={p.id}
-                className="rounded-xl border border-black/[0.07] bg-white px-3 py-2.5 text-sm"
+                className="rounded-xl border border-line bg-elevated px-3 py-2.5 text-sm"
               >
                 <span className="font-semibold text-ink">{p.title}</span>
                 <span className="text-muted"> · {p.minutes}m</span>

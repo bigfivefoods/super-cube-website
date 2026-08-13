@@ -41,7 +41,7 @@ export default function LearnDemoPage() {
       title="Try Super-Cube® free"
       subtitle="Unlock a full demo pathway on this device—orientation, six faces, and practice. No card required. Upgrade anytime for paid access and multi-device sync."
     >
-      <div className="mb-5 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
+      <div className="mb-5 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <p className="learn-eyebrow">What you get</p>
         <ul className="mt-2 space-y-1.5 text-[0.8125rem] leading-relaxed text-slate">
           <li>· Pre-pre orientation + baseline self-assessment</li>

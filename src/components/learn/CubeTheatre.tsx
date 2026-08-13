@@ -12,8 +12,8 @@ export function CubeTheatre({ lms }: { lms: LocalLmsState }) {
   const hasPulses = pattern.pulseCount > 0;
 
   return (
-    <section className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] bg-white">
-      <div className="flex items-start justify-between gap-3 border-b border-black/[0.05] px-4 py-3.5 sm:px-5">
+    <section className="mb-4 overflow-hidden rounded-2xl border border-line bg-elevated">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-4 py-3.5 sm:px-5">
         <div className="min-w-0">
           <p className="learn-eyebrow">
             {hasPulses ? "Face tracking" : "Your cube is forming"}

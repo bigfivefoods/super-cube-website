@@ -50,7 +50,7 @@ export function ConstructDeepDive({
           return (
             <li
               key={c.id}
-              className="rounded-xl border border-black/[0.06] bg-white"
+              className="rounded-xl border border-line bg-elevated"
             >
               <button
                 type="button"
@@ -77,7 +77,7 @@ export function ConstructDeepDive({
                 </span>
               </button>
               {isOpen && face && (
-                <div className="border-t border-black/[0.05] px-3 pb-3 pt-2">
+                <div className="border-t border-line px-3 pb-3 pt-2">
                   <p className="text-[0.8125rem] font-semibold text-ink">
                     {face.headline}
                   </p>

@@ -61,7 +61,7 @@ export default function LearnAnalyticsPage() {
           {FUNNEL_GOALS.map((g) => (
             <li
               key={g.event}
-              className="flex items-center justify-between rounded-xl bg-[#fafafa] px-3 py-2 text-sm"
+              className="flex items-center justify-between rounded-xl bg-surface px-3 py-2 text-sm"
             >
               <span className="font-medium text-ink">{g.label}</span>
               <span className="tabular-nums font-semibold text-ink">
@@ -102,7 +102,7 @@ export default function LearnAnalyticsPage() {
           {log.map((row, i) => (
             <li
               key={`${row.ts}-${i}`}
-              className="rounded-lg border border-black/[0.05] px-2.5 py-1.5 font-mono text-slate"
+              className="rounded-lg border border-line px-2.5 py-1.5 font-mono text-slate"
             >
               <span className="font-semibold text-ink">{row.event}</span>
               <span className="text-muted"> · {row.path}</span>

@@ -41,7 +41,7 @@ export default function TheModelPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-bg">
         <div className="container-site grid items-center gap-10 md:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] md:gap-12 lg:gap-16">
           <div className="prose-site min-w-0">
             <SectionHeading

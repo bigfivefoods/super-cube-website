@@ -34,7 +34,7 @@ export function FounderVideo({
 
   return (
     <div
-      className={`overflow-hidden rounded-2xl border border-black/[0.08] bg-black shadow-sm ${className}`}
+      className={`overflow-hidden rounded-2xl border border-line bg-black shadow-sm ${className}`}
     >
       <div className="relative aspect-video w-full">
         <iframe

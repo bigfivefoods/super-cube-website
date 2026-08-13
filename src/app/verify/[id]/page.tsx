@@ -55,7 +55,7 @@ export default function VerifyCertificatePage() {
       <h1 className="mt-2 text-2xl font-semibold tracking-tight text-ink">
         Super-Cube® completion ID
       </h1>
-      <p className="mt-4 break-all rounded-xl border border-black/[0.08] bg-[#fafafa] px-4 py-3 font-mono text-sm font-semibold text-ink">
+      <p className="mt-4 break-all rounded-xl border border-line bg-surface px-4 py-3 font-mono text-sm font-semibold text-ink">
         {id || "—"}
       </p>
 
@@ -107,7 +107,7 @@ export default function VerifyCertificatePage() {
           <p className="font-semibold">Unrecognised format</p>
           <p className="mt-1.5">
             Expected like{" "}
-            <code className="rounded bg-white/80 px-1">
+            <code className="rounded bg-elevated/80 px-1">
               SC-20260731-A1B2C3D4
             </code>
             .
@@ -129,7 +129,7 @@ export default function VerifyCertificatePage() {
         </Link>
         <Link
           href="/learn"
-          className="rounded-full border border-black/[0.12] bg-white px-5 py-2.5 text-sm font-semibold text-ink"
+          className="rounded-full border border-line-strong bg-elevated px-5 py-2.5 text-sm font-semibold text-ink"
         >
           Open Learn
         </Link>

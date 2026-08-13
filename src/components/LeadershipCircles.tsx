@@ -90,7 +90,7 @@ export function LeadershipCircles({
 
   return (
     <div className={`mx-auto w-full max-w-5xl ${className}`}>
-      <div className="overflow-hidden rounded-2xl border border-black/[0.05] bg-gradient-to-b from-white via-[#fafbff] to-[#f8f5ff] shadow-[0_12px_32px_-20px_rgba(15,23,42,0.16)]">
+      <div className="overflow-hidden rounded-2xl border border-line bg-gradient-to-b from-elevated via-surface to-surface shadow-[0_12px_32px_-20px_rgba(15,23,42,0.16)]">
         <div
           className={`grid items-center gap-0 ${
             showLegend ? "lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)]" : ""
@@ -305,7 +305,7 @@ export function LeadershipCircles({
         </div>
 
         {showLegend && (
-          <div className="border-t border-black/[0.04] bg-white/70 px-3 py-4 backdrop-blur-sm sm:px-5 sm:py-5 lg:border-l lg:border-t-0">
+          <div className="border-t border-line bg-elevated/70 px-3 py-4 backdrop-blur-sm sm:px-5 sm:py-5 lg:border-l lg:border-t-0">
             <p className="mb-3 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-slate-400 lg:text-left">
               How leadership radiates
             </p>

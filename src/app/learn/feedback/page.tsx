@@ -63,7 +63,7 @@ export default function AssessmentFeedbackPage() {
       subtitle="Strengths, stretch faces, and first practices—not just numbers."
     >
       <div className="mb-5 grid gap-5 lg:grid-cols-[1fr_0.9fr] lg:items-start">
-        <div className="rounded-2xl border border-ink bg-white p-5 sm:p-6">
+        <div className="rounded-2xl border border-ink bg-elevated p-5 sm:p-6">
           <p className="learn-eyebrow">Overall · {narrative.overall}/100</p>
           <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink">
             {narrative.overallHeadline}
@@ -71,7 +71,7 @@ export default function AssessmentFeedbackPage() {
           <p className="mt-2 text-sm leading-relaxed text-slate">
             {narrative.overallBody}
           </p>
-          <p className="mt-3 rounded-xl bg-[#f4f4f4] px-3 py-2 text-[0.8125rem] font-medium text-ink">
+          <p className="mt-3 rounded-xl bg-cream-dark px-3 py-2 text-[0.8125rem] font-medium text-ink">
             {narrative.weekFocus}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
@@ -86,7 +86,7 @@ export default function AssessmentFeedbackPage() {
             </Link>
           </div>
         </div>
-        <div className="flex flex-col items-center rounded-2xl border border-black/[0.07] bg-[#fafafa] p-4">
+        <div className="flex flex-col items-center rounded-2xl border border-line bg-surface p-4">
           <p className="mb-2 text-center text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
             Your cube · lit by baseline scores
           </p>
@@ -104,7 +104,7 @@ export default function AssessmentFeedbackPage() {
         {narrative.faces.map((f) => (
           <li
             key={f.constructId}
-            className="rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5"
+            className="rounded-2xl border border-line bg-elevated p-4 sm:p-5"
             style={{ boxShadow: `inset 3px 0 0 ${f.color}` }}
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">

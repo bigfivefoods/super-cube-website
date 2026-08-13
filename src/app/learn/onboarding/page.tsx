@@ -33,7 +33,7 @@ function OnboardingInner() {
           : "Free on this device. Five steps. Deliberate practice. You’ll see pre → post change on your report."
       }
     >
-      <div className="mb-5 rounded-2xl border border-ink bg-white p-5 sm:p-6">
+      <div className="mb-5 rounded-2xl border border-ink bg-elevated p-5 sm:p-6">
         <p className="learn-eyebrow">
           {programme?.name ?? "Super-Cube®"} · {programme?.ageLabel}
         </p>

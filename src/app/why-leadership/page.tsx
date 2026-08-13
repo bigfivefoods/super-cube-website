@@ -39,7 +39,7 @@ export default function WhyLeadershipPage() {
         title="The world has goals. It needs leaders who can deliver them."
         description="The UN Sustainable Development Goals (SDGs) are humanity’s shared agenda for people, planet, and prosperity. Progress is off track—not only for lack of money or technology, but for lack of human-centric leadership at every level."
         visual={
-          <figure className="mx-auto w-full max-w-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-white/95 p-4 shadow-xl sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-[22rem]">
+          <figure className="mx-auto w-full max-w-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-elevated/95 p-4 shadow-xl sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-[22rem]">
             <div className="relative mx-auto aspect-[1280/811] w-full">
               <Image
                 src="/images/sdgs/sdg-logo.png"
@@ -70,7 +70,7 @@ export default function WhyLeadershipPage() {
       </PageHero>
 
       {/* Opening argument */}
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
           <div>
             <SectionHeading
@@ -102,7 +102,7 @@ export default function WhyLeadershipPage() {
       </section>
 
       {/* Headline stats */}
-      <section className="section-pad border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-b border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow="Latest global picture"
@@ -113,7 +113,7 @@ export default function WhyLeadershipPage() {
             {sdgHeadlineStats.map((stat) => (
               <article
                 key={stat.label}
-                className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 sm:p-6"
+                className="flex h-full flex-col rounded-2xl border border-line bg-elevated p-5 sm:p-6"
               >
                 <p className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                   {stat.value}
@@ -135,7 +135,7 @@ export default function WhyLeadershipPage() {
             {sdgPressurePoints.map((p) => (
               <article
                 key={p.title}
-                className="rounded-2xl border border-black/[0.07] bg-white p-5 sm:p-6"
+                className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
               >
                 <h3 className="text-base font-semibold tracking-tight text-ink">
                   {p.title}
@@ -155,7 +155,7 @@ export default function WhyLeadershipPage() {
       {/* 17 SDGs visual grid */}
       <section
         id="sdgs"
-        className="section-pad scroll-mt-20 border-b border-black/[0.06] bg-white"
+        className="section-pad scroll-mt-20 border-b border-line bg-elevated"
       >
         <div className="container-site">
           <SectionHeading
@@ -168,10 +168,10 @@ export default function WhyLeadershipPage() {
             {sdgGoals.map((goal) => (
               <article
                 key={goal.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-[0_1px_0_rgba(0,0,0,0.03)] transition hover:shadow-md"
+                className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated shadow-[0_1px_0_rgba(0,0,0,0.03)] transition hover:shadow-md"
               >
                 {/* Official UN SDG icon */}
-                <div className="relative aspect-square w-full overflow-hidden bg-white">
+                <div className="relative aspect-square w-full overflow-hidden bg-elevated">
                   <Image
                     src={goal.icon}
                     alt={`SDG ${goal.id}: ${goal.short}`}
@@ -181,7 +181,7 @@ export default function WhyLeadershipPage() {
                   />
                 </div>
                 <div
-                  className="flex flex-1 flex-col border-t border-black/[0.04] p-3 sm:p-3.5"
+                  className="flex flex-1 flex-col border-t border-line p-3 sm:p-3.5"
                   style={{ background: goal.soft }}
                 >
                   <p
@@ -214,7 +214,7 @@ export default function WhyLeadershipPage() {
       </section>
 
       {/* Why leadership for SDGs */}
-      <section className="section-pad border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-b border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow="Leadership × the SDGs"
@@ -247,7 +247,7 @@ export default function WhyLeadershipPage() {
             ].map((item) => (
               <article
                 key={item.n}
-                className="grid gap-3 rounded-2xl border border-black/[0.07] bg-white p-5 sm:grid-cols-[4rem_1fr] sm:gap-6 sm:p-6"
+                className="grid gap-3 rounded-2xl border border-line bg-elevated p-5 sm:grid-cols-[4rem_1fr] sm:gap-6 sm:p-6"
               >
                 <p className="font-display text-2xl text-muted">{item.n}</p>
                 <div>
@@ -265,7 +265,7 @@ export default function WhyLeadershipPage() {
       </section>
 
       {/* Super-Cube mapping */}
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site">
           <SectionHeading
             eyebrow="Super-Cube® for sustainable development"
@@ -281,7 +281,7 @@ export default function WhyLeadershipPage() {
               return (
                 <article
                   key={row.constructId}
-                  className="flex flex-col rounded-2xl border border-black/[0.07] bg-white p-5 sm:p-6"
+                  className="flex flex-col rounded-2xl border border-line bg-elevated p-5 sm:p-6"
                   style={{ boxShadow: `inset 3px 0 0 ${construct.color}` }}
                 >
                   <div className="flex flex-wrap items-center gap-2">
@@ -334,7 +334,7 @@ export default function WhyLeadershipPage() {
       </section>
 
       {/* Closing call */}
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site max-w-3xl text-center">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-muted">
             From goals to practice
@@ -359,7 +359,7 @@ export default function WhyLeadershipPage() {
       </section>
 
       {/* Sources */}
-      <section className="border-t border-black/[0.06] bg-white py-10">
+      <section className="border-t border-line bg-elevated py-10">
         <div className="container-site">
           <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
             Sources

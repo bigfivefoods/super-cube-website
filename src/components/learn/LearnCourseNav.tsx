@@ -82,7 +82,7 @@ export function LearnCourseNav({
   return (
     <div
       className={`${
-        nested ? "ml-2 border-l border-black/[0.08] pl-2 lg:ml-3 lg:pl-2.5" : ""
+        nested ? "ml-2 border-l border-line pl-2 lg:ml-3 lg:pl-2.5" : ""
       } mt-0.5 space-y-0.5 pb-1`}
       role="group"
       aria-label="Courses and sessions"
@@ -120,7 +120,7 @@ export function LearnCourseNav({
                 <button
                   type="button"
                   onClick={() => toggleConstruct(course.constructId)}
-                  className={`flex h-8 w-7 shrink-0 items-center justify-center rounded-lg text-[0.65rem] text-muted transition hover:bg-black/[0.04] hover:text-ink ${
+                  className={`flex h-8 w-7 shrink-0 items-center justify-center rounded-lg text-[0.65rem] text-muted transition hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink ${
                     isCourseActive ? "text-ink" : ""
                   }`}
                   aria-expanded={isOpen}
@@ -147,7 +147,7 @@ export function LearnCourseNav({
                       ? "bg-void text-void-fg"
                       : isCourseActive
                         ? "bg-black/[0.05] text-ink"
-                        : "text-slate hover:bg-black/[0.04] hover:text-ink"
+                        : "text-slate hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
                   }`}
                 >
                   <span
@@ -174,7 +174,7 @@ export function LearnCourseNav({
               </div>
 
               {isOpen && (
-                <ul className="ml-7 mt-0.5 space-y-0.5 border-l border-black/[0.06] pl-2">
+                <ul className="ml-7 mt-0.5 space-y-0.5 border-l border-line pl-2">
                   {course.lessons.map((lesson, idx) => {
                     const href = `/learn/courses/${course.constructId}/${lesson.id}`;
                     const active = pathLesson === lesson.id;
@@ -189,7 +189,7 @@ export function LearnCourseNav({
                           className={`flex items-start gap-1.5 rounded-md px-2 py-1.5 text-left transition ${
                             active
                               ? "bg-void text-void-fg"
-                              : "text-slate hover:bg-black/[0.04] hover:text-ink"
+                              : "text-slate hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
                           }`}
                           title={lesson.title}
                         >
@@ -199,7 +199,7 @@ export function LearnCourseNav({
                                 ? "bg-white/20 text-white"
                                 : completed
                                   ? "bg-void text-void-fg"
-                                  : "border border-black/[0.12] text-muted"
+                                  : "border border-line-strong text-muted"
                             }`}
                           >
                             {completed && !active ? "✓" : idx + 1}
@@ -236,7 +236,7 @@ export function LearnCourseNav({
 
       <Link
         href="/learn/courses"
-        className="mt-1 block rounded-lg px-2 py-1.5 text-[0.7rem] font-medium text-muted transition hover:bg-black/[0.04] hover:text-ink"
+        className="mt-1 block rounded-lg px-2 py-1.5 text-[0.7rem] font-medium text-muted transition hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
       >
         All courses →
       </Link>

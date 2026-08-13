@@ -19,14 +19,14 @@ function statusClasses(status: JourneyStepStatus, activeHere: boolean) {
       : "border-ink/20 bg-void text-void-fg";
   }
   if (status === "current") {
-    return "border-ink bg-white text-ink ring-2 ring-ink/15";
+    return "border-ink bg-elevated text-ink ring-2 ring-ink/15";
   }
   if (status === "locked") {
-    return "border-black/[0.08] bg-[#f4f4f4] text-muted";
+    return "border-line bg-cream-dark text-muted";
   }
   return activeHere
-    ? "border-ink/30 bg-white text-ink"
-    : "border-black/[0.1] bg-white text-muted";
+    ? "border-ink/30 bg-elevated text-ink"
+    : "border-line-strong bg-elevated text-muted";
 }
 
 function StepDot({
@@ -74,7 +74,7 @@ export function JourneyRail({ journey }: { journey: JourneySnapshot }) {
   const pathStep = journeyStepFromPath(pathname);
 
   return (
-    <div className="rounded-2xl border border-black/[0.07] bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5">
+    <div className="rounded-2xl border border-line bg-elevated p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="learn-eyebrow">Your pathway</p>
@@ -165,12 +165,12 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
           <div
             className={`relative flex gap-3.5 rounded-2xl border p-4 transition sm:gap-4 sm:p-5 ${
               locked
-                ? "cursor-not-allowed border-black/[0.05] bg-[#fafafa] opacity-55"
+                ? "cursor-not-allowed border-line bg-surface opacity-55"
                 : current
-                  ? "border-ink bg-white shadow-[0_8px_28px_-16px_rgba(10,10,10,0.25)]"
+                  ? "border-ink bg-elevated shadow-[0_8px_28px_-16px_rgba(10,10,10,0.25)]"
                   : done
-                    ? "border-black/[0.07] bg-white hover:border-black/15"
-                    : "border-black/[0.07] bg-white hover:border-black/12 hover:bg-[#fafafa]"
+                    ? "border-line bg-elevated hover:border-black/15 dark:hover:border-white/20"
+                    : "border-line bg-elevated hover:border-black/12 dark:hover:border-white/15 hover:bg-surface"
             }`}
           >
             {/* Vertical connector */}
@@ -286,7 +286,7 @@ export function JourneyRailLive() {
   const journey = useJourney();
   if (!journey) {
     return (
-      <div className="mb-5 h-[7.5rem] animate-pulse rounded-2xl border border-black/[0.06] bg-[#f8f9fb] sm:mb-6" />
+      <div className="mb-5 h-[7.5rem] animate-pulse rounded-2xl border border-line bg-surface sm:mb-6" />
     );
   }
   return (

@@ -48,7 +48,7 @@ export function FaceMomentum({ state }: { state: LocalLmsState }) {
           return (
             <div
               key={c.id}
-              className="rounded-xl border border-black/[0.05] bg-[#fafafa] px-3 py-2.5"
+              className="rounded-xl border border-line bg-surface px-3 py-2.5"
             >
               <div className="flex items-center gap-1.5">
                 <span

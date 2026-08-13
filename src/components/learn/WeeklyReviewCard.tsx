@@ -15,7 +15,7 @@ export function WeeklyReviewCard({ state }: { state: LocalLmsState }) {
   if (!isSunday && pattern.pulseCount < 3) return null;
 
   return (
-    <section className="mb-4 rounded-2xl border border-black/[0.07] bg-gradient-to-br from-[#f8f9fb] to-white p-4 sm:p-5">
+    <section className="mb-4 rounded-2xl border border-line bg-gradient-to-br from-surface to-elevated p-4 sm:p-5">
       <p className="learn-eyebrow">
         {isSunday ? "Sunday ritual" : "Weekly focus"}
       </p>

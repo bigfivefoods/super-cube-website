@@ -290,14 +290,14 @@ function AccountPageInner() {
       subtitle="Your identity, growth snapshot, cohort, and device tools—one place to know yourself in Super-Cube®."
     >
       {msg && (
-        <p className="mb-4 rounded-xl border border-black/[0.08] bg-white px-3 py-2 text-[0.8125rem] text-ink">
+        <p className="mb-4 rounded-xl border border-line bg-elevated px-3 py-2 text-[0.8125rem] text-ink">
           {msg}
         </p>
       )}
 
       <NextBestActionCard action={nextAction} />
 
-      <section className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] bg-void text-void-fg">
+      <section className="mb-4 overflow-hidden rounded-2xl border border-line bg-void text-void-fg">
         <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-xl font-bold">
             {initials}
@@ -434,7 +434,7 @@ function AccountPageInner() {
                 </button>
               </div>
               {showSample && (
-                <p className="mt-3 rounded-xl bg-[#fafafa] px-3 py-2 text-[0.8125rem] text-slate">
+                <p className="mt-3 rounded-xl bg-surface px-3 py-2 text-[0.8125rem] text-slate">
                   Example: Pre overall 58 · Strength Emotional · Focus Physical.
                   After the programme, learners typically see multi-point lifts
                   on stretch faces.
@@ -444,19 +444,19 @@ function AccountPageInner() {
           ) : (
             <>
               <div className="mt-3 grid grid-cols-3 gap-2">
-                <div className="rounded-xl bg-[#fafafa] px-3 py-2.5">
+                <div className="rounded-xl bg-surface px-3 py-2.5">
                   <p className="learn-eyebrow">Pre</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {pre.result.overall}
                   </p>
                 </div>
-                <div className="rounded-xl bg-[#fafafa] px-3 py-2.5">
+                <div className="rounded-xl bg-surface px-3 py-2.5">
                   <p className="learn-eyebrow">Post</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {post ? post.result.overall : "—"}
                   </p>
                 </div>
-                <div className="rounded-xl bg-[#fafafa] px-3 py-2.5">
+                <div className="rounded-xl bg-surface px-3 py-2.5">
                   <p className="learn-eyebrow">Growth</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {growth === null
@@ -546,7 +546,7 @@ function AccountPageInner() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 transition hover:border-black/[0.12]"
+                    className="flex items-center justify-between gap-3 rounded-xl border border-line bg-surface px-3 py-2.5 transition hover:border-line-strong"
                   >
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-ink">{item.t}</p>
@@ -615,14 +615,14 @@ function AccountPageInner() {
           ].map((row) => (
             <li
               key={row.label}
-              className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.05] px-3 py-2.5"
+              className="flex items-center justify-between gap-3 rounded-xl border border-line px-3 py-2.5"
             >
               <div className="flex items-center gap-2.5">
                 <span
                   className={`flex h-6 w-6 items-center justify-center rounded-full text-[0.65rem] font-bold ${
                     row.at
                       ? "bg-emerald-600 text-white"
-                      : "border border-black/[0.12] text-muted"
+                      : "border border-line-strong text-muted"
                   }`}
                 >
                   {row.at ? "✓" : "·"}

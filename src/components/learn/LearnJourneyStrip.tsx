@@ -8,9 +8,9 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
   return (
     <section
       id="journey"
-      className="scroll-mt-28 overflow-hidden rounded-3xl border border-black/[0.07] bg-white"
+      className="scroll-mt-28 overflow-hidden rounded-3xl border border-line bg-elevated"
     >
-      <div className="flex flex-col gap-4 border-b border-black/[0.05] px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+      <div className="flex flex-col gap-4 border-b border-line px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
         <div>
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
             Your journey
@@ -65,7 +65,7 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
                 >
                   {locked ? (
                     <span
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-black/[0.1] bg-white text-[0.7rem] font-bold text-muted"
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-line-strong bg-elevated text-[0.7rem] font-bold text-muted"
                       title="Complete previous steps first"
                     >
                       {step.n}
@@ -78,7 +78,7 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
                           ? "bg-void text-void-fg ring-4 ring-ink/15"
                           : done
                             ? "bg-void text-void-fg"
-                            : "border border-black/[0.12] bg-white text-slate hover:border-ink/40"
+                            : "border border-line-strong bg-elevated text-slate hover:border-ink/40"
                       }`}
                       title={step.title}
                     >

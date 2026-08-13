@@ -26,7 +26,7 @@ export function LearnBottomNav() {
       className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 lg:hidden"
       aria-label="Learn app navigation"
     >
-      <ul className="mx-auto flex max-w-md items-stretch justify-between rounded-2xl border border-black/[0.08] bg-white/95 px-1.5 py-1.5 shadow-[0_12px_40px_-12px_rgba(10,10,10,0.35)] backdrop-blur-xl">
+      <ul className="mx-auto flex max-w-md items-stretch justify-between rounded-2xl border border-line bg-elevated/95 px-1.5 py-1.5 shadow-[0_12px_40px_-12px_rgba(10,10,10,0.35)] backdrop-blur-xl">
         {LEARN_PRIMARY_NAV.map((tab) => {
           const active = isLearnNavActive(pathname, tab);
           const Icon = icons[tab.id];
@@ -37,7 +37,7 @@ export function LearnBottomNav() {
                 className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
                   active
                     ? "bg-void text-void-fg"
-                    : "text-muted hover:bg-black/[0.04] hover:text-ink"
+                    : "text-muted hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
                 }`}
                 aria-current={active ? "page" : undefined}
               >

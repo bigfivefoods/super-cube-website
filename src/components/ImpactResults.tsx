@@ -23,7 +23,7 @@ export function ImpactResults({
       className={
         light
           ? "section-pad border-y border-white/10 bg-ink text-cream"
-          : "section-pad border-b border-black/[0.06] bg-[#fafafa]"
+          : "section-pad border-b border-line bg-surface"
       }
     >
       <div className="container-site">
@@ -56,7 +56,7 @@ export function ImpactResults({
           className={`mt-8 flex flex-col items-start gap-1 rounded-2xl border px-6 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-8 sm:py-6 ${
             light
               ? "border-white/10 bg-white/5"
-              : "border-black/[0.07] bg-white"
+              : "border-line bg-elevated"
           }`}
         >
           <div>
@@ -87,7 +87,7 @@ export function ImpactResults({
           className={`mt-6 space-y-3 rounded-2xl border p-5 sm:p-6 ${
             light
               ? "border-white/10 bg-white/5"
-              : "border-black/[0.07] bg-white"
+              : "border-line bg-elevated"
           }`}
         >
           {interventionGains.map((g) => {

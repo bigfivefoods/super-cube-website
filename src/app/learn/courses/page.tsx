@@ -38,7 +38,7 @@ export default function CoursesPage() {
           return (
             <article
               key={course.id}
-              className="card-lift group flex gap-3 overflow-hidden rounded-2xl border border-black/[0.07] bg-white p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5"
+              className="card-lift group flex gap-3 overflow-hidden rounded-2xl border border-line bg-elevated p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5"
               style={{
                 boxShadow: `inset 3px 0 0 ${color}`,
               }}
@@ -92,7 +92,7 @@ export default function CoursesPage() {
         })}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5">
+      <div className="mt-6 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <p className="learn-eyebrow">After the full programme</p>
         <p className="mt-1 text-sm font-semibold text-ink">
           Step 5 · Re-measure, then Step 6 · Report

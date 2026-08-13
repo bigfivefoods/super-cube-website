@@ -7,7 +7,7 @@ export function GrowthStoryCard({ state }: { state: LocalLmsState }) {
   const story = buildGrowthStory(state);
 
   return (
-    <section className="mb-4 rounded-2xl border border-black/[0.07] bg-white p-4 sm:p-5 print:break-inside-avoid">
+    <section className="mb-4 rounded-2xl border border-line bg-elevated p-4 sm:p-5 print:break-inside-avoid">
       <p className="learn-eyebrow">Your growth story</p>
       <h2 className="mt-1 text-lg font-semibold tracking-tight text-ink">
         {story.headline}
@@ -15,7 +15,7 @@ export function GrowthStoryCard({ state }: { state: LocalLmsState }) {
       <p className="mt-2 text-[0.875rem] leading-relaxed text-slate">
         {story.body}
       </p>
-      <p className="mt-3 rounded-xl bg-[#f8f9fb] px-3 py-2 text-[0.8125rem] font-medium text-ink">
+      <p className="mt-3 rounded-xl bg-surface px-3 py-2 text-[0.8125rem] font-medium text-ink">
         {story.focusLine}
       </p>
     </section>

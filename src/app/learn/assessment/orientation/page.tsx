@@ -135,7 +135,7 @@ export default function OrientationAssessmentPage() {
           ))}
         </div>
 
-        <p className="learn-body mt-4 rounded-xl border border-black/[0.06] bg-[#f5f7fa] px-3.5 py-2.5">
+        <p className="learn-body mt-4 rounded-xl border border-line bg-surface px-3.5 py-2.5">
           <strong className="font-semibold text-ink">Why this matters:</strong>{" "}
           Super-Cube® is a leadership <em>model</em> grounded in theory and
           philosophy. We first need to know whether you already hold a

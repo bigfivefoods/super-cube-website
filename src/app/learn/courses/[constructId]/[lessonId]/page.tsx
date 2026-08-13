@@ -114,7 +114,7 @@ export default function LessonPlayerPage() {
       subtitle={`${TYPE_LABEL[data.lesson.lessonType] ?? "Session"} ${idx + 1} of ${data.course.lessons.length} · ~${data.lesson.durationMinutes} min`}
     >
       <div
-        className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07]"
+        className="mb-4 overflow-hidden rounded-2xl border border-line"
         style={{ background: colorSoft }}
       >
         <div className="p-3 sm:p-4">
@@ -126,7 +126,7 @@ export default function LessonPlayerPage() {
             variant="hero"
           />
         </div>
-        <div className="border-t border-black/[0.05] px-3.5 py-3.5 sm:px-5 sm:py-4">
+        <div className="border-t border-line px-3.5 py-3.5 sm:px-5 sm:py-4">
           <div className="flex flex-wrap items-center gap-1.5">
             <span
               className="rounded-full px-2 py-0.5 text-[0.625rem] font-bold uppercase tracking-wider text-white"
@@ -181,7 +181,7 @@ export default function LessonPlayerPage() {
 
       {winBanner && (
         <div
-          className="mt-5 rounded-2xl border border-black/[0.08] bg-white p-4 sm:p-5"
+          className="mt-5 rounded-2xl border border-line bg-elevated p-4 sm:p-5"
           style={{ boxShadow: `inset 3px 0 0 ${color}` }}
           role="status"
         >
@@ -202,7 +202,7 @@ export default function LessonPlayerPage() {
         </div>
       )}
 
-      <div className="mt-6 flex flex-col gap-2.5 border-t border-black/[0.06] pt-5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-6 flex flex-col gap-2.5 border-t border-line pt-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-wrap gap-3 text-[0.8125rem] font-semibold">
           <Link
             href={`/learn/courses/${constructId}`}

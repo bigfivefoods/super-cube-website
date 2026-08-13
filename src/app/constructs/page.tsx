@@ -160,7 +160,7 @@ export default function ConstructsPage() {
             {/* Detail panel — white + construct colour accents */}
             <section
               id={`${c.id}-detail`}
-              className="scroll-mt-28 border-b border-black/[0.06] bg-white"
+              className="scroll-mt-28 border-b border-line bg-bg"
             >
               <div
                 className="h-1 w-full"
@@ -228,7 +228,7 @@ export default function ConstructsPage() {
                       {c.elements.map((el) => (
                         <li
                           key={el}
-                          className="rounded-full border border-black/[0.08] bg-[#fafafa] px-3.5 py-1.5 text-sm font-medium text-ink"
+                          className="rounded-full border border-line bg-surface px-3.5 py-1.5 text-sm font-medium text-ink"
                           style={{ boxShadow: `inset 0 0 0 1px ${c.color}22` }}
                         >
                           {el}
@@ -249,7 +249,7 @@ export default function ConstructsPage() {
                           {c.keyComponents.map((comp) => (
                             <li
                               key={comp.name}
-                              className="rounded-xl bg-[#fafafa] p-3.5 sm:p-4"
+                              className="rounded-xl bg-surface p-3.5 sm:p-4"
                               style={{
                                 boxShadow: `inset 3px 0 0 ${c.color}`,
                               }}
@@ -283,7 +283,7 @@ export default function ConstructsPage() {
                       </Link>
                       <Link
                         href={`#${next.id}`}
-                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 text-sm font-semibold text-ink transition hover:border-black/25"
+                        className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink transition hover:border-black/25 dark:hover:border-white/25"
                       >
                         Next · {next.name} →
                       </Link>
@@ -296,7 +296,7 @@ export default function ConstructsPage() {
         );
       })}
 
-      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-t border-line bg-surface">
         <div className="container-site max-w-3xl">
           <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-muted">
             Integrated practice

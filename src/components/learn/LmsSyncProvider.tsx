@@ -84,7 +84,7 @@ export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
               ? "border-red-200 bg-red-50 text-red-800"
               : status === "synced"
                 ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-                : "border-black/[0.06] bg-white text-muted"
+                : "border-line bg-elevated text-muted"
           }`}
           role="status"
         >

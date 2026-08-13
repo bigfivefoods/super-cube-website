@@ -26,7 +26,7 @@ export default function InsightsIndexPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site">
           <SectionHeading title="Latest" />
           <ul className="mt-8 grid gap-4 md:grid-cols-2">
@@ -34,7 +34,7 @@ export default function InsightsIndexPage() {
               <li key={p.slug}>
                 <Link
                   href={`/insights/${p.slug}`}
-                  className="block h-full rounded-2xl border border-black/[0.08] bg-white p-5 transition hover:border-black/15 hover:shadow-sm sm:p-6"
+                  className="block h-full rounded-2xl border border-line bg-elevated p-5 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-sm sm:p-6"
                 >
                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
                     {p.date} · {p.readingMinutes} min

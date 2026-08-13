@@ -74,7 +74,7 @@ export default function SignupPage() {
       <section className="section-pad pt-0">
         <form
           onSubmit={onSubmit}
-          className="mx-auto max-w-md rounded-2xl border border-black/[0.08] bg-white p-6 sm:p-8"
+          className="mx-auto max-w-md rounded-2xl border border-line bg-elevated p-6 sm:p-8"
         >
           <label className="block text-sm font-semibold text-ink">
             Full name
@@ -82,7 +82,7 @@ export default function SignupPage() {
               required
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm outline-none focus:border-ink"
+              className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm outline-none focus:border-ink"
             />
           </label>
           <label className="mt-4 block text-sm font-semibold text-ink">
@@ -92,7 +92,7 @@ export default function SignupPage() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm outline-none focus:border-ink"
+              className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm outline-none focus:border-ink"
             />
           </label>
           <label className="mt-4 block text-sm font-semibold text-ink">
@@ -103,7 +103,7 @@ export default function SignupPage() {
               minLength={6}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm outline-none focus:border-ink"
+              className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm outline-none focus:border-ink"
             />
           </label>
           <label className="mt-4 block text-sm font-semibold text-ink">
@@ -111,7 +111,7 @@ export default function SignupPage() {
             <select
               value={programmeId}
               onChange={(e) => setProgrammeId(e.target.value as ProgrammeId)}
-              className="mt-2 w-full rounded-lg border border-black/[0.12] bg-[#fafafa] px-4 py-3 text-sm outline-none focus:border-ink"
+              className="mt-2 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm outline-none focus:border-ink"
             >
               {programmes.map((p) => (
                 <option key={p.id} value={p.id}>

@@ -49,12 +49,12 @@ export default function CertifyPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site max-w-3xl space-y-4">
           {rungs.map((r) => (
             <div
               key={r.level}
-              className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6"
+              className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
             >
               <p className="text-[0.7rem] font-bold uppercase tracking-[0.14em] text-muted">
                 {r.level}

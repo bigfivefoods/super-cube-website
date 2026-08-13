@@ -58,7 +58,7 @@ export default function CourseDetailPage() {
     >
       {/* Module hero with intro video */}
       <div
-        className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] sm:mb-5"
+        className="mb-4 overflow-hidden rounded-2xl border border-line sm:mb-5"
         style={{ background: construct.colorSoft }}
       >
         <div className="p-3 sm:p-4">
@@ -72,7 +72,7 @@ export default function CourseDetailPage() {
           />
         </div>
 
-        <div className="border-t border-black/[0.05] px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
+        <div className="border-t border-line px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
           <p className="learn-eyebrow" style={{ color: construct.color }}>
             Super-Cube® · {construct.shortName}
           </p>
@@ -131,7 +131,7 @@ export default function CourseDetailPage() {
             <li key={lesson.id}>
               <Link
                 href={`/learn/courses/${constructId}/${lesson.id}`}
-                className="flex items-center justify-between gap-3 rounded-xl border border-black/[0.07] bg-white px-3.5 py-3 transition hover:border-black/18"
+                className="flex items-center justify-between gap-3 rounded-xl border border-line bg-elevated px-3.5 py-3 transition hover:border-black/18 dark:hover:border-white/25"
                 style={
                   done
                     ? { boxShadow: `inset 3px 0 0 ${construct.color}` }

@@ -99,7 +99,7 @@ export default function PulsePage() {
     <LearnShell>
       <LearnPage>
         {/* Mode switcher — sidebar also lists Check-in */}
-        <div className="flex gap-1 rounded-2xl border border-black/[0.07] bg-white p-1 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
+        <div className="flex gap-1 rounded-2xl border border-line bg-elevated p-1 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
           {(
             [
               ["checkin", "Check-in"],
@@ -159,7 +159,7 @@ export default function PulsePage() {
                       return (
                         <li
                           key={p.id}
-                          className="rounded-xl bg-white px-3 py-2.5 text-sm"
+                          className="rounded-xl bg-elevated px-3 py-2.5 text-sm"
                           style={
                             meta
                               ? { boxShadow: `inset 3px 0 0 ${meta.color}` }
@@ -240,7 +240,7 @@ export default function PulsePage() {
                             className={`rounded-lg border py-2 text-sm font-semibold ${
                               peerResponses[item.id] === v
                                 ? "border-ink bg-void text-void-fg"
-                                : "border-black/[0.1] bg-[#fafafa] text-slate"
+                                : "border-line-strong bg-surface text-slate"
                             }`}
                           >
                             {v}

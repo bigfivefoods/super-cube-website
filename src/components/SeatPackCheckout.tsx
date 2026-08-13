@@ -122,7 +122,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
               className={`rounded-2xl border px-3 py-3 text-left transition ${
                 selected
                   ? "border-ink bg-void text-void-fg"
-                  : "border-black/[0.1] bg-white text-ink hover:border-black/25"
+                  : "border-line-strong bg-elevated text-ink hover:border-black/25 dark:hover:border-white/25"
               }`}
             >
               {p.popular && (
@@ -158,7 +158,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
           value={orgName}
           onChange={(e) => setOrgName(e.target.value)}
           placeholder="e.g. Greenfield High · Acme L&D"
-          className="mt-1 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-3 py-2.5 text-sm outline-none focus:border-ink/40"
+          className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-ink/40"
         />
       </div>
 
@@ -169,7 +169,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
         <select
           value={programmeId}
           onChange={(e) => setProgrammeId(e.target.value as ProgrammeId)}
-          className="mt-1 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-3 py-2.5 text-sm outline-none focus:border-ink/40"
+          className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-ink/40"
         >
           {programmes.map((p) => (
             <option key={p.id} value={p.id}>
@@ -189,7 +189,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@school.co.za"
-            className="mt-1 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-3 py-2.5 text-sm outline-none focus:border-ink/40"
+            className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-ink/40"
           />
         </div>
         <div>
@@ -200,7 +200,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Facilitator name"
-            className="mt-1 w-full rounded-xl border border-black/[0.1] bg-[#fafafa] px-3 py-2.5 text-sm outline-none focus:border-ink/40"
+            className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-ink/40"
           />
         </div>
       </div>

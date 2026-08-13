@@ -186,7 +186,7 @@ export default function WhatPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site">
           <SectionHeading
             eyebrow="Programmes"
@@ -201,7 +201,7 @@ export default function WhatPage() {
                 <article
                   key={p.id}
                   id={p.id}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-sm"
+                  className="flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated shadow-sm"
                 >
                   <div
                     className="h-1.5 w-full"
@@ -226,7 +226,7 @@ export default function WhatPage() {
                     </p>
                     <p className="mt-4 text-xs text-muted">{p.audienceNote}</p>
 
-                    <div className="mt-6 border-t border-black/[0.06] pt-5">
+                    <div className="mt-6 border-t border-line pt-5">
                       <p className="text-2xl font-semibold tracking-tight text-ink">
                         ${p.priceUsd}
                         <span className="text-sm font-medium text-muted">
@@ -258,7 +258,7 @@ export default function WhatPage() {
         </div>
       </section>
 
-      <section className="section-pad border-b border-black/[0.06] bg-white">
+      <section className="section-pad border-b border-line bg-bg">
         <div className="container-site">
           <SectionHeading
             eyebrow="The offer"
@@ -269,7 +269,7 @@ export default function WhatPage() {
             {includes.map((item) => (
               <li
                 key={item}
-                className="rounded-2xl border border-black/[0.07] bg-[#fafafa] px-5 py-4 text-sm font-medium leading-relaxed text-ink"
+                className="rounded-2xl border border-line bg-surface px-5 py-4 text-sm font-medium leading-relaxed text-ink"
               >
                 {item}
               </li>
@@ -279,7 +279,7 @@ export default function WhatPage() {
       </section>
 
       {/* Benefits: Holistic · Longitudinal · Multi-level */}
-      <section className="section-pad border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-b border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow="Why Super-Cube®"
@@ -313,10 +313,10 @@ export default function WhatPage() {
               <article
                 key={b.id}
                 id={`benefit-${b.id}`}
-                className="scroll-mt-28 overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+                className="scroll-mt-28 overflow-hidden rounded-2xl border border-line bg-elevated shadow-[0_1px_0_rgba(0,0,0,0.02)]"
               >
                 <div className="grid gap-0 lg:grid-cols-[minmax(0,12rem)_minmax(0,1fr)]">
-                  <div className="flex flex-col items-center justify-center gap-3 border-b border-black/[0.06] bg-[#fafafa] px-6 py-8 lg:border-b-0 lg:border-r lg:px-8">
+                  <div className="flex flex-col items-center justify-center gap-3 border-b border-line bg-surface px-6 py-8 lg:border-b-0 lg:border-r lg:px-8">
                     <div className="relative h-20 w-20 sm:h-24 sm:w-24">
                       <Image
                         src={b.logo.src}
@@ -375,7 +375,7 @@ export default function WhatPage() {
                           {b.stages.map((s) => (
                             <div
                               key={s.label}
-                              className="rounded-xl border border-black/[0.06] bg-[#fafafa] p-4"
+                              className="rounded-xl border border-line bg-surface p-4"
                             >
                               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                 <p className="text-sm font-semibold tracking-tight text-ink">
@@ -409,7 +409,7 @@ export default function WhatPage() {
                           {b.levels.map((lv) => (
                             <div
                               key={lv.label}
-                              className="rounded-xl border border-black/[0.06] bg-[#fafafa] p-4"
+                              className="rounded-xl border border-line bg-surface p-4"
                             >
                               <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
                                 <p className="text-sm font-semibold tracking-tight text-ink">
@@ -431,7 +431,7 @@ export default function WhatPage() {
                       </>
                     )}
 
-                    <div className="mt-6 rounded-xl border border-black/[0.06] bg-[#f5f7fa] p-4 sm:p-5">
+                    <div className="mt-6 rounded-xl border border-line bg-surface p-4 sm:p-5">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="relative h-7 w-7 overflow-hidden">
                           <Image
@@ -491,7 +491,7 @@ export default function WhatPage() {
         </div>
       </section>
 
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-bg">
         <div className="container-site grid gap-10 lg:grid-cols-2 lg:items-center">
           <SectionHeading
             eyebrow="Same cube, different season of life"

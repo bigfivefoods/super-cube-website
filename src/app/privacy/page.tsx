@@ -25,7 +25,7 @@ export default function PrivacyPage() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-[#fafafa]">
+      <section className="section-pad bg-surface">
         <div className="container-site prose-site max-w-3xl space-y-8">
           <div>
             <SectionHeading title="Who we are" />

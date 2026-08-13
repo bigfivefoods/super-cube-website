@@ -49,7 +49,7 @@ export function InlineProfileEdit({
   }
 
   return (
-    <div className="mt-3 space-y-3 rounded-xl border border-black/[0.08] bg-[#fafafa] p-3">
+    <div className="mt-3 space-y-3 rounded-xl border border-line bg-surface p-3">
       <label className="block">
         <span className="learn-label">Goal</span>
         <textarea
@@ -70,7 +70,7 @@ export function InlineProfileEdit({
               className={`rounded-full border px-2.5 py-1 text-[0.7rem] font-semibold ${
                 cohortKind === c.id
                   ? "border-ink bg-void text-void-fg"
-                  : "border-black/[0.1] text-ink"
+                  : "border-line-strong text-ink"
               }`}
             >
               {c.label}
