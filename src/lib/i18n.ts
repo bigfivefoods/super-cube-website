@@ -62,6 +62,7 @@ const en = {
   "nav.group.proof": "Practice",
   "nav.group.connect": "Connect",
   "nav.why": "Why leadership",
+  "nav.leadershipChallenges": "Leadership challenges",
   "nav.how": "How it works",
   "nav.research": "Research",
   "nav.about": "About",
@@ -316,6 +317,7 @@ const zu: Record<I18nKey, string> = {
   "nav.group.proof": "Zilolonge",
   "nav.group.connect": "Xhumana",
   "nav.why": "Kungani ubuholi",
+  "nav.leadershipChallenges": "Izinselelo zobuholi",
   "nav.how": "Kusebenza kanjani",
   "nav.research": "Ucwaningo",
   "nav.about": "Mayelana",
@@ -561,6 +563,7 @@ const af: Record<I18nKey, string> = {
   "nav.group.proof": "Oefening",
   "nav.group.connect": "Skakel",
   "nav.why": "Hoekom leierskap",
+  "nav.leadershipChallenges": "Leierskapuitdagings",
   "nav.how": "Hoe dit werk",
   "nav.research": "Navorsing",
   "nav.about": "Oor ons",
@@ -826,6 +829,7 @@ export const mainNavI18n: Record<string, I18nKey> = {
 
 export const moreLinkI18n: Record<string, I18nKey> = {
   "/why": "nav.why",
+  "/leadership-challenges": "nav.leadershipChallenges",
   "/how": "nav.how",
   "/research": "nav.research",
   "/about": "nav.about",

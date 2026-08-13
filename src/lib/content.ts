@@ -26,6 +26,7 @@ export const exploreNavGroups = [
     description: "Why it matters and the research behind it",
     links: [
       { href: "/why", label: "Why leadership" },
+      { href: "/leadership-challenges", label: "Leadership challenges" },
       { href: "/research", label: "Research" },
       { href: "/impact", label: "Impact" },
       { href: "/about", label: "About" },
@@ -77,6 +78,7 @@ export const footerColumns = [
     title: "Understand",
     links: [
       { href: "/why", label: "Why leadership" },
+      { href: "/leadership-challenges", label: "Leadership challenges" },
       { href: "/research", label: "Research" },
       { href: "/impact", label: "Impact" },
       { href: "/about", label: "About" },

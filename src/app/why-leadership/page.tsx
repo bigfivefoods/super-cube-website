@@ -95,7 +95,13 @@ export default function WhyLeadershipPage() {
             </p>
             <p className="text-sm text-muted">
               Below: the latest global picture on SDG progress, the 17 Goals,
-              and why leadership capacity is central to closing the gap.
+              and why leadership capacity is central to closing the gap.{" "}
+              <Link
+                href="/leadership-challenges"
+                className="font-medium text-ink underline-offset-2 hover:underline"
+              >
+                See leadership challenges →
+              </Link>
             </p>
           </div>
         </div>

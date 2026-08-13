@@ -84,6 +84,7 @@ export const darkHeroPaths = [
   "/how",
   "/why-leadership",
   "/why",
+  "/leadership-challenges",
   "/research",
   "/about",
   "/pricing",

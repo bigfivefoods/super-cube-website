@@ -14,6 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/how",
     "/why-leadership",
     "/why",
+    "/leadership-challenges",
     "/research",
     "/about",
     "/pricing",
