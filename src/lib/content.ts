@@ -477,6 +477,49 @@ export const researchHighlights = [
   },
 ];
 
+/** Peer-reviewed journal articles and primary academic sources (PDFs under /public/research). */
+export type Publication = {
+  id: string;
+  badge: string;
+  journal: string;
+  title: string;
+  authors: string;
+  year: number;
+  doi: string;
+  pdf: string;
+  abstract: string;
+};
+
+export const publications: Publication[] = [
+  {
+    id: "sajems-2022",
+    badge: "SAJEMS",
+    journal:
+      "South African Journal of Economic and Management Sciences",
+    title:
+      "A proposed leadership skills development model for African FMCG business-networks: Super-Cube®",
+    authors: "Muller, C. R. & Pelser, T. G.",
+    year: 2022,
+    doi: "https://doi.org/10.4102/sajems.v25i1.4303",
+    pdf: "/research/sajems-2022-super-cube-african-fmcg.pdf",
+    abstract:
+      "Proposes Super-Cube® as a six-construct leadership skills development model for African FMCG business-networks, grounded in mixed-methods validation.",
+  },
+  {
+    id: "jcm-2022",
+    badge: "JCM",
+    journal: "Journal of Contemporary Management",
+    title:
+      "A leadership skills development model for the Kwaden Group: A case study of an African fast-moving consumer goods business network",
+    authors: "Muller, C. R. & Pelser, T. G.",
+    year: 2022,
+    doi: "https://doi.org/10.35683/jcm21092.154",
+    pdf: "/research/jcm-2022-kwaden-leadership-skills-model.pdf",
+    abstract:
+      "Case-study account of applying and validating the leadership skills development model within the Kwaden Group African FMCG network.",
+  },
+];
+
 /**
  * Literature map under the “Theory” abstraction level of the Super-Cube®
  * conceptual model (leadership skills development). Moves from classical

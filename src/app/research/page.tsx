@@ -1,20 +1,22 @@
 import type { Metadata } from "next";
 import { ImpactResults } from "@/components/ImpactResults";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
-import { constructs, researchHighlights } from "@/lib/content";
+import { constructs, publications, researchHighlights } from "@/lib/content";
 
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
   title: "Research & validation",
   description:
-    "Empirical validation of the Super-Cube® Leadership Model—mixed-methods research at UKZN, confirmatory factor analysis (CFI≈0.86), and qualitative findings from African FMCG networks.",
+    "Empirical validation of the Super-Cube® Leadership Model—mixed-methods research at UKZN, peer-reviewed SAJEMS and JCM journal articles (2022), confirmatory factor analysis (CFI≈0.86), and qualitative findings from African FMCG networks.",
   path: "/research",
   image: "/images/hero/hero-research.jpg",
   keywords: [
     "leadership research South Africa",
     "confirmatory factor analysis leadership",
     "UKZN DBA leadership model",
+    "SAJEMS Super-Cube",
+    "Journal of Contemporary Management leadership",
   ],
 });
 
@@ -25,16 +27,16 @@ export default function ResearchPage() {
         theme="research"
         eyebrow="Research & validation"
         title="Evidence that the model holds."
-        description="Super-Cube® was developed and tested through a pragmatic explanatory sequential mixed-methods design—quantitative structure first, qualitative depth second—within an African FMCG business-network."
+        description="Super-Cube® was developed and tested through a pragmatic explanatory sequential mixed-methods design—quantitative structure first, qualitative depth second—within an African FMCG business-network, and published in peer-reviewed journals."
       >
-        <Button href="/media" variant="primary">
+        <Button href="#journal-articles" variant="primary">
+          Download journal articles
+        </Button>
+        <Button href="/media" variant="ghost">
           Media kit & citation
         </Button>
         <Button href="/the-model" variant="ghost">
           Return to the model
-        </Button>
-        <Button href="/about" variant="ghost">
-          Origins & authorship
         </Button>
       </PageHero>
 
@@ -43,7 +45,7 @@ export default function ResearchPage() {
           <SectionHeading
             eyebrow="Open summary"
             title="Thesis abstract (non-paywalled)"
-            description="For full academic text, contact the author. This summary is free to share with schools, L&D, and media."
+            description="Full peer-reviewed articles are free to download below. The DBA thesis abstract summarises the founding study for schools, L&D, and media."
           />
           <div className="prose-site mt-6 space-y-4 text-slate">
             <p>
@@ -72,6 +74,16 @@ export default function ResearchPage() {
               Learn operationalises that loop for kids, adolescents, and adults.
             </p>
             <p>
+              Peer-reviewed outputs (2022) appear in the{" "}
+              <em>South African Journal of Economic and Management Sciences</em>{" "}
+              (SAJEMS) and the <em>Journal of Contemporary Management</em>{" "}
+              (JCM)—see{" "}
+              <a href="#journal-articles" className="font-semibold text-ink">
+                Journal articles
+              </a>{" "}
+              below for open PDF downloads and DOI links.
+            </p>
+            <p>
               The Theory-level literature map moves from classical
               trait/behavioural/contingency schools through relational, shared,
               biological/evolutionary and neuroscientific perspectives, into
@@ -84,6 +96,67 @@ export default function ResearchPage() {
               </a>
               .
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="journal-articles"
+        className="section-pad border-b border-[var(--line)] bg-paper scroll-mt-24"
+      >
+        <div className="container-site">
+          <SectionHeading
+            eyebrow="Peer-reviewed"
+            title="Download journal articles"
+            description="Open PDF downloads of the 2022 SAJEMS and JCM publications that formalise Super-Cube® for African FMCG leadership development."
+          />
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            {publications.map((pub) => (
+              <article
+                key={pub.id}
+                className="flex flex-col rounded-[var(--radius)] border border-[var(--line)] bg-elevated p-6 shadow-[var(--shadow-sm)]"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-ink px-3 py-1 text-xs font-semibold tracking-wide text-cream">
+                    {pub.badge}
+                  </span>
+                  <span className="text-xs font-medium text-muted">
+                    {pub.year}
+                  </span>
+                </div>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted">
+                  {pub.journal}
+                </p>
+                <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-ink md:text-xl">
+                  {pub.title}
+                </h3>
+                <p className="mt-2 text-sm text-slate">
+                  {pub.authors} · {pub.year}
+                </p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-slate">
+                  {pub.abstract}
+                </p>
+                <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+                  <a
+                    href={pub.pdf}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
+                  >
+                    Download PDF
+                  </a>
+                  <a
+                    href={pub.doi}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink hover:border-black/25 hover:bg-black/[0.02] dark:hover:border-white/25 dark:hover:bg-white/[0.04]"
+                  >
+                    View DOI
+                  </a>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -269,26 +342,53 @@ export default function ResearchPage() {
           <SectionHeading
             eyebrow="Primary sources"
             title="Where to go deeper."
+            description="Doctoral thesis plus peer-reviewed journal articles. PDFs open in a new tab or download to your device."
           />
           <ul className="mt-8 space-y-4">
-            {[
-              {
-                title:
-                  "A Leadership Skills Development Model for the Kwaden Group: A Case Study of an African FMCG Business-Network",
-                meta: "Craig Ross Muller · DBA thesis · University of KwaZulu-Natal · 2020",
-              },
-              {
-                title:
-                  "A proposed leadership skills development model for African FMCG business-networks: Super-Cube®",
-                meta: "Published scholarship (SAJEMS / related research outputs)",
-              },
-            ].map((ref) => (
+            <li className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5">
+              <p className="font-semibold text-ink">
+                A Leadership Skills Development Model for the Kwaden Group: A
+                Case Study of an African FMCG Business-Network
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                Craig Ross Muller · DBA thesis · University of KwaZulu-Natal ·
+                2020
+              </p>
+            </li>
+            {publications.map((pub) => (
               <li
-                key={ref.title}
+                key={pub.id}
                 className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5"
               >
-                <p className="font-semibold text-ink">{ref.title}</p>
-                <p className="mt-1 text-sm text-muted">{ref.meta}</p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
+                    {pub.badge}
+                  </span>
+                  <span className="text-xs text-muted">{pub.year}</span>
+                </div>
+                <p className="mt-2 font-semibold text-ink">{pub.title}</p>
+                <p className="mt-1 text-sm text-muted">
+                  {pub.authors} · {pub.journal}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-3 text-sm font-semibold">
+                  <a
+                    href={pub.pdf}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-ink underline-offset-2 hover:underline"
+                  >
+                    Download PDF
+                  </a>
+                  <a
+                    href={pub.doi}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate underline-offset-2 hover:underline"
+                  >
+                    DOI
+                  </a>
+                </div>
               </li>
             ))}
           </ul>
