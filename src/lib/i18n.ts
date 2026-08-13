@@ -29,6 +29,12 @@ const en = {
   "lang.zu": "isiZulu",
   "lang.af": "Afrikaans",
 
+  // Theme
+  "theme.light": "Light",
+  "theme.dark": "Dark",
+  "theme.system": "System",
+  "theme.toggle": "Theme",
+
   // Primary nav
   "nav.model": "The model",
   "nav.sixFaces": "Six faces",
@@ -268,6 +274,11 @@ const zu: Record<I18nKey, string> = {
   "lang.zu": "isiZulu",
   "lang.af": "isiBhunu",
 
+  "theme.light": "Okukhanyayo",
+  "theme.dark": "Okumnyama",
+  "theme.system": "Isistimu",
+  "theme.toggle": "Itimu",
+
   "nav.model": "Imodeli",
   "nav.sixFaces": "Ubuso obuyisithupha",
   "nav.programmes": "Izinhlelo",
@@ -322,8 +333,7 @@ const zu: Record<I18nKey, string> = {
   "footer.contact": "Xhumana",
   "footer.privacy": "Ubumfihlo",
   "footer.terms": "Imigomo",
-  "footer.journals":
-    "Amadayari ayimfihlo · imvume yokwabelana nomqeqeshi",
+  "footer.journals": "Amadayari ayimfihlo · imvume yokwabelana nomqeqeshi",
   "footer.copyright": "Imodeli yobuholi ye-Super-Cube®",
 
   "cta.tryFree": "Qala isisekelo samahhala",
@@ -387,7 +397,8 @@ const zu: Record<I18nKey, string> = {
     "Imodeli eyodwa empilweni yonke. Khetha indlela yalesi sikhathi—ubuso obuyisithupha buhlala nawe njengoba umhlaba wakho ukhula.",
   "home.programmesCta": "Hlola izinhlelo",
   "home.ptmEyebrow": "Ifilosofi · Ithiyori · Imodeli",
-  "home.ptmTitle": "Kusuka ebudlelwaneni bomuntu kuya ekhyubhini engasetshenziswa.",
+  "home.ptmTitle":
+    "Kusuka ebudlelwaneni bomuntu kuya ekhyubhini engasetshenziswa.",
   "home.ptmDesc":
     "I-Super-Cube® imi phezukwefilosofi ecacile, ithiyori yokuthuthuka, nemodeli yobuso obuyisithupha ongayikala futhi uyilolonge.",
   "home.philosophyTitle": "Ifilosofi",
@@ -496,6 +507,11 @@ const af: Record<I18nKey, string> = {
   "lang.zu": "isiZulu",
   "lang.af": "Afrikaans",
 
+  "theme.light": "Lig",
+  "theme.dark": "Donker",
+  "theme.system": "Stelsel",
+  "theme.toggle": "Tema",
+
   "nav.model": "Die model",
   "nav.sixFaces": "Ses vlakke",
   "nav.programmes": "Programme",
@@ -550,8 +566,7 @@ const af: Record<I18nKey, string> = {
   "footer.contact": "Kontak",
   "footer.privacy": "Privaatheid",
   "footer.terms": "Bepalings",
-  "footer.journals":
-    "Joernale privaat · toestemming vir afrigter-deling",
+  "footer.journals": "Joernale privaat · toestemming vir afrigter-deling",
   "footer.copyright": "Super-Cube® Leierskapmodel",
 
   "cta.tryFree": "Begin gratis basislyn",
@@ -731,7 +746,7 @@ export function isLocale(v: string | null | undefined): v is Locale {
 export function t(
   key: I18nKey,
   locale: Locale = "en",
-  vars?: Record<string, string | number>
+  vars?: Record<string, string | number>,
 ): string {
   let s = dictionaries[locale]?.[key] ?? dictionaries.en[key] ?? key;
   if (vars) {

@@ -108,7 +108,7 @@ export function PaystackCheckout({
       if (data.demo || data.configured === false) {
         setError(
           data.message ||
-            "Paystack is not configured yet. Use free demo or contact us."
+            "Paystack is not configured yet. Use free demo or contact us.",
         );
         if (onDemoFallback) {
           // Don't auto-start demo — let user choose
@@ -126,9 +126,7 @@ export function PaystackCheckout({
   }
 
   const priceLabel =
-    currency === "USD"
-      ? `$${COURSE_PRICE_USD} USD`
-      : formatCoursePrice("ZAR");
+    currency === "USD" ? `$${COURSE_PRICE_USD} USD` : formatCoursePrice("ZAR");
 
   return (
     <div className={`space-y-3 ${className}`}>
@@ -163,7 +161,7 @@ export function PaystackCheckout({
         type="button"
         disabled={busy}
         onClick={() => void pay()}
-        className="flex min-h-11 w-full items-center justify-center rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white hover:bg-ink-soft disabled:opacity-50"
+        className="flex min-h-11 w-full items-center justify-center rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
       >
         {busy
           ? "Redirecting to Paystack…"

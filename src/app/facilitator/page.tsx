@@ -135,10 +135,7 @@ export default function FacilitatorPage() {
 
       <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
         <div className="container-site max-w-3xl">
-          <SectionHeading
-            eyebrow="Safeguarding"
-            title="Kids & adolescents"
-          />
+          <SectionHeading eyebrow="Safeguarding" title="Kids & adolescents" />
           <ul className="mt-6 list-disc space-y-2 pl-5 text-slate">
             {safeguardingKids.map((s) => (
               <li key={s}>{s}</li>

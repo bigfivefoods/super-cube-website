@@ -49,7 +49,7 @@ export function StickyContinue() {
           onClick={() =>
             track("continue_click", { kind: action.kind, sticky: true })
           }
-          className="inline-flex min-h-11 max-w-sm items-center gap-2 rounded-full border border-black/[0.08] bg-ink px-5 text-sm font-semibold text-white shadow-lg"
+          className="inline-flex min-h-11 max-w-sm items-center gap-2 rounded-full border border-black/[0.08] sc-btn-primary px-5 text-sm font-semibold shadow-lg"
         >
           <span className="truncate">{action.title}</span>
           <span aria-hidden>→</span>

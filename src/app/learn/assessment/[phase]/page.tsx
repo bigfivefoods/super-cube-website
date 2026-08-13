@@ -3,10 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
-import {
-  buildAssessmentItems,
-  LIKERT_LABELS,
-} from "@/lib/lms/curriculum";
+import { buildAssessmentItems, LIKERT_LABELS } from "@/lib/lms/curriculum";
 import { scoreAttempt } from "@/lib/lms/scoring";
 import {
   clearAssessmentDraft,
@@ -25,9 +22,8 @@ export default function AssessmentRunnerPage() {
   const params = useParams();
   const router = useRouter();
   const raw = String(params.phase || "pre");
-  const phase = (
-    raw === "post" ? "post" : raw === "mid" ? "mid" : "pre"
-  ) as "pre" | "post" | "mid";
+  const phase = (raw === "post" ? "post" : raw === "mid" ? "mid" : "pre") as
+    "pre" | "post" | "mid";
 
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [step, setStep] = useState(0);
@@ -48,17 +44,14 @@ export default function AssessmentRunnerPage() {
     state?.user?.programmeId ||
     "adults") as ProgrammeId;
   const programme = getProgramme(programmeId);
-  const items = useMemo(
-    () => buildAssessmentItems(programmeId),
-    [programmeId]
-  );
+  const items = useMemo(() => buildAssessmentItems(programmeId), [programmeId]);
 
   const constructIds = constructs.map((c) => c.id);
   const currentConstruct = constructIds[step];
   const stepItems = items.filter((i) => i.constructId === currentConstruct);
   const constructMeta = constructs.find((c) => c.id === currentConstruct);
   const answered = Object.keys(responses).filter(
-    (k) => responses[k] >= 1 && responses[k] <= 5
+    (k) => responses[k] >= 1 && responses[k] <= 5,
   ).length;
   const pct = items.length ? Math.round((answered / items.length) * 100) : 0;
 
@@ -178,7 +171,7 @@ export default function AssessmentRunnerPage() {
             onClick={() => setStep(i)}
             className={`rounded-full px-2.5 py-1 text-[0.7rem] font-semibold transition ${
               i === step
-                ? "bg-ink text-white"
+                ? "bg-void text-void-fg"
                 : "border border-black/[0.08] bg-white text-slate hover:text-ink"
             }`}
           >
@@ -218,7 +211,7 @@ export default function AssessmentRunnerPage() {
                       onClick={() => setValue(item.id, v)}
                       className={`rounded-lg border px-1 py-2.5 text-center text-[0.75rem] font-semibold transition sm:text-[0.8125rem] ${
                         selected
-                          ? "border-ink bg-ink text-white"
+                          ? "border-ink bg-void text-void-fg"
                           : "border-black/[0.09] bg-[#f8f9fb] text-slate hover:border-ink/40"
                       }`}
                       title={LIKERT_LABELS[v - 1]}

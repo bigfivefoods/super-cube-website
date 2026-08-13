@@ -4,10 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { constructs, type ConstructId } from "@/lib/content";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
-import {
-  deriveFacePattern,
-  pulseSeries,
-} from "@/lib/lms/face-tracking";
+import { deriveFacePattern, pulseSeries } from "@/lib/lms/face-tracking";
 import { getMicroPracticesFor } from "@/lib/lms/micro-practices";
 import { buildAssessmentNarrative } from "@/lib/lms/narrative";
 import type { LocalAttempt } from "@/lib/lms/store";
@@ -37,10 +34,10 @@ export function ConstructDeepDive({
         {constructs.map((c) => {
           const face = narrative.faces.find((f) => f.constructId === c.id);
           const preScore = pre.result.constructScores.find(
-            (s) => s.constructId === c.id
+            (s) => s.constructId === c.id,
           )?.score;
           const postScore = post?.result.constructScores.find(
-            (s) => s.constructId === c.id
+            (s) => s.constructId === c.id,
           )?.score;
           const delta =
             preScore != null && postScore != null
@@ -72,9 +69,7 @@ export function ConstructDeepDive({
                   <span className="text-[0.7rem] text-muted">
                     Pre {preScore ?? "—"}
                     {postScore != null ? ` · Post ${postScore}` : ""}
-                    {delta != null
-                      ? ` · ${delta > 0 ? "+" : ""}${delta}`
-                      : ""}
+                    {delta != null ? ` · ${delta > 0 ? "+" : ""}${delta}` : ""}
                   </span>
                 </span>
                 <span className="text-sm font-semibold text-muted">
@@ -106,10 +101,7 @@ export function ConstructDeepDive({
                   {practices.length > 0 && (
                     <ul className="mt-2 space-y-1">
                       {practices.map((p) => (
-                        <li
-                          key={p.id}
-                          className="text-[0.75rem] text-slate"
-                        >
+                        <li key={p.id} className="text-[0.75rem] text-slate">
                           · {p.title}
                           {p.minutes ? ` (${p.minutes} min)` : ""}
                         </li>

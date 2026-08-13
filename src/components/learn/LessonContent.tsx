@@ -1,8 +1,5 @@
 import type { ReactNode } from "react";
-import {
-  BLOCK_META,
-  type SessionSection,
-} from "@/lib/lms/curriculum";
+import { BLOCK_META, type SessionSection } from "@/lib/lms/curriculum";
 
 function renderInline(text: string): ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*)/g);
@@ -36,7 +33,7 @@ function renderBody(md: string) {
         {listBuffer.items.map((item, i) => (
           <li key={i}>{renderInline(item)}</li>
         ))}
-      </Tag>
+      </Tag>,
     );
     listBuffer = null;
   }
@@ -67,7 +64,7 @@ function renderBody(md: string) {
           className="mt-4 text-[0.8125rem] font-semibold tracking-tight text-ink first:mt-0"
         >
           {line.replace(/^### /, "")}
-        </h4>
+        </h4>,
       );
       return;
     }
@@ -78,7 +75,7 @@ function renderBody(md: string) {
           className="mt-5 text-[0.9375rem] font-semibold tracking-tight text-ink first:mt-0"
         >
           {line.replace(/^## /, "")}
-        </h3>
+        </h3>,
       );
       return;
     }
@@ -89,7 +86,7 @@ function renderBody(md: string) {
     nodes.push(
       <p key={i} className="text-[0.8125rem] leading-relaxed text-slate">
         {renderInline(line)}
-      </p>
+      </p>,
     );
   });
 
@@ -126,10 +123,7 @@ export function LessonContent({
                 {meta.label.slice(0, 1)}
               </span>
               <div className="min-w-0">
-                <p
-                  className="learn-eyebrow"
-                  style={{ color }}
-                >
+                <p className="learn-eyebrow" style={{ color }}>
                   {meta.label} · {meta.hint}
                 </p>
                 <h2 className="truncate text-[0.875rem] font-semibold tracking-tight text-ink sm:text-[0.9375rem]">

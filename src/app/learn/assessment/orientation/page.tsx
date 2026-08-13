@@ -28,7 +28,11 @@ function ChoiceGroup<T extends string>({
   options: { value: T; label: string; hint?: string }[];
 }) {
   return (
-    <div className="grid gap-1.5 sm:grid-cols-3" role="radiogroup" aria-label={name}>
+    <div
+      className="grid gap-1.5 sm:grid-cols-3"
+      role="radiogroup"
+      aria-label={name}
+    >
       {options.map((opt) => {
         const selected = value === opt.value;
         return (
@@ -38,9 +42,7 @@ function ChoiceGroup<T extends string>({
             role="radio"
             aria-checked={selected}
             onClick={() => onChange(opt.value)}
-            className={`learn-choice ${
-              selected ? "learn-choice-active" : ""
-            }`}
+            className={`learn-choice ${selected ? "learn-choice-active" : ""}`}
           >
             <span className="block text-[0.8125rem] font-semibold">
               {opt.label}
@@ -77,7 +79,7 @@ export default function OrientationAssessmentPage() {
 
   function patch<K extends keyof OrientationResponses>(
     key: K,
-    value: OrientationResponses[K]
+    value: OrientationResponses[K],
   ) {
     setResponses((r) => ({ ...r, [key]: value }));
   }
@@ -162,7 +164,11 @@ export default function OrientationAssessmentPage() {
                   label: "Yes",
                   hint: "I can name or describe models",
                 },
-                { value: "some", label: "A little", hint: "I’ve heard of some" },
+                {
+                  value: "some",
+                  label: "A little",
+                  hint: "I’ve heard of some",
+                },
                 {
                   value: "no",
                   label: "Not really",
@@ -174,9 +180,7 @@ export default function OrientationAssessmentPage() {
         </section>
 
         <section className="learn-card">
-          <h3 className="learn-card-title">
-            2. Do you use leadership models?
-          </h3>
+          <h3 className="learn-card-title">2. Do you use leadership models?</h3>
           <p className="learn-meta mt-1">
             In work, school, sport, family, or community—do you apply a model on
             purpose?
@@ -319,9 +323,7 @@ export default function OrientationAssessmentPage() {
         </section>
 
         <section className="learn-card">
-          <h3 className="learn-card-title">
-            5. Optional — name any you know
-          </h3>
+          <h3 className="learn-card-title">5. Optional — name any you know</h3>
           <p className="learn-meta mt-1">
             Philosophies, theories, or models you already use or have heard of
             (comma-separated is fine).

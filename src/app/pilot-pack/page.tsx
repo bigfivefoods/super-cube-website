@@ -32,10 +32,7 @@ export default function PilotPackPage() {
         <Button href="/pricing#pilot" variant="primary">
           Buy seat pack
         </Button>
-        <Button
-          href="/downloads/super-cube-overview.pptx"
-          variant="ghost"
-        >
+        <Button href="/downloads/super-cube-overview.pptx" variant="ghost">
           Download overview deck
         </Button>
         <Button href="/learn/coach" variant="ghost">
@@ -65,21 +62,25 @@ export default function PilotPackPage() {
               <li>
                 · <strong className="text-ink">Pricing:</strong> from $
                 {COURSE_PRICE_USD} USD per learner; seat packs 10/20/50 on{" "}
-                <a href="/pricing#pilot" className="font-semibold text-ink underline-offset-2 hover:underline">
+                <a
+                  href="/pricing#pilot"
+                  className="font-semibold text-ink underline-offset-2 hover:underline"
+                >
                   pricing
                 </a>
               </li>
               <li>
                 · <strong className="text-ink">Pathway:</strong> orient →
-                baseline → six faces → mid check-in → post → report & certificate
+                baseline → six faces → mid check-in → post → report &
+                certificate
               </li>
               <li>
-                · <strong className="text-ink">Consent:</strong> journals private;
-                coach sees scores only when learners opt in
+                · <strong className="text-ink">Consent:</strong> journals
+                private; coach sees scores only when learners opt in
               </li>
               <li>
-                · <strong className="text-ink">Tools:</strong> org codes, roster,
-                CSV export, face heat map, verify URLs
+                · <strong className="text-ink">Tools:</strong> org codes,
+                roster, CSV export, face heat map, verify URLs
               </li>
               <li>
                 · <strong className="text-ink">Calendar:</strong> 8-week

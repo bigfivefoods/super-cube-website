@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import type { ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
 import { reflectionPrompt } from "@/lib/lms/wins";
-import {
-  loadLmsState,
-  saveReflection,
-} from "@/lib/lms/store";
+import { loadLmsState, saveReflection } from "@/lib/lms/store";
 import type { ProgrammeId } from "@/lib/programmes";
 
 /**
@@ -37,7 +34,7 @@ export function SessionReflection({
     setProgrammeId(
       (state.subscription?.programmeId ||
         state.user?.programmeId ||
-        "adults") as ProgrammeId
+        "adults") as ProgrammeId,
     );
   }, [lessonId]);
 

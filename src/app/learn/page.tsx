@@ -48,7 +48,7 @@ export default function LearnDashboardPage() {
   const cont = getContinueTarget(
     lms,
     journey.current.href,
-    journey.current.title
+    journey.current.title,
   );
   const pulseToday = Boolean(getTodayPulse(lms));
   const streak = lms.practiceStreak?.current ?? 0;
@@ -83,7 +83,7 @@ export default function LearnDashboardPage() {
           />
 
           <div className="mt-5 grid flex-1 gap-5 sm:grid-cols-[1.1fr_0.9fr] sm:items-center">
-            <div className="rounded-2xl bg-ink p-5 text-white sm:p-6">
+            <div className="rounded-2xl bg-void p-5 text-void-fg sm:p-6">
               <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white/45">
                 Pathway · step {journey.current.n} of {journey.total}
               </p>
@@ -116,9 +116,7 @@ export default function LearnDashboardPage() {
                 <SuperCube
                   size="sm"
                   showSkills={false}
-                  scores={
-                    Object.keys(preScores).length ? preScores : undefined
-                  }
+                  scores={Object.keys(preScores).length ? preScores : undefined}
                 />
               </div>
             </div>
@@ -128,7 +126,7 @@ export default function LearnDashboardPage() {
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <a
                 href="#today-next"
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-soft"
+                className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
               >
                 Next page · do this next ↓
               </a>
@@ -206,9 +204,7 @@ export default function LearnDashboardPage() {
                   ? cont.title
                   : "Six faces · courses"
               }
-              detail={
-                cont.detail || "Sessions across all Super-Cube® faces"
-              }
+              detail={cont.detail || "Sessions across all Super-Cube® faces"}
               accent={constructs[2].color}
             />
             <LearnNavTile

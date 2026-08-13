@@ -59,9 +59,7 @@ export default function VerifyCertificatePage() {
         {id || "—"}
       </p>
 
-      {loading && (
-        <p className="mt-6 text-sm text-muted">Checking registry…</p>
-      )}
+      {loading && <p className="mt-6 text-sm text-muted">Checking registry…</p>}
 
       {!loading && found && cert && (
         <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
@@ -109,7 +107,9 @@ export default function VerifyCertificatePage() {
           <p className="font-semibold">Unrecognised format</p>
           <p className="mt-1.5">
             Expected like{" "}
-            <code className="rounded bg-white/80 px-1">SC-20260731-A1B2C3D4</code>
+            <code className="rounded bg-white/80 px-1">
+              SC-20260731-A1B2C3D4
+            </code>
             .
           </p>
         </div>
@@ -123,7 +123,7 @@ export default function VerifyCertificatePage() {
       <div className="mt-10 flex flex-wrap gap-3">
         <Link
           href="/"
-          className="rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white"
+          className="rounded-full sc-btn-primary px-5 py-2.5 text-sm font-semibold "
         >
           Super-Cube® home
         </Link>

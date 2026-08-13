@@ -2,10 +2,7 @@
 
 import Link from "next/link";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
-import {
-  deriveFacePattern,
-  pulseSeries,
-} from "@/lib/lms/face-tracking";
+import { deriveFacePattern, pulseSeries } from "@/lib/lms/face-tracking";
 import type { LocalLmsState } from "@/lib/lms/store";
 
 /** Empty-state / progress theatre for continuous face tracking on the dashboard */
@@ -34,7 +31,7 @@ export function CubeTheatre({ lms }: { lms: LocalLmsState }) {
         </div>
         <Link
           href="/learn/pulse"
-          className="shrink-0 rounded-full bg-ink px-3 py-1.5 text-[0.75rem] font-semibold text-white"
+          className="shrink-0 rounded-full sc-btn-primary px-3 py-1.5 text-[0.75rem] font-semibold "
         >
           {hasPulses ? "Track →" : "First pulse →"}
         </Link>

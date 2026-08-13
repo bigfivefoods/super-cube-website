@@ -6,14 +6,11 @@ import type { NextBestAction as Action } from "@/lib/lms/next-action";
 export function NextBestActionCard({ action }: { action: Action }) {
   const border =
     action.urgency === "high"
-      ? "border-ink bg-ink text-white"
+      ? "border-ink bg-void text-void-fg"
       : "border-black/[0.08] bg-white text-ink";
-  const muted =
-    action.urgency === "high" ? "text-white/65" : "text-muted";
+  const muted = action.urgency === "high" ? "text-white/65" : "text-muted";
   const btn =
-    action.urgency === "high"
-      ? "bg-white text-ink"
-      : "bg-ink text-white";
+    action.urgency === "high" ? "bg-white text-ink" : "bg-void text-void-fg";
 
   return (
     <section className={`mb-4 overflow-hidden rounded-2xl border ${border}`}>

@@ -118,7 +118,9 @@ export function LearnPageHeader({
         {title}
       </h1>
       {description && (
-        <p className="text-[0.9375rem] leading-relaxed text-slate">{description}</p>
+        <p className="text-[0.9375rem] leading-relaxed text-slate">
+          {description}
+        </p>
       )}
     </header>
   );
@@ -135,7 +137,7 @@ export function LearnCard({
 }) {
   const tones = {
     default: "border-black/[0.07] bg-white",
-    ink: "border-transparent bg-ink text-white",
+    ink: "border-transparent bg-void text-void-fg",
     soft: "border-black/[0.06] bg-[#f6f6f6]",
   };
   return (
@@ -163,7 +165,12 @@ export function LearnPageActions({
   secondary,
   tertiary,
 }: {
-  primary?: { href?: string; label: string; onClick?: () => void; disabled?: boolean };
+  primary?: {
+    href?: string;
+    label: string;
+    onClick?: () => void;
+    disabled?: boolean;
+  };
   secondary?: { href?: string; label: string; onClick?: () => void };
   tertiary?: { href?: string; label: string };
 }) {
@@ -176,7 +183,7 @@ export function LearnPageActions({
             className={`inline-flex min-h-12 items-center justify-center rounded-full px-6 text-sm font-semibold transition ${
               primary.disabled
                 ? "pointer-events-none bg-black/20 text-white/70"
-                : "bg-ink text-white hover:bg-ink-soft"
+                : "bg-void text-void-fg hover:opacity-90"
             }`}
           >
             {primary.label}
@@ -186,7 +193,7 @@ export function LearnPageActions({
             type="button"
             disabled={primary.disabled}
             onClick={primary.onClick}
-            className="inline-flex min-h-12 items-center justify-center rounded-full bg-ink px-6 text-sm font-semibold text-white transition hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex min-h-12 items-center justify-center rounded-full sc-btn-primary px-6 text-sm font-semibold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {primary.label}
           </button>

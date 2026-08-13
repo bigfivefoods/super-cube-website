@@ -38,7 +38,7 @@ export default function ResearchPage() {
         </Button>
       </PageHero>
 
-      <section className="border-b border-black/[0.06] bg-[#fafafa]">
+      <section className="border-b border-line bg-surface">
         <div className="container-site max-w-3xl py-10 sm:py-12">
           <SectionHeading
             eyebrow="Open summary"
@@ -62,8 +62,9 @@ export default function ResearchPage() {
             <p>
               Mixed methods: survey (N=132) with confirmatory factor analysis
               (acceptable fit, CFI≈0.86; scale reliability α≈0.60–0.80) and
-              senior-leader interviews (N=10) for thematic validation. Philosophy
-              of mutual respect (Buber’s I–Thou) informs practice design.
+              senior-leader interviews (N=10) for thematic validation.
+              Philosophy of mutual respect (Buber’s I–Thou) informs practice
+              design.
             </p>
             <p>
               Implication: leadership is substantially developable; measurement
@@ -100,7 +101,9 @@ export default function ResearchPage() {
                 key={h.title}
                 className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-6 shadow-[var(--shadow-sm)]"
               >
-                <h3 className="heading-md text-[1.35rem] text-ink">{h.title}</h3>
+                <h3 className="heading-md text-[1.35rem] text-ink">
+                  {h.title}
+                </h3>
                 <p className="mt-3 leading-relaxed text-slate">{h.body}</p>
               </article>
             ))}
@@ -110,7 +113,7 @@ export default function ResearchPage() {
 
       <ImpactResults light />
 
-      <section className="section-pad border-y border-[var(--line)] bg-ink text-cream">
+      <section className="section-pad border-y border-[var(--line)] bg-void text-void-fg">
         <div className="container-site">
           <SectionHeading
             eyebrow="Structural validation"
@@ -122,7 +125,11 @@ export default function ResearchPage() {
             {[
               { k: "2.232", v: "CMIN/DF", d: "Within common SEM thresholds" },
               { k: "0.86", v: "CFI", d: "Comparative Fit Index" },
-              { k: "0.097", v: "RMSEA", d: "Root mean square error of approx." },
+              {
+                k: "0.097",
+                v: "RMSEA",
+                d: "Root mean square error of approx.",
+              },
               {
                 k: "0.60–0.80",
                 v: "Cronbach’s α",
@@ -164,12 +171,15 @@ export default function ResearchPage() {
               .sort(
                 (a, b) =>
                   parseFloat(b.qualitativeShare || "0") -
-                  parseFloat(a.qualitativeShare || "0")
+                  parseFloat(a.qualitativeShare || "0"),
               )
               .map((c) => {
                 const pct = parseFloat(c.qualitativeShare || "0");
                 return (
-                  <div key={c.id} className="grid gap-2 md:grid-cols-[10rem_1fr_3rem] md:items-center">
+                  <div
+                    key={c.id}
+                    className="grid gap-2 md:grid-cols-[10rem_1fr_3rem] md:items-center"
+                  >
                     <div className="flex items-center gap-2">
                       <span
                         className="h-2.5 w-2.5 rounded-full"
@@ -203,10 +213,10 @@ export default function ResearchPage() {
               meaningful themes.
             </p>
             <p>
-              Participants expressed unanimous support for multilevel
-              leadership development—from individual to organisational and
-              network levels—with recommendations for inclusive approaches that
-              can extend to suppliers and customers for a broader ripple effect.
+              Participants expressed unanimous support for multilevel leadership
+              development—from individual to organisational and network
+              levels—with recommendations for inclusive approaches that can
+              extend to suppliers and customers for a broader ripple effect.
             </p>
           </div>
         </div>
@@ -215,10 +225,7 @@ export default function ResearchPage() {
       <section className="section-pad border-t border-[var(--line)] bg-paper">
         <div className="container-site grid gap-10 lg:grid-cols-2">
           <div>
-            <SectionHeading
-              eyebrow="Limitations"
-              title="Honest about scope."
-            />
+            <SectionHeading eyebrow="Limitations" title="Honest about scope." />
             <div className="prose-site mt-6">
               <p>
                 The model was developed and validated within a single-case study

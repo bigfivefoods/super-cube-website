@@ -10,7 +10,11 @@ export const metadata: Metadata = {
 };
 
 const bookCovers = [
-  { id: "choices", title: "Choices", src: "/images/programs/choices-cover.jpg" },
+  {
+    id: "choices",
+    title: "Choices",
+    src: "/images/programs/choices-cover.jpg",
+  },
   {
     id: "principles",
     title: "Principles",
@@ -190,7 +194,11 @@ export default function ProgramsPage() {
                     </li>
                   ))}
                 </ul>
-                <Button href="/contact" variant="primary" className="mt-8 w-full">
+                <Button
+                  href="/contact"
+                  variant="primary"
+                  className="mt-8 w-full"
+                >
                   Enquire
                 </Button>
               </article>
@@ -234,7 +242,7 @@ export default function ProgramsPage() {
         </div>
       </section>
 
-      <section className="section-pad border-t border-[var(--line)] bg-ink text-cream">
+      <section className="section-pad border-t border-[var(--line)] bg-void text-void-fg">
         <div className="container-site">
           <SectionHeading
             eyebrow="Implementation levels"

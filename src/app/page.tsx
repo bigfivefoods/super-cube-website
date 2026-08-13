@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { HomeHero } from "@/components/HomeHero";
-import {
-  courseJsonLd,
-  JsonLd,
-  organizationJsonLd,
-} from "@/components/JsonLd";
+import { courseJsonLd, JsonLd, organizationJsonLd } from "@/components/JsonLd";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, CTABanner, SectionHeading } from "@/components/ui";
 import { site } from "@/lib/content";
@@ -23,7 +19,7 @@ export default function HomePage() {
       <HomeHero />
 
       {/* 9. Research strip */}
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-paper">
         <div className="container-site grid gap-8 sm:gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-center lg:gap-12">
           <SectionHeading
             eyebrow="Evidence"
@@ -55,7 +51,7 @@ export default function HomePage() {
             ].map((item) => (
               <div
                 key={item.v}
-                className="rounded-xl border border-black/[0.08] bg-[#fafafa] p-3.5 sm:p-5"
+                className="rounded-xl border border-line bg-surface p-3.5 sm:p-5"
               >
                 <p className="text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
                   {item.k}
@@ -79,7 +75,7 @@ export default function HomePage() {
       </section>
 
       {/* 10. Proof of growth */}
-      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-t border-line bg-surface">
         <div className="container-site grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
             <SectionHeading
@@ -91,7 +87,8 @@ export default function HomePage() {
               <li>· Pre → post comparison across all six Super-Cube® faces</li>
               <li>· Downloadable growth PDF + certificate with verify ID</li>
               <li>
-                · Optional private share link for coaches (journals stay private)
+                · Optional private share link for coaches (journals stay
+                private)
               </li>
             </ul>
             <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
@@ -103,7 +100,7 @@ export default function HomePage() {
               </Button>
             </div>
           </div>
-          <div className="rounded-2xl border border-black/[0.08] bg-white p-5 sm:p-6">
+          <div className="rounded-2xl border border-line bg-elevated p-5 sm:p-6">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Anonymised cohort illustration
             </p>
@@ -123,7 +120,7 @@ export default function HomePage() {
               ].map((row) => (
                 <div
                   key={row.n}
-                  className="flex items-center justify-between rounded-lg bg-[#fafafa] px-3 py-2 text-sm"
+                  className="flex items-center justify-between rounded-lg bg-surface px-3 py-2 text-sm"
                 >
                   <span className="font-medium text-ink">{row.n}</span>
                   <span className="font-semibold tabular-nums text-ink">

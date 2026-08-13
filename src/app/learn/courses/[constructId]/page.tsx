@@ -44,7 +44,7 @@ export default function CourseDetailPage() {
   }
 
   const doneCount = course.lessons.filter(
-    (l) => state?.lessonProgress[l.id] === "completed"
+    (l) => state?.lessonProgress[l.id] === "completed",
   ).length;
   const pct = Math.round((doneCount / course.lessons.length) * 100);
   const firstIncomplete =
@@ -73,10 +73,7 @@ export default function CourseDetailPage() {
         </div>
 
         <div className="border-t border-black/[0.05] px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
-          <p
-            className="learn-eyebrow"
-            style={{ color: construct.color }}
-          >
+          <p className="learn-eyebrow" style={{ color: construct.color }}>
             Super-Cube® · {construct.shortName}
           </p>
           <p className="mt-1 text-[0.875rem] font-medium text-ink sm:text-[0.9375rem]">
@@ -103,9 +100,7 @@ export default function CourseDetailPage() {
           </div>
           <div className="mt-3.5 max-w-md">
             <div className="learn-progress">
-              <div
-                style={{ width: `${pct}%`, background: construct.color }}
-              />
+              <div style={{ width: `${pct}%`, background: construct.color }} />
             </div>
             <p className="learn-meta mt-1">
               {doneCount}/{course.lessons.length} complete · {pct}%

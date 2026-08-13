@@ -79,7 +79,7 @@ export function HomeHero() {
   return (
     <>
       {/* 1. Hero — media + title/lede/CTAs only (no cube) */}
-      <section className="page-hero page-hero--full page-hero--media relative isolate flex w-full overflow-hidden bg-ink">
+      <section className="page-hero page-hero--full page-hero--media relative isolate flex w-full overflow-hidden bg-void">
         <Image
           src="/images/hero/leadership-hero.jpg"
           alt="Super-Cube® leadership development"
@@ -135,7 +135,7 @@ export function HomeHero() {
       </section>
 
       {/* 2. Rotating model — interactive SuperCube */}
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-paper">
         <div className="container-site grid items-center gap-8 sm:gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:gap-10 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-12 xl:gap-16">
           <div className="min-w-0 order-2 md:order-1">
             <SectionHeading
@@ -164,7 +164,7 @@ export function HomeHero() {
             </div>
           </div>
           <div className="order-1 flex justify-center md:order-2 md:justify-end">
-            <div className="w-full max-w-[15rem] bg-white sm:max-w-[18rem] md:max-w-[19rem] lg:max-w-[21rem]">
+            <div className="w-full max-w-[15rem] bg-paper sm:max-w-[18rem] md:max-w-[19rem] lg:max-w-[21rem]">
               <SuperCube size="md" showSkills />
             </div>
           </div>
@@ -172,7 +172,7 @@ export function HomeHero() {
       </section>
 
       {/* 3. Who the programme is for — Kids / Adolescents / Adults */}
-      <section className="section-pad border-t border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-t border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow={t("home.programmesEyebrow")}
@@ -187,7 +187,7 @@ export function HomeHero() {
                 <Link
                   key={p.id}
                   href={`/what#${p.id}`}
-                  className="card-lift group flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white"
+                  className="card-lift group flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated"
                 >
                   <div
                     className="h-1.5 w-full"
@@ -227,7 +227,7 @@ export function HomeHero() {
       </section>
 
       {/* 4. Philosophy → theory → model */}
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-paper">
         <div className="container-site">
           <SectionHeading
             eyebrow={t("home.ptmEyebrow")}
@@ -254,7 +254,7 @@ export function HomeHero() {
             ).map((card) => (
               <div
                 key={card.titleKey}
-                className="rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6"
+                className="rounded-2xl border border-line bg-surface p-5 sm:p-6"
               >
                 <h3 className="text-base font-semibold tracking-tight text-ink sm:text-lg">
                   {t(card.titleKey)}
@@ -266,19 +266,19 @@ export function HomeHero() {
             ))}
           </div>
 
-          <div className="mt-6 grid gap-0 overflow-hidden rounded-xl border border-black/[0.08] sm:mt-8 sm:rounded-2xl md:grid-cols-2">
-            <div className="bg-ink p-6 text-white sm:p-8 md:p-10">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-white/50">
+          <div className="mt-6 grid gap-0 overflow-hidden rounded-xl border border-line sm:mt-8 sm:rounded-2xl md:grid-cols-2">
+            <div className="bg-void p-6 text-void-fg sm:p-8 md:p-10">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-void-fg/50">
                 {t("home.coreBeliefEyebrow")}
               </p>
-              <h3 className="heading-lg mt-3 text-white">
+              <h3 className="heading-lg mt-3 text-void-fg">
                 {t("home.coreBelief")}
               </h3>
-              <p className="mt-4 text-base leading-relaxed text-white/65">
+              <p className="mt-4 text-base leading-relaxed text-void-fg/65">
                 {t("home.coreBeliefBody")}
               </p>
             </div>
-            <div className="flex flex-col justify-center gap-0 bg-white p-1 sm:p-2 md:p-4">
+            <div className="flex flex-col justify-center gap-0 bg-elevated p-1 sm:p-2 md:p-4">
               <p className="px-4 pt-3 text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted sm:px-6">
                 {t("home.theoryMapLabel")}
               </p>
@@ -286,7 +286,7 @@ export function HomeHero() {
                 <div
                   key={th.name}
                   className={`flex items-start gap-3 px-4 py-3.5 sm:px-6 sm:py-4 ${
-                    i < 3 ? "border-b border-black/[0.06]" : ""
+                    i < 3 ? "border-b border-line" : ""
                   }`}
                 >
                   <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-ink" />
@@ -298,7 +298,7 @@ export function HomeHero() {
                   </div>
                 </div>
               ))}
-              <div className="border-t border-black/[0.06] px-4 py-3 sm:px-6">
+              <div className="border-t border-line px-4 py-3 sm:px-6">
                 <Link
                   href="/the-model#theory"
                   className="text-sm font-semibold text-ink underline-offset-4 hover:underline"
@@ -310,7 +310,11 @@ export function HomeHero() {
           </div>
 
           <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap">
-            <Button href="/the-model" variant="primary" className="w-full sm:w-auto">
+            <Button
+              href="/the-model"
+              variant="primary"
+              className="w-full sm:w-auto"
+            >
               {t("cta.exploreModel")}
             </Button>
             <Button href="/how" variant="ghost" className="w-full sm:w-auto">
@@ -321,7 +325,7 @@ export function HomeHero() {
       </section>
 
       {/* 5. Six constructs */}
-      <section className="section-pad border-y border-black/[0.06] bg-[#fafafa]">
+      <section className="section-pad border-y border-line bg-surface">
         <div className="container-site">
           <SectionHeading
             eyebrow={t("home.facesEyebrow")}
@@ -334,9 +338,9 @@ export function HomeHero() {
               <Link
                 key={c.id}
                 href={`/constructs#${c.id}`}
-                className="card-lift group relative overflow-hidden rounded-xl border border-black/[0.08] bg-white p-4 sm:p-5 md:p-6"
+                className="card-lift group relative overflow-hidden rounded-xl border border-line bg-elevated p-4 sm:p-5 md:p-6"
               >
-                <div className="relative mb-5 h-12 w-12 overflow-hidden rounded-xl bg-[#f4f4f4]">
+                <div className="relative mb-5 h-12 w-12 overflow-hidden rounded-xl bg-cream-dark">
                   <Image
                     src={constructIcons[c.id] || constructIcons.choices}
                     alt=""
@@ -364,7 +368,7 @@ export function HomeHero() {
       </section>
 
       {/* 6. Benefits — Holistic / Longitudinal / Multi-level */}
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-paper">
         <div className="container-site">
           <SectionHeading
             eyebrow={t("home.benefitsEyebrow")}
@@ -375,7 +379,7 @@ export function HomeHero() {
             {benefits.map((b) => (
               <article
                 key={b.id}
-                className="flex flex-col rounded-2xl border border-black/[0.08] bg-[#fafafa] p-5 sm:p-6"
+                className="flex flex-col rounded-2xl border border-line bg-surface p-5 sm:p-6"
               >
                 <div className="relative h-12 w-12 sm:h-14 sm:w-14">
                   <Image
@@ -410,11 +414,14 @@ export function HomeHero() {
       </section>
 
       {/* 7. Trust strip + social proof */}
-      <section className="border-y border-black/[0.06] bg-white">
+      <section className="border-y border-line bg-paper">
         <div className="container-site py-4 sm:py-5">
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
             {trustItems.map((item) => (
-              <div key={item.label} className="min-w-0 text-center sm:text-left">
+              <div
+                key={item.label}
+                className="min-w-0 text-center sm:text-left"
+              >
                 <p className="text-[0.7rem] font-semibold tracking-tight text-ink sm:text-xs">
                   {item.label}
                 </p>
@@ -433,12 +440,12 @@ export function HomeHero() {
       <SocialProofStrip />
 
       {/* 8. Stats strip */}
-      <section className="border-b border-black/[0.06] bg-[#fafafa]">
-        <div className="container-site grid grid-cols-2 gap-px bg-black/[0.06] md:grid-cols-4">
+      <section className="border-b border-line bg-surface">
+        <div className="container-site grid grid-cols-2 gap-px bg-line md:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="bg-[#fafafa] px-3 py-6 sm:px-5 sm:py-10 md:px-6 md:py-12"
+              className="bg-surface px-3 py-6 sm:px-5 sm:py-10 md:px-6 md:py-12"
             >
               <p className="text-xl font-semibold tracking-tight text-ink sm:text-3xl md:text-4xl">
                 {stat.value}

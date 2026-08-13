@@ -26,7 +26,7 @@ export function ConstructBanner({
   return (
     <figure className="space-y-3">
       <div
-        className="relative overflow-hidden rounded-2xl bg-ink shadow-[0_20px_50px_-24px_rgba(0,0,0,0.45)] ring-1 ring-black/10"
+        className="relative overflow-hidden rounded-2xl bg-void shadow-[0_20px_50px_-24px_rgba(0,0,0,0.45)] ring-1 ring-black/10"
         style={{
           boxShadow: `0 20px 50px -24px rgba(0,0,0,0.4), 0 0 0 1px ${color}33, inset 0 0 0 1px rgba(255,255,255,0.06)`,
         }}
@@ -125,7 +125,7 @@ export function ConstructBannerStatic({
   return (
     <figure className="space-y-3">
       <div
-        className="relative overflow-hidden rounded-2xl bg-ink ring-1 ring-black/10"
+        className="relative overflow-hidden rounded-2xl bg-void ring-1 ring-black/10"
         style={{
           boxShadow: `0 20px 50px -24px rgba(0,0,0,0.4), 0 0 0 1px ${color}33`,
         }}
@@ -139,7 +139,13 @@ export function ConstructBannerStatic({
           <p className="text-[0.7rem] font-semibold text-white/90">{name}</p>
         </div>
         <div className="relative aspect-[16/9] w-full sm:aspect-[1441/630]">
-          <Image src={banner} alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
+          <Image
+            src={banner}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(max-width: 1024px) 100vw, 66vw"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-transparent" />
           <div className="absolute left-1/2 top-1/2 flex h-14 w-14 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 shadow-lg">
             <span

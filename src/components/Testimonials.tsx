@@ -16,7 +16,7 @@ function QuoteCard({
 }) {
   return (
     <article
-      className={`flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white ${
+      className={`flex h-full flex-col rounded-2xl border border-line bg-elevated ${
         compact ? "p-5" : "p-5 sm:p-6"
       }`}
       style={{ boxShadow: `inset 3px 0 0 ${accent}` }}
@@ -35,8 +35,10 @@ function QuoteCard({
         {t.quote}
         <span className="text-muted">”</span>
       </p>
-      <footer className="mt-4 border-t border-black/[0.05] pt-3">
-        <p className="text-sm font-semibold tracking-tight text-ink">{t.name}</p>
+      <footer className="mt-4 border-t border-line pt-3">
+        <p className="text-sm font-semibold tracking-tight text-ink">
+          {t.name}
+        </p>
         <p className="text-xs text-muted">{t.org}</p>
       </footer>
     </article>
@@ -57,7 +59,7 @@ export function TestimonialsSection({
 }) {
   const list = limit ? testimonials.slice(0, limit) : testimonials;
   return (
-    <section className="section-pad border-b border-black/[0.06] bg-[#fafafa]">
+    <section className="section-pad border-b border-line bg-surface">
       <div className="container-site">
         <div className="max-w-2xl">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">

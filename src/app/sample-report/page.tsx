@@ -52,21 +52,21 @@ export default function SampleReportPage() {
       <section className="section-pad bg-[#fafafa]">
         <div className="container-site max-w-3xl">
           {/* Conversion band above the fold of the report */}
-          <div className="mb-6 rounded-2xl border border-black/[0.08] bg-ink px-5 py-5 text-white sm:px-6 sm:py-6">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/50">
+          <div className="mb-6 rounded-2xl border border-line bg-void px-5 py-5 text-void-fg sm:px-6 sm:py-6">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-void-fg/50">
               For schools & L&D
             </p>
             <p className="mt-1.5 text-lg font-semibold tracking-tight">
               Baseline 52 → Post 68 after an 8-week pattern
             </p>
-            <p className="mt-1 text-sm text-white/65">
+            <p className="mt-1 text-sm text-void-fg/65">
               Capacity change you can show a principal or board—not activity
               completion rates.
             </p>
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Link
                 href="/pricing#pilot"
-                className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-ink"
+                className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-5 text-sm font-semibold text-black"
               >
                 Book a pilot
               </Link>
@@ -92,10 +92,7 @@ export default function SampleReportPage() {
             <div className="mt-6 grid grid-cols-3 gap-3">
               <Stat label="Baseline" value={String(SAMPLE.pre)} />
               <Stat label="Post" value={String(SAMPLE.post)} />
-              <Stat
-                label="Growth"
-                value={`+${SAMPLE.post - SAMPLE.pre}`}
-              />
+              <Stat label="Growth" value={`+${SAMPLE.post - SAMPLE.pre}`} />
             </div>
 
             <h3 className="mt-8 text-sm font-semibold uppercase tracking-[0.12em] text-muted">
@@ -180,7 +177,9 @@ function Stat({ label, value }: { label: string; value: string }) {
       <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
         {label}
       </p>
-      <p className="mt-1 text-xl font-semibold tabular-nums text-ink">{value}</p>
+      <p className="mt-1 text-xl font-semibold tabular-nums text-ink">
+        {value}
+      </p>
     </div>
   );
 }

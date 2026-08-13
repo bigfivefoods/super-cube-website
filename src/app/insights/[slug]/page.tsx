@@ -41,7 +41,9 @@ export default async function InsightPostPage({
             {post.date} · {post.readingMinutes} min read ·{" "}
             {post.tags.join(" · ")}
           </p>
-          <p className="mt-4 text-lg leading-relaxed text-slate">{post.excerpt}</p>
+          <p className="mt-4 text-lg leading-relaxed text-slate">
+            {post.excerpt}
+          </p>
         </div>
       </header>
       <div className="section-pad bg-[#fafafa]">

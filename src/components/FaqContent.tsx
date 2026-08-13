@@ -35,12 +35,12 @@ export function FaqContent() {
         </Button>
       </PageHero>
 
-      <section className="section-pad bg-white">
+      <section className="section-pad bg-paper">
         <div className="container-site mx-auto max-w-3xl space-y-3">
           {ITEMS.map((item) => (
             <details
               key={item.q}
-              className="group rounded-2xl border border-black/[0.08] bg-[#fafafa] px-5 py-4 open:bg-white open:shadow-sm"
+              className="group rounded-2xl border border-line bg-surface px-5 py-4 open:bg-elevated open:shadow-sm"
             >
               <summary className="cursor-pointer list-none text-[0.975rem] font-semibold tracking-tight text-ink marker:content-none [&::-webkit-details-marker]:hidden">
                 <span className="flex items-start justify-between gap-3">

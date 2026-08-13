@@ -118,7 +118,9 @@ export default function WhyLeadershipPage() {
                 <p className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                   {stat.value}
                 </p>
-                <p className="mt-2 text-sm font-semibold text-ink">{stat.label}</p>
+                <p className="mt-2 text-sm font-semibold text-ink">
+                  {stat.label}
+                </p>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
                   {stat.detail}
                 </p>
@@ -138,7 +140,9 @@ export default function WhyLeadershipPage() {
                 <h3 className="text-base font-semibold tracking-tight text-ink">
                   {p.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate">{p.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate">
+                  {p.body}
+                </p>
                 <p className="mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
                   {p.source}
                 </p>
@@ -271,7 +275,9 @@ export default function WhyLeadershipPage() {
 
           <div className="mt-10 grid gap-4 md:grid-cols-2">
             {leadershipForSdgs.map((row) => {
-              const construct = constructs.find((c) => c.id === row.constructId)!;
+              const construct = constructs.find(
+                (c) => c.id === row.constructId,
+              )!;
               return (
                 <article
                   key={row.constructId}
@@ -375,16 +381,22 @@ export default function WhyLeadershipPage() {
           <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted">
             Statistics are summarised from official UN publications for
             educational framing on this site. Always consult the latest UN SDG
-            reports for full methodologies, country data, and updates. Super-Cube®
-            does not claim UN endorsement.
+            reports for full methodologies, country data, and updates.
+            Super-Cube® does not claim UN endorsement.
           </p>
           <p className="mt-3 text-xs text-muted">
             Also see{" "}
-            <Link href="/research" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/research"
+              className="text-ink underline-offset-2 hover:underline"
+            >
               Super-Cube® research
             </Link>{" "}
             and{" "}
-            <Link href="/the-model" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/the-model"
+              className="text-ink underline-offset-2 hover:underline"
+            >
               the model
             </Link>
             .

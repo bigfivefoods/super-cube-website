@@ -42,7 +42,7 @@ export function LearnCourseNav({
 
   const courses = useMemo(
     () => getCoursesForProgramme(programmeId),
-    [programmeId]
+    [programmeId],
   );
 
   const pathConstruct = useMemo(() => {
@@ -57,7 +57,7 @@ export function LearnCourseNav({
 
   // Which course modules are open (auto-open current construct)
   const [openConstructs, setOpenConstructs] = useState<Record<string, boolean>>(
-    {}
+    {},
   );
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export function LearnCourseNav({
   function courseDoneCount(course: Course) {
     if (!state) return 0;
     return course.lessons.filter(
-      (l) => state.lessonProgress[l.id] === "completed"
+      (l) => state.lessonProgress[l.id] === "completed",
     ).length;
   }
 
@@ -82,9 +82,7 @@ export function LearnCourseNav({
   return (
     <div
       className={`${
-        nested
-          ? "ml-2 border-l border-black/[0.08] pl-2 lg:ml-3 lg:pl-2.5"
-          : ""
+        nested ? "ml-2 border-l border-black/[0.08] pl-2 lg:ml-3 lg:pl-2.5" : ""
       } mt-0.5 space-y-0.5 pb-1`}
       role="group"
       aria-label="Courses and sessions"
@@ -110,8 +108,7 @@ export function LearnCourseNav({
           if (!construct) return null;
 
           const isCourseActive = pathConstruct === course.constructId;
-          const isOpen =
-            openConstructs[course.constructId] ?? isCourseActive;
+          const isOpen = openConstructs[course.constructId] ?? isCourseActive;
           const done = courseDoneCount(course);
           const total = course.lessons.length;
           const allDone = done === total && total > 0;
@@ -147,7 +144,7 @@ export function LearnCourseNav({
                   href={`/learn/courses/${course.constructId}`}
                   className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[0.75rem] font-medium tracking-tight transition ${
                     isCourseActive && !pathLesson
-                      ? "bg-ink text-white"
+                      ? "bg-void text-void-fg"
                       : isCourseActive
                         ? "bg-black/[0.05] text-ink"
                         : "text-slate hover:bg-black/[0.04] hover:text-ink"
@@ -183,8 +180,7 @@ export function LearnCourseNav({
                     const active = pathLesson === lesson.id;
                     const completed =
                       state?.lessonProgress[lesson.id] === "completed";
-                    const type =
-                      TYPE_SHORT[lesson.lessonType] ?? "Session";
+                    const type = TYPE_SHORT[lesson.lessonType] ?? "Session";
 
                     return (
                       <li key={lesson.id}>
@@ -192,7 +188,7 @@ export function LearnCourseNav({
                           href={href}
                           className={`flex items-start gap-1.5 rounded-md px-2 py-1.5 text-left transition ${
                             active
-                              ? "bg-ink text-white"
+                              ? "bg-void text-void-fg"
                               : "text-slate hover:bg-black/[0.04] hover:text-ink"
                           }`}
                           title={lesson.title}
@@ -202,7 +198,7 @@ export function LearnCourseNav({
                               active
                                 ? "bg-white/20 text-white"
                                 : completed
-                                  ? "bg-ink text-white"
+                                  ? "bg-void text-void-fg"
                                   : "border border-black/[0.12] text-muted"
                             }`}
                           >
@@ -214,7 +210,10 @@ export function LearnCourseNav({
                                 active ? "text-white" : "text-ink"
                               }`}
                             >
-                              {lesson.title.replace(/^Overview:\s*/i, "Overview · ")}
+                              {lesson.title.replace(
+                                /^Overview:\s*/i,
+                                "Overview · ",
+                              )}
                             </span>
                             <span
                               className={`mt-0.5 block text-[0.6rem] ${
@@ -271,7 +270,7 @@ export function useLearnCourseContext() {
   const construct = constructs.find((c) => c.id === pathConstruct);
   const course = pathConstruct
     ? getCoursesForProgramme(programmeId).find(
-        (c) => c.constructId === pathConstruct
+        (c) => c.constructId === pathConstruct,
       )
     : undefined;
   const lesson = course?.lessons.find((l) => l.id === pathLesson);
@@ -281,8 +280,6 @@ export function useLearnCourseContext() {
     construct,
     course,
     lesson,
-    courseId: pathConstruct
-      ? courseId(programmeId, pathConstruct)
-      : null,
+    courseId: pathConstruct ? courseId(programmeId, pathConstruct) : null,
   };
 }

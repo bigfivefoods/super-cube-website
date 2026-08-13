@@ -18,7 +18,8 @@ export function ProfileGate({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!pathname?.startsWith("/learn")) return;
-    if (ALLOW.some((p) => pathname === p || pathname.startsWith(p + "/"))) return;
+    if (ALLOW.some((p) => pathname === p || pathname.startsWith(p + "/")))
+      return;
     try {
       if (!profileComplete(getProfile())) {
         router.replace("/learn/welcome");

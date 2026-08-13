@@ -49,7 +49,8 @@ export default function LearnAnalyticsPage() {
           <>
             <strong>GA4 not configured.</strong> Set{" "}
             <code className="text-xs">NEXT_PUBLIC_GA_ID</code> in Vercel
-            Production and redeploy. See <code className="text-xs">docs/ANALYTICS.md</code>.
+            Production and redeploy. See{" "}
+            <code className="text-xs">docs/ANALYTICS.md</code>.
           </>
         )}
       </div>
@@ -75,7 +76,11 @@ export default function LearnAnalyticsPage() {
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="learn-card-title">Recent events</h2>
           <div className="flex gap-2">
-            <button type="button" className="learn-btn learn-btn-ghost" onClick={refresh}>
+            <button
+              type="button"
+              className="learn-btn learn-btn-ghost"
+              onClick={refresh}
+            >
               Refresh
             </button>
             <button

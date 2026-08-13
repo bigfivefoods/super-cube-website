@@ -59,7 +59,7 @@ export function LearnShell({
                 const isLearn = item.id === "learn";
                 const cls = `flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[0.8125rem] font-medium tracking-tight transition lg:w-full ${
                   active
-                    ? "bg-ink text-white"
+                    ? "bg-void text-void-fg"
                     : "text-slate hover:bg-black/[0.04] hover:text-ink"
                 }`;
 
@@ -87,7 +87,7 @@ export function LearnShell({
                           onClick={() => setLearnOpen((v) => !v)}
                           className={`flex shrink-0 items-center justify-center rounded-xl px-2 text-[0.7rem] font-semibold transition ${
                             active
-                              ? "bg-ink text-white hover:bg-ink-soft"
+                              ? "bg-void text-void-fg hover:opacity-90"
                               : "text-muted hover:bg-black/[0.04] hover:text-ink"
                           }`}
                           aria-expanded={learnOpen}
@@ -134,10 +134,7 @@ export function LearnShell({
 
             {learnOpen && (
               <div className="mt-2 rounded-xl border border-black/[0.07] bg-[#fafafa] p-2.5 lg:hidden">
-                <LearnCourseNav
-                  expanded
-                  onToggle={() => setLearnOpen(false)}
-                />
+                <LearnCourseNav expanded onToggle={() => setLearnOpen(false)} />
               </div>
             )}
 

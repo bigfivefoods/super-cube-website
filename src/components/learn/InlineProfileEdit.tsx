@@ -20,7 +20,7 @@ export function InlineProfileEdit({
   const [open, setOpen] = useState(false);
   const [goal, setGoal] = useState(profile?.goal || "");
   const [cohortKind, setCohortKind] = useState<CohortKind>(
-    profile?.cohortKind || "solo"
+    profile?.cohortKind || "solo",
   );
   const [code, setCode] = useState(state.orgCode || "");
 
@@ -69,7 +69,7 @@ export function InlineProfileEdit({
               onClick={() => setCohortKind(c.id)}
               className={`rounded-full border px-2.5 py-1 text-[0.7rem] font-semibold ${
                 cohortKind === c.id
-                  ? "border-ink bg-ink text-white"
+                  ? "border-ink bg-void text-void-fg"
                   : "border-black/[0.1] text-ink"
               }`}
             >
@@ -91,7 +91,11 @@ export function InlineProfileEdit({
         </label>
       )}
       <div className="flex gap-2">
-        <button type="button" onClick={save} className="learn-btn learn-btn-primary">
+        <button
+          type="button"
+          onClick={save}
+          className="learn-btn learn-btn-primary"
+        >
           Save
         </button>
         <button

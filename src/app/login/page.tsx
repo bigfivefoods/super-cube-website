@@ -6,7 +6,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { FormEvent, Suspense, useMemo, useState } from "react";
 import { constructs } from "@/lib/content";
 import { createClient } from "@/lib/supabase/client";
-import { isSupabaseConfigured, loadLmsState, saveLmsState } from "@/lib/lms/store";
+import {
+  isSupabaseConfigured,
+  loadLmsState,
+  saveLmsState,
+} from "@/lib/lms/store";
 
 const rainbow = constructs.map((c) => c.color).join(", ");
 
@@ -60,7 +64,7 @@ function LoginForm() {
       setError(
         err.message === "Invalid login credentials"
           ? "Email or password is incorrect. Try again, or create an account."
-          : err.message
+          : err.message,
       );
       return;
     }
@@ -78,7 +82,10 @@ function LoginForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-5" noValidate>
       <div>
-        <label htmlFor="login-email" className="block text-[0.8125rem] font-semibold text-ink">
+        <label
+          htmlFor="login-email"
+          className="block text-[0.8125rem] font-semibold text-ink"
+        >
           Email
         </label>
         <input
@@ -137,7 +144,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="flex w-full min-h-12 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white transition hover:bg-ink-soft disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex w-full min-h-12 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? (
           <span className="inline-flex items-center gap-2">
@@ -167,8 +174,8 @@ function LoginForm() {
           </>
         ) : (
           <>
-            Demo mode: sign-in saves a local session on this device. Add Supabase
-            keys for cloud sync.
+            Demo mode: sign-in saves a local session on this device. Add
+            Supabase keys for cloud sync.
           </>
         )}
       </div>
@@ -200,7 +207,7 @@ function LoginShell({ children }: { children: React.ReactNode }) {
 
       <div className="container-site relative grid gap-8 py-10 sm:py-12 lg:grid-cols-2 lg:items-stretch lg:gap-0 lg:py-16">
         {/* Brand / value panel */}
-        <aside className="flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.07] bg-ink p-7 text-white shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] sm:p-9 lg:rounded-r-none lg:border-r-0">
+        <aside className="flex flex-col justify-between overflow-hidden rounded-3xl border border-black/[0.07] bg-void p-7 text-white shadow-[0_20px_50px_-28px_rgba(0,0,0,0.45)] sm:p-9 lg:rounded-r-none lg:border-r-0">
           <div>
             <Link
               href="/"
@@ -307,7 +314,10 @@ function LoginShell({ children }: { children: React.ReactNode }) {
           {children}
 
           <p className="mt-8 text-center text-[0.7rem] text-muted">
-            <Link href="/" className="font-medium hover:text-ink hover:underline">
+            <Link
+              href="/"
+              className="font-medium hover:text-ink hover:underline"
+            >
               ← Back to site
             </Link>
             <span className="mx-2 text-black/15">·</span>

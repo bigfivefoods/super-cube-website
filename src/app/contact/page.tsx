@@ -33,7 +33,10 @@ export default function ContactPage() {
                 "Outline assessment, blended learning, and measurement options.",
                 "Explore research-informed design for multi-entity networks.",
               ].map((item) => (
-                <li key={item} className="flex gap-3 text-slate leading-relaxed">
+                <li
+                  key={item}
+                  className="flex gap-3 text-slate leading-relaxed"
+                >
                   <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />
                   {item}
                 </li>

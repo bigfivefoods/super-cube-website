@@ -18,13 +18,13 @@ export default function MediaKitPage() {
         title="Media kit"
         description="Logos, model description, research abstract, overview slides, and how to credit Super-Cube®. For interviews and features: hello@super-cube.me."
       >
-        <Button
-          href="/downloads/super-cube-overview.pptx"
-          variant="primary"
-        >
+        <Button href="/downloads/super-cube-overview.pptx" variant="primary">
           Download overview deck (.pptx)
         </Button>
-        <Button href={`mailto:${site.email}?subject=Media%20enquiry`} variant="ghost">
+        <Button
+          href={`mailto:${site.email}?subject=Media%20enquiry`}
+          variant="ghost"
+        >
           Email media
         </Button>
         <Button href="/research" variant="ghost">
@@ -70,13 +70,13 @@ export default function MediaKitPage() {
               <SectionHeading title="Overview presentation" />
               <p className="mt-3 text-sm leading-relaxed text-slate">
                 A 12-slide Super-Cube® overview for schools, companies, and
-                partners—model, research, Learn pathway, seat packs, and pricing.
-                Widescreen PowerPoint (.pptx).
+                partners—model, research, Learn pathway, seat packs, and
+                pricing. Widescreen PowerPoint (.pptx).
               </p>
               <a
                 href="/downloads/super-cube-overview.pptx"
                 download
-                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-soft"
+                className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
               >
                 Download Super-Cube overview (.pptx)
               </a>
@@ -94,7 +94,9 @@ export default function MediaKitPage() {
               </p>
             </div>
             <div>
-              <h3 className="text-base font-semibold text-ink">Suggested citation</h3>
+              <h3 className="text-base font-semibold text-ink">
+                Suggested citation
+              </h3>
               <p className="mt-2 rounded-xl border border-black/[0.08] bg-white p-4 font-mono text-xs leading-relaxed text-slate">
                 Muller, C. R. (2020). A Leadership Skills Development Model for
                 the Kwaden Group: A Case Study of an African FMCG
@@ -105,7 +107,8 @@ export default function MediaKitPage() {
             <div>
               <h3 className="text-base font-semibold text-ink">Boilerplate</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate">
-                {site.description} Learn more at {site.url.replace("https://", "")}.
+                {site.description} Learn more at{" "}
+                {site.url.replace("https://", "")}.
               </p>
             </div>
           </div>

@@ -26,7 +26,7 @@ export function ConstructsHero() {
       </PageHero>
 
       <nav
-        className="sticky top-14 z-40 border-b border-black/[0.06] bg-white/95 py-2.5 backdrop-blur-md md:top-16"
+        className="sticky top-14 z-40 border-b border-line bg-paper/95 py-2.5 backdrop-blur-md md:top-16"
         aria-label={t("face.jump")}
       >
         <div className="container-site flex flex-wrap items-center gap-2">
@@ -37,7 +37,7 @@ export function ConstructsHero() {
             <a
               key={c.id}
               href={`#${c.id}`}
-              className="face-jump inline-flex items-center gap-1.5 rounded-full border border-black/[0.08] bg-white px-3 py-1.5 text-[0.8125rem] font-semibold text-ink transition"
+              className="face-jump inline-flex items-center gap-1.5 rounded-full border border-line bg-elevated px-3 py-1.5 text-[0.8125rem] font-semibold text-ink transition"
               style={{ ["--face-color" as string]: c.color }}
             >
               <span

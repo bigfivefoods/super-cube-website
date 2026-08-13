@@ -32,8 +32,7 @@ export function FaceSparkline({
 
   const coord = (i: number, v: number) => {
     const x = pad + (i / n) * (width - pad * 2);
-    const y =
-      height - pad - ((v - min) / span) * (height - pad * 2);
+    const y = height - pad - ((v - min) / span) * (height - pad * 2);
     return [x, y] as const;
   };
 

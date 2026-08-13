@@ -86,8 +86,8 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3 text-slate">
               Optional analytics (e.g. Google Analytics) and error monitoring
-              (e.g. Sentry) may run when configured. They help improve the product
-              and do not require journal content.
+              (e.g. Sentry) may run when configured. They help improve the
+              product and do not require journal content.
             </p>
           </div>
 
@@ -96,10 +96,10 @@ export default function PrivacyPage() {
               Children & schools
             </h2>
             <p className="mt-3 text-slate">
-              School programmes should be run under the school’s safeguarding and
-              parental consent policies. Super-Cube® is a development tool, not a
-              clinical assessment. Facilitators must not force public comparison
-              of scores.
+              School programmes should be run under the school’s safeguarding
+              and parental consent policies. Super-Cube® is a development tool,
+              not a clinical assessment. Facilitators must not force public
+              comparison of scores.
             </p>
           </div>
 
@@ -109,9 +109,9 @@ export default function PrivacyPage() {
             </h2>
             <p className="mt-3 text-slate">
               You may request access, correction, or deletion of account-linked
-              data by emailing {site.email}. Local device data can be cleared via
-              browser storage. Certificate verification pages show only what you
-              chose to register publicly.
+              data by emailing {site.email}. Local device data can be cleared
+              via browser storage. Certificate verification pages show only what
+              you chose to register publicly.
             </p>
           </div>
 

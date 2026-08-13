@@ -17,7 +17,9 @@ export const RADAR_ORDER: ConstructId[] = [
   "spiritual",
 ];
 
-export function orderScoresForRadar(scores: ConstructScore[]): ConstructScore[] {
+export function orderScoresForRadar(
+  scores: ConstructScore[],
+): ConstructScore[] {
   return RADAR_ORDER.map(
     (id) =>
       scores.find((s) => s.constructId === id) ?? {
@@ -27,7 +29,7 @@ export function orderScoresForRadar(scores: ConstructScore[]): ConstructScore[] 
         rawMean: 0,
         score: 0,
         itemCount: 0,
-      }
+      },
   );
 }
 
@@ -52,9 +54,7 @@ export function RadarChart({
   postLabel?: string;
 }) {
   const orderedPre = orderScoresForRadar(scores);
-  const orderedPost = compareScores
-    ? orderScoresForRadar(compareScores)
-    : null;
+  const orderedPost = compareScores ? orderScoresForRadar(compareScores) : null;
   const n = orderedPre.length || 6;
   const cx = size / 2;
   const cy = size / 2;
@@ -89,7 +89,7 @@ export function RadarChart({
       {/* Grid rings */}
       {grid.map((g) => {
         const pts = Array.from({ length: n }, (_, i) =>
-          point(i, g).join(",")
+          point(i, g).join(","),
         ).join(" ");
         return (
           <polygon
@@ -279,7 +279,12 @@ export function RadarChart({
             strokeWidth="2"
             strokeDasharray="4 3"
           />
-          <text x={20} y={7} fill="#666" style={{ fontSize: 10, fontWeight: 600 }}>
+          <text
+            x={20}
+            y={7}
+            fill="#666"
+            style={{ fontSize: 10, fontWeight: 600 }}
+          >
             {preLabel}
           </text>
           <line
@@ -290,7 +295,12 @@ export function RadarChart({
             stroke="#0a0a0a"
             strokeWidth="2.5"
           />
-          <text x={78} y={7} fill="#0a0a0a" style={{ fontSize: 10, fontWeight: 600 }}>
+          <text
+            x={78}
+            y={7}
+            fill="#0a0a0a"
+            style={{ fontSize: 10, fontWeight: 600 }}
+          >
             {postLabel}
           </text>
         </g>

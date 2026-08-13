@@ -21,7 +21,7 @@ export default function AssessmentFeedbackPage() {
   const pre = state?.attempts.find((a) => a.phase === "pre");
   const narrative = useMemo(
     () => (pre ? buildAssessmentNarrative(pre.result) : null),
-    [pre]
+    [pre],
   );
 
   const scoreMap = useMemo(() => {
@@ -47,7 +47,10 @@ export default function AssessmentFeedbackPage() {
         title="Your baseline"
         subtitle="Complete the pre-assessment to unlock narrative feedback and your lit cube."
       >
-        <Link href="/learn/assessment/pre" className="learn-btn learn-btn-primary">
+        <Link
+          href="/learn/assessment/pre"
+          className="learn-btn learn-btn-primary"
+        >
           Start baseline
         </Link>
       </LearnShell>
@@ -111,7 +114,9 @@ export default function AssessmentFeedbackPage() {
                 <span className="font-medium text-muted"> / 100</span>
               </span>
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-slate">{f.insight}</p>
+            <p className="mt-2 text-sm leading-relaxed text-slate">
+              {f.insight}
+            </p>
             <p className="mt-2 text-[0.8125rem] text-ink">
               <span className="font-semibold">First practice: </span>
               {f.firstPractice}

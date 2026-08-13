@@ -10,10 +10,7 @@ import { RadarChart } from "@/components/learn/RadarChart";
 import { ReportMeta } from "@/components/learn/ReportMeta";
 import { Button } from "@/components/ui";
 import { downloadCompletionCertificate } from "@/lib/lms/certificate-pdf";
-import {
-  compareAttempts,
-  recommendations,
-} from "@/lib/lms/scoring";
+import { compareAttempts, recommendations } from "@/lib/lms/scoring";
 import { depthLabel } from "@/lib/lms/orientation";
 import {
   buildReportSharePayload,
@@ -132,16 +129,32 @@ export default function ReportPage() {
 
         <div className="mb-4 flex flex-wrap gap-2 print:hidden">
           <DownloadReportButton state={state} pre={pre} post={post} />
-          <button type="button" className="learn-btn learn-btn-primary" onClick={generateShare}>
+          <button
+            type="button"
+            className="learn-btn learn-btn-primary"
+            onClick={generateShare}
+          >
             Share growth link
           </button>
-          <Button href="/learn/feedback" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+          <Button
+            href="/learn/feedback"
+            variant="ghost"
+            className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+          >
             Narrative + lit cube
           </Button>
-          <Button href="/learn/practice" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+          <Button
+            href="/learn/practice"
+            variant="ghost"
+            className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+          >
             Micro-practice
           </Button>
-          <Button href="/learn/account" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+          <Button
+            href="/learn/account"
+            variant="ghost"
+            className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+          >
             You / profile
           </Button>
           <button
@@ -155,7 +168,9 @@ export default function ReportPage() {
 
         {shareUrl && (
           <div className="mb-4 rounded-xl border border-black/[0.08] bg-white px-3 py-2 print:hidden">
-            <p className="text-[0.7rem] text-muted">Share link (scores only — journals stay private)</p>
+            <p className="text-[0.7rem] text-muted">
+              Share link (scores only — journals stay private)
+            </p>
             <p className="mt-1 break-all text-[0.75rem] text-ink">{shareUrl}</p>
             <button
               type="button"
@@ -183,8 +198,8 @@ export default function ReportPage() {
                 Take the post-assessment to measure how you’ve grown
               </p>
               <p className="learn-meta mt-0.5">
-                Same six faces as your baseline. Unlocks pre → post comparison on
-                this report and in your PDF download.
+                Same six faces as your baseline. Unlocks pre → post comparison
+                on this report and in your PDF download.
               </p>
             </div>
             <Button
@@ -213,7 +228,9 @@ export default function ReportPage() {
               {post ? post.result.overall : "—"}
             </p>
             <p className="learn-meta mt-0.5">
-              {post ? new Date(post.completedAt).toLocaleDateString() : "Not taken yet"}
+              {post
+                ? new Date(post.completedAt).toLocaleDateString()
+                : "Not taken yet"}
             </p>
           </div>
           <div className="learn-card !p-4">
@@ -270,8 +287,9 @@ export default function ReportPage() {
                     preOverall: pre.result.overall,
                     postOverall: post.result.overall,
                     growth:
-                      Math.round((post.result.overall - pre.result.overall) * 10) /
-                      10,
+                      Math.round(
+                        (post.result.overall - pre.result.overall) * 10,
+                      ) / 10,
                     orgCode: next.orgCode,
                   }),
                 });
@@ -306,7 +324,9 @@ export default function ReportPage() {
 
         <div className="grid gap-3 sm:gap-4 lg:grid-cols-2 print:break-inside-avoid">
           <div className="learn-card">
-            <h2 className="learn-card-title">{post ? "Growth radar" : "Profile radar"}</h2>
+            <h2 className="learn-card-title">
+              {post ? "Growth radar" : "Profile radar"}
+            </h2>
             <p className="learn-meta mt-1">
               {post
                 ? "Grey dashed = pre · Coloured solid = post"
@@ -334,22 +354,34 @@ export default function ReportPage() {
                     <th className="py-2 px-1 text-right font-semibold">Pre</th>
                     {post && (
                       <>
-                        <th className="py-2 px-1 text-right font-semibold">Post</th>
-                        <th className="py-2 pl-1 text-right font-semibold">Growth</th>
+                        <th className="py-2 px-1 text-right font-semibold">
+                          Post
+                        </th>
+                        <th className="py-2 pl-1 text-right font-semibold">
+                          Growth
+                        </th>
                       </>
                     )}
                   </tr>
                 </thead>
                 <tbody>
                   {comparison?.map((row) => (
-                    <tr key={row.constructId} className="border-b border-black/[0.05] last:border-0">
+                    <tr
+                      key={row.constructId}
+                      className="border-b border-black/[0.05] last:border-0"
+                    >
                       <td className="py-2.5 pr-2">
                         <span className="inline-flex items-center gap-1.5 font-semibold text-ink">
-                          <span className="h-2 w-2 shrink-0 rounded-full" style={{ background: row.color }} />
+                          <span
+                            className="h-2 w-2 shrink-0 rounded-full"
+                            style={{ background: row.color }}
+                          />
                           {row.name}
                         </span>
                       </td>
-                      <td className="py-2.5 px-1 text-right tabular-nums text-slate">{row.pre}</td>
+                      <td className="py-2.5 px-1 text-right tabular-nums text-slate">
+                        {row.pre}
+                      </td>
                       {post && (
                         <>
                           <td className="py-2.5 px-1 text-right font-semibold tabular-nums text-ink">
@@ -365,7 +397,9 @@ export default function ReportPage() {
                     </tr>
                   ))}
                   <tr className="border-t border-black/[0.1] bg-[#fafafa]">
-                    <td className="py-2.5 pr-2 font-semibold text-ink">Overall</td>
+                    <td className="py-2.5 pr-2 font-semibold text-ink">
+                      Overall
+                    </td>
                     <td className="py-2.5 px-1 text-right font-semibold tabular-nums text-ink">
                       {pre.result.overall}
                     </td>
@@ -375,7 +409,9 @@ export default function ReportPage() {
                           {post.result.overall}
                         </td>
                         <td className="py-2.5 pl-1 text-right font-semibold tabular-nums text-ink">
-                          {growth === null ? "—" : `${growth > 0 ? "+" : ""}${growth}`}
+                          {growth === null
+                            ? "—"
+                            : `${growth > 0 ? "+" : ""}${growth}`}
                         </td>
                       </>
                     )}
@@ -409,15 +445,27 @@ export default function ReportPage() {
             <DownloadReportButton state={state} pre={pre} post={post} />
             {!post ? (
               <>
-                <Button href="/learn/assessment/post" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+                <Button
+                  href="/learn/assessment/post"
+                  variant="ghost"
+                  className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+                >
                   Take post-assessment
                 </Button>
-                <Button href="/learn/courses" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+                <Button
+                  href="/learn/courses"
+                  variant="ghost"
+                  className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+                >
                   Continue courses
                 </Button>
               </>
             ) : (
-              <Button href="/learn/courses" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+              <Button
+                href="/learn/courses"
+                variant="ghost"
+                className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+              >
                 Revisit courses
               </Button>
             )}
@@ -425,8 +473,8 @@ export default function ReportPage() {
         </section>
 
         <p className="learn-meta mt-5">
-          This report is for developmental use within the Super-Cube® model. Scores
-          reflect self-report on this instrument only.
+          This report is for developmental use within the Super-Cube® model.
+          Scores reflect self-report on this instrument only.
         </p>
       </div>
     </LearnShell>

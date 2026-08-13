@@ -5,12 +5,7 @@ import { BrandWordmark } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
 import { constructs, footerColumns } from "@/lib/content";
-import {
-  faceI18n,
-  footerColI18n,
-  mainNavI18n,
-  moreLinkI18n,
-} from "@/lib/i18n";
+import { faceI18n, footerColI18n, mainNavI18n, moreLinkI18n } from "@/lib/i18n";
 
 export function Footer() {
   const { t } = useLocale();
@@ -21,11 +16,14 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t border-black/[0.08] bg-[#fafafa] text-ink">
+    <footer className="border-t border-line bg-surface text-ink">
       <div className="container-site section-pad pb-[max(2rem,env(safe-area-inset-bottom))]">
-        <div className="flex flex-col gap-6 border-b border-black/[0.06] pb-12 lg:flex-row lg:items-start lg:justify-between">
+        <div className="flex flex-col gap-6 border-b border-line pb-12 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-sm">
-            <BrandWordmark height={24} />
+            <BrandWordmark
+              height={24}
+              className="dark:brightness-0 dark:invert"
+            />
             <p className="mt-3 text-sm leading-relaxed tracking-tight text-slate">
               {t("footer.tagline")}
             </p>
@@ -37,13 +35,13 @@ export function Footer() {
           <div className="flex flex-wrap gap-2.5">
             <Link
               href="/learn/start"
-              className="inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold tracking-tight text-white hover:bg-ink-soft"
+              className="sc-btn-primary inline-flex min-h-10 items-center justify-center rounded-full px-5 text-sm font-semibold tracking-tight"
             >
               {t("footer.startFree")}
             </Link>
             <Link
               href="/contact"
-              className="inline-flex min-h-10 items-center justify-center rounded-full border border-black/[0.12] bg-white px-5 text-sm font-semibold tracking-tight text-ink hover:border-black/25"
+              className="inline-flex min-h-10 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold tracking-tight text-ink hover:border-black/25 dark:hover:border-white/25"
             >
               {t("footer.contact")}
             </Link>
@@ -72,7 +70,7 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-12 border-t border-black/[0.06] pt-8">
+        <div className="mt-12 border-t border-line pt-8">
           <div className="mb-3.5 flex items-baseline justify-between gap-3">
             <h3 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               {t("footer.sixFaces")}
@@ -89,7 +87,7 @@ export function Footer() {
               <li key={c.id}>
                 <Link
                   href={`/constructs#${c.id}`}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.07] bg-white px-3 py-1.5 text-[0.8125rem] font-medium tracking-tight text-ink transition hover:border-black/15"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-line bg-elevated px-3 py-1.5 text-[0.8125rem] font-medium tracking-tight text-ink transition hover:border-black/15 dark:hover:border-white/20"
                 >
                   <span
                     className="h-1.5 w-1.5 rounded-full"
@@ -103,7 +101,7 @@ export function Footer() {
           </ul>
         </div>
 
-        <div className="mt-12 flex flex-col gap-2 border-t border-black/[0.06] pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:text-sm">
+        <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:text-sm">
           <p>
             © {new Date().getFullYear()} {t("footer.copyright")}
           </p>

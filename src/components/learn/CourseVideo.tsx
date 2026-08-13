@@ -3,10 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ConstructId } from "@/lib/content";
-import {
-  courseVideoPath,
-  sessionVideoPath,
-} from "@/lib/lms/course-videos";
+import { courseVideoPath, sessionVideoPath } from "@/lib/lms/course-videos";
 import type { ProgrammeId } from "@/lib/programmes";
 
 type Variant = "thumb" | "hero";
@@ -72,9 +69,12 @@ export function CourseVideo({
       const v = videoRef.current;
       if (!v) return;
       setStarted(true);
-      void v.play().then(() => setPlaying(true)).catch(() => setError(true));
+      void v
+        .play()
+        .then(() => setPlaying(true))
+        .catch(() => setError(true));
     },
-    [error]
+    [error],
   );
 
   const toggle = useCallback(
@@ -85,13 +85,16 @@ export function CourseVideo({
       if (!v || error) return;
       if (v.paused) {
         setStarted(true);
-        void v.play().then(() => setPlaying(true)).catch(() => setError(true));
+        void v
+          .play()
+          .then(() => setPlaying(true))
+          .catch(() => setError(true));
       } else {
         v.pause();
         setPlaying(false);
       }
     },
-    [error]
+    [error],
   );
 
   useEffect(() => {
@@ -210,7 +213,10 @@ export function CourseVideo({
               </span>
             )
           ) : isHero ? (
-            <PlayIcon className="ml-0.5 h-6 w-6 sm:h-7 sm:w-7" style={{ color }} />
+            <PlayIcon
+              className="ml-0.5 h-6 w-6 sm:h-7 sm:w-7"
+              style={{ color }}
+            />
           ) : (
             <span
               className="flex h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-md transition group-hover/video:scale-110"

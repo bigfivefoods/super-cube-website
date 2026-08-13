@@ -16,7 +16,8 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
             Your journey
           </p>
           <h2 className="mt-1 text-lg font-semibold tracking-tight text-ink sm:text-xl">
-            Step {journey.current.n} of {journey.total} · {journey.current.title}
+            Step {journey.current.n} of {journey.total} ·{" "}
+            {journey.current.title}
           </h2>
           <p className="mt-1 max-w-md text-sm leading-relaxed text-slate">
             {journey.current.promise}
@@ -44,9 +45,10 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
             style={{
               width: `${Math.max(
                 4,
-                ((journey.doneCount + (journey.current.status === "current" ? 0.35 : 0)) /
+                ((journey.doneCount +
+                  (journey.current.status === "current" ? 0.35 : 0)) /
                   journey.total) *
-                  100
+                  100,
               )}%`,
             }}
             aria-hidden
@@ -57,7 +59,10 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
               const current = step.status === "current";
               const locked = step.status === "locked";
               return (
-                <li key={step.id} className="flex flex-col items-center text-center">
+                <li
+                  key={step.id}
+                  className="flex flex-col items-center text-center"
+                >
                   {locked ? (
                     <span
                       className="flex h-9 w-9 items-center justify-center rounded-full border border-black/[0.1] bg-white text-[0.7rem] font-bold text-muted"
@@ -70,9 +75,9 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
                       href={step.href}
                       className={`flex h-9 w-9 items-center justify-center rounded-full text-[0.7rem] font-bold transition ${
                         current
-                          ? "bg-ink text-white ring-4 ring-ink/15"
+                          ? "bg-void text-void-fg ring-4 ring-ink/15"
                           : done
-                            ? "bg-ink text-white"
+                            ? "bg-void text-void-fg"
                             : "border border-black/[0.12] bg-white text-slate hover:border-ink/40"
                       }`}
                       title={step.title}
@@ -96,7 +101,7 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
         <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center">
           <Link
             href={journey.current.href}
-            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-soft sm:flex-none"
+            className="inline-flex min-h-11 flex-1 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90 sm:flex-none"
           >
             {journey.current.cta} →
           </Link>

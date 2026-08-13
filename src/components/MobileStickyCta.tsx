@@ -38,20 +38,18 @@ export function MobileStickyCta() {
 
   const hide =
     dismissed ||
-    HIDDEN_PREFIXES.some(
-      (p) => pathname === p || pathname.startsWith(`${p}/`)
-    );
+    HIDDEN_PREFIXES.some((p) => pathname === p || pathname.startsWith(`${p}/`));
 
   if (hide || !visible) return null;
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-0 z-40 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:hidden">
       <div className="container-site pointer-events-auto">
-        <div className="mb-1 flex items-center gap-2 rounded-2xl border border-black/[0.1] bg-white/95 p-2 shadow-lg backdrop-blur-md supports-[backdrop-filter]:bg-white/90">
+        <div className="mb-1 flex items-center gap-2 rounded-2xl border border-line bg-paper/95 p-2 shadow-lg backdrop-blur-md supports-[backdrop-filter]:bg-paper/90 dark:bg-elevated/95">
           <Link
             href="/learn/start"
             onClick={() => track("sticky_cta_click", { path: pathname })}
-            className="flex min-h-11 flex-1 items-center justify-center rounded-xl bg-ink px-3 text-sm font-semibold text-white touch-manipulation"
+            className="sc-btn-primary flex min-h-11 flex-1 items-center justify-center rounded-xl px-3 text-sm font-semibold touch-manipulation"
           >
             {t("cta.tryFree")}
           </Link>
@@ -67,7 +65,7 @@ export function MobileStickyCta() {
               }
               track("sticky_cta_dismiss", { path: pathname });
             }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-black/[0.1] text-lg leading-none text-muted touch-manipulation hover:text-ink"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-line text-lg leading-none text-muted touch-manipulation hover:text-ink"
           >
             ×
           </button>

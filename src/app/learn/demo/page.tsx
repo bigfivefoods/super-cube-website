@@ -33,9 +33,7 @@ export default function LearnDemoPage() {
         }),
       });
     }
-    router.push(
-      `/learn/onboarding?mode=demo&programme=${programmeId}`
-    );
+    router.push(`/learn/onboarding?mode=demo&programme=${programmeId}`);
   }
 
   return (
@@ -49,7 +47,9 @@ export default function LearnDemoPage() {
           <li>· Pre-pre orientation + baseline self-assessment</li>
           <li>· All six construct courses for your age band</li>
           <li>· Session reflections, streak, and growth report tools</li>
-          <li>· Private to this browser until you create an account &amp; sync</li>
+          <li>
+            · Private to this browser until you create an account &amp; sync
+          </li>
         </ul>
       </div>
 
@@ -78,11 +78,17 @@ export default function LearnDemoPage() {
 
       <p className="learn-meta mt-6">
         Ready to purchase?{" "}
-        <Link href="/pricing" className="font-semibold text-ink underline-offset-2 hover:underline">
+        <Link
+          href="/pricing"
+          className="font-semibold text-ink underline-offset-2 hover:underline"
+        >
           See pricing
         </Link>{" "}
         · Already learning?{" "}
-        <Link href="/learn" className="font-semibold text-ink underline-offset-2 hover:underline">
+        <Link
+          href="/learn"
+          className="font-semibold text-ink underline-offset-2 hover:underline"
+        >
           Dashboard
         </Link>
       </p>

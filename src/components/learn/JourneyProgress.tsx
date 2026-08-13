@@ -15,8 +15,8 @@ import { loadLmsState } from "@/lib/lms/store";
 function statusClasses(status: JourneyStepStatus, activeHere: boolean) {
   if (status === "done") {
     return activeHere
-      ? "border-ink bg-ink text-white"
-      : "border-ink/20 bg-ink text-white";
+      ? "border-ink bg-void text-void-fg"
+      : "border-ink/20 bg-void text-void-fg";
   }
   if (status === "current") {
     return "border-ink bg-white text-ink ring-2 ring-ink/15";
@@ -40,11 +40,7 @@ function StepDot({
 }) {
   const locked = step.status === "locked";
   const inner =
-    step.status === "done" ? (
-      <span aria-hidden>✓</span>
-    ) : (
-      <span>{step.n}</span>
-    );
+    step.status === "done" ? <span aria-hidden>✓</span> : <span>{step.n}</span>;
 
   const className = `flex shrink-0 items-center justify-center rounded-full border font-bold transition ${
     compact ? "h-6 w-6 text-[0.65rem]" : "h-8 w-8 text-[0.7rem]"
@@ -63,7 +59,9 @@ function StepDot({
       href={step.href}
       className={className}
       title={step.title}
-      aria-current={activeHere || step.status === "current" ? "step" : undefined}
+      aria-current={
+        activeHere || step.status === "current" ? "step" : undefined
+      }
     >
       {inner}
     </Link>
@@ -105,7 +103,9 @@ export function JourneyRail({ journey }: { journey: JourneySnapshot }) {
       <div className="learn-progress mt-3 h-1">
         <div
           className="bg-ink transition-all duration-500"
-          style={{ width: `${Math.max(journey.pct, journey.pct === 0 ? 4 : journey.pct)}%` }}
+          style={{
+            width: `${Math.max(journey.pct, journey.pct === 0 ? 4 : journey.pct)}%`,
+          }}
         />
       </div>
 
@@ -187,7 +187,7 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
               <span
                 className={`flex h-9 w-9 items-center justify-center rounded-full border text-[0.75rem] font-bold sm:h-10 sm:w-10 ${statusClasses(
                   step.status,
-                  activeHere
+                  activeHere,
                 )}`}
               >
                 {done ? "✓" : step.n}
@@ -200,7 +200,7 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
                   <p className="learn-eyebrow">
                     Step {step.n}
                     {current && (
-                      <span className="ml-1.5 rounded-full bg-ink px-1.5 py-0.5 text-[0.55rem] font-bold tracking-wider text-white">
+                      <span className="ml-1.5 rounded-full sc-btn-primary px-1.5 py-0.5 text-[0.55rem] font-bold tracking-wider ">
                         YOU ARE HERE
                       </span>
                     )}
@@ -218,7 +218,7 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
                   <span
                     className={`shrink-0 rounded-full px-2.5 py-1 text-[0.7rem] font-semibold ${
                       current
-                        ? "bg-ink text-white"
+                        ? "bg-void text-void-fg"
                         : "bg-black/[0.04] text-ink"
                     }`}
                   >

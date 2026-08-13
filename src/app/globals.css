@@ -1,16 +1,26 @@
 /* Inter via next/font (layout.tsx) — no render-blocking Google CSS */
 @import "tailwindcss";
 
+/* Tailwind v4: class-based dark via html.dark */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  /* Bright white system — black / white / cool gray */
+  /* Page surfaces */
+  --bg: #ffffff;
+  --surface: #fafafa;
+  --elevated: #ffffff;
+  /* Text */
   --ink: #0a0a0a;
   --ink-soft: #1a1a1a;
-  --slate: #4a4a4a; /* body secondary, stronger contrast */
-  --muted: #6b6b6b; /* ≥4.5:1 on white for secondary text */
+  --slate: #4a4a4a;
+  --muted: #6b6b6b;
   --cream: #ffffff;
   --cream-dark: #f4f4f4;
   --paper: #ffffff;
-  /* Accent: electric blue (product UI, not gold) — maps existing text-gold / bg-gold classes */
+  /* Solid dark panels / CTAs — does NOT invert to light in dark mode */
+  --void: #0a0a0a;
+  --void-fg: #fafafa;
+  /* Accent: electric blue (product UI) */
   --gold: #3b82f6;
   --gold-bright: #2563eb;
   --gold-soft: #eff6ff;
@@ -20,9 +30,36 @@
   --shadow-sm: 0 4px 16px -6px rgba(0, 0, 0, 0.1);
   --radius: 0.5rem;
   --radius-lg: 0.75rem;
+  color-scheme: light;
+}
+
+html.dark {
+  --bg: #000000;
+  --surface: #0c0c0c;
+  --elevated: #121212;
+  --ink: #f5f5f5;
+  --ink-soft: #e5e5e5;
+  --slate: #a3a3a3;
+  --muted: #8a8a8a;
+  --cream: #f5f5f5;
+  --cream-dark: #121212;
+  --paper: #000000;
+  --void: #121212;
+  --void-fg: #f5f5f5;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --gold-soft: #0a1620;
+  --shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.55);
+  --shadow-sm: 0 4px 16px -6px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
 }
 
 @theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-elevated: var(--elevated);
+  --color-void: var(--void);
+  --color-void-fg: var(--void-fg);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-slate: var(--slate);
@@ -34,14 +71,17 @@
   --color-gold-bright: var(--gold-bright);
   --color-gold-soft: var(--gold-soft);
   --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
   /* SupplierAdvisor-style stack; self-hosted Inter via next/font */
   --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
   --font-display: var(--font-inter), Inter, system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   --default-font-family: var(--font-inter), Inter, system-ui, sans-serif;
-  --default-mono-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco,
-    Consolas, "Liberation Mono", "Courier New", monospace;
+  --default-mono-font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 }
 
 html {
@@ -49,12 +89,15 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   tab-size: 4;
-  font-feature-settings: "ss01" on, "cv11" on;
+  font-feature-settings:
+    "ss01" on,
+    "cv11" on;
   font-variation-settings: normal;
   -webkit-tap-highlight-color: transparent;
   font-family: var(--font-inter), Inter, system-ui, sans-serif;
   line-height: 1.5;
-  background: #fff;
+  background: var(--bg);
+  color: var(--ink);
   overflow-x: clip;
 }
 
@@ -81,7 +124,7 @@ html {
 }
 
 body {
-  background: #fff;
+  background: var(--bg);
   color: var(--ink);
   font-family: var(--font-inter), Inter, system-ui, sans-serif;
   line-height: inherit;
@@ -93,8 +136,48 @@ body {
 }
 
 ::selection {
-  background: #0a0a0a;
-  color: #fff;
+  background: var(--void);
+  color: var(--void-fg);
+}
+
+html.dark ::selection {
+  background: #f5f5f5;
+  color: #0a0a0a;
+}
+
+/* Primary CTA: dark on light, light on dark (SA / Tesla polish) */
+.sc-btn-primary {
+  background: var(--void);
+  color: var(--void-fg);
+}
+.sc-btn-primary:hover {
+  background: var(--ink-soft);
+}
+html.dark .sc-btn-primary {
+  background: #f5f5f5;
+  color: #0a0a0a;
+}
+html.dark .sc-btn-primary:hover {
+  background: #e5e5e5;
+}
+
+/* Subtle scrollbars in dark mode */
+html.dark {
+  scrollbar-color: #404040 #0c0c0c;
+}
+html.dark ::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #0c0c0c;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #404040;
+  border-radius: 9999px;
+}
+html.dark ::-webkit-scrollbar-thumb:hover {
+  background: #525252;
 }
 
 .font-display {
@@ -104,8 +187,9 @@ body {
 }
 
 .font-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
   letter-spacing: 0;
 }
 
@@ -167,7 +251,7 @@ body {
   z-index: 1;
   isolation: isolate;
   overflow: clip;
-  background-color: #fff;
+  background-color: var(--bg);
   padding-top: var(--hero-pad-top);
   padding-bottom: var(--hero-pad-bottom);
   box-sizing: border-box;
@@ -331,8 +415,8 @@ button:focus-visible {
   top: -100px;
   z-index: 100;
   border-radius: 9999px;
-  background: var(--ink);
-  color: #fff;
+  background: var(--void);
+  color: var(--void-fg);
   padding: 0.65rem 1.15rem;
   font-size: 0.8125rem;
   font-weight: 600;
@@ -341,7 +425,7 @@ button:focus-visible {
 }
 .skip-link:focus {
   top: max(0.75rem, env(safe-area-inset-top, 0px));
-  outline: 2px solid #fff;
+  outline: 2px solid var(--void-fg);
   outline-offset: 2px;
 }
 
@@ -353,14 +437,16 @@ button:focus-visible {
 }
 
 .card-lift {
-  transition: border-color 0.25s ease, transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+  transition:
+    border-color 0.25s ease,
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .card-lift:hover {
     transform: translateY(-2px);
-    border-color: rgba(0, 0, 0, 0.18);
+    border-color: var(--line-strong);
     box-shadow: var(--shadow-sm);
   }
 }
@@ -379,7 +465,7 @@ body.capacitor-app .site-chrome {
 }
 
 .learn-surface {
-  background: #ffffff;
+  background: var(--bg);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
@@ -410,8 +496,8 @@ body.capacitor-app .site-chrome {
 
 .learn-card {
   border-radius: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  background: #fff;
+  border: 1px solid var(--line);
+  background: var(--elevated);
   padding: 1.125rem 1.25rem;
   box-shadow: 0 1px 0 rgba(0, 0, 0, 0.02);
 }
@@ -424,8 +510,8 @@ body.capacitor-app .site-chrome {
 
 .learn-card-muted {
   border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  background: #f8f9fb;
+  border: 1px solid var(--line);
+  background: var(--surface);
   padding: 0.75rem 0.875rem;
 }
 
@@ -475,8 +561,8 @@ body.capacitor-app .site-chrome {
   display: inline-flex;
   align-items: center;
   border-radius: 9999px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: #fff;
+  border: 1px solid var(--line);
+  background: var(--elevated);
   padding: 0.2rem 0.55rem;
   font-size: 0.7rem;
   font-weight: 500;
@@ -488,12 +574,16 @@ body.capacitor-app .site-chrome {
   display: inline-flex;
   align-items: center;
   border-radius: 9999px;
-  background: var(--ink);
+  background: var(--void);
   padding: 0.2rem 0.55rem;
   font-size: 0.7rem;
   font-weight: 600;
   line-height: 1.3;
-  color: #fff;
+  color: var(--void-fg);
+}
+html.dark .learn-chip-solid {
+  background: #f5f5f5;
+  color: #0a0a0a;
 }
 
 .learn-btn {
@@ -506,34 +596,42 @@ body.capacitor-app .site-chrome {
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: -0.01em;
-  transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
 }
 
 .learn-btn-primary {
-  background: var(--ink);
-  color: #fff;
+  background: var(--void);
+  color: var(--void-fg);
 }
 
 .learn-btn-primary:hover {
-  background: var(--ink-soft);
+  opacity: 0.92;
+}
+
+html.dark .learn-btn-primary {
+  background: #f5f5f5;
+  color: #0a0a0a;
 }
 
 .learn-btn-ghost {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #fff;
+  border: 1px solid var(--line-strong);
+  background: var(--elevated);
   color: var(--ink);
 }
 
 .learn-btn-ghost:hover {
-  border-color: rgba(0, 0, 0, 0.2);
-  background: #fafafa;
+  border-color: var(--line-strong);
+  background: var(--surface);
 }
 
 .learn-input {
   width: 100%;
   border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  background: #f8f9fb;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
   padding: 0.625rem 0.875rem;
   font-size: 0.8125rem;
   color: var(--ink);
@@ -541,29 +639,37 @@ body.capacitor-app .site-chrome {
 }
 
 .learn-input:focus {
-  border-color: rgba(0, 0, 0, 0.22);
-  background: #fff;
-  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
+  border-color: var(--line-strong);
+  background: var(--elevated);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
 .learn-choice {
   border-radius: 0.75rem;
-  border: 1px solid rgba(0, 0, 0, 0.09);
-  background: #f8f9fb;
+  border: 1px solid var(--line);
+  background: var(--surface);
   padding: 0.7rem 0.875rem;
   text-align: left;
-  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease,
+    color 0.15s ease;
 }
 
 .learn-choice:hover {
-  border-color: rgba(0, 0, 0, 0.18);
-  background: #fff;
+  border-color: var(--line-strong);
+  background: var(--elevated);
 }
 
 .learn-choice-active {
-  border-color: var(--ink);
-  background: var(--ink);
-  color: #fff;
+  border-color: var(--void);
+  background: var(--void);
+  color: var(--void-fg);
+}
+html.dark .learn-choice-active {
+  border-color: #f5f5f5;
+  background: #f5f5f5;
+  color: #0a0a0a;
 }
 
 /* Stacked LMS screens — scroll main column for the next “page” */
@@ -585,7 +691,7 @@ body.capacitor-app .site-chrome {
   height: 0.3rem;
   overflow: hidden;
   border-radius: 9999px;
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--line);
 }
 
 .learn-progress > span,
@@ -753,7 +859,11 @@ body.capacitor-app .site-chrome {
 }
 
 .level-line {
-  background: linear-gradient(180deg, #0a0a0a 0%, rgba(10, 10, 10, 0.1) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--void) 0%,
+    color-mix(in srgb, var(--void) 10%, transparent) 100%
+  );
 }
 
 @keyframes fade-up {
@@ -811,7 +921,7 @@ body.capacitor-app .site-chrome {
 }
 
 .surface-muted {
-  background: #fafafa;
+  background: var(--surface);
 }
 
 img,

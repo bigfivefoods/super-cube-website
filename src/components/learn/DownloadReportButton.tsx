@@ -34,12 +34,14 @@ export function DownloadReportButton({
   }
 
   return (
-    <div className={`flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3 ${className}`}>
+    <div
+      className={`flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3 ${className}`}
+    >
       <button
         type="button"
         onClick={onDownload}
         disabled={busy}
-        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-5 py-2 text-[0.8125rem] font-semibold text-white transition hover:bg-ink-soft disabled:opacity-50"
+        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-full sc-btn-primary px-5 py-2 text-[0.8125rem] font-semibold transition hover:opacity-90 disabled:opacity-50"
       >
         <DownloadIcon />
         {busy

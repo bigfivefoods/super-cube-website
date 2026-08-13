@@ -1,12 +1,7 @@
 "use client";
 
 import { useLocale } from "@/components/LocaleProvider";
-import {
-  LOCALES,
-  LOCALE_LABELS,
-  LOCALE_SHORT,
-  type Locale,
-} from "@/lib/i18n";
+import { LOCALES, LOCALE_LABELS, LOCALE_SHORT, type Locale } from "@/lib/i18n";
 
 export function LanguageSwitcher({
   variant = "header",
@@ -32,8 +27,8 @@ export function LanguageSwitcher({
               onClick={() => setLocale(code)}
               className={`rounded-full px-2.5 py-1 text-xs font-semibold transition ${
                 locale === code
-                  ? "bg-ink text-white"
-                  : "border border-black/[0.1] bg-white text-slate hover:text-ink"
+                  ? "sc-btn-primary"
+                  : "border border-line-strong bg-elevated text-slate hover:text-ink"
               }`}
               aria-pressed={locale === code}
               lang={code === "en" ? "en" : code}
@@ -66,11 +61,11 @@ export function LanguageSwitcher({
             className={`${btnBase} ${
               active
                 ? overDark
-                  ? "bg-white text-ink"
-                  : "bg-ink text-white"
+                  ? "bg-white text-black"
+                  : "sc-btn-primary"
                 : overDark
                   ? "text-white/80 hover:bg-white/10 hover:text-white"
-                  : "text-slate hover:bg-black/[0.04] hover:text-ink"
+                  : "text-slate hover:bg-black/[0.04] hover:text-ink dark:hover:bg-white/[0.06]"
             }`}
             aria-pressed={active}
             title={LOCALE_LABELS[code]}

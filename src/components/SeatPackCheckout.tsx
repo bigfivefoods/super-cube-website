@@ -36,7 +36,8 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
       .then((r) => r.json())
       .then((d) => {
         setConfigured(Boolean(d.configured));
-        if (d.currency === "USD" || d.currency === "ZAR") setCurrency(d.currency);
+        if (d.currency === "USD" || d.currency === "ZAR")
+          setCurrency(d.currency);
       })
       .catch(() => setConfigured(false));
   }, []);
@@ -99,7 +100,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
       setError(
         data.error ||
           data.message ||
-          "Checkout could not start. Configure Paystack or try again."
+          "Checkout could not start. Configure Paystack or try again.",
       );
       setBusy(false);
     } catch {
@@ -120,7 +121,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
               onClick={() => setPackId(p.id)}
               className={`rounded-2xl border px-3 py-3 text-left transition ${
                 selected
-                  ? "border-ink bg-ink text-white"
+                  ? "border-ink bg-void text-void-fg"
                   : "border-black/[0.1] bg-white text-ink hover:border-black/25"
               }`}
             >
@@ -205,17 +206,18 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
       </div>
 
       <p className="text-[0.75rem] leading-relaxed text-slate">
-        After payment we create a <strong className="text-ink">cohort code</strong>{" "}
-        automatically. Sign up / sign in with the same email first so we can
-        attach admin rights. Learners join via Learn → Org. Journals stay private;
-        coaches only see scores when learners consent.
+        After payment we create a{" "}
+        <strong className="text-ink">cohort code</strong> automatically. Sign up
+        / sign in with the same email first so we can attach admin rights.
+        Learners join via Learn → Org. Journals stay private; coaches only see
+        scores when learners consent.
       </p>
 
       <button
         type="button"
         disabled={busy}
         onClick={() => void pay()}
-        className="flex min-h-12 w-full items-center justify-center rounded-full bg-ink px-4 text-sm font-semibold text-white hover:bg-ink-soft disabled:opacity-50"
+        className="flex min-h-12 w-full items-center justify-center rounded-full sc-btn-primary px-4 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
       >
         {busy
           ? "Redirecting to Paystack…"

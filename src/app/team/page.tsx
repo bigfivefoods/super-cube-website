@@ -10,11 +10,12 @@ import { Button, PageHero, SectionHeading } from "@/components/ui";
  * Client-only; no PII stored.
  */
 export default function TeamCubePage() {
-  const [scores, setScores] = useState<Record<ConstructId, number>>(() =>
-    Object.fromEntries(constructs.map((c) => [c.id, 55])) as Record<
-      ConstructId,
-      number
-    >
+  const [scores, setScores] = useState<Record<ConstructId, number>>(
+    () =>
+      Object.fromEntries(constructs.map((c) => [c.id, 55])) as Record<
+        ConstructId,
+        number
+      >,
   );
 
   const overall = useMemo(() => {

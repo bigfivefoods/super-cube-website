@@ -125,13 +125,16 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-6 w-full rounded-full bg-ink py-3 text-sm font-semibold text-white disabled:opacity-50"
+            className="mt-6 w-full rounded-full sc-btn-primary py-3 text-sm font-semibold disabled:opacity-50"
           >
             {loading ? "Creating…" : "Create account"}
           </button>
           <p className="mt-4 text-center text-sm text-muted">
             Already have an account?{" "}
-            <Link href="/login" className="font-semibold text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/login"
+              className="font-semibold text-ink underline-offset-2 hover:underline"
+            >
               Sign in
             </Link>
           </p>

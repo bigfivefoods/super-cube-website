@@ -36,7 +36,7 @@ export function LearnBottomNav() {
                 href={tab.href}
                 className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
                   active
-                    ? "bg-ink text-white"
+                    ? "bg-void text-void-fg"
                     : "text-muted hover:bg-black/[0.04] hover:text-ink"
                 }`}
                 aria-current={active ? "page" : undefined}

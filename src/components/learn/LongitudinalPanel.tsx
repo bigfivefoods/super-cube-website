@@ -3,10 +3,7 @@
 import Link from "next/link";
 import { constructs, type ConstructId } from "@/lib/content";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
-import {
-  deriveFacePattern,
-  pulseSeries,
-} from "@/lib/lms/face-tracking";
+import { deriveFacePattern, pulseSeries } from "@/lib/lms/face-tracking";
 import type { LocalLmsState } from "@/lib/lms/store";
 
 export function LongitudinalPanel({ state }: { state: LocalLmsState }) {
@@ -54,7 +51,7 @@ export function LongitudinalPanel({ state }: { state: LocalLmsState }) {
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {constructs.map((c) => {
               const vals = series.map(
-                (s) => s.faces[c.id as ConstructId] ?? null
+                (s) => s.faces[c.id as ConstructId] ?? null,
               );
               const avg = pattern.averages[c.id as ConstructId];
               return (

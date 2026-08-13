@@ -42,7 +42,7 @@ export default function LessonPlayerPage() {
 
   const data = useMemo(
     () => getLesson(courseId(programmeId, constructId), lessonId),
-    [programmeId, constructId, lessonId]
+    [programmeId, constructId, lessonId],
   );
 
   const construct = constructs.find((c) => c.id === constructId);
@@ -62,11 +62,7 @@ export default function LessonPlayerPage() {
       return;
     }
     markLessonCompleted(data.lesson.id, constructId);
-    const win = sessionWinLine(
-      constructId,
-      programmeId,
-      data.lesson.title
-    );
+    const win = sessionWinLine(constructId, programmeId, data.lesson.title);
     recordSessionWin(data.lesson.id, constructId, win);
     setState(loadLmsState());
     setWinBanner(win);

@@ -16,7 +16,7 @@ export function FacilitatorDownloadButton({
       type="button"
       className={
         className ||
-        "inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-5 text-sm font-semibold text-white hover:bg-ink-soft"
+        "sc-btn-primary inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm font-semibold"
       }
       onClick={() => downloadFacilitatorOnePager({ orgName, orgCode })}
     >

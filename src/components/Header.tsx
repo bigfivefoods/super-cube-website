@@ -6,14 +6,11 @@ import { useEffect, useId, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { useTheme } from "@/components/ThemeProvider";
 import { constructs, exploreNavGroups, mainNav } from "@/lib/content";
 import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
-import {
-  faceI18n,
-  mainNavI18n,
-  moreGroupI18n,
-  moreLinkI18n,
-} from "@/lib/i18n";
+import { faceI18n, mainNavI18n, moreGroupI18n, moreLinkI18n } from "@/lib/i18n";
 
 function linkActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -30,6 +27,7 @@ function matchesPath(pathname: string, paths: readonly string[]) {
 export function Header() {
   const pathname = usePathname();
   const { t } = useLocale();
+  const { resolvedDark } = useTheme();
   const explorePanelId = useId();
   const [open, setOpen] = useState(false);
   const [exploreOpen, setExploreOpen] = useState(false);
@@ -40,6 +38,9 @@ export function Header() {
   const overHero = (isDarkHero || isLightHero) && !scrolled && !open;
   const overDark = overHero && isDarkHero;
   const overLight = overHero && isLightHero;
+  /** Dark chrome when over dark hero, or site theme is dark (not light hero top) */
+  const chromeDark = overDark || (resolvedDark && !overLight);
+  const invertLogo = overDark || (resolvedDark && !overLight);
 
   const exploreActive = exploreNavGroups.some((g) =>
     g.links.some((item) => linkActive(pathname, item.href)),
@@ -76,29 +77,29 @@ export function Header() {
   }, []);
 
   const navLinkClass = (active: boolean) => {
-    if (overDark) {
+    if (overDark || (chromeDark && !overLight)) {
       return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
         active
-          ? "bg-white text-ink"
+          ? "bg-white text-black"
           : "text-white/85 hover:bg-white/10 hover:text-white"
       }`;
     }
     if (overLight) {
       return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
         active
-          ? "bg-ink text-white"
+          ? "bg-void text-void-fg"
           : "text-ink/80 hover:bg-black/[0.06] hover:text-ink"
       }`;
     }
     return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
       active
-        ? "bg-ink text-white"
-        : "text-slate hover:bg-black/[0.04] hover:text-ink"
+        ? "sc-btn-primary"
+        : "text-slate hover:bg-black/[0.04] hover:text-ink dark:hover:bg-white/[0.06]"
     }`;
   };
 
   const quietLinkClass = () => {
-    if (overDark) {
+    if (overDark || (chromeDark && !overLight)) {
       return "text-sm font-medium tracking-tight text-white/80 transition-colors hover:text-white";
     }
     if (overLight) {
@@ -110,8 +111,10 @@ export function Header() {
   const headerSurface = overDark
     ? "border-b border-transparent bg-transparent"
     : overLight
-      ? "border-b border-transparent bg-[#e8e8e8]/90 backdrop-blur-md"
-      : "border-b border-black/[0.06] bg-white/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl";
+      ? "border-b border-transparent bg-[#e8e8e8]/90 backdrop-blur-md dark:bg-black/70 dark:border-white/10"
+      : chromeDark
+        ? "border-b border-white/10 bg-black/80 shadow-[0_1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl"
+        : "border-b border-black/[0.06] bg-paper/95 shadow-[0_1px_0_rgba(0,0,0,0.02)] backdrop-blur-xl";
 
   function navLabel(href: string, fallback: string) {
     const key = mainNavI18n[href] || moreLinkI18n[href];
@@ -126,7 +129,7 @@ export function Header() {
         <BrandWordmark
           height={26}
           className={`min-w-0 max-w-[min(100%,10rem)] shrink sm:max-w-none ${
-            overDark ? "brightness-0 invert" : ""
+            invertLogo ? "brightness-0 invert" : ""
           }`}
         />
 
@@ -168,7 +171,7 @@ export function Header() {
                 />
                 <div
                   id={explorePanelId}
-                  className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,40rem)] rounded-2xl border border-black/[0.08] bg-white p-5 shadow-xl"
+                  className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,40rem)] rounded-2xl border border-line bg-elevated p-5 shadow-xl"
                   role="menu"
                 >
                   <div className="grid grid-cols-3 gap-5">
@@ -188,7 +191,7 @@ export function Header() {
                               <Link
                                 href={item.href}
                                 role="menuitem"
-                                className="block rounded-lg px-2 py-1.5 text-sm font-medium tracking-tight text-ink hover:bg-black/[0.04]"
+                                className="block rounded-lg px-2 py-1.5 text-sm font-medium tracking-tight text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
                                 onClick={() => setExploreOpen(false)}
                               >
                                 {navLabel(item.href, item.label)}
@@ -212,20 +215,26 @@ export function Header() {
           </Link>
 
           <div
-            className={`ml-1 flex items-center gap-3 border-l pl-3 ${
-              overDark ? "border-white/20" : "border-black/[0.08]"
+            className={`ml-1 flex items-center gap-2 border-l pl-3 ${
+              chromeDark && !overLight
+                ? "border-white/20"
+                : "border-black/[0.08] dark:border-white/15"
             }`}
           >
-            <LanguageSwitcher overDark={overDark} variant="compact" />
+            <ThemeToggle overDark={chromeDark && !overLight} />
+            <LanguageSwitcher
+              overDark={chromeDark && !overLight}
+              variant="compact"
+            />
             <Link href="/login" className={quietLinkClass()}>
               {t("nav.signIn")}
             </Link>
             <Link
               href="/learn/start"
               className={`rounded-full px-4 py-2 text-sm font-semibold tracking-tight transition ${
-                overDark
-                  ? "bg-white text-ink hover:bg-white/90"
-                  : "bg-ink text-white hover:bg-ink-soft"
+                chromeDark && !overLight
+                  ? "bg-white text-black hover:bg-white/90"
+                  : "sc-btn-primary"
               }`}
             >
               {t("nav.startFree")}
@@ -234,13 +243,17 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-1.5 lg:hidden">
-          <LanguageSwitcher overDark={overDark} variant="compact" />
+          <ThemeToggle overDark={chromeDark && !overLight} />
+          <LanguageSwitcher
+            overDark={chromeDark && !overLight}
+            variant="compact"
+          />
           <button
             type="button"
             className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border touch-manipulation ${
-              overDark
+              chromeDark && !overLight
                 ? "border-white/25 bg-white/10 text-white"
-                : "border-black/[0.1] bg-white/80 text-ink"
+                : "border-black/[0.1] bg-paper/80 text-ink dark:border-white/15 dark:bg-elevated"
             }`}
             aria-expanded={open}
             aria-controls="mobile-nav"
@@ -251,17 +264,17 @@ export function Header() {
             <span className="relative block h-3.5 w-4">
               <span
                 className={`absolute left-0 block h-px w-full transition ${
-                  overDark ? "bg-white" : "bg-ink"
+                  chromeDark && !overLight ? "bg-white" : "bg-ink"
                 } ${open ? "top-1.5 rotate-45" : "top-0"}`}
               />
               <span
                 className={`absolute left-0 top-1.5 block h-px w-full transition ${
-                  overDark ? "bg-white" : "bg-ink"
+                  chromeDark && !overLight ? "bg-white" : "bg-ink"
                 } ${open ? "opacity-0" : ""}`}
               />
               <span
                 className={`absolute left-0 block h-px w-full transition ${
-                  overDark ? "bg-white" : "bg-ink"
+                  chromeDark && !overLight ? "bg-white" : "bg-ink"
                 } ${open ? "top-1.5 -rotate-45" : "top-3"}`}
               />
             </span>
@@ -272,10 +285,9 @@ export function Header() {
       {open && (
         <div
           id="mobile-nav"
-          className="max-h-[min(100dvh,100svh)] overflow-y-auto overscroll-contain border-t border-black/[0.06] bg-white lg:hidden"
+          className="max-h-[min(100dvh,100svh)] overflow-y-auto overscroll-contain border-t border-line bg-elevated lg:hidden"
           style={{
-            maxHeight:
-              "calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px))",
+            maxHeight: "calc(100dvh - 3.5rem - env(safe-area-inset-top, 0px))",
           }}
         >
           <nav
@@ -294,8 +306,8 @@ export function Header() {
                     href={item.href}
                     className={`rounded-xl px-3 py-3 text-base font-semibold tracking-tight ${
                       active
-                        ? "bg-ink text-white"
-                        : "text-ink hover:bg-black/[0.04]"
+                        ? "sc-btn-primary"
+                        : "text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
                     }`}
                   >
                     {navLabel(item.href, item.label)}
@@ -314,7 +326,7 @@ export function Header() {
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-ink hover:bg-black/[0.04]"
+                      className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
                     >
                       {navLabel(item.href, item.label)}
                     </Link>
@@ -331,7 +343,7 @@ export function Header() {
                 <Link
                   key={c.id}
                   href={`/constructs#${c.id}`}
-                  className="rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 text-[0.875rem] font-semibold tracking-tight text-ink"
+                  className="rounded-xl border border-line bg-surface px-3 py-2.5 text-[0.875rem] font-semibold tracking-tight text-ink"
                   style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
                 >
                   {t(faceI18n[c.id] || "nav.sixFaces")}
@@ -339,16 +351,16 @@ export function Header() {
               ))}
             </div>
 
-            <div className="mt-5 flex flex-col gap-0.5 border-t border-black/[0.06] pt-4">
+            <div className="mt-5 flex flex-col gap-0.5 border-t border-line pt-4">
               <Link
                 href="/contact"
-                className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-ink hover:bg-black/[0.04]"
+                className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
               >
                 {t("nav.contact")}
               </Link>
               <Link
                 href="/login"
-                className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-slate hover:bg-black/[0.04] hover:text-ink"
+                className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-slate hover:bg-black/[0.04] hover:text-ink dark:hover:bg-white/[0.06]"
               >
                 {t("nav.signIn")}
               </Link>
@@ -360,7 +372,7 @@ export function Header() {
 
             <Link
               href="/learn/start"
-              className="mt-5 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold tracking-tight text-white"
+              className="sc-btn-primary mt-5 rounded-full px-4 py-3.5 text-center text-base font-semibold tracking-tight"
             >
               {t("nav.startFreeBaseline")}
             </Link>

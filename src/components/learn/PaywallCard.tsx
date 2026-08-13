@@ -31,7 +31,7 @@ export function PaywallCard() {
       </p>
       <Link
         href="/pricing"
-        className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 text-[0.8125rem] font-semibold text-white"
+        className="mt-3 inline-flex min-h-10 items-center justify-center rounded-full sc-btn-primary px-4 text-[0.8125rem] font-semibold "
       >
         View pricing & pay →
       </Link>

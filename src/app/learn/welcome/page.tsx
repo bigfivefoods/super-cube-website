@@ -73,7 +73,7 @@ export default function WelcomeProfilePage() {
         cohortKind,
         programmeId: band.programmeId,
       },
-      { complete: true }
+      { complete: true },
     );
     unlockDemo(band.programmeId);
     if (codeInput.trim()) {
@@ -92,7 +92,7 @@ export default function WelcomeProfilePage() {
     }
     // First-pulse onboarding: charts never start empty when possible
     const s = loadLmsState();
-    if (!s.firstRun?.firstPulse && !(s.facePulses?.length)) {
+    if (!s.firstRun?.firstPulse && !s.facePulses?.length) {
       router.push("/learn/pulse?first=1");
       return;
     }
@@ -100,7 +100,8 @@ export default function WelcomeProfilePage() {
   }
 
   const programme =
-    ageBand && getProgramme(AGE_BANDS.find((a) => a.id === ageBand)!.programmeId);
+    ageBand &&
+    getProgramme(AGE_BANDS.find((a) => a.id === ageBand)!.programmeId);
 
   return (
     <LearnShell
@@ -133,7 +134,9 @@ export default function WelcomeProfilePage() {
             />
           </label>
           <label className="block">
-            <span className="learn-label">Email (optional — for sync later)</span>
+            <span className="learn-label">
+              Email (optional — for sync later)
+            </span>
             <input
               className="learn-input mt-1.5 w-full"
               type="email"
@@ -168,7 +171,7 @@ export default function WelcomeProfilePage() {
                 onClick={() => setAgeBand(a.id)}
                 className={`rounded-xl border px-3 py-3 text-left text-sm font-semibold ${
                   ageBand === a.id
-                    ? "border-ink bg-ink text-white"
+                    ? "border-ink bg-void text-void-fg"
                     : "border-black/[0.08] bg-white text-ink"
                 }`}
               >
@@ -184,7 +187,11 @@ export default function WelcomeProfilePage() {
             </p>
           )}
           <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(1)} className="learn-btn learn-btn-ghost">
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="learn-btn learn-btn-ghost"
+            >
               Back
             </button>
             <button
@@ -211,7 +218,7 @@ export default function WelcomeProfilePage() {
                 onClick={() => setRole(r.id)}
                 className={`rounded-full border px-3 py-1.5 text-[0.75rem] font-semibold ${
                   role === r.id
-                    ? "border-ink bg-ink text-white"
+                    ? "border-ink bg-void text-void-fg"
                     : "border-black/[0.1] text-ink"
                 }`}
               >
@@ -228,7 +235,7 @@ export default function WelcomeProfilePage() {
                 onClick={() => setContext(c.id)}
                 className={`rounded-full border px-3 py-1.5 text-[0.75rem] font-semibold ${
                   context === c.id
-                    ? "border-ink bg-ink text-white"
+                    ? "border-ink bg-void text-void-fg"
                     : "border-black/[0.1] text-ink"
                 }`}
               >
@@ -264,7 +271,11 @@ export default function WelcomeProfilePage() {
             />
           </label>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(2)} className="learn-btn learn-btn-ghost">
+            <button
+              type="button"
+              onClick={() => setStep(2)}
+              className="learn-btn learn-btn-ghost"
+            >
               Back
             </button>
             <button
@@ -290,7 +301,7 @@ export default function WelcomeProfilePage() {
                 onClick={() => setCohortKind(c.id)}
                 className={`rounded-xl border p-3 text-left ${
                   cohortKind === c.id
-                    ? "border-ink bg-ink text-white"
+                    ? "border-ink bg-void text-void-fg"
                     : "border-black/[0.08] bg-white"
                 }`}
               >
@@ -325,7 +336,8 @@ export default function WelcomeProfilePage() {
             </label>
           )}
           <div className="rounded-xl border border-black/[0.06] bg-[#fafafa] p-3 text-[0.8125rem] text-slate">
-            After profile: optional first face pulse so charts start with real data.{" "}
+            After profile: optional first face pulse so charts start with real
+            data.{" "}
             <Link href="/signup" className="font-semibold text-ink underline">
               Sign up
             </Link>{" "}
@@ -335,10 +347,18 @@ export default function WelcomeProfilePage() {
             </Link>
           </div>
           <div className="flex gap-2">
-            <button type="button" onClick={() => setStep(3)} className="learn-btn learn-btn-ghost">
+            <button
+              type="button"
+              onClick={() => setStep(3)}
+              className="learn-btn learn-btn-ghost"
+            >
               Back
             </button>
-            <button type="button" onClick={finish} className="learn-btn learn-btn-primary flex-1">
+            <button
+              type="button"
+              onClick={finish}
+              className="learn-btn learn-btn-primary flex-1"
+            >
               Save profile & start →
             </button>
           </div>
@@ -348,7 +368,10 @@ export default function WelcomeProfilePage() {
       {profileComplete(getProfile()) && (
         <p className="mt-4 text-center text-sm text-muted">
           Profile already saved.{" "}
-          <Link href="/learn/start" className="font-semibold text-ink underline">
+          <Link
+            href="/learn/start"
+            className="font-semibold text-ink underline"
+          >
             Skip to guided start
           </Link>
         </p>

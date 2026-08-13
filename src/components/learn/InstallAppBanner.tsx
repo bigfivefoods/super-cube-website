@@ -42,7 +42,7 @@ function setDismissedForDays(days: number) {
   try {
     localStorage.setItem(
       DISMISS_KEY,
-      String(Date.now() + days * 24 * 60 * 60 * 1000)
+      String(Date.now() + days * 24 * 60 * 60 * 1000),
     );
   } catch {
     /* ignore */
@@ -76,7 +76,7 @@ function ShareIcon({ className }: { className?: string }) {
  */
 export function InstallAppBanner() {
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
-    null
+    null,
   );
   const [dismissed, setDismissed] = useState(true); // hide until client check
   const [standalone, setStandalone] = useState(true);
@@ -137,7 +137,7 @@ export function InstallAppBanner() {
 
   return (
     <>
-      <div className="border-b border-black/[0.08] bg-ink text-white">
+      <div className="border-b border-black/[0.08] bg-void text-void-fg">
         <div className="container-site flex items-center gap-3 py-3">
           <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-white/15 bg-white/10">
             <Image
@@ -214,14 +214,14 @@ export function InstallAppBanner() {
                 Add Super-Cube® to your Home Screen
               </h2>
               <p className="mt-1 text-sm text-slate">
-                Takes about 10 seconds in Safari. Opens full-screen like a native
-                app.
+                Takes about 10 seconds in Safari. Opens full-screen like a
+                native app.
               </p>
             </div>
 
             <ol className="space-y-4 px-5 py-5">
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sc-btn-primary text-xs font-bold ">
                   1
                 </span>
                 <div className="min-w-0 pt-0.5">
@@ -238,7 +238,7 @@ export function InstallAppBanner() {
                 </div>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sc-btn-primary text-xs font-bold ">
                   2
                 </span>
                 <div className="min-w-0 pt-0.5">
@@ -252,7 +252,7 @@ export function InstallAppBanner() {
                 </div>
               </li>
               <li className="flex gap-3">
-                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
+                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sc-btn-primary text-xs font-bold ">
                   3
                 </span>
                 <div className="min-w-0 pt-0.5">
@@ -269,7 +269,7 @@ export function InstallAppBanner() {
               <button
                 type="button"
                 onClick={() => setShowGuide(false)}
-                className="flex min-h-11 flex-1 items-center justify-center rounded-full bg-ink text-sm font-semibold text-white"
+                className="flex min-h-11 flex-1 items-center justify-center rounded-full sc-btn-primary text-sm font-semibold "
               >
                 Got it — open Share
               </button>

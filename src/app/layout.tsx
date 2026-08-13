@@ -10,6 +10,7 @@ import { LocaleProvider } from "@/components/LocaleProvider";
 import { MobileStickyCta } from "@/components/MobileStickyCta";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import { site } from "@/lib/content";
 import "./globals.css";
 
@@ -21,10 +22,13 @@ const inter = Inter({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+/** FOUC: apply html.dark before paint from sc-theme + prefers-color-scheme */
+const themeInitScript = `(function(){try{var preferDark=window.matchMedia('(prefers-color-scheme: dark)').matches;var mode=localStorage.getItem('sc-theme')||'system';var isDark=mode==='dark'||(mode==='system'&&preferDark);document.documentElement.classList.toggle('dark',isDark);document.documentElement.dataset.theme=isDark?'dark':'light';}catch(e){}})();`;
+
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#0a0a0a" },
-    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
   width: "device-width",
   initialScale: 1,
@@ -111,32 +115,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`h-full scroll-smooth antialiased ${inter.variable}`}>
+    <html
+      lang="en"
+      className={`h-full scroll-smooth antialiased ${inter.variable}`}
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body
-        className={`${inter.className} flex min-h-full flex-col bg-white text-ink`}
+        className={`${inter.className} flex min-h-full flex-col bg-bg text-ink`}
       >
         <a href="#main-content" className="skip-link">
           Skip to main content
         </a>
-        <LocaleProvider>
-          <PwaRegister />
-          <CapacitorInit />
-          <CapacitorPush />
-          <SentryInit />
-          <AnalyticsProvider />
-          <div className="site-chrome contents">
-            <Header />
-          </div>
-          <ErrorBoundary>
-            <main id="main-content" className="flex-1" tabIndex={-1}>
-              {children}
-            </main>
-          </ErrorBoundary>
-          <div className="site-chrome contents">
-            <Footer />
-            <MobileStickyCta />
-          </div>
-        </LocaleProvider>
+        <ThemeProvider>
+          <LocaleProvider>
+            <PwaRegister />
+            <CapacitorInit />
+            <CapacitorPush />
+            <SentryInit />
+            <AnalyticsProvider />
+            <div className="site-chrome contents">
+              <Header />
+            </div>
+            <ErrorBoundary>
+              <main id="main-content" className="flex-1" tabIndex={-1}>
+                {children}
+              </main>
+            </ErrorBoundary>
+            <div className="site-chrome contents">
+              <Footer />
+              <MobileStickyCta />
+            </div>
+          </LocaleProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

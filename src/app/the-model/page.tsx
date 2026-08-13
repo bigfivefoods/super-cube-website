@@ -50,12 +50,11 @@ export default function TheModelPage() {
             />
             <p className="mt-6">
               The Super-Cube® Leadership Model is a multidimensional,
-              human-centric leadership skills development framework. Its
-              purpose is to build leadership capacity at individual,
-              organisational, and network levels—enabling leaders to navigate
-              distinctive business environments marked by growth, talent
-              abundance alongside skills shortages, and institutional
-              complexity.
+              human-centric leadership skills development framework. Its purpose
+              is to build leadership capacity at individual, organisational, and
+              network levels—enabling leaders to navigate distinctive business
+              environments marked by growth, talent abundance alongside skills
+              shortages, and institutional complexity.
             </p>
             <p>
               Developed in 2020 by Craig Ross Muller as the core output of his
@@ -209,7 +208,7 @@ export default function TheModelPage() {
 
       <section
         id="theory"
-        className="section-pad border-t border-[var(--line)] bg-ink text-cream"
+        className="section-pad border-t border-[var(--line)] bg-void text-void-fg"
       >
         <div className="container-site">
           <SectionHeading
@@ -272,7 +271,9 @@ export default function TheModelPage() {
                     {level.subtitle}
                   </p>
                 </div>
-                <p className="text-slate leading-relaxed">{level.description}</p>
+                <p className="text-slate leading-relaxed">
+                  {level.description}
+                </p>
                 {i === levels.length - 1 && (
                   <div className="md:col-span-3 border-b border-[var(--line)]" />
                 )}

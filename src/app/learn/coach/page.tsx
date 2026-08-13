@@ -78,8 +78,7 @@ function CoachToolsInner() {
     setState(s);
     const qCode = searchParams.get("code");
     const fromPack = searchParams.get("pack") === "1";
-    const code =
-      qCode || s.seatPack?.orgCode || s.orgCode || "DEMO2026";
+    const code = qCode || s.seatPack?.orgCode || s.orgCode || "DEMO2026";
     setOrgCodeState(code);
     if (qCode) {
       setOrgCode(qCode);
@@ -87,7 +86,7 @@ function CoachToolsInner() {
     if (fromPack && (qCode || s.seatPack?.orgCode)) {
       const c = qCode || s.seatPack?.orgCode;
       setPackBanner(
-        `Seat pack active. Share cohort code ${c} with learners (Learn → Org). Seats: ${s.seatPack?.seats ?? "—"}.`
+        `Seat pack active. Share cohort code ${c} with learners (Learn → Org). Seats: ${s.seatPack?.seats ?? "—"}.`,
       );
     }
     const supabase = createClient();
@@ -193,23 +192,20 @@ function CoachToolsInner() {
 
   // Cohort pulse summary (consented snapshots only)
   const pulseStats = (() => {
-    const withPulse = roster.filter(
-      (r) => (r.progress?.pulse_count ?? 0) > 0
-    );
+    const withPulse = roster.filter((r) => (r.progress?.pulse_count ?? 0) > 0);
     const consistencies = withPulse
       .map((r) => r.progress?.pulse_consistency)
       .filter((n): n is number => typeof n === "number");
     const meanConsistency =
       consistencies.length > 0
         ? Math.round(
-            consistencies.reduce((a, b) => a + b, 0) / consistencies.length
+            consistencies.reduce((a, b) => a + b, 0) / consistencies.length,
           )
         : null;
     const recentlyPulsed = roster.filter((r) => {
       const at = r.progress?.last_pulse_at;
       if (!at) return false;
-      const days =
-        (Date.now() - Date.parse(at)) / (1000 * 60 * 60 * 24);
+      const days = (Date.now() - Date.parse(at)) / (1000 * 60 * 60 * 24);
       return days <= 7;
     }).length;
     return {
@@ -232,8 +228,7 @@ function CoachToolsInner() {
           </p>
           <p className="mt-1 text-sm font-semibold text-ink">{packBanner}</p>
           <p className="mt-2 text-[0.8125rem] text-slate">
-            Code:{" "}
-            <strong className="font-mono text-ink">{orgCode}</strong>
+            Code: <strong className="font-mono text-ink">{orgCode}</strong>
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <a
@@ -242,7 +237,10 @@ function CoachToolsInner() {
             >
               Export CSV
             </a>
-            <Link href="/pricing#pilot" className="learn-btn learn-btn-ghost !min-h-9">
+            <Link
+              href="/pricing#pilot"
+              className="learn-btn learn-btn-ghost !min-h-9"
+            >
               Buy more seats
             </Link>
           </div>
@@ -400,7 +398,9 @@ function CoachToolsInner() {
                 <input
                   className="learn-input max-w-[12rem]"
                   value={orgCode}
-                  onChange={(e) => setOrgCodeState(e.target.value.toUpperCase())}
+                  onChange={(e) =>
+                    setOrgCodeState(e.target.value.toUpperCase())
+                  }
                   placeholder="CODE"
                 />
                 <button
@@ -523,19 +523,18 @@ function CoachToolsInner() {
                               const vals = faceMaps
                                 .map((m) => m[c.id]?.pre)
                                 .filter(
-                                  (n): n is number => typeof n === "number"
+                                  (n): n is number => typeof n === "number",
                                 );
                               if (vals.length)
                                 means[c.id] =
-                                  vals.reduce((a, b) => a + b, 0) /
-                                  vals.length;
+                                  vals.reduce((a, b) => a + b, 0) / vals.length;
                             }
                           }
                           const overallFallback = (() => {
                             const pres = roster
                               .map((r) => r.progress?.pre_overall)
                               .filter(
-                                (n): n is number => typeof n === "number"
+                                (n): n is number => typeof n === "number",
                               );
                             return pres.length
                               ? pres.reduce((a, b) => a + b, 0) / pres.length
@@ -545,7 +544,7 @@ function CoachToolsInner() {
                             const mean = means[c.id] ?? overallFallback;
                             const intensity = Math.min(
                               1,
-                              Math.max(0.25, mean / 100)
+                              Math.max(0.25, mean / 100),
                             );
                             return (
                               <div
@@ -644,13 +643,22 @@ function CoachToolsInner() {
             ))}
           </ul>
           <div className="mt-4 flex flex-wrap gap-2 text-[0.8125rem] font-semibold">
-            <Link href="/facilitator" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/facilitator"
+              className="text-ink underline-offset-2 hover:underline"
+            >
               8-week calendar →
             </Link>
-            <Link href="/team" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/team"
+              className="text-ink underline-offset-2 hover:underline"
+            >
               Team cube →
             </Link>
-            <Link href="/practices" className="text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/practices"
+              className="text-ink underline-offset-2 hover:underline"
+            >
               Practice library →
             </Link>
           </div>

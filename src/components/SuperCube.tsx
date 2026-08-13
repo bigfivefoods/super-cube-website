@@ -193,9 +193,10 @@ export function SuperCube({
                     "--face-bg": c.color,
                     background: c.color,
                     opacity: intensity,
-                    boxShadow: hasScore && score >= 70
-                      ? `0 0 18px ${c.color}`
-                      : undefined,
+                    boxShadow:
+                      hasScore && score >= 70
+                        ? `0 0 18px ${c.color}`
+                        : undefined,
                   } as CSSProperties
                 }
               >
@@ -231,7 +232,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("y", -25)}
-            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Rotate left"
           >
             ↺ Y
@@ -239,7 +240,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("y", 25)}
-            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Rotate right"
           >
             ↻ Y
@@ -247,7 +248,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("x", -25)}
-            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Tilt up"
           >
             ↑ X
@@ -255,7 +256,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("x", 25)}
-            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Tilt down"
           >
             ↓ X
@@ -263,7 +264,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={() => nudge("z", 25)}
-            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Roll"
           >
             ⟳ Z
@@ -271,7 +272,7 @@ export function SuperCube({
           <button
             type="button"
             onClick={reset}
-            className="cube-ctrl rounded-full border border-black/[0.1] bg-white px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
+            className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
           >
             Reset
           </button>
@@ -280,8 +281,8 @@ export function SuperCube({
             onClick={() => setAutoEnabled((v) => !v)}
             className={`cube-ctrl rounded-full border px-2.5 py-1.5 text-[0.7rem] font-semibold touch-manipulation sm:px-2.5 sm:text-xs ${
               autoEnabled
-                ? "border-ink bg-ink text-white"
-                : "border-black/[0.1] bg-white text-ink hover:border-ink/30"
+                ? "sc-btn-primary border-transparent"
+                : "border-line bg-elevated text-ink hover:border-ink/30"
             }`}
             aria-pressed={autoEnabled}
           >

@@ -81,8 +81,8 @@ export default function PricingPage() {
               </p>
               <ul className="mt-3 space-y-2 text-sm leading-relaxed text-slate sm:text-[0.9375rem]">
                 <li>
-                  <strong className="text-ink">Free baseline</strong> —
-                  orient + six-face measure without paying.
+                  <strong className="text-ink">Free baseline</strong> — orient +
+                  six-face measure without paying.
                 </li>
                 <li>
                   <strong className="text-ink">
@@ -104,10 +104,7 @@ export default function PricingPage() {
               </p>
               <p className="mt-2 text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
                 R{COURSE_PRICE_ZAR}
-                <span className="text-lg font-medium text-muted">
-                  {" "}
-                  ZAR
-                </span>
+                <span className="text-lg font-medium text-muted"> ZAR</span>
               </p>
               <p className="mt-1 text-sm text-muted">
                 or ${COURSE_PRICE_USD} USD · set{" "}
@@ -159,7 +156,7 @@ export default function PricingPage() {
                         <button
                           type="button"
                           onClick={() => setExpanded(p.id)}
-                          className="min-h-11 rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white hover:bg-ink-soft"
+                          className="min-h-11 rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90"
                         >
                           Buy with Paystack · R{COURSE_PRICE_ZAR}
                         </button>
@@ -214,8 +211,8 @@ export default function PricingPage() {
                 <SeatPackCheckout />
               </div>
               <p className="mt-4 text-[0.75rem] leading-relaxed text-muted">
-                Tip: <strong className="text-ink">sign up / sign in</strong> with
-                the same email before paying so admin rights attach to your
+                Tip: <strong className="text-ink">sign up / sign in</strong>{" "}
+                with the same email before paying so admin rights attach to your
                 account. Then open Learn → Coach tools.
               </p>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
@@ -243,18 +240,14 @@ export default function PricingPage() {
 
             <div className="mx-auto mt-10 max-w-2xl sm:mt-12">
               <p className="text-sm leading-relaxed text-muted">
-                Payments run on{" "}
-                <strong className="text-ink">Paystack</strong>. Set{" "}
-                <code className="text-ink">PAYSTACK_SECRET_KEY</code>,{" "}
+                Payments run on <strong className="text-ink">Paystack</strong>.
+                Set <code className="text-ink">PAYSTACK_SECRET_KEY</code>,{" "}
                 <code className="text-ink">
                   NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
                 </code>
                 , optional{" "}
                 <code className="text-ink">PAYSTACK_CURRENCY=ZAR|USD</code>.
-                Webhook:{" "}
-                <code className="text-ink">
-                  /api/paystack/webhook
-                </code>
+                Webhook: <code className="text-ink">/api/paystack/webhook</code>
                 . See <code className="text-ink">docs/PAYSTACK.md</code>.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">

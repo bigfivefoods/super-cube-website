@@ -6,11 +6,7 @@ import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
 import { getProfile, profileComplete } from "@/lib/lms/profile";
-import {
-  loadLmsState,
-  unlockDemo,
-  type LocalLmsState,
-} from "@/lib/lms/store";
+import { loadLmsState, unlockDemo, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 
 /**
@@ -30,7 +26,7 @@ export default function GuidedStartPage() {
     const s = loadLmsState();
     if (!s.demoUnlocked && !s.subscription) {
       unlockDemo(
-        (p?.programmeId || s.user?.programmeId || "adults") as ProgrammeId
+        (p?.programmeId || s.user?.programmeId || "adults") as ProgrammeId,
       );
     }
     setState(loadLmsState());
@@ -55,7 +51,7 @@ export default function GuidedStartPage() {
   const fr = state?.firstRun ?? {};
   const orientDone = Boolean(state?.orientation || fr.orient);
   const preDone = Boolean(
-    state?.attempts.some((a) => a.phase === "pre") || fr.pre
+    state?.attempts.some((a) => a.phase === "pre") || fr.pre,
   );
   const lessonDone =
     Boolean(fr.firstLesson) ||
@@ -102,11 +98,15 @@ export default function GuidedStartPage() {
 
   return (
     <LearnShell
-      title={name ? `${name.split(" ")[0]}, your first 10 minutes` : "Your first 10 minutes"}
+      title={
+        name
+          ? `${name.split(" ")[0]}, your first 10 minutes`
+          : "Your first 10 minutes"
+      }
       subtitle={`${programme?.name ?? "Super-Cube®"} · Guided path. Skip anytime—this is the fastest route to a real baseline and first practice.`}
       hideJourneyRail
     >
-      <div className="mb-5 rounded-2xl border border-ink bg-ink p-5 text-white sm:p-6">
+      <div className="mb-5 rounded-2xl border border-ink bg-void p-5 text-white sm:p-6">
         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/50">
           Recommended next
         </p>
@@ -140,9 +140,7 @@ export default function GuidedStartPage() {
           >
             <span
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
-                step.done
-                  ? "bg-emerald-600 text-white"
-                  : "bg-ink text-white"
+                step.done ? "bg-emerald-600 text-white" : "bg-void text-void-fg"
               }`}
             >
               {step.done ? "✓" : step.n}
@@ -170,15 +168,24 @@ export default function GuidedStartPage() {
 
       <p className="mt-6 text-center text-sm text-muted">
         Prefer the full dashboard?{" "}
-        <Link href="/learn" className="font-semibold text-ink underline-offset-2 hover:underline">
+        <Link
+          href="/learn"
+          className="font-semibold text-ink underline-offset-2 hover:underline"
+        >
           Go to Learn
         </Link>
         {" · "}
-        <Link href="/learn/account" className="font-semibold text-ink underline-offset-2 hover:underline">
+        <Link
+          href="/learn/account"
+          className="font-semibold text-ink underline-offset-2 hover:underline"
+        >
           You / profile
         </Link>
         {" · "}
-        <Link href="/learn/welcome" className="font-semibold text-ink underline-offset-2 hover:underline">
+        <Link
+          href="/learn/welcome"
+          className="font-semibold text-ink underline-offset-2 hover:underline"
+        >
           Edit profile
         </Link>
       </p>

@@ -23,7 +23,11 @@ import {
   pulseSeries,
   recommendPracticesForFocus,
 } from "@/lib/lms/face-tracking";
-import { loadLmsState, saveLmsState, type LocalLmsState } from "@/lib/lms/store";
+import {
+  loadLmsState,
+  saveLmsState,
+  type LocalLmsState,
+} from "@/lib/lms/store";
 
 type Mode = "checkin" | "patterns" | "peer";
 
@@ -44,17 +48,14 @@ export default function PulsePage() {
     track("page_view", { path: "/learn/pulse" });
   }, []);
 
-  const pattern = useMemo(
-    () => deriveFacePattern(state ?? undefined),
-    [state]
-  );
+  const pattern = useMemo(() => deriveFacePattern(state ?? undefined), [state]);
   const series = useMemo(
     () => pulseSeries(state ?? undefined, 14).map((d) => d.overall),
-    [state]
+    [state],
   );
   const recommended = useMemo(
     () => recommendPracticesForFocus(pattern.weakest, 3),
-    [pattern.weakest]
+    [pattern.weakest],
   );
 
   function submitPeer() {
@@ -81,7 +82,7 @@ export default function PulsePage() {
   }
 
   const peerReady = peerPulseItems.every(
-    (i) => peerResponses[i.id] >= 1 && peerResponses[i.id] <= 5
+    (i) => peerResponses[i.id] >= 1 && peerResponses[i.id] <= 5,
   );
 
   if (!state) {
@@ -112,7 +113,7 @@ export default function PulsePage() {
               onClick={() => setMode(id)}
               className={`flex-1 rounded-xl py-2.5 text-[0.8125rem] font-semibold transition ${
                 mode === id
-                  ? "bg-ink text-white"
+                  ? "bg-void text-void-fg"
                   : "text-slate hover:text-ink"
               }`}
             >
@@ -122,10 +123,7 @@ export default function PulsePage() {
         </div>
 
         {mode === "checkin" && (
-          <DailyCheckInPanel
-            state={state}
-            onSaved={(next) => setState(next)}
-          />
+          <DailyCheckInPanel state={state} onSaved={(next) => setState(next)} />
         )}
 
         {mode === "patterns" && (
@@ -156,7 +154,7 @@ export default function PulsePage() {
                   <ul className="mt-3 space-y-2">
                     {recommended.map((p) => {
                       const meta = constructs.find(
-                        (c) => c.id === p.constructId
+                        (c) => c.id === p.constructId,
                       );
                       return (
                         <li
@@ -241,7 +239,7 @@ export default function PulsePage() {
                             }
                             className={`rounded-lg border py-2 text-sm font-semibold ${
                               peerResponses[item.id] === v
-                                ? "border-ink bg-ink text-white"
+                                ? "border-ink bg-void text-void-fg"
                                 : "border-black/[0.1] bg-[#fafafa] text-slate"
                             }`}
                           >

@@ -43,15 +43,11 @@ export default function LearnProgrammesPage() {
               key={p.id}
               className={`flex flex-col rounded-2xl border p-4 sm:p-5 ${
                 active
-                  ? "border-ink bg-ink text-white shadow-sm"
+                  ? "border-ink bg-void text-void-fg shadow-sm"
                   : "border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.02)]"
               }`}
             >
-              <p
-                className={`learn-eyebrow ${
-                  active ? "!text-white/50" : ""
-                }`}
-              >
+              <p className={`learn-eyebrow ${active ? "!text-white/50" : ""}`}>
                 {p.ageLabel}
               </p>
               <h2 className="learn-card-title mt-1.5">{p.name}</h2>

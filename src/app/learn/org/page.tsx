@@ -47,14 +47,15 @@ export default function LearnOrgPage() {
           body: JSON.stringify({
             code: next.orgCode,
             role,
-            displayName: next.profile?.displayName || next.user?.fullName || email,
+            displayName:
+              next.profile?.displayName || next.user?.fullName || email,
           }),
         });
         const j = await res.json();
         if (!res.ok) {
           setCloudMsg(
             j.error ||
-              "Cloud join failed — run org SQL migrations if tables are missing."
+              "Cloud join failed — run org SQL migrations if tables are missing.",
           );
         } else {
           setCloudMsg(`Joined ${j.org?.name || next.orgCode} as ${role}.`);
@@ -65,7 +66,7 @@ export default function LearnOrgPage() {
       }
     } else {
       setCloudMsg(
-        "Saved on this device. Sign in to join the cloud roster for coaches / family leads."
+        "Saved on this device. Sign in to join the cloud roster for coaches / family leads.",
       );
     }
   }
@@ -75,15 +76,14 @@ export default function LearnOrgPage() {
     const pre = s.attempts.find((a) => a.phase === "pre");
     const post = s.attempts.find((a) => a.phase === "post");
     const lessonsCompleted = Object.values(s.lessonProgress).filter(
-      (x) => x === "completed"
+      (x) => x === "completed",
     ).length;
     await fetch("/api/org/progress", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         orgCode,
-        programmeId:
-          s.subscription?.programmeId || s.user?.programmeId || null,
+        programmeId: s.subscription?.programmeId || s.user?.programmeId || null,
         pathwayPct: 0,
         lessonsCompleted,
         preOverall: pre?.result.overall ?? null,
@@ -151,8 +151,8 @@ export default function LearnOrgPage() {
           </label>
         </fieldset>
         <p id="org-help" className="learn-meta">
-          Try <strong className="text-ink">DEMO2026</strong> for pilots. Ask your
-          facilitator or family lead for a live code.
+          Try <strong className="text-ink">DEMO2026</strong> for pilots. Ask
+          your facilitator or family lead for a live code.
         </p>
         <button type="submit" className="learn-btn learn-btn-primary">
           Join cohort

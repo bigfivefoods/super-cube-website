@@ -23,11 +23,11 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
       state.subscription?.programmeId ||
       state.user?.programmeId ||
       profile?.programmeId ||
-      ""
+      "",
   );
   const pulseCount = state.facePulses?.length ?? 0;
   const sessions = Object.values(state.lessonProgress).filter(
-    (s) => s === "completed"
+    (s) => s === "completed",
   ).length;
 
   const role = profile?.role
@@ -43,8 +43,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
     ? COHORT_KINDS.find((c) => c.id === profile.cohortKind)?.label
     : null;
 
-  const name =
-    profile?.displayName || state.user?.fullName || "Learner";
+  const name = profile?.displayName || state.user?.fullName || "Learner";
 
   return (
     <div className="mb-4 space-y-3">
@@ -56,7 +55,9 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
               {name}
             </h2>
             <p className="mt-1 text-[0.8125rem] text-slate">
-              {profile ? profileStory(profile) : programme?.name || "Super-Cube® Learn"}
+              {profile
+                ? profileStory(profile)
+                : programme?.name || "Super-Cube® Learn"}
             </p>
           </div>
           <Link
@@ -82,10 +83,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
             ["Sessions done", String(sessions)],
             ["Face pulses", String(pulseCount)],
           ].map(([k, v]) => (
-            <div
-              key={k}
-              className="rounded-xl bg-[#fafafa] px-3 py-2.5"
-            >
+            <div key={k} className="rounded-xl bg-[#fafafa] px-3 py-2.5">
               <dt className="text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-muted">
                 {k}
               </dt>

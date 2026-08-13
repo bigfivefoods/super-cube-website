@@ -31,8 +31,8 @@ export default function TermsPage() {
               1. Service
             </h2>
             <p className="mt-3">
-              We provide leadership education content, assessments, and tools for
-              personal, school, and organisational development. Features may
+              We provide leadership education content, assessments, and tools
+              for personal, school, and organisational development. Features may
               change as we improve the product.
             </p>
           </div>
@@ -41,9 +41,10 @@ export default function TermsPage() {
               2. Not clinical or employment advice
             </h2>
             <p className="mt-3">
-              Assessments are developmental self-report instruments, not clinical
-              diagnostics, hiring tools, or medical advice. Organisations remain
-              responsible for fair HR practice and POPIA compliance.
+              Assessments are developmental self-report instruments, not
+              clinical diagnostics, hiring tools, or medical advice.
+              Organisations remain responsible for fair HR practice and POPIA
+              compliance.
             </p>
           </div>
           <div>
@@ -62,10 +63,10 @@ export default function TermsPage() {
             </h2>
             <p className="mt-3">
               Super-Cube® model, branding, course media, and software remain our
-              intellectual property (or licensed to us). You may use outputs (e.g.
-              your growth report) for personal and organisational development; you
-              may not resell course content or rebrand the model without written
-              permission.
+              intellectual property (or licensed to us). You may use outputs
+              (e.g. your growth report) for personal and organisational
+              development; you may not resell course content or rebrand the
+              model without written permission.
             </p>
           </div>
           <div>
@@ -73,8 +74,9 @@ export default function TermsPage() {
               5. Acceptable use
             </h2>
             <p className="mt-3">
-              Do not abuse APIs, scrape at scale, harass users, or upload unlawful
-              content. School facilitators must follow safeguarding policies.
+              Do not abuse APIs, scrape at scale, harass users, or upload
+              unlawful content. School facilitators must follow safeguarding
+              policies.
             </p>
           </div>
           <div>
@@ -82,9 +84,9 @@ export default function TermsPage() {
               6. Liability
             </h2>
             <p className="mt-3">
-              The service is provided “as is.” To the fullest extent permitted by
-              law we disclaim indirect damages. Nothing excludes liability that
-              cannot be excluded under applicable South African law.
+              The service is provided “as is.” To the fullest extent permitted
+              by law we disclaim indirect damages. Nothing excludes liability
+              that cannot be excluded under applicable South African law.
             </p>
           </div>
           <div>
@@ -92,7 +94,10 @@ export default function TermsPage() {
               7. Contact
             </h2>
             <p className="mt-3">
-              <a className="font-semibold text-ink" href={`mailto:${site.email}`}>
+              <a
+                className="font-semibold text-ink"
+                href={`mailto:${site.email}`}
+              >
                 {site.email}
               </a>
             </p>

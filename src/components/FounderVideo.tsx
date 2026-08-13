@@ -13,14 +13,15 @@ export function FounderVideo({
   if (!url) {
     return (
       <div
-        className={`rounded-2xl border border-dashed border-black/[0.12] bg-[#fafafa] p-6 text-center ${className}`}
+        className={`rounded-2xl border border-dashed border-line-strong bg-surface p-6 text-center ${className}`}
       >
         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
           Video
         </p>
         <p className="mt-2 text-sm font-semibold text-ink">{title}</p>
         <p className="mt-1 text-xs text-muted">
-          Set <code className="text-[0.65rem]">NEXT_PUBLIC_FOUNDER_VIDEO_URL</code>{" "}
+          Set{" "}
+          <code className="text-[0.65rem]">NEXT_PUBLIC_FOUNDER_VIDEO_URL</code>{" "}
           to your YouTube/Vimeo embed URL (e.g.{" "}
           <code className="text-[0.65rem]">
             https://www.youtube.com/embed/…
@@ -45,7 +46,7 @@ export function FounderVideo({
           loading="lazy"
         />
       </div>
-      <p className="bg-white px-3 py-2 text-center text-xs font-medium text-muted">
+      <p className="bg-elevated px-3 py-2 text-center text-xs font-medium text-muted">
         {title}
       </p>
     </div>

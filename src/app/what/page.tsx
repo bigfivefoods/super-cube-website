@@ -239,7 +239,7 @@ export default function WhatPage() {
                     <div className="mt-5 flex flex-col gap-2">
                       <Link
                         href={`/pricing#${p.id}`}
-                        className="inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-ink-soft"
+                        className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold transition hover:opacity-90"
                       >
                         Get access
                       </Link>
@@ -292,7 +292,7 @@ export default function WhatPage() {
               <a
                 key={b.id}
                 href={`#benefit-${b.id}`}
-                className="inline-flex items-center gap-2 rounded-full border border-black/[0.1] bg-white px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink hover:bg-ink hover:text-white"
+                className="inline-flex items-center gap-2 rounded-full border border-line bg-elevated px-3.5 py-1.5 text-sm font-medium text-ink transition hover:border-ink"
               >
                 <span className="relative h-5 w-5 overflow-hidden">
                   <Image
@@ -456,17 +456,17 @@ export default function WhatPage() {
             ))}
           </div>
 
-          <div className="mt-10 rounded-2xl border border-black/[0.07] bg-ink px-5 py-6 text-white sm:px-8 sm:py-8">
+          <div className="mt-10 rounded-2xl border border-line bg-void px-5 py-6 text-void-fg sm:px-8 sm:py-8">
             <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
               <div className="max-w-2xl">
-                <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-white/50">
+                <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-void-fg/50">
                   Leadership × sustainable development
                 </p>
                 <h3 className="mt-2 text-xl font-semibold tracking-tight sm:text-2xl">
                   The SDGs define what we must achieve. Super-Cube® develops who
                   can deliver—across a life, and across systems.
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-white/65">
+                <p className="mt-3 text-sm leading-relaxed text-void-fg/65">
                   Holistic capacity for multi-goal complexity. Longitudinal
                   growth from childhood to adulthood as impact deepens.
                   Multi-level scale for institutions and partnerships. Together,

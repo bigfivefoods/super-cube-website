@@ -13,7 +13,7 @@ export type SampleFaceRow = {
 
 function toScores(
   faces: SampleFaceRow[],
-  key: "pre" | "post"
+  key: "pre" | "post",
 ): ConstructScore[] {
   return faces.map((row) => {
     const c = constructs.find((x) => x.id === row.id)!;
@@ -32,7 +32,10 @@ function toScores(
  * Illustrative 14-day overall capacity trend from near-baseline toward post.
  * Mirrors continuous face-tracking sparklines in /learn/pulse.
  */
-function buildSampleSeries(preOverall: number, postOverall: number): (number | null)[] {
+function buildSampleSeries(
+  preOverall: number,
+  postOverall: number,
+): (number | null)[] {
   const days = 14;
   const out: (number | null)[] = [];
   for (let i = 0; i < days; i++) {
@@ -71,8 +74,8 @@ export function SampleReportCharts({
           Growth radar · pre → post
         </h3>
         <p className="mt-1 text-xs leading-relaxed text-slate">
-          Baseline in grey; post in construct colours. Choices at top, Principles
-          at bottom—matching the Super-Cube® face layout.
+          Baseline in grey; post in construct colours. Choices at top,
+          Principles at bottom—matching the Super-Cube® face layout.
         </p>
         <div className="mt-4 flex justify-center rounded-2xl border border-black/[0.06] bg-[#fafafa] px-2 py-4 sm:px-4">
           <RadarChart
@@ -107,11 +110,16 @@ export function SampleReportCharts({
             <p className="text-[0.65rem] text-muted">14-day sample</p>
           </div>
           <div className="mt-3">
-            <FaceSparkline values={series} width={320} height={56} stroke="#0a0a0a" />
+            <FaceSparkline
+              values={series}
+              width={320}
+              height={56}
+              stroke="#0a0a0a"
+            />
           </div>
           <p className="mt-2 text-[0.7rem] leading-relaxed text-muted">
-            In live Learn, pulses feed adaptive micro-practices and coach heatmaps
-            (with consent). This sample is illustrative only.
+            In live Learn, pulses feed adaptive micro-practices and coach
+            heatmaps (with consent). This sample is illustrative only.
           </p>
         </div>
       </div>

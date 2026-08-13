@@ -41,7 +41,8 @@ function OnboardingInner() {
           Your next 30 minutes
         </h2>
         <ol className="mt-4 space-y-3">
-          {[{
+          {[
+            {
               n: "1",
               t: "Orient",
               d: "Pre-pre assessment — how you see leadership levels",
@@ -73,7 +74,7 @@ function OnboardingInner() {
             },
           ].map((step) => (
             <li key={step.n} className="flex gap-3">
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-ink text-xs font-bold text-white">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full sc-btn-primary text-xs font-bold ">
                 {step.n}
               </span>
               <div className="min-w-0">

@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import {
-  syncLearnerState,
-  type SyncStatus,
-} from "@/lib/lms/sync";
+import { syncLearnerState, type SyncStatus } from "@/lib/lms/sync";
 
 /**
  * On Learn mount / auth change: pull → merge → push cloud progress.
@@ -60,8 +57,7 @@ export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
 
     const onSync = (e: Event) => {
       const detail = (e as CustomEvent).detail as
-        | { status?: SyncStatus; message?: string }
-        | undefined;
+        { status?: SyncStatus; message?: string } | undefined;
       if (detail?.status) {
         setStatus(detail.status);
         setMessage(detail.message ?? null);
@@ -77,9 +73,7 @@ export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const show =
-    status === "syncing" ||
-    status === "error" ||
-    status === "synced";
+    status === "syncing" || status === "error" || status === "synced";
 
   return (
     <>

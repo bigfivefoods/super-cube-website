@@ -13,10 +13,7 @@ import {
   scoresFromAnswers,
   weekDaysAround,
 } from "@/lib/lms/daily-checkin";
-import {
-  getFacePulses,
-  saveFacePulse,
-} from "@/lib/lms/face-tracking";
+import { getFacePulses, saveFacePulse } from "@/lib/lms/face-tracking";
 import { localDayKey, loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 import {
@@ -65,7 +62,7 @@ export function DailyCheckInPanel({
   const [selectedDay, setSelectedDay] = useState(today);
   const [faceIndex, setFaceIndex] = useState(0);
   const [answers, setAnswers] = useState<Answers>(() =>
-    loadAnswersForDay(state, today)
+    loadAnswersForDay(state, today),
   );
   const [note, setNote] = useState("");
   const [showMonth, setShowMonth] = useState(false);
@@ -75,7 +72,10 @@ export function DailyCheckInPanel({
   });
 
   const pulses = useMemo(() => getFacePulses(state), [state]);
-  const pulseDates = useMemo(() => new Set(pulses.map((p) => p.date)), [pulses]);
+  const pulseDates = useMemo(
+    () => new Set(pulses.map((p) => p.date)),
+    [pulses],
+  );
   const week = useMemo(() => weekDaysAround(new Date(), 6, 0), []);
   const monthCells = monthGrid(calCursor.y, calCursor.m);
 
@@ -91,9 +91,10 @@ export function DailyCheckInPanel({
   const face = constructs[faceIndex]!;
   const row = answers[face.id] ?? [];
   const faceQsDone = row.filter(
-    (v) => typeof v === "number" && v >= 1 && v <= 5
+    (v) => typeof v === "number" && v >= 1 && v <= 5,
   ).length;
-  const stepNum = step === "day" ? 1 : step === "faces" ? 2 : step === "note" ? 3 : 4;
+  const stepNum =
+    step === "day" ? 1 : step === "faces" ? 2 : step === "note" ? 3 : 4;
 
   function setAnswer(qi: number, value: number) {
     setAnswers((prev) => {
@@ -109,7 +110,7 @@ export function DailyCheckInPanel({
     const questions: Partial<Record<ConstructId, number[]>> = {};
     for (const c of constructs) {
       const r = (answers[c.id] ?? []).filter(
-        (v): v is number => typeof v === "number"
+        (v): v is number => typeof v === "number",
       );
       if (r.length) questions[c.id] = r;
     }
@@ -180,7 +181,7 @@ export function DailyCheckInPanel({
                     onClick={() => setSelectedDay(key)}
                     className={`flex flex-col items-center rounded-2xl px-1 py-2.5 transition ${
                       selected
-                        ? "bg-ink text-white shadow-md"
+                        ? "bg-void text-void-fg shadow-md"
                         : "bg-[#f4f4f4] text-ink hover:bg-black/[0.06]"
                     }`}
                   >
@@ -228,7 +229,7 @@ export function DailyCheckInPanel({
                   <p className="text-sm font-semibold">
                     {new Date(calCursor.y, calCursor.m).toLocaleString(
                       undefined,
-                      { month: "long", year: "numeric" }
+                      { month: "long", year: "numeric" },
                     )}
                   </p>
                   <button
@@ -267,7 +268,7 @@ export function DailyCheckInPanel({
                         }}
                         className={`aspect-square rounded-xl text-[0.75rem] font-semibold disabled:opacity-30 ${
                           selected
-                            ? "bg-ink text-white"
+                            ? "bg-void text-void-fg"
                             : logged
                               ? "bg-emerald-50 ring-1 ring-emerald-200"
                               : "bg-white hover:bg-black/[0.04]"
@@ -370,16 +371,19 @@ export function DailyCheckInPanel({
             <div className="mt-6 flex justify-center gap-1.5">
               {constructs.map((c, i) => {
                 const done =
-                  (answers[c.id] ?? []).filter(
-                    (v) => typeof v === "number"
-                  ).length >= 2;
+                  (answers[c.id] ?? []).filter((v) => typeof v === "number")
+                    .length >= 2;
                 return (
                   <button
                     key={c.id}
                     type="button"
                     onClick={() => setFaceIndex(i)}
                     className={`h-2 rounded-full transition-all ${
-                      i === faceIndex ? "w-6 bg-ink" : done ? "w-2 bg-ink/40" : "w-2 bg-black/15"
+                      i === faceIndex
+                        ? "w-6 bg-ink"
+                        : done
+                          ? "w-2 bg-ink/40"
+                          : "w-2 bg-black/15"
                     }`}
                     aria-label={c.name}
                   />
@@ -429,7 +433,9 @@ export function DailyCheckInPanel({
         <LearnCard>
           <LearnCardBody>
             <p className="text-sm text-slate">
-              <span className="font-semibold text-ink">{answeredFaces} faces</span>{" "}
+              <span className="font-semibold text-ink">
+                {answeredFaces} faces
+              </span>{" "}
               rated for{" "}
               <span className="font-semibold text-ink">{selectedDay}</span>
               {!canSave && (
@@ -480,8 +486,9 @@ export function DailyCheckInPanel({
       <LearnCard tone="ink">
         <LearnCardBody>
           <p className="text-sm leading-relaxed text-white/75">
-            Logged for <span className="font-semibold text-white">{selectedDay}</span>
-            . {answeredFaces} faces captured
+            Logged for{" "}
+            <span className="font-semibold text-white">{selectedDay}</span>.{" "}
+            {answeredFaces} faces captured
             {note ? " with a journal note" : ""}.
           </p>
         </LearnCardBody>

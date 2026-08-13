@@ -82,8 +82,7 @@ function AccountPageInner() {
     void (async () => {
       let checkoutEmail: string | undefined;
       try {
-        checkoutEmail =
-          localStorage.getItem("sc_checkout_email") || undefined;
+        checkoutEmail = localStorage.getItem("sc_checkout_email") || undefined;
       } catch {
         /* ignore */
       }
@@ -128,14 +127,14 @@ function AccountPageInner() {
               const code = data.org?.code || data.activateLocal.orgCode;
               if (code) {
                 setMsg(
-                  `Seat pack paid. Cohort code ${code} — open Coach tools to share it.`
+                  `Seat pack paid. Cohort code ${code} — open Coach tools to share it.`,
                 );
                 window.location.href = `/learn/coach?code=${encodeURIComponent(code)}&pack=1`;
               } else {
                 setMsg(
                   data.orgReason === "user_not_found_sign_up_first"
                     ? "Payment OK. Sign up with the same email, then open Coach tools — or email hello@super-cube.me with your reference."
-                    : "Payment OK but cohort code was not created. Contact support with your Paystack reference."
+                    : "Payment OK but cohort code was not created. Contact support with your Paystack reference.",
                 );
               }
               return;
@@ -147,7 +146,7 @@ function AccountPageInner() {
           if (data.error || data.paid === false) {
             setMsg(
               data.error ||
-                "Payment could not be verified. Contact hello@super-cube.me with your reference."
+                "Payment could not be verified. Contact hello@super-cube.me with your reference.",
             );
           }
         } catch {
@@ -157,7 +156,7 @@ function AccountPageInner() {
       // Do NOT unlock without a verified Paystack reference
       if (!reference) {
         setMsg(
-          "Missing payment reference. If you paid, return from Paystack or contact hello@super-cube.me with your receipt."
+          "Missing payment reference. If you paid, return from Paystack or contact hello@super-cube.me with your receipt.",
         );
         setState(loadLmsState());
       }
@@ -183,7 +182,7 @@ function AccountPageInner() {
   function clearDemo() {
     if (
       !confirm(
-        "Reset all local Learn progress, assessments, and reflections on this device?"
+        "Reset all local Learn progress, assessments, and reflections on this device?",
       )
     )
       return;
@@ -242,10 +241,10 @@ function AccountPageInner() {
     state.subscription?.programmeId ||
       state.user?.programmeId ||
       profile?.programmeId ||
-      ""
+      "",
   );
   const completedLessons = Object.values(state.lessonProgress).filter(
-    (s) => s === "completed"
+    (s) => s === "completed",
   ).length;
   const reflections = reflectionCount(state);
   const streak = state.practiceStreak?.current ?? 0;
@@ -298,7 +297,7 @@ function AccountPageInner() {
 
       <NextBestActionCard action={nextAction} />
 
-      <section className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] bg-ink text-white">
+      <section className="mb-4 overflow-hidden rounded-2xl border border-black/[0.07] bg-void text-void-fg">
         <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:p-6">
           <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-xl font-bold">
             {initials}
@@ -308,10 +307,14 @@ function AccountPageInner() {
               Learner profile
             </p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
-              {profile?.displayName || state.user?.fullName || "Complete your profile"}
+              {profile?.displayName ||
+                state.user?.fullName ||
+                "Complete your profile"}
             </h2>
             <p className="mt-1 text-sm text-white/65">
-              {profile ? profileStory(profile) : "Tell us who you are so Learn can fit you."}
+              {profile
+                ? profileStory(profile)
+                : "Tell us who you are so Learn can fit you."}
             </p>
             {profile?.goal && (
               <p className="mt-2 rounded-xl bg-white/10 px-3 py-2 text-[0.8125rem] text-white/85">
@@ -362,17 +365,27 @@ function AccountPageInner() {
       <section className="learn-card mb-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
           <h2 className="learn-card-title">About you</h2>
-          <Link href="/learn/welcome" className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline">
+          <Link
+            href="/learn/welcome"
+            className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+          >
             Full editor →
           </Link>
         </div>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
           {[
-            ["Email", profile?.email || state.user?.email || signedInEmail || "—"],
+            [
+              "Email",
+              profile?.email || state.user?.email || signedInEmail || "—",
+            ],
             ["Age band", ageLabel || "—"],
             ["Role", roleLabel || "—"],
             ["Context", contextLabel || "—"],
-            ["Location", [profile?.city, profile?.country].filter(Boolean).join(", ") || "—"],
+            [
+              "Location",
+              [profile?.city, profile?.country].filter(Boolean).join(", ") ||
+                "—",
+            ],
             ["Programme", programme?.name || "Not selected"],
             ["Learning mode", cohortLabel || "—"],
             ["Signed in", signedInEmail || "Local device only"],
@@ -392,15 +405,24 @@ function AccountPageInner() {
         <div className="learn-card">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <h2 className="learn-card-title">Growth snapshot</h2>
-            <Link href="/learn/report" className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline">
+            <Link
+              href="/learn/report"
+              className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+            >
               Full report →
             </Link>
           </div>
           {!pre ? (
             <div className="mt-3">
-              <p className="learn-body">No baseline yet. Take the pre-assessment to see your six-face profile.</p>
+              <p className="learn-body">
+                No baseline yet. Take the pre-assessment to see your six-face
+                profile.
+              </p>
               <div className="mt-3 flex flex-wrap gap-2">
-                <Link href="/learn/assessment/pre" className="learn-btn learn-btn-primary inline-flex">
+                <Link
+                  href="/learn/assessment/pre"
+                  className="learn-btn learn-btn-primary inline-flex"
+                >
                   Start baseline →
                 </Link>
                 <button
@@ -414,7 +436,8 @@ function AccountPageInner() {
               {showSample && (
                 <p className="mt-3 rounded-xl bg-[#fafafa] px-3 py-2 text-[0.8125rem] text-slate">
                   Example: Pre overall 58 · Strength Emotional · Focus Physical.
-                  After the programme, learners typically see multi-point lifts on stretch faces.
+                  After the programme, learners typically see multi-point lifts
+                  on stretch faces.
                 </p>
               )}
             </div>
@@ -423,16 +446,22 @@ function AccountPageInner() {
               <div className="mt-3 grid grid-cols-3 gap-2">
                 <div className="rounded-xl bg-[#fafafa] px-3 py-2.5">
                   <p className="learn-eyebrow">Pre</p>
-                  <p className="text-lg font-semibold tabular-nums text-ink">{pre.result.overall}</p>
+                  <p className="text-lg font-semibold tabular-nums text-ink">
+                    {pre.result.overall}
+                  </p>
                 </div>
                 <div className="rounded-xl bg-[#fafafa] px-3 py-2.5">
                   <p className="learn-eyebrow">Post</p>
-                  <p className="text-lg font-semibold tabular-nums text-ink">{post ? post.result.overall : "—"}</p>
+                  <p className="text-lg font-semibold tabular-nums text-ink">
+                    {post ? post.result.overall : "—"}
+                  </p>
                 </div>
                 <div className="rounded-xl bg-[#fafafa] px-3 py-2.5">
                   <p className="learn-eyebrow">Growth</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
-                    {growth === null ? "—" : `${growth > 0 ? "+" : ""}${growth}`}
+                    {growth === null
+                      ? "—"
+                      : `${growth > 0 ? "+" : ""}${growth}`}
                   </p>
                 </div>
               </div>
@@ -440,16 +469,26 @@ function AccountPageInner() {
                 <ul className="mt-3 space-y-1.5 text-[0.8125rem]">
                   {strongest && (
                     <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full" style={{ background: strongest.color }} />
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ background: strongest.color }}
+                      />
                       <span className="text-slate">Strength ·</span>
-                      <span className="font-semibold text-ink">{strongest.name}</span>
+                      <span className="font-semibold text-ink">
+                        {strongest.name}
+                      </span>
                     </li>
                   )}
                   {weakest && (
                     <li className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full" style={{ background: weakest.color }} />
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ background: weakest.color }}
+                      />
                       <span className="text-slate">Focus ·</span>
-                      <span className="font-semibold text-ink">{weakest.name}</span>
+                      <span className="font-semibold text-ink">
+                        {weakest.name}
+                      </span>
                     </li>
                   )}
                 </ul>
@@ -469,7 +508,9 @@ function AccountPageInner() {
         <div className="space-y-3">
           <div className="learn-card">
             <h2 className="learn-card-title">Your reports</h2>
-            <p className="learn-meta mt-1">Open any assessment view in one tap.</p>
+            <p className="learn-meta mt-1">
+              Open any assessment view in one tap.
+            </p>
             <ul className="mt-3 space-y-2">
               {[
                 {
@@ -484,12 +525,17 @@ function AccountPageInner() {
                 {
                   href: "/learn/assessment/orientation",
                   t: "Orientation",
-                  d: state.orientation ? state.orientation.result.label : "Not taken",
+                  d: state.orientation
+                    ? state.orientation.result.label
+                    : "Not taken",
                 },
                 {
                   href: "/learn/pulse",
                   t: "Face pulse history",
-                  d: pulseCount > 0 ? `${pulseCount} check-ins recorded` : "Start daily/weekly tracking",
+                  d:
+                    pulseCount > 0
+                      ? `${pulseCount} check-ins recorded`
+                      : "Start daily/weekly tracking",
                 },
                 {
                   href: "/learn/feedback",
@@ -504,9 +550,13 @@ function AccountPageInner() {
                   >
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-ink">{item.t}</p>
-                      <p className="truncate text-[0.7rem] text-muted">{item.d}</p>
+                      <p className="truncate text-[0.7rem] text-muted">
+                        {item.d}
+                      </p>
                     </div>
-                    <span className="shrink-0 text-sm font-semibold text-ink">→</span>
+                    <span className="shrink-0 text-sm font-semibold text-ink">
+                      →
+                    </span>
                   </Link>
                 </li>
               ))}
@@ -518,7 +568,8 @@ function AccountPageInner() {
             <p className="learn-body mt-2">
               {state.orgCode ? (
                 <>
-                  Joined code <strong className="text-ink">{state.orgCode}</strong>
+                  Joined code{" "}
+                  <strong className="text-ink">{state.orgCode}</strong>
                   {cohortLabel ? ` · ${cohortLabel}` : ""}
                 </>
               ) : (
@@ -541,10 +592,26 @@ function AccountPageInner() {
         <h2 className="learn-card-title">Assessment timeline</h2>
         <ol className="mt-3 space-y-2">
           {[
-            { label: "Orientation", at: state.orientation?.completedAt, meta: state.orientation?.result.label },
-            { label: "Pre-assessment", at: pre?.completedAt, meta: pre ? `Overall ${pre.result.overall}` : undefined },
-            { label: "Mid check", at: mid?.completedAt, meta: mid ? `Overall ${mid.result.overall}` : undefined },
-            { label: "Post-assessment", at: post?.completedAt, meta: post ? `Overall ${post.result.overall}` : undefined },
+            {
+              label: "Orientation",
+              at: state.orientation?.completedAt,
+              meta: state.orientation?.result.label,
+            },
+            {
+              label: "Pre-assessment",
+              at: pre?.completedAt,
+              meta: pre ? `Overall ${pre.result.overall}` : undefined,
+            },
+            {
+              label: "Mid check",
+              at: mid?.completedAt,
+              meta: mid ? `Overall ${mid.result.overall}` : undefined,
+            },
+            {
+              label: "Post-assessment",
+              at: post?.completedAt,
+              meta: post ? `Overall ${post.result.overall}` : undefined,
+            },
           ].map((row) => (
             <li
               key={row.label}
@@ -553,14 +620,18 @@ function AccountPageInner() {
               <div className="flex items-center gap-2.5">
                 <span
                   className={`flex h-6 w-6 items-center justify-center rounded-full text-[0.65rem] font-bold ${
-                    row.at ? "bg-emerald-600 text-white" : "border border-black/[0.12] text-muted"
+                    row.at
+                      ? "bg-emerald-600 text-white"
+                      : "border border-black/[0.12] text-muted"
                   }`}
                 >
                   {row.at ? "✓" : "·"}
                 </span>
                 <div>
                   <p className="text-sm font-semibold text-ink">{row.label}</p>
-                  {row.meta && <p className="text-[0.7rem] text-muted">{row.meta}</p>}
+                  {row.meta && (
+                    <p className="text-[0.7rem] text-muted">{row.meta}</p>
+                  )}
                 </div>
               </div>
               <p className="text-[0.7rem] tabular-nums text-muted">
@@ -575,31 +646,56 @@ function AccountPageInner() {
         <section className="learn-card">
           <h2 className="learn-card-title">Access & account</h2>
           <p className="learn-body mt-2">
-            Status: <strong className="text-ink">{state.subscription?.status ?? "demo / none"}</strong>
+            Status:{" "}
+            <strong className="text-ink">
+              {state.subscription?.status ?? "demo / none"}
+            </strong>
             {state.subscription && (
-              <> · {new Date(state.subscription.activatedAt).toLocaleDateString()}</>
+              <>
+                {" "}
+                ·{" "}
+                {new Date(state.subscription.activatedAt).toLocaleDateString()}
+              </>
             )}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Button href="/pricing" variant="primary" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+            <Button
+              href="/pricing"
+              variant="primary"
+              className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+            >
               Manage plan
             </Button>
             {signedInEmail ? (
-              <button type="button" onClick={signOut} className="learn-btn learn-btn-ghost">
+              <button
+                type="button"
+                onClick={signOut}
+                className="learn-btn learn-btn-ghost"
+              >
                 Sign out
               </button>
             ) : (
               <>
-                <Button href="/login?next=/learn/account" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+                <Button
+                  href="/login?next=/learn/account"
+                  variant="ghost"
+                  className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+                >
                   Sign in
                 </Button>
-                <Button href="/signup" variant="ghost" className="!min-h-9 !py-1.5 !text-[0.8125rem]">
+                <Button
+                  href="/signup"
+                  variant="ghost"
+                  className="!min-h-9 !py-1.5 !text-[0.8125rem]"
+                >
                   Create account
                 </Button>
               </>
             )}
           </div>
-          {signedInEmail && <p className="learn-meta mt-2">Signed in as {signedInEmail}</p>}
+          {signedInEmail && (
+            <p className="learn-meta mt-2">Signed in as {signedInEmail}</p>
+          )}
         </section>
 
         <section className="learn-card">
@@ -624,19 +720,36 @@ function AccountPageInner() {
         <section className="learn-card lg:col-span-2">
           <h2 className="learn-card-title">Backup & device tools</h2>
           <p className="learn-body mt-2">
-            Download a JSON backup before switching devices. Includes profile, assessments, courses, and journal.
+            Download a JSON backup before switching devices. Includes profile,
+            assessments, courses, and journal.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <button type="button" onClick={downloadBackup} className="learn-btn learn-btn-primary">
+            <button
+              type="button"
+              onClick={downloadBackup}
+              className="learn-btn learn-btn-primary"
+            >
               Download backup
             </button>
-            <button type="button" onClick={() => fileRef.current?.click()} className="learn-btn learn-btn-ghost">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="learn-btn learn-btn-ghost"
+            >
               Restore backup
             </button>
-            <button type="button" onClick={enableReminders} className="learn-btn learn-btn-ghost">
+            <button
+              type="button"
+              onClick={enableReminders}
+              className="learn-btn learn-btn-ghost"
+            >
               {state.notifyPractice ? "Reminders on" : "Enable reminders"}
             </button>
-            <button type="button" onClick={clearDemo} className="learn-btn learn-btn-ghost !text-slate">
+            <button
+              type="button"
+              onClick={clearDemo}
+              className="learn-btn learn-btn-ghost !text-slate"
+            >
               Reset local data
             </button>
             <input

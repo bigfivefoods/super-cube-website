@@ -38,7 +38,8 @@ const pillars = [
 const education = [
   {
     degree: "Doctor of Business Administration (DBA)",
-    detail: "University of KwaZulu-Natal · 2021 · Creator of the Super-Cube® leadership model",
+    detail:
+      "University of KwaZulu-Natal · 2021 · Creator of the Super-Cube® leadership model",
   },
   {
     degree: "Master of Business Administration (MBA)",
@@ -84,8 +85,8 @@ export default function AboutPage() {
                 Dr Craig R. Muller
               </h2>
               <p className="mt-2 text-sm font-semibold tracking-tight text-slate sm:text-base">
-                Visionary architect of Kingdom-centred leadership and sustainable
-                impact in Africa
+                Visionary architect of Kingdom-centred leadership and
+                sustainable impact in Africa
               </p>
               <div className="prose-site mt-5 space-y-4 sm:mt-6">
                 <p>
@@ -115,7 +116,7 @@ export default function AboutPage() {
                     >
                       {v}
                     </span>
-                  )
+                  ),
                 )}
               </div>
               <p className="mt-4 text-sm leading-relaxed text-muted">
@@ -167,7 +168,9 @@ export default function AboutPage() {
                 <h3 className="mt-2 text-base font-semibold tracking-tight text-ink">
                   {p.title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate">{p.body}</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate">
+                  {p.body}
+                </p>
               </article>
             ))}
           </div>
@@ -287,10 +290,18 @@ export default function AboutPage() {
             the primary thesis and peer-reviewed outputs.
           </p>
           <div className="mt-8 flex w-full max-w-md flex-col gap-2.5 sm:max-w-none sm:flex-row sm:flex-wrap">
-            <Button href="/research" variant="primary" className="w-full sm:w-auto">
+            <Button
+              href="/research"
+              variant="primary"
+              className="w-full sm:w-auto"
+            >
               Read the research summary
             </Button>
-            <Button href="/programs" variant="ghost" className="w-full sm:w-auto">
+            <Button
+              href="/programs"
+              variant="ghost"
+              className="w-full sm:w-auto"
+            >
               See programmes
             </Button>
           </div>

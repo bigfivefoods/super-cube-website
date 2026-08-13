@@ -132,7 +132,10 @@ export default function ConstructsPage() {
                     tagline={c.tagline}
                   />
                   {m.quote && (
-                    <blockquote className="mt-6 border-l-2 pl-4 sm:mt-8" style={{ borderColor: c.color }}>
+                    <blockquote
+                      className="mt-6 border-l-2 pl-4 sm:mt-8"
+                      style={{ borderColor: c.color }}
+                    >
                       <p className="text-sm font-medium italic leading-relaxed text-white/90 sm:text-base">
                         “{m.quote}”
                       </p>

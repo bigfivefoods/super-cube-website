@@ -136,7 +136,9 @@ export default function HowPage() {
               <h3 className="text-base font-semibold tracking-tight text-ink">
                 {p.title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate">{p.body}</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate">
+                {p.body}
+              </p>
             </article>
           ))}
         </div>

@@ -47,11 +47,12 @@ export class ErrorBoundary extends Component<Props, State> {
             We hit an unexpected error
           </h1>
           <p className="mt-3 text-sm text-slate">
-            Try refreshing the page. Your Learn progress is saved on this device.
+            Try refreshing the page. Your Learn progress is saved on this
+            device.
           </p>
           <button
             type="button"
-            className="mt-6 rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white"
+            className="mt-6 rounded-full sc-btn-primary px-5 py-2.5 text-sm font-semibold "
             onClick={() => {
               this.setState({ error: null });
               window.location.reload();

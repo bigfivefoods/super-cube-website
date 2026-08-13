@@ -30,7 +30,7 @@ export default function CoursesPage() {
         {courses.map((course) => {
           const construct = constructs.find((c) => c.id === course.constructId);
           const done = course.lessons.filter(
-            (l) => state?.lessonProgress[l.id] === "completed"
+            (l) => state?.lessonProgress[l.id] === "completed",
           ).length;
           const pct = Math.round((done / course.lessons.length) * 100);
           const color = construct?.color ?? "#111";

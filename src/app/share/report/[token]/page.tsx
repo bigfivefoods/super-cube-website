@@ -3,10 +3,7 @@
 import { useParams } from "next/navigation";
 import { useMemo } from "react";
 import { constructs } from "@/lib/content";
-import {
-  decodeShareToken,
-  type ReportSharePayload,
-} from "@/lib/lms/share";
+import { decodeShareToken, type ReportSharePayload } from "@/lib/lms/share";
 import Link from "next/link";
 
 export default function SharedReportPage() {
@@ -15,7 +12,7 @@ export default function SharedReportPage() {
 
   const payload = useMemo(
     () => (token ? decodeShareToken(token) : null),
-    [token]
+    [token],
   );
 
   if (!payload) {
@@ -33,7 +30,7 @@ export default function SharedReportPage() {
         </p>
         <Link
           href="/"
-          className="mt-8 inline-flex rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white"
+          className="mt-8 inline-flex rounded-full sc-btn-primary px-5 py-2.5 text-sm font-semibold "
         >
           Super-Cube® home
         </Link>
@@ -66,16 +63,11 @@ export default function SharedReportPage() {
           </p>
 
           <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
-            <Stat
-              label="Baseline"
-              value={String(payload.preOverall)}
-            />
+            <Stat label="Baseline" value={String(payload.preOverall)} />
             <Stat
               label="Post"
               value={
-                payload.postOverall != null
-                  ? String(payload.postOverall)
-                  : "—"
+                payload.postOverall != null ? String(payload.postOverall) : "—"
               }
             />
             <Stat
@@ -147,7 +139,7 @@ export default function SharedReportPage() {
         <div className="mt-10 text-center">
           <Link
             href="/pricing"
-            className="inline-flex rounded-full bg-ink px-5 py-2.5 text-sm font-semibold text-white"
+            className="inline-flex rounded-full sc-btn-primary px-5 py-2.5 text-sm font-semibold "
           >
             Start your Super-Cube® pathway
           </Link>
@@ -163,7 +155,9 @@ function Stat({ label, value }: { label: string; value: string }) {
       <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
         {label}
       </p>
-      <p className="mt-1 text-xl font-semibold tabular-nums text-ink">{value}</p>
+      <p className="mt-1 text-xl font-semibold tabular-nums text-ink">
+        {value}
+      </p>
     </div>
   );
 }

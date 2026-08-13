@@ -36,7 +36,9 @@ export default function ImpactPage() {
           />
           <ul className="mt-4 list-disc space-y-1.5 pl-5 text-sm text-slate">
             <li>SDG 4 Quality education · structured leadership pathway</li>
-            <li>SDG 5 / 8 / 16 · agency, work capability, institutions of trust</li>
+            <li>
+              SDG 5 / 8 / 16 · agency, work capability, institutions of trust
+            </li>
             <li>
               Export: coach CSV + sample report pattern +{" "}
               <a href="/verify/SC-DEMO" className="font-semibold text-ink">
@@ -68,8 +70,8 @@ export default function ImpactPage() {
               Mid-level leaders in a multi-entity FMCG network completed a
               Super-Cube® adults pathway: orientation, baseline, deliberate
               practice across Choices through Spiritual, then re-measure.
-              Facilitators stopped tracking only attendance and started reviewing
-              pre → post deltas by face with consent.
+              Facilitators stopped tracking only attendance and started
+              reviewing pre → post deltas by face with consent.
             </p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
@@ -98,8 +100,9 @@ export default function ImpactPage() {
                 pathway + session journals + dual radar report
               </li>
               <li>
-                · <strong className="text-ink">Signal:</strong> stronger Emotional
-                and Choices scores; clearer decision language in reviews
+                · <strong className="text-ink">Signal:</strong> stronger
+                Emotional and Choices scores; clearer decision language in
+                reviews
               </li>
             </ul>
             <p className="mt-4 text-xs text-muted">
@@ -118,17 +121,17 @@ export default function ImpactPage() {
             <p className="mt-4 text-sm leading-relaxed text-slate sm:text-base">
               Schools piloting Super-Cube® Kids or Adolescents use cohort codes
               so facilitators see completion and growth snapshots—while learner
-              journals stay private. Short sessions and age-adapted language make
-              practice doable between classes.
+              journals stay private. Short sessions and age-adapted language
+              make practice doable between classes.
             </p>
             <ul className="mt-4 space-y-2 text-sm text-slate">
               <li>
-                · <strong className="text-ink">Setup:</strong> cohort code + free
-                demo for teachers, then paid seats
+                · <strong className="text-ink">Setup:</strong> cohort code +
+                free demo for teachers, then paid seats
               </li>
               <li>
-                · <strong className="text-ink">Rhythm:</strong> one face focus per
-                week (weakest-first after baseline)
+                · <strong className="text-ink">Rhythm:</strong> one face focus
+                per week (weakest-first after baseline)
               </li>
               <li>
                 · <strong className="text-ink">Outcome language:</strong>{" "}

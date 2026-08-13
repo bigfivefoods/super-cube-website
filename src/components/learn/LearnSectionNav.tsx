@@ -16,7 +16,7 @@ export function LearnSectionNav() {
 
   useEffect(() => {
     const els = SECTIONS.map((s) => document.getElementById(s.id)).filter(
-      Boolean
+      Boolean,
     ) as HTMLElement[];
     if (!els.length) return;
 
@@ -27,7 +27,7 @@ export function LearnSectionNav() {
           .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
         if (visible[0]?.target?.id) setActive(visible[0].target.id);
       },
-      { rootMargin: "-20% 0px -55% 0px", threshold: [0.1, 0.35, 0.6] }
+      { rootMargin: "-20% 0px -55% 0px", threshold: [0.1, 0.35, 0.6] },
     );
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
@@ -47,7 +47,7 @@ export function LearnSectionNav() {
                 href={`#${s.id}`}
                 className={`inline-flex min-h-9 items-center rounded-full px-3.5 text-[0.75rem] font-semibold transition ${
                   on
-                    ? "bg-ink text-white shadow-sm"
+                    ? "bg-void text-void-fg shadow-sm"
                     : "bg-white text-slate ring-1 ring-black/[0.08] hover:text-ink"
                 }`}
               >
