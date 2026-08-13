@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { Fragment } from "react";
+import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs } from "@/lib/content";
@@ -498,16 +500,19 @@ export default function WhatPage() {
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
                           Six faces
                         </p>
-                        <div className="mt-2.5 flex flex-wrap gap-1.5">
-                          {constructs.map((c) => (
-                            <span
-                              key={c.id}
-                              className="rounded-full px-2.5 py-1 text-[0.7rem] font-semibold text-white"
-                              style={{ background: c.color }}
-                            >
-                              {c.name}
-                            </span>
-                          ))}
+                        <div className="mt-2 flex flex-col items-center">
+                          <div className="relative flex h-[8.5rem] w-full max-w-[11rem] items-center justify-center overflow-hidden">
+                            <SuperCube
+                              size="sm"
+                              showSkills={false}
+                              autoSpin
+                              className="pointer-events-none scale-[0.62] origin-center [&>div:last-child]:hidden"
+                            />
+                          </div>
+                          <p className="mt-1.5 text-center text-[0.65rem] leading-snug text-muted">
+                            Choices · Principles · Mental · Emotional ·
+                            Physical · Spiritual
+                          </p>
                         </div>
                       </>
                     )}
@@ -517,26 +522,32 @@ export default function WhatPage() {
                         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
                           Across the lifespan
                         </p>
-                        <ul className="mt-2.5 space-y-2">
-                          {lifespanStages.map((s) => (
-                            <li
-                              key={s.label}
-                              className="flex items-start gap-2.5 rounded-lg border border-line bg-elevated px-2.5 py-2"
-                            >
-                              <span className="shrink-0 rounded-md bg-void px-2 py-0.5 text-[0.65rem] font-bold uppercase tracking-wide text-void-fg">
-                                {s.label}
-                              </span>
-                              <span className="min-w-0">
-                                <span className="block text-[0.65rem] font-medium text-muted">
+                        <div className="mt-2.5 flex items-stretch justify-between gap-1">
+                          {lifespanStages.map((s, i) => (
+                            <Fragment key={s.label}>
+                              <div className="flex min-w-0 flex-1 flex-col items-center text-center">
+                                <span className="flex h-7 w-7 items-center justify-center rounded-full bg-void text-[0.65rem] font-bold text-void-fg">
+                                  {i + 1}
+                                </span>
+                                <span className="mt-1.5 text-[0.7rem] font-semibold text-ink">
+                                  {s.label}
+                                </span>
+                                <span className="text-[0.6rem] text-muted">
                                   {s.ages}
                                 </span>
-                                <span className="block text-xs leading-snug text-ink">
-                                  {s.line}
-                                </span>
-                              </span>
-                            </li>
+                              </div>
+                              {i < lifespanStages.length - 1 && (
+                                <div
+                                  className="mt-3.5 h-px w-3 shrink-0 self-start bg-line-strong"
+                                  aria-hidden
+                                />
+                              )}
+                            </Fragment>
                           ))}
-                        </ul>
+                        </div>
+                        <p className="mt-2.5 text-center text-[0.6rem] leading-snug text-muted">
+                          Same model · deeper learning · wider impact
+                        </p>
                       </>
                     )}
 
