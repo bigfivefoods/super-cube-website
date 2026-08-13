@@ -50,7 +50,7 @@ export default function SampleReportPage() {
       </PageHero>
 
       <section className="section-pad bg-surface">
-        <div className="container-site max-w-3xl">
+        <div className="container-site max-w-5xl">
           {/* Conversion band above the fold of the report */}
           <div className="mb-6 rounded-2xl border border-line bg-void px-5 py-5 text-void-fg sm:px-6 sm:py-6">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-void-fg/50">
