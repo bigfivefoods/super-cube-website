@@ -78,20 +78,20 @@ export function Header() {
 
   const navLinkClass = (active: boolean) => {
     if (overDark || (chromeDark && !overLight)) {
-      return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
+      return `rounded-full px-3 py-2 text-xs font-medium tracking-tight transition-colors ${
         active
           ? "bg-white text-black"
           : "text-white/85 hover:bg-white/10 hover:text-white"
       }`;
     }
     if (overLight) {
-      return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
+      return `rounded-full px-3 py-2 text-xs font-medium tracking-tight transition-colors ${
         active
           ? "bg-void text-void-fg"
           : "text-ink/80 hover:bg-black/[0.06] dark:hover:bg-white/[0.08] hover:text-ink"
       }`;
     }
-    return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
+    return `rounded-full px-3 py-2 text-xs font-medium tracking-tight transition-colors ${
       active
         ? "sc-btn-primary"
         : "text-slate hover:bg-black/[0.04] hover:text-ink dark:hover:bg-white/[0.06]"
@@ -100,12 +100,12 @@ export function Header() {
 
   const quietLinkClass = () => {
     if (overDark || (chromeDark && !overLight)) {
-      return "text-sm font-medium tracking-tight text-white/80 transition-colors hover:text-white";
+      return "text-xs font-medium tracking-tight text-white/80 transition-colors hover:text-white";
     }
     if (overLight) {
-      return "text-sm font-medium tracking-tight text-ink/75 transition-colors hover:text-ink";
+      return "text-xs font-medium tracking-tight text-ink/75 transition-colors hover:text-ink";
     }
-    return "text-sm font-medium tracking-tight text-slate transition-colors hover:text-ink";
+    return "text-xs font-medium tracking-tight text-slate transition-colors hover:text-ink";
   };
 
   const headerSurface = overDark
@@ -191,7 +191,7 @@ export function Header() {
                               <Link
                                 href={item.href}
                                 role="menuitem"
-                                className="block rounded-lg px-2 py-1.5 text-sm font-medium tracking-tight text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
+                                className="block rounded-lg px-2 py-1.5 text-xs font-medium tracking-tight text-ink hover:bg-black/[0.04] dark:hover:bg-white/[0.06]"
                                 onClick={() => setExploreOpen(false)}
                               >
                                 {navLabel(item.href, item.label)}
@@ -231,7 +231,7 @@ export function Header() {
             </Link>
             <Link
               href="/learn/start"
-              className={`rounded-full px-4 py-2 text-sm font-semibold tracking-tight transition ${
+              className={`rounded-full px-4 py-2 text-xs font-semibold tracking-tight transition ${
                 chromeDark && !overLight
                   ? "bg-white text-black hover:bg-white/90"
                   : "sc-btn-primary"
