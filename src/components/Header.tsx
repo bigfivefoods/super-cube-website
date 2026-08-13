@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
-import { constructs, mainNav, moreNavGroups } from "@/lib/content";
+import { constructs, exploreNavGroups, mainNav } from "@/lib/content";
 import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
 import {
   faceI18n,
@@ -30,8 +30,9 @@ function matchesPath(pathname: string, paths: readonly string[]) {
 export function Header() {
   const pathname = usePathname();
   const { t } = useLocale();
+  const explorePanelId = useId();
   const [open, setOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
+  const [exploreOpen, setExploreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   const isLightHero = matchesPath(pathname, lightHeroPaths);
@@ -39,6 +40,10 @@ export function Header() {
   const overHero = (isDarkHero || isLightHero) && !scrolled && !open;
   const overDark = overHero && isDarkHero;
   const overLight = overHero && isLightHero;
+
+  const exploreActive = exploreNavGroups.some((g) =>
+    g.links.some((item) => linkActive(pathname, item.href)),
+  );
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -49,7 +54,7 @@ export function Header() {
 
   useEffect(() => {
     setOpen(false);
-    setMoreOpen(false);
+    setExploreOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -59,12 +64,11 @@ export function Header() {
     };
   }, [open]);
 
-  /* Escape closes mobile nav + more menu (Tier 3 a11y) */
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") {
         setOpen(false);
-        setMoreOpen(false);
+        setExploreOpen(false);
       }
     }
     window.addEventListener("keydown", onKey);
@@ -73,24 +77,34 @@ export function Header() {
 
   const navLinkClass = (active: boolean) => {
     if (overDark) {
-      return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
+      return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
         active
           ? "bg-white text-ink"
           : "text-white/85 hover:bg-white/10 hover:text-white"
       }`;
     }
     if (overLight) {
-      return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
+      return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
         active
           ? "bg-ink text-white"
           : "text-ink/80 hover:bg-black/[0.06] hover:text-ink"
       }`;
     }
-    return `rounded-full px-3 py-2 text-[0.8125rem] font-medium transition-colors ${
+    return `rounded-full px-3 py-2 text-sm font-medium tracking-tight transition-colors ${
       active
         ? "bg-ink text-white"
         : "text-slate hover:bg-black/[0.04] hover:text-ink"
     }`;
+  };
+
+  const quietLinkClass = () => {
+    if (overDark) {
+      return "text-sm font-medium tracking-tight text-white/80 transition-colors hover:text-white";
+    }
+    if (overLight) {
+      return "text-sm font-medium tracking-tight text-ink/75 transition-colors hover:text-ink";
+    }
+    return "text-sm font-medium tracking-tight text-slate transition-colors hover:text-ink";
   };
 
   const headerSurface = overDark
@@ -108,7 +122,7 @@ export function Header() {
     <header
       className={`fixed inset-x-0 top-0 z-50 pt-[env(safe-area-inset-top,0px)] transition-all duration-300 ${headerSurface}`}
     >
-      <div className="container-site flex h-14 items-center justify-between gap-2 md:h-16 md:gap-3">
+      <div className="container-site flex h-14 items-center justify-between gap-2 md:gap-3 lg:h-16">
         <BrandWordmark
           height={26}
           className={`min-w-0 max-w-[min(100%,10rem)] shrink sm:max-w-none ${
@@ -133,42 +147,49 @@ export function Header() {
           <div className="relative">
             <button
               type="button"
-              className={navLinkClass(moreOpen)}
-              aria-expanded={moreOpen}
+              className={navLinkClass(exploreOpen || exploreActive)}
+              aria-expanded={exploreOpen}
               aria-haspopup="true"
-              onClick={() => setMoreOpen((v) => !v)}
+              aria-controls={explorePanelId}
+              onClick={() => setExploreOpen((v) => !v)}
             >
-              {t("nav.more")}
+              {t("nav.explore")}
               <span className="ml-1 text-[0.65rem] opacity-60" aria-hidden>
                 ▾
               </span>
             </button>
-            {moreOpen && (
+            {exploreOpen && (
               <>
                 <button
                   type="button"
                   className="fixed inset-0 z-40 cursor-default bg-transparent"
                   aria-label={t("nav.close")}
-                  onClick={() => setMoreOpen(false)}
+                  onClick={() => setExploreOpen(false)}
                 />
                 <div
-                  className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,22rem)] rounded-2xl border border-black/[0.08] bg-white p-4 shadow-xl"
+                  id={explorePanelId}
+                  className="absolute right-0 top-full z-50 mt-2 w-[min(100vw-2rem,40rem)] rounded-2xl border border-black/[0.08] bg-white p-5 shadow-xl"
                   role="menu"
                 >
-                  <div className="grid grid-cols-2 gap-4">
-                    {moreNavGroups.map((group) => (
+                  <div className="grid grid-cols-3 gap-5">
+                    {exploreNavGroups.map((group) => (
                       <div key={group.title}>
-                        <p className="px-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                          {t(moreGroupI18n[group.title] || "nav.more")}
+                        <p className="px-1 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                          {t(moreGroupI18n[group.title] || "nav.explore")}
                         </p>
-                        <ul className="mt-1.5 space-y-0.5">
+                        {"description" in group && group.description ? (
+                          <p className="mt-1 px-1 text-[0.6875rem] leading-snug text-muted/90">
+                            {group.description}
+                          </p>
+                        ) : null}
+                        <ul className="mt-2.5 space-y-0.5">
                           {group.links.map((item) => (
                             <li key={item.href}>
                               <Link
                                 href={item.href}
                                 role="menuitem"
-                                className="block rounded-lg px-2 py-1.5 text-sm font-medium text-ink hover:bg-black/[0.04]"
-                                onClick={() => setMoreOpen(false)}
+                                className="block rounded-lg px-2 py-1.5 text-sm font-medium tracking-tight text-ink hover:bg-black/[0.04]"
+                                onClick={() => setExploreOpen(false)}
                               >
                                 {navLabel(item.href, item.label)}
                               </Link>
@@ -190,18 +211,26 @@ export function Header() {
             {t("nav.contact")}
           </Link>
 
-          <LanguageSwitcher overDark={overDark} variant="compact" />
-
-          <Link
-            href="/learn/start"
-            className={`ml-1 rounded-full px-4 py-2 text-[0.8125rem] font-semibold transition ${
-              overDark
-                ? "bg-white text-ink hover:bg-white/90"
-                : "bg-ink text-white hover:bg-ink-soft"
+          <div
+            className={`ml-1 flex items-center gap-3 border-l pl-3 ${
+              overDark ? "border-white/20" : "border-black/[0.08]"
             }`}
           >
-            {t("nav.startFree")}
-          </Link>
+            <LanguageSwitcher overDark={overDark} variant="compact" />
+            <Link href="/login" className={quietLinkClass()}>
+              {t("nav.signIn")}
+            </Link>
+            <Link
+              href="/learn/start"
+              className={`rounded-full px-4 py-2 text-sm font-semibold tracking-tight transition ${
+                overDark
+                  ? "bg-white text-ink hover:bg-white/90"
+                  : "bg-ink text-white hover:bg-ink-soft"
+              }`}
+            >
+              {t("nav.startFree")}
+            </Link>
+          </div>
         </nav>
 
         <div className="flex items-center gap-1.5 lg:hidden">
@@ -263,7 +292,7 @@ export function Header() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`rounded-xl px-3 py-3 text-[1rem] font-semibold ${
+                    className={`rounded-xl px-3 py-3 text-base font-semibold tracking-tight ${
                       active
                         ? "bg-ink text-white"
                         : "text-ink hover:bg-black/[0.04]"
@@ -275,33 +304,17 @@ export function Header() {
               })}
             </div>
 
-            <p className="mt-5 px-1 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              {t("nav.sixFaces")}
-            </p>
-            <div className="grid grid-cols-2 gap-1.5">
-              {constructs.map((c) => (
-                <Link
-                  key={c.id}
-                  href={`/constructs#${c.id}`}
-                  className="rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 text-[0.875rem] font-semibold text-ink"
-                  style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
-                >
-                  {t(faceI18n[c.id] || "nav.sixFaces")}
-                </Link>
-              ))}
-            </div>
-
-            {moreNavGroups.map((group) => (
+            {exploreNavGroups.map((group) => (
               <div key={group.title} className="mt-5">
                 <p className="px-1 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                  {t(moreGroupI18n[group.title] || "nav.more")}
+                  {t(moreGroupI18n[group.title] || "nav.explore")}
                 </p>
                 <div className="flex flex-col gap-0.5">
                   {group.links.map((item) => (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium text-ink hover:bg-black/[0.04]"
+                      className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-ink hover:bg-black/[0.04]"
                     >
                       {navLabel(item.href, item.label)}
                     </Link>
@@ -310,13 +323,44 @@ export function Header() {
               </div>
             ))}
 
-            <div className="mt-5 px-1">
+            <p className="mt-5 px-1 pb-2 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
+              {t("nav.sixFaces")}
+            </p>
+            <div className="grid grid-cols-2 gap-1.5">
+              {constructs.map((c) => (
+                <Link
+                  key={c.id}
+                  href={`/constructs#${c.id}`}
+                  className="rounded-xl border border-black/[0.06] bg-[#fafafa] px-3 py-2.5 text-[0.875rem] font-semibold tracking-tight text-ink"
+                  style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
+                >
+                  {t(faceI18n[c.id] || "nav.sixFaces")}
+                </Link>
+              ))}
+            </div>
+
+            <div className="mt-5 flex flex-col gap-0.5 border-t border-black/[0.06] pt-4">
+              <Link
+                href="/contact"
+                className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-ink hover:bg-black/[0.04]"
+              >
+                {t("nav.contact")}
+              </Link>
+              <Link
+                href="/login"
+                className="rounded-xl px-3 py-2.5 text-[0.9375rem] font-medium tracking-tight text-slate hover:bg-black/[0.04] hover:text-ink"
+              >
+                {t("nav.signIn")}
+              </Link>
+            </div>
+
+            <div className="mt-4 px-1">
               <LanguageSwitcher variant="footer" />
             </div>
 
             <Link
               href="/learn/start"
-              className="mt-5 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold text-white"
+              className="mt-5 rounded-full bg-ink px-4 py-3.5 text-center text-base font-semibold tracking-tight text-white"
             >
               {t("nav.startFreeBaseline")}
             </Link>

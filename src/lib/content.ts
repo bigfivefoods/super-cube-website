@@ -8,35 +8,88 @@ export const site = {
 };
 
 /**
- * Desktop primary bar — short labels, left → right journey.
- * Six faces → /constructs (Principles, Choices, …).
+ * Desktop primary bar — journey order left → right.
+ * Explore (secondary) + Contact / Sign in / Start free sit after primary.
  */
 export const mainNav = [
-  { href: "/the-model", label: "Model" },
+  { href: "/the-model", label: "The model" },
   { href: "/constructs", label: "Six faces" },
   { href: "/what", label: "Programmes" },
-  { href: "/learn/start", label: "Learn" },
+  { href: "/how", label: "How it works" },
   { href: "/pricing", label: "Pricing" },
 ] as const;
 
-/** Grouped “More” menu — logical sections */
-export const moreNavGroups = [
+/** Explore mega-menu — Understand · Practice · Organisations */
+export const exploreNavGroups = [
   {
-    title: "Story",
+    title: "Understand",
+    description: "Why it matters and the research behind it",
     links: [
       { href: "/why", label: "Why leadership" },
-      { href: "/how", label: "How it works" },
       { href: "/research", label: "Research" },
+      { href: "/impact", label: "Impact" },
       { href: "/about", label: "About" },
     ],
   },
   {
-    title: "Proof & practice",
+    title: "Practice",
+    description: "Tools, reports, and ongoing learning",
     links: [
       { href: "/sample-report", label: "Sample report" },
-      { href: "/impact", label: "Impact" },
       { href: "/practices", label: "Practices" },
       { href: "/insights", label: "Insights" },
+      { href: "/faq", label: "FAQ" },
+    ],
+  },
+  {
+    title: "Organisations",
+    description: "Pilots, teams, and certification",
+    links: [
+      { href: "/pilot-pack", label: "Pilot pack" },
+      { href: "/facilitator", label: "Facilitator kit" },
+      { href: "/team", label: "Team cube" },
+      { href: "/certify", label: "Certification" },
+      { href: "/community", label: "Community" },
+    ],
+  },
+] as const;
+
+/** @deprecated Prefer exploreNavGroups */
+export const moreNavGroups = exploreNavGroups;
+
+/** Flat list for simple maps (mobile extras, legacy) */
+export const moreNav = exploreNavGroups.flatMap((g) => [...g.links]);
+
+/** Footer link columns — shared IA with Explore groups where possible */
+export const footerColumns = [
+  {
+    title: "Product",
+    links: [
+      { href: "/the-model", label: "The model" },
+      { href: "/constructs", label: "Six faces" },
+      { href: "/what", label: "Programmes" },
+      { href: "/how", label: "How it works" },
+      { href: "/pricing", label: "Pricing" },
+      { href: "/learn/start", label: "Learn" },
+    ],
+  },
+  {
+    title: "Understand",
+    links: [
+      { href: "/why", label: "Why leadership" },
+      { href: "/research", label: "Research" },
+      { href: "/impact", label: "Impact" },
+      { href: "/about", label: "About" },
+      { href: "/faq", label: "FAQ" },
+    ],
+  },
+  {
+    title: "Practice",
+    links: [
+      { href: "/sample-report", label: "Sample report" },
+      { href: "/practices", label: "Practices" },
+      { href: "/insights", label: "Insights" },
+      { href: "/media", label: "Media kit" },
     ],
   },
   {
@@ -47,21 +100,10 @@ export const moreNavGroups = [
       { href: "/team", label: "Team cube" },
       { href: "/certify", label: "Certification" },
       { href: "/community", label: "Community" },
-    ],
-  },
-  {
-    title: "Connect",
-    links: [
-      { href: "/faq", label: "FAQ" },
-      { href: "/contact", label: "Contact" },
-      { href: "/media", label: "Media kit" },
-      { href: "/login", label: "Sign in" },
+      { href: "/pricing#pilot", label: "Book a pilot" },
     ],
   },
 ] as const;
-
-/** Flat list for simple maps (mobile extras, legacy) */
-export const moreNav = moreNavGroups.flatMap((g) => [...g.links]);
 
 /** Story strip (Why → How → What) — footer / homepage narrative only */
 export const primaryNav = [

@@ -34,6 +34,7 @@
   --color-gold-bright: var(--gold-bright);
   --color-gold-soft: var(--gold-soft);
   --color-line: var(--line);
+  /* SupplierAdvisor-style stack; self-hosted Inter via next/font */
   --font-sans: var(--font-inter), Inter, system-ui, sans-serif;
   --font-display: var(--font-inter), Inter, system-ui, sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,

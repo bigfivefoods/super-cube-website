@@ -30,12 +30,13 @@ const en = {
   "lang.af": "Afrikaans",
 
   // Primary nav
-  "nav.model": "Model",
+  "nav.model": "The model",
   "nav.sixFaces": "Six faces",
   "nav.programmes": "Programmes",
   "nav.learn": "Learn",
   "nav.pricing": "Pricing",
-  "nav.more": "More",
+  "nav.explore": "Explore",
+  "nav.more": "Explore",
   "nav.contact": "Contact",
   "nav.startFree": "Start free",
   "nav.startFreeBaseline": "Start free baseline",
@@ -46,10 +47,13 @@ const en = {
   "nav.open": "Open menu",
   "nav.faq": "FAQ",
 
-  // More menu groups
-  "nav.group.story": "Story",
-  "nav.group.proof": "Proof & practice",
+  // Explore menu groups
+  "nav.group.explore": "Explore",
+  "nav.group.understand": "Understand",
+  "nav.group.practice": "Practice",
   "nav.group.orgs": "Organisations",
+  "nav.group.story": "Understand",
+  "nav.group.proof": "Practice",
   "nav.group.connect": "Connect",
   "nav.why": "Why leadership",
   "nav.how": "How it works",
@@ -68,7 +72,9 @@ const en = {
 
   // Footer
   "footer.product": "Product",
-  "footer.proof": "Proof",
+  "footer.understand": "Understand",
+  "footer.practice": "Practice",
+  "footer.proof": "Practice",
   "footer.orgs": "Organisations",
   "footer.company": "Company",
   "footer.sixFaces": "Six faces",
@@ -220,7 +226,8 @@ const zu: Record<I18nKey, string> = {
   "nav.programmes": "Izinhlelo",
   "nav.learn": "Funda",
   "nav.pricing": "Amanani",
-  "nav.more": "Okuningi",
+  "nav.explore": "Hlola",
+  "nav.more": "Hlola",
   "nav.contact": "Xhumana",
   "nav.startFree": "Qala mahhala",
   "nav.startFreeBaseline": "Qala isisekelo samahhala",
@@ -231,9 +238,12 @@ const zu: Record<I18nKey, string> = {
   "nav.open": "Vula imenyu",
   "nav.faq": "Imibuzo",
 
-  "nav.group.story": "Indaba",
-  "nav.group.proof": "Ubufakazi nokuzilolonga",
+  "nav.group.explore": "Hlola",
+  "nav.group.understand": "Qonda",
+  "nav.group.practice": "Zilolonge",
   "nav.group.orgs": "Izinhlangano",
+  "nav.group.story": "Qonda",
+  "nav.group.proof": "Zilolonge",
   "nav.group.connect": "Xhumana",
   "nav.why": "Kungani ubuholi",
   "nav.how": "Kusebenza kanjani",
@@ -251,7 +261,9 @@ const zu: Record<I18nKey, string> = {
   "nav.media": "Ikhithi yezindaba",
 
   "footer.product": "Umkhiqizo",
-  "footer.proof": "Ubufakazi",
+  "footer.understand": "Qonda",
+  "footer.practice": "Zilolonge",
+  "footer.proof": "Zilolonge",
   "footer.orgs": "Izinhlangano",
   "footer.company": "Inkampani",
   "footer.sixFaces": "Ubuso obuyisithupha",
@@ -391,12 +403,13 @@ const af: Record<I18nKey, string> = {
   "lang.zu": "isiZulu",
   "lang.af": "Afrikaans",
 
-  "nav.model": "Model",
+  "nav.model": "Die model",
   "nav.sixFaces": "Ses vlakke",
   "nav.programmes": "Programme",
   "nav.learn": "Leer",
   "nav.pricing": "Pryse",
-  "nav.more": "Meer",
+  "nav.explore": "Verken",
+  "nav.more": "Verken",
   "nav.contact": "Kontak",
   "nav.startFree": "Begin gratis",
   "nav.startFreeBaseline": "Begin gratis basislyn",
@@ -407,9 +420,12 @@ const af: Record<I18nKey, string> = {
   "nav.open": "Maak kieslys oop",
   "nav.faq": "Gereelde vrae",
 
-  "nav.group.story": "Storie",
-  "nav.group.proof": "Bewys & oefening",
+  "nav.group.explore": "Verken",
+  "nav.group.understand": "Verstaan",
+  "nav.group.practice": "Oefening",
   "nav.group.orgs": "Organisasies",
+  "nav.group.story": "Verstaan",
+  "nav.group.proof": "Oefening",
   "nav.group.connect": "Skakel",
   "nav.why": "Hoekom leierskap",
   "nav.how": "Hoe dit werk",
@@ -427,7 +443,9 @@ const af: Record<I18nKey, string> = {
   "nav.media": "Media-kit",
 
   "footer.product": "Produk",
-  "footer.proof": "Bewys",
+  "footer.understand": "Verstaan",
+  "footer.practice": "Oefening",
+  "footer.proof": "Oefening",
   "footer.orgs": "Organisasies",
   "footer.company": "Maatskappy",
   "footer.sixFaces": "Ses vlakke",
@@ -611,8 +629,9 @@ export const mainNavI18n: Record<string, I18nKey> = {
   "/the-model": "nav.model",
   "/constructs": "nav.sixFaces",
   "/what": "nav.programmes",
-  "/learn/start": "nav.learn",
+  "/how": "nav.how",
   "/pricing": "nav.pricing",
+  "/learn/start": "nav.learn",
 };
 
 export const moreLinkI18n: Record<string, I18nKey> = {
@@ -633,12 +652,17 @@ export const moreLinkI18n: Record<string, I18nKey> = {
   "/media": "nav.media",
   "/faq": "nav.faq",
   "/login": "nav.signIn",
+  "/pricing#pilot": "cta.bookPilot",
 };
 
 export const moreGroupI18n: Record<string, I18nKey> = {
+  Understand: "nav.group.understand",
+  Practice: "nav.group.practice",
+  Organisations: "nav.group.orgs",
+  Explore: "nav.group.explore",
+  // Legacy titles
   Story: "nav.group.story",
   "Proof & practice": "nav.group.proof",
-  Organisations: "nav.group.orgs",
   Connect: "nav.group.connect",
 };
 
@@ -653,7 +677,10 @@ export const faceI18n: Record<string, I18nKey> = {
 
 export const footerColI18n: Record<string, I18nKey> = {
   Product: "footer.product",
-  Proof: "footer.proof",
+  Understand: "footer.understand",
+  Practice: "footer.practice",
   Organisations: "footer.orgs",
+  // Legacy titles
+  Proof: "footer.proof",
   Company: "footer.company",
 };
