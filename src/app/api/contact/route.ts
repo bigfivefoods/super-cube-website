@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { isNonProductionDeploy } from "@/lib/deploy-env";
 
 type Body = {
   name?: string;
@@ -7,11 +8,15 @@ type Body = {
   message?: string;
   intent?: string;
   source?: string;
+  /** Honeypot: real users never fill this. */
+  website?: string;
 };
 
 /**
- * Contact intake. Logs structured payload; optionally posts to a webhook
- * (NEXT_PUBLIC_CONTACT_WEBHOOK or CONTACT_WEBHOOK) for email/CRM.
+ * Contact / quote / keynote intake. Logs a structured payload; in production it
+ * also posts to a webhook (CONTACT_WEBHOOK or NEXT_PUBLIC_CONTACT_WEBHOOK) for
+ * email/CRM. On preview deployments nothing is forwarded (log only), so test
+ * submissions never reach real people.
  */
 export async function POST(req: Request) {
   let body: Body;
@@ -19,6 +24,11 @@ export async function POST(req: Request) {
     body = (await req.json()) as Body;
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  if (String(body.website ?? "").trim()) {
+    // Bot filled the honeypot: pretend success, do nothing.
+    return NextResponse.json({ ok: true });
   }
 
   const name = String(body.name ?? "").trim().slice(0, 120);
@@ -60,7 +70,9 @@ export async function POST(req: Request) {
     process.env.NEXT_PUBLIC_CONTACT_WEBHOOK ||
     "";
 
-  if (webhook) {
+  const preview = isNonProductionDeploy();
+
+  if (webhook && !preview) {
     try {
       await fetch(webhook, {
         method: "POST",
@@ -71,8 +83,11 @@ export async function POST(req: Request) {
       // still accept — mail may be down
     }
   } else {
-    console.info("[contact]", JSON.stringify(payload));
+    console.info(
+      preview ? "[contact][preview: not forwarded]" : "[contact]",
+      JSON.stringify(payload)
+    );
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, delivered: Boolean(webhook && !preview) });
 }

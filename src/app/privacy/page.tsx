@@ -68,6 +68,12 @@ export default function PrivacyPage() {
                 <strong className="text-ink">Contact form:</strong> name, email,
                 message—used only to respond or route a pilot request.
               </li>
+              <li>
+                <strong className="text-ink">Newsletter (only if you tick the consent box):</strong>{" "}
+                your email address, where you signed up, and when you gave
+                consent—used only to send Super-Cube® updates. Every email has
+                an unsubscribe option, or ask us to remove you at any time.
+              </li>
             </ul>
           </div>
 

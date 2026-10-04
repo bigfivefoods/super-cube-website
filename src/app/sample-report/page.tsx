@@ -3,6 +3,7 @@ import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { constructs } from "@/lib/content";
 import { SampleReportCharts } from "@/components/learn/SampleReportCharts";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
 export const metadata: Metadata = pageMeta({
@@ -167,6 +168,11 @@ export default function SampleReportPage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+      <section className="section-pad border-t border-line bg-paper">
+        <div className="container-site max-w-2xl">
+          <NewsletterSignup source="sample-report" />
         </div>
       </section>
     </>

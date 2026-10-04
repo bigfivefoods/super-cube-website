@@ -34,6 +34,7 @@ export const exploreNavGroups = [
       { href: "/research", label: "Research" },
       { href: "/impact", label: "Impact" },
       { href: "/about", label: "About" },
+      { href: "/speaking", label: "Speaking" },
     ],
   },
   {
@@ -50,6 +51,8 @@ export const exploreNavGroups = [
     title: "Organisations",
     description: "Pilots, teams, and certification",
     links: [
+      { href: "/organisations", label: "For organisations" },
+      { href: "/schools", label: "For schools" },
       { href: "/pilot-pack", label: "Pilot pack" },
       { href: "/facilitator", label: "Facilitator kit" },
       { href: "/team", label: "Team cube" },
@@ -96,11 +99,14 @@ export const footerColumns = [
       { href: "/practices", label: "Practices" },
       { href: "/insights", label: "Insights" },
       { href: "/media", label: "Media kit" },
+      { href: "/speaking", label: "Speaking" },
     ],
   },
   {
     title: "Organisations",
     links: [
+      { href: "/organisations", label: "For organisations" },
+      { href: "/schools", label: "For schools" },
       { href: "/pilot-pack", label: "Pilot pack" },
       { href: "/facilitator", label: "Facilitator kit" },
       { href: "/team", label: "Team cube" },
