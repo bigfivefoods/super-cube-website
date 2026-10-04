@@ -2,13 +2,14 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getNewsletterAdmin } from "@/lib/newsletter/admin-auth";
 import { SignInForm } from "./SignInForm";
-import { signOutAction } from "./actions";
+import { signOutAction, toggleHandledAction } from "./actions";
+import { EnquiriesTab, type Enquiry } from "./EnquiriesTab";
 import { NEWSLETTER_TABLE, newsletterDb, type Subscriber } from "@/lib/newsletter/db";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Newsletter admin | Super-Cube®" },
+  title: { absolute: "Super-Cube admin" },
   robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
 };
 
@@ -21,14 +22,20 @@ function fmt(iso: string | null) {
   });
 }
 
-export default async function NewsletterAdminPage() {
+export default async function AdminPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
+  const { tab: tabParam } = await searchParams;
+  const tab = tabParam === "subscribers" ? "subscribers" : "enquiries";
   const admin = await getNewsletterAdmin();
   if (!admin.ok) {
     return (
       <section className="section-pad">
         <div className="container-site max-w-md">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">Admin</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Newsletter admin</h1>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
           <p className="mt-2 text-sm text-slate">
             Sign in with your Super-Cube® account. Only approved admin emails can open this page.
           </p>
@@ -40,9 +47,10 @@ export default async function NewsletterAdminPage() {
 
   const db = newsletterDb();
   let rows: Subscriber[] = [];
+  let enquiries: Enquiry[] = [];
   let error: string | null = null;
-  if (!db) error = "The subscriber store isn’t configured (Supabase URL / service role key).";
-  else {
+  if (!db) error = "The store isn’t configured (Supabase URL / service role key).";
+  else if (tab === "subscribers") {
     const res = await db
       .from(NEWSLETTER_TABLE)
       .select("id,email,source,consent_text,consent_at,unsubscribe_token,unsubscribed_at,created_at")
@@ -50,14 +58,26 @@ export default async function NewsletterAdminPage() {
       .limit(2000);
     if (res.error) error = res.error.message;
     rows = (res.data ?? []) as Subscriber[];
+  } else {
+    const res = await db
+      .from("enquiries")
+      .select("id,created_at,intent,name,email,organisation,message,source,delivered,handled_at,handled_by")
+      .order("created_at", { ascending: false })
+      .limit(2000);
+    if (res.error) error = res.error.message;
+    enquiries = (res.data ?? []) as Enquiry[];
   }
   const active = rows.filter((r) => !r.unsubscribed_at).length;
+  const tabCls = (on: boolean) =>
+    `inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold ${
+      on ? "bg-ink text-paper" : "border border-line-strong text-ink"
+    }`;
 
   return (
     <section className="section-pad">
       <div className="container-site">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">Admin</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-ink">Newsletter subscribers</h1>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
         <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate">
           <p>Signed in as {admin.email}. Times in SAST.</p>
           <form action={signOutAction}>
@@ -65,7 +85,25 @@ export default async function NewsletterAdminPage() {
           </form>
         </div>
 
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        <nav aria-label="Admin sections" className="mt-6 flex flex-wrap gap-2">
+          <Link href="/newsletter/admin?tab=enquiries" className={tabCls(tab === "enquiries")} aria-current={tab === "enquiries" ? "page" : undefined}>
+            Enquiries
+          </Link>
+          <Link href="/newsletter/admin?tab=subscribers" className={tabCls(tab === "subscribers")} aria-current={tab === "subscribers" ? "page" : undefined}>
+            Newsletter subscribers
+          </Link>
+        </nav>
+
+        {tab === "enquiries" ? (
+          error ? (
+            <p className="mt-6 rounded-xl border border-line bg-elevated p-4 text-sm text-ink" role="alert">{error}</p>
+          ) : (
+            <EnquiriesTab rows={enquiries} toggle={toggleHandledAction} />
+          )
+        ) : (
+        <>
+        <h2 className="mt-8 text-xl font-semibold tracking-tight text-ink">Newsletter subscribers</h2>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
           <div className="rounded-xl border border-line bg-elevated px-4 py-3">
             <p className="text-2xl font-semibold tabular-nums text-ink">{active}</p>
             <p className="text-xs text-slate">Active</p>
@@ -120,6 +158,8 @@ export default async function NewsletterAdminPage() {
               </tbody>
             </table>
           </div>
+        )}
+        </>
         )}
         <p className="mt-6 text-sm">
           <Link href="/" className="font-semibold text-ink underline underline-offset-2">Back to site</Link>
