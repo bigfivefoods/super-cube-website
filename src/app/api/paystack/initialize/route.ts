@@ -11,6 +11,7 @@ import {
   programmes,
   type ProgrammeId,
 } from "@/lib/programmes";
+import { createClient } from "@/lib/supabase/server";
 import {
   getSeatPack,
   isSeatPackId,
@@ -55,6 +56,16 @@ export async function POST(request: Request) {
     }
 
     const currency = paystackCurrency();
+    // Bind the payment to the signed-in account (if any) so fulfilment never
+    // has to guess the buyer from an email address.
+    let userId: string | undefined;
+    try {
+      const sb = await createClient();
+      const { data } = (await sb?.auth.getUser()) ?? { data: { user: null } };
+      userId = data.user?.id;
+    } catch {
+      userId = undefined;
+    }
     const siteUrl = (
       process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me"
     ).replace(/\/$/, "");
@@ -95,6 +106,7 @@ export async function POST(request: Request) {
           programme_id: programmeId,
           plan_id: planId,
           org_name: orgName,
+          user_id: userId,
           currency,
           price_display: seatPackListPrice(pack, currency),
           full_name: fullName || undefined,
@@ -131,7 +143,7 @@ export async function POST(request: Request) {
 
     // ── Single learner ───────────────────────────────────────────
     const programmeId = String(body.programmeId || "") as ProgrammeId;
-    const planId = String(body.planId || `${programmeId}_once`);
+    const planId = `${programmeId}_once`;
     const programme = programmes.find((p) => p.id === programmeId);
     if (!programme) {
       return NextResponse.json({ error: "Invalid programme" }, { status: 400 });
@@ -152,6 +164,7 @@ export async function POST(request: Request) {
         plan_id: planId,
         product: "super_cube_lms",
         product_type: "single",
+        user_id: userId,
         price_display:
           currency === "USD" ? programme.priceUsd : programme.priceZar,
         currency,

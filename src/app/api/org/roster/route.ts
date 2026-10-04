@@ -63,7 +63,7 @@ export async function GET(request: Request) {
       return NextResponse.json({
         orgs: list.map((m) => m.organisations).filter(Boolean),
         roster: [],
-        message: "No coach org yet. Join with role=coach or use DEMO2026.",
+        message: "No coach organisation yet. Ask your organisation admin for a coach invite, or create an organisation.",
       });
     }
 

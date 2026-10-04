@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { verifyPaystackSignature } from "@/lib/paystack";
-import { activateSubscriptionInSupabase } from "@/lib/lms/activate-subscription-server";
-import { createOrgFromSeatPayment } from "@/lib/org/create-from-payment";
+import { fulfilPaystackCharge } from "@/lib/lms/server/paystack-fulfil";
 
 /**
  * Paystack webhook — charge.success for single + seat packs.
@@ -30,58 +29,17 @@ export async function POST(request: Request) {
     console.info("[paystack webhook]", event.event, event.data?.reference);
 
     if (event.event === "charge.success") {
-      const data = event.data;
-      if (data.status && data.status !== "success") {
-        return NextResponse.json({ received: true, skipped: true });
-      }
-      const meta = data.metadata || {};
-      const productType = String(meta.product_type || "single");
-      const programmeId = String(meta.programme_id || "adults");
-      const planId = String(meta.plan_id || `${programmeId}_once`);
-      const reference = String(data.reference || "");
-      const email = data.customer?.email;
-
-      if (!reference) {
-        return NextResponse.json({ received: true, skipped: "no_ref" });
-      }
-
-      if (productType === "seat_pack") {
-        const seats = Number(meta.seats || 10);
-        const packId = String(meta.pack_id || "seats_10");
-        const orgName = String(meta.org_name || "Cohort");
-        const orgResult = await createOrgFromSeatPayment({
-          email,
-          orgName,
-          seats,
-          packId,
-          paystackReference: reference,
-          programmeId,
-          kind: "school",
-        });
-        const sub = await activateSubscriptionInSupabase({
-          email,
-          programmeId,
-          planId,
-          paystackReference: reference,
-          paystackCustomerCode: data.customer?.customer_code,
-          amountCents: data.amount,
-          currency: data.currency,
-        });
-        console.info("[paystack webhook] seat_pack", {
-          org: orgResult,
-          sub,
-        });
-      } else if (programmeId) {
-        const result = await activateSubscriptionInSupabase({
-          email,
-          programmeId,
-          planId,
-          paystackReference: reference,
-          paystackCustomerCode: data.customer?.customer_code,
-          amountCents: data.amount,
-          currency: data.currency,
-        });
-        console.info("[paystack webhook] single", result);
+      // Same checks as /api/paystack/verify: metadata-only product data and
+      // amount/currency must match the server price list.
+      const result = await fulfilPaystackCharge(event.data);
+      console.info("[paystack webhook] fulfil", {
+        reference: event.data?.reference,
+        ok: result.ok,
+        reason: result.reason,
+        productType: result.productType,
+      });
+      if (!result.ok) {
+        return NextResponse.json({ received: true, fulfilled: false, reason: result.reason });
       }
     }
 

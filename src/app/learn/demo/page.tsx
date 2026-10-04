@@ -9,8 +9,7 @@ import { unlockDemo } from "@/lib/lms/store";
 import { programmes, type ProgrammeId } from "@/lib/programmes";
 
 /**
- * Free sample path: unlock demo access without Paystack so people can
- * orient + try a construct course before buying.
+ * Free sample path: sample sessions only (no subscription is created).
  */
 export default function LearnDemoPage() {
   const router = useRouter();
@@ -39,13 +38,13 @@ export default function LearnDemoPage() {
   return (
     <LearnShell
       title="Try Super-Cube® free"
-      subtitle="Unlock a full demo pathway on this device—orientation, six faces, and practice. No card required. Upgrade anytime for paid access and multi-device sync."
+      subtitle="Try sample sessions on this device: orientation, your baseline, and the first sessions of each face. No card required. The full pathway, after-test and certificate need paid access or a cohort seat."
     >
       <div className="mb-5 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <p className="learn-eyebrow">What you get</p>
         <ul className="mt-2 space-y-1.5 text-[0.8125rem] leading-relaxed text-slate">
           <li>· Pre-pre orientation + baseline self-assessment</li>
-          <li>· All six construct courses for your age band</li>
+          <li>· Two free sample sessions in each of the six faces</li>
           <li>· Session reflections, streak, and growth report tools</li>
           <li>
             · Private to this browser until you create an account &amp; sync
