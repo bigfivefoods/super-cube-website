@@ -58,14 +58,17 @@ export function mergeLmsStates(
     }
   }
 
-  // attempts: one pre + one post, prefer later completedAt
+  // attempts: one pre + one post per programme. The FIRST one wins (the baseline
+  // is locked and the after-test is once-only); mid check-ins keep the latest.
   const attemptsByPhase = new Map<string, LocalAttempt>();
   for (const att of [...(a.attempts || []), ...(b.attempts || [])]) {
-    const key = att.phase;
+    const key = `${att.programmeId}:${att.phase}`;
     const prev = attemptsByPhase.get(key);
-    if (!prev || Date.parse(att.completedAt) >= Date.parse(prev.completedAt)) {
-      attemptsByPhase.set(key, att);
-    }
+    const t = Date.parse(att.completedAt);
+    const replace =
+      !prev ||
+      (att.phase === "mid" ? t >= Date.parse(prev.completedAt) : t < Date.parse(prev.completedAt));
+    if (replace) attemptsByPhase.set(key, att);
   }
 
   // reflections: latest per lesson
@@ -135,7 +138,20 @@ export function mergeLmsStates(
       subscription?.programmeId,
   };
 
+  // Keep every field the merge does not handle explicitly (profile, consent,
+  // server entitlement, drafts …). Previously these were dropped on each sync,
+  // which wiped the learner's profile and bounced them back to /learn/welcome.
+  const profile =
+    (newer.profile?.profileCompletedAt ? newer.profile : undefined) ||
+    (older.profile?.profileCompletedAt ? older.profile : undefined) ||
+    newer.profile ||
+    older.profile;
+
   return {
+    ...older,
+    ...newer,
+    profile,
+    guardianConsent: newer.guardianConsent || older.guardianConsent,
     user: user.email || user.fullName ? user : newer.user || older.user,
     subscription,
     lessonProgress,
