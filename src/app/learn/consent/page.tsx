@@ -6,6 +6,8 @@ import { Suspense, useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
 import {
+  CONSENT_CHECKBOX_TEXT,
+  CONSENT_INTRO,
   CONSENT_POINTS,
   CONSENT_TEXT_VERSION,
   GUARDIAN_RELATIONSHIPS,
@@ -129,16 +131,16 @@ function ConsentForm() {
       <section className="learn-card">
         <p className="learn-eyebrow">For the parent or guardian</p>
         <h2 className="learn-card-title mt-1">
-          {profile.displayName || "Your child"} is {band?.label ?? "under 18"}
+          Before {profile.displayName || "your child"} starts
+          {band?.label ? <span className="learn-meta"> · {band.label}</span> : null}
         </h2>
-        <p className="learn-body mt-2">
-          South African privacy law (POPIA) needs a parent or guardian to agree before we
-          process a child&apos;s personal information. Please read this with your child and
-          complete it yourself.
-        </p>
-        <ul className="mt-3 space-y-1.5 text-[0.8125rem] leading-relaxed text-ink">
+        <p className="learn-body mt-2">{CONSENT_INTRO}</p>
+        <ul className="mt-3 space-y-2 text-[0.8125rem] leading-relaxed text-ink">
           {CONSENT_POINTS.map((p) => (
-            <li key={p}>· {p}</li>
+            <li key={p.label}>
+              <strong>{p.label}:</strong>{" "}
+              {p.label === "Questions" ? <a href={`mailto:${p.text}`} className="underline">{p.text}</a> : p.text}
+            </li>
           ))}
         </ul>
       </section>
@@ -169,7 +171,7 @@ function ConsentForm() {
           </select>
         </label>
         <label className="block">
-          <span className="learn-label">Your email (optional, so you can ask for deletion)</span>
+          <span className="learn-label">Your email (optional, so we can help if you ask us to delete or correct data)</span>
           <input
             className="learn-input mt-1.5 w-full"
             type="email"
@@ -187,11 +189,7 @@ function ConsentForm() {
             onChange={(e) => setAttested(e.target.checked)}
             name="attested"
           />
-          <span>
-            I am this learner&apos;s parent or legal guardian (or have parental responsibility),
-            I have read the points above, and I consent to Super-Cube® processing my child&apos;s
-            information for their leadership programme.
-          </span>
+          <span>{CONSENT_CHECKBOX_TEXT}</span>
         </label>
         <button
           type="button"
@@ -202,7 +200,7 @@ function ConsentForm() {
           {busy ? "Saving…" : "I consent · continue"}
         </button>
         <p className="learn-meta">
-          Consent wording version {CONSENT_TEXT_VERSION} (draft, pending review). No email is sent.
+          Consent version {CONSENT_TEXT_VERSION}. We&apos;ll only email you if you add your email address and ask us to.
         </p>
       </section>
       {note && <p className="learn-meta" role="status">{note}</p>}
