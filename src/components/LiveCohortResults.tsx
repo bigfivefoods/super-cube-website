@@ -41,9 +41,9 @@ export function LiveCohortResults() {
         <p className="mt-3 text-sm text-slate">Loading live results…</p>
       ) : !data.available ? (
         <>
-          <h3 className="mt-2 text-xl font-semibold tracking-tight text-ink">
+          <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">
             Live cohort results will appear here.
-          </h3>
+          </h2>
           <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
             Once consented cohorts finish their post-assessment, this panel will
             show their combined, anonymised before-and-after change by face. We
@@ -54,11 +54,11 @@ export function LiveCohortResults() {
         </>
       ) : (
         <>
-          <h3 className="mt-2 text-xl font-semibold tracking-tight text-ink">
+          <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">
             {typeof data.overallDelta === "number"
               ? `${signed(data.overallDelta)} points average growth`
               : "Average growth by face"}
-          </h3>
+          </h2>
           <p className="mt-1 text-sm text-slate">
             {data.learners} learners
             {data.cohorts ? ` across ${data.cohorts} cohorts` : ""} · pre → post,
