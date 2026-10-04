@@ -17,17 +17,24 @@ export type Subscriber = {
 };
 
 let warned = false;
+let warnedUrl = false;
 
-/**
- * Service-role client for the newsletter table (server only).
- *
- * Reads SUPABASE_SERVICE_ROLE_KEY. The production Vercel project currently
- * has this variable saved as "UPABASE_SERVICE_ROLE_KEY" (missing the S); the
- * fallback below keeps signups working until it is renamed. Remove the
- * fallback once the env var is fixed.
- */
-export function newsletterDb(): SupabaseClient | null {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+/** Public project URL (not a secret). Used if the env value is missing/invalid. */
+const DEFAULT_SUPABASE_URL = "https://scsgmmyjrulwoymegsid.supabase.co";
+
+export function supabaseUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || process.env.SUPABASE_URL?.trim() || "";
+  if (/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(raw)) return raw.replace(/\/$/, "");
+  if (!warnedUrl) {
+    warnedUrl = true;
+    console.warn(
+      `[newsletter] NEXT_PUBLIC_SUPABASE_URL is ${raw ? "not a valid https://<ref>.supabase.co URL" : "missing"}; using the project default`
+    );
+  }
+  return DEFAULT_SUPABASE_URL;
+}
+
+export function serviceKey(): string | null {
   let key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   if (!key && process.env.UPABASE_SERVICE_ROLE_KEY?.trim()) {
     key = process.env.UPABASE_SERVICE_ROLE_KEY.trim();
@@ -38,8 +45,21 @@ export function newsletterDb(): SupabaseClient | null {
       );
     }
   }
-  if (!url || !key) return null;
-  return createClient(url, key, {
+  return key || null;
+}
+
+/**
+ * Service-role client for the newsletter table (server only).
+ *
+ * Reads SUPABASE_SERVICE_ROLE_KEY. The production Vercel project currently
+ * has this variable saved as "UPABASE_SERVICE_ROLE_KEY" (missing the S); the
+ * fallback below keeps signups working until it is renamed. Remove the
+ * fallback once the env var is fixed.
+ */
+export function newsletterDb(): SupabaseClient | null {
+  const key = serviceKey();
+  if (!key) return null;
+  return createClient(supabaseUrl(), key, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 }

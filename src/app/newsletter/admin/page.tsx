@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { getNewsletterAdmin } from "@/lib/newsletter/admin-auth";
+import { SignInForm } from "./SignInForm";
+import { signOutAction } from "./actions";
 import { NEWSLETTER_TABLE, newsletterDb, type Subscriber } from "@/lib/newsletter/db";
 
 export const dynamic = "force-dynamic";
@@ -23,14 +24,15 @@ function fmt(iso: string | null) {
 export default async function NewsletterAdminPage() {
   const admin = await getNewsletterAdmin();
   if (!admin.ok) {
-    if (!admin.signedInAs) redirect("/login?next=/newsletter/admin");
     return (
       <section className="section-pad">
-        <div className="container-site max-w-xl">
-          <h1 className="text-2xl font-semibold tracking-tight text-ink">Not authorised</h1>
-          <p className="mt-3 text-slate">
-            You’re signed in as {admin.signedInAs}, which doesn’t have newsletter admin access.
+        <div className="container-site max-w-md">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">Admin</p>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Newsletter admin</h1>
+          <p className="mt-2 text-sm text-slate">
+            Sign in with your Super-Cube® account. Only approved admin emails can open this page.
           </p>
+          <SignInForm />
         </div>
       </section>
     );
@@ -56,7 +58,12 @@ export default async function NewsletterAdminPage() {
       <div className="container-site">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">Admin</p>
         <h1 className="mt-1 text-3xl font-semibold tracking-tight text-ink">Newsletter subscribers</h1>
-        <p className="mt-2 text-sm text-slate">Signed in as {admin.email}. Times in SAST.</p>
+        <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate">
+          <p>Signed in as {admin.email}. Times in SAST.</p>
+          <form action={signOutAction}>
+            <button type="submit" className="min-h-6 font-semibold text-ink underline underline-offset-2">Sign out</button>
+          </form>
+        </div>
 
         <div className="mt-6 flex flex-wrap items-center gap-3">
           <div className="rounded-xl border border-line bg-elevated px-4 py-3">
