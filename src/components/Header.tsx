@@ -91,7 +91,11 @@ export function Header() {
     return k ? t(k) : fallback;
   }
 
-  const surface = overDark
+  // When the menu is open the header must be solid with no backdrop-filter:
+  // a backdrop-filter would become the containing block for the fixed sheet.
+  const surface = open
+    ? "border-line bg-paper"
+    : overDark
     ? "border-transparent bg-transparent"
     : overLight
       ? "border-transparent bg-white/60 backdrop-blur-md dark:bg-black/50"

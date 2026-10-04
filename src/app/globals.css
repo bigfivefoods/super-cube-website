@@ -1189,11 +1189,6 @@ a.sc-card:hover,
   opacity: 0.85;
 }
 
-/* Header hairline gets the spectrum once scrolled past the hero */
-.site-header {
-  -webkit-backdrop-filter: saturate(1.5) blur(20px);
-}
-
 /* Mobile menu sheet: soft entrance */
 .mobile-sheet:not([hidden]) {
   animation: sheet-in 0.28s var(--ease-out) both;
