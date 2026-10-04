@@ -18,7 +18,8 @@ export function Footer() {
   }
 
   return (
-    <footer className="site-footer border-t border-line bg-surface text-ink">
+    <footer className="site-footer bg-surface text-ink">
+      <div className="spectrum-rule" aria-hidden />
       <div className="container-site section-pad pb-[max(2rem,env(safe-area-inset-bottom))]">
         <div className="grid items-start gap-10 lg:grid-cols-[1fr_minmax(17rem,22rem)] lg:gap-12">
           <div className="min-w-0">

@@ -82,7 +82,7 @@ export default function SampleReportPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
+          <div className="sc-card p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               Example only · illustrative composite, not a real learner or a research result
             </p>

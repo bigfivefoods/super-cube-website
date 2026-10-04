@@ -99,4 +99,7 @@ export const darkHeroPaths = [
   "/certify",
   "/community",
   "/team",
+  "/organisations",
+  "/schools",
+  "/speaking",
 ] as const;

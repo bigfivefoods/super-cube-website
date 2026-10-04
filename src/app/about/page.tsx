@@ -162,7 +162,7 @@ export default function AboutPage() {
             {pillars.map((p) => (
               <article
                 key={p.label}
-                className="rounded-2xl border border-line bg-elevated p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+                className="sc-card p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)]"
               >
                 <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
                   {p.label}
@@ -215,7 +215,7 @@ export default function AboutPage() {
               leadership development.
             </p>
           </div>
-          <div className="min-w-0 rounded-2xl border border-line bg-elevated p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-6 md:p-8">
+          <div className="min-w-0 sc-card p-5 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-6 md:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               At a glance
             </p>
@@ -260,7 +260,7 @@ export default function AboutPage() {
             ].map((card) => (
               <article
                 key={card.title}
-                className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                className="sc-card p-5 sm:p-6"
               >
                 <h3 className="text-base font-semibold tracking-tight text-ink sm:text-lg">
                   {card.title}

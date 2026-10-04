@@ -45,7 +45,7 @@ export default function ContactPage() {
               ))}
             </ul>
             <div className="mt-10 rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-gold-bright">
                 Direct
               </p>
               <p className="mt-2 text-sm text-slate">

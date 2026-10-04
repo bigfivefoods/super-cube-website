@@ -68,7 +68,7 @@ export function ContactForm({
     if (isFooter) {
       return (
         <div
-          className={`rounded-2xl border border-line bg-elevated p-5 ${className}`.trim()}
+          className={`sc-card p-5 ${className}`.trim()}
         >
           <h2 className="text-base font-semibold tracking-tight text-ink">
             {t("footer.formThanks")}
@@ -90,7 +90,7 @@ export function ContactForm({
 
     return (
       <div
-        className={`rounded-2xl border border-line bg-elevated p-8 md:p-10 ${className}`.trim()}
+        className={`sc-card p-8 md:p-10 ${className}`.trim()}
       >
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
           Message received
@@ -123,7 +123,7 @@ export function ContactForm({
     return (
       <form
         onSubmit={handleSubmit}
-        className={`rounded-2xl border border-line bg-elevated p-5 ${className}`.trim()}
+        className={`sc-card p-5 ${className}`.trim()}
         noValidate={false}
       >
         <h2 className="text-base font-semibold tracking-tight text-ink">
@@ -203,7 +203,7 @@ export function ContactForm({
   return (
     <form
       onSubmit={handleSubmit}
-      className={`rounded-2xl border border-line bg-elevated p-6 md:p-8 ${className}`.trim()}
+      className={`sc-card p-6 md:p-8 ${className}`.trim()}
       noValidate={false}
     >
       <div className="grid gap-5 sm:grid-cols-2">

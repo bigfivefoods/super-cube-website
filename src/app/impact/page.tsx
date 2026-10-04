@@ -40,7 +40,7 @@ export default function ImpactPage() {
       <ImpactResults
         eyebrow="Research results · UKZN doctoral study"
         title="What the research found."
-        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® doctoral research (University of KwaZulu-Natal, 2021). These are research results, not live programme data."
+        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® doctoral research (University of KwaZulu-Natal, 2021), carried out with leaders in an African FMCG business-network. These are research results, not live programme data."
       />
 
       {/* 3. Example pattern (illustrative) */}
@@ -74,7 +74,7 @@ export default function ImpactPage() {
             </div>
           </article>
 
-          <article className="mt-6 rounded-2xl border border-line bg-elevated p-6 sm:p-8">
+          <article className="mt-6 sc-card p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               How a school cohort works · a pattern, not a result
             </p>

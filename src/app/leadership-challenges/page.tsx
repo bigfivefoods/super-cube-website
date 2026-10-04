@@ -69,7 +69,7 @@ export default function LeadershipChallengesPage() {
             {sofiSnapshot.keyStats.map((stat) => (
               <article
                 key={stat.label}
-                className="flex h-full flex-col rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                className="flex h-full flex-col sc-card p-5 sm:p-6"
               >
                 <p className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                   {stat.value}
@@ -84,7 +84,7 @@ export default function LeadershipChallengesPage() {
             ))}
           </div>
 
-          <div className="mt-8 rounded-2xl border border-line bg-elevated p-5 sm:p-6">
+          <div className="mt-8 sc-card p-5 sm:p-6">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
               SOFI themes
             </p>
@@ -268,7 +268,7 @@ export default function LeadershipChallengesPage() {
             {howSuperCubeAddresses.map((item) => (
               <article
                 key={item.title}
-                className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                className="sc-card p-5 sm:p-6"
               >
                 <h3 className="text-base font-semibold tracking-tight text-ink sm:text-lg">
                   {item.title}
@@ -285,7 +285,7 @@ export default function LeadershipChallengesPage() {
               <Link
                 key={c.id}
                 href="/constructs"
-                className="flex items-start gap-3 rounded-2xl border border-line bg-elevated p-4 transition hover:border-line-strong"
+                className="flex items-start gap-3 sc-card p-4 transition hover:border-line-strong"
                 style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
               >
                 <span

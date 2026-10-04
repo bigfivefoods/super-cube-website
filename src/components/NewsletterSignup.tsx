@@ -63,7 +63,7 @@ export function NewsletterSignup({
 
   const wrap = footer
     ? `min-w-0 ${className}`
-    : `rounded-2xl border border-line bg-elevated p-5 sm:p-6 ${className}`;
+    : `sc-card p-5 sm:p-6 ${className}`;
 
   if (state === "done") {
     return (

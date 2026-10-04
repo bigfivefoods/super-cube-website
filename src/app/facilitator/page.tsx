@@ -51,7 +51,7 @@ export default function FacilitatorPage() {
             ].map((item) => (
               <div
                 key={item.t}
-                className="rounded-2xl border border-line bg-elevated p-4 text-center sm:p-5"
+                className="sc-card p-4 text-center sm:p-5"
               >
                 <p className="text-sm font-semibold tracking-tight text-ink">
                   {item.t}

@@ -137,7 +137,7 @@ export function ImpactResults({
 
         <p
           className={`mt-5 max-w-2xl text-xs leading-relaxed ${
-            light ? "text-cream/45" : "text-muted"
+            light ? "text-cream/65" : "text-muted"
           }`}
         >
           Research results: average percentage improvement following

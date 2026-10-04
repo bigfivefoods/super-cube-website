@@ -76,6 +76,11 @@ const en = {
   "nav.certify": "Certification",
   "nav.community": "Community",
   "nav.media": "Media kit",
+  "nav.individuals": "Individuals",
+  "nav.organisations": "Organisations",
+  "nav.schools": "Schools",
+  "nav.speaking": "Speaking",
+  "nav.moreLinks": "More from Super-Cube",
 
   // Footer
   "footer.product": "Product",
@@ -331,6 +336,11 @@ const zu: Record<I18nKey, string> = {
   "nav.certify": "Isitifiketi",
   "nav.community": "Umphakathi",
   "nav.media": "Ikhithi yezindaba",
+  "nav.individuals": "Abantu ngabanye",
+  "nav.organisations": "Izinhlangano",
+  "nav.schools": "Izikole",
+  "nav.speaking": "Izinkulumo",
+  "nav.moreLinks": "Okunye kwe-Super-Cube",
 
   "footer.product": "Umkhiqizo",
   "footer.understand": "Qonda",
@@ -577,6 +587,11 @@ const af: Record<I18nKey, string> = {
   "nav.certify": "Sertifisering",
   "nav.community": "Gemeenskap",
   "nav.media": "Media-kit",
+  "nav.individuals": "Individue",
+  "nav.organisations": "Organisasies",
+  "nav.schools": "Skole",
+  "nav.speaking": "Toesprake",
+  "nav.moreLinks": "Meer van Super-Cube",
 
   "footer.product": "Produk",
   "footer.understand": "Verstaan",
@@ -819,6 +834,10 @@ export function setLocaleInStorage(locale: Locale) {
 
 /** Map main nav href → translation key */
 export const mainNavI18n: Record<string, I18nKey> = {
+  "/organisations": "nav.organisations",
+  "/schools": "nav.schools",
+  "/speaking": "nav.speaking",
+  "/research": "nav.research",
   "/the-model": "nav.model",
   "/constructs": "nav.sixFaces",
   "/what": "nav.programmes",

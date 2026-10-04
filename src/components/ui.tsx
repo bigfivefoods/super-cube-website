@@ -22,7 +22,7 @@ export function SectionHeading({
 }) {
   return (
     <div
-      className={`max-w-2xl min-w-0 ${align === "center" ? "mx-auto text-center" : ""}`}
+      className={`reveal max-w-2xl min-w-0 ${align === "center" ? "mx-auto text-center" : ""}`}
     >
       {eyebrow && (
         <p
@@ -63,12 +63,12 @@ export function Button({
   className?: string;
 }) {
   const base =
-    "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight transition sm:w-auto sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink touch-manipulation";
+    "sc-btn inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight sm:w-auto sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink touch-manipulation";
   const variants = {
     primary: "sc-btn-primary",
     secondary: "sc-btn-primary",
     ghost:
-      "border border-line-strong bg-elevated text-ink hover:border-black/25 hover:bg-black/[0.02] dark:hover:border-white/25 dark:hover:bg-white/[0.04]",
+      "border border-line-strong bg-transparent text-ink hover:border-black/30 hover:bg-black/[0.03] dark:hover:border-white/30 dark:hover:bg-white/[0.05]",
     light:
       "border border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/15",
   };
@@ -106,20 +106,20 @@ export function PageHero({
   const mediaAlt = imageAlt ?? preset?.alt ?? "";
   const objectPos = preset?.position ?? "object-center";
   const isMedia = Boolean(mediaSrc);
-  const useFull = full ?? isMedia;
+  const useFull = full ?? false;
   const lightTone = isMedia && preset?.tone === "light";
   const darkTone = isMedia && !lightTone;
 
   const actionsClass = lightTone
-    ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3"
+    ? "mt-5 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3"
     : darkTone
-      ? "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
-      : "mt-5 flex w-full max-w-md animate-fade-up delay-3 flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3";
+      ? "mt-5 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
+      : "mt-5 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3";
 
   const eyebrowCls = lightTone
-    ? "text-slate before:bg-black/25"
+    ? "text-slate"
     : darkTone
-      ? "text-white/70 before:bg-white/50"
+      ? "text-white/75"
       : "";
   const titleCls = lightTone
     ? "text-ink"
@@ -151,6 +151,7 @@ export function PageHero({
             alt={mediaAlt}
             fill
             priority
+            quality={60}
             className={`object-cover ${objectPos}`}
             sizes="100vw"
           />
@@ -184,35 +185,35 @@ export function PageHero({
         {visual ? (
           <div className="grid w-full items-center gap-6 sm:gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-12 xl:gap-16">
             <div className="page-hero__copy order-2 min-w-0 md:order-1">
-              <p className={`eyebrow animate-fade-up ${eyebrowCls}`}>
+              <p className={`eyebrow ${eyebrowCls}`}>
                 {eyebrow}
               </p>
               <h1
-                className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${titleCls}`}
+                className={`page-hero__title heading-xl mt-3 sm:mt-4 ${titleCls}`}
               >
                 {title}
               </h1>
               <p
-                className={`page-hero__lede mt-4 max-w-xl animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:max-w-2xl md:text-lg lg:text-xl ${ledeCls}`}
+                className={`page-hero__lede mt-4 max-w-xl text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:max-w-2xl md:text-lg lg:text-xl ${ledeCls}`}
               >
                 {description}
               </p>
               {children && <div className={actionsClass}>{children}</div>}
             </div>
-            <div className="animate-fade-up delay-2 relative z-[1] order-1 mx-auto w-full max-w-[min(100%,15rem)] min-w-0 sm:max-w-[17rem] md:order-2 md:mx-0 md:max-w-[18rem] lg:max-w-[20rem] lg:justify-self-end">
+            <div className=" relative z-[1] order-1 mx-auto w-full max-w-[min(100%,15rem)] min-w-0 sm:max-w-[17rem] md:order-2 md:mx-0 md:max-w-[18rem] lg:max-w-[20rem] lg:justify-self-end">
               {visual}
             </div>
           </div>
         ) : (
           <div className="page-hero__copy min-w-0 max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
-            <p className={`eyebrow animate-fade-up ${eyebrowCls}`}>{eyebrow}</p>
+            <p className={`eyebrow ${eyebrowCls}`}>{eyebrow}</p>
             <h1
-              className={`page-hero__title heading-xl mt-3 animate-fade-up delay-1 sm:mt-4 ${titleCls}`}
+              className={`page-hero__title heading-xl mt-3 sm:mt-4 ${titleCls}`}
             >
               {title}
             </h1>
             <p
-              className={`page-hero__lede mt-4 animate-fade-up delay-2 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${ledeCls}`}
+              className={`page-hero__lede mt-4 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${ledeCls}`}
             >
               {description}
             </p>

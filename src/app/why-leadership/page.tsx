@@ -119,7 +119,7 @@ export default function WhyLeadershipPage() {
             {sdgHeadlineStats.map((stat) => (
               <article
                 key={stat.label}
-                className="flex h-full flex-col rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                className="flex h-full flex-col sc-card p-5 sm:p-6"
               >
                 <p className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
                   {stat.value}
@@ -141,7 +141,7 @@ export default function WhyLeadershipPage() {
             {sdgPressurePoints.map((p) => (
               <article
                 key={p.title}
-                className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                className="sc-card p-5 sm:p-6"
               >
                 <h3 className="text-base font-semibold tracking-tight text-ink">
                   {p.title}
@@ -174,7 +174,7 @@ export default function WhyLeadershipPage() {
             {sdgGoals.map((goal) => (
               <article
                 key={goal.id}
-                className="group flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated shadow-[0_1px_0_rgba(0,0,0,0.03)] transition hover:shadow-md"
+                className="group flex flex-col overflow-hidden sc-card shadow-[0_1px_0_rgba(0,0,0,0.03)] transition hover:shadow-md"
               >
                 {/* Official UN SDG icon */}
                 <div className="relative aspect-square w-full overflow-hidden bg-elevated">
@@ -253,7 +253,7 @@ export default function WhyLeadershipPage() {
             ].map((item) => (
               <article
                 key={item.n}
-                className="grid gap-3 rounded-2xl border border-line bg-elevated p-5 sm:grid-cols-[4rem_1fr] sm:gap-6 sm:p-6"
+                className="grid gap-3 sc-card p-5 sm:grid-cols-[4rem_1fr] sm:gap-6 sm:p-6"
               >
                 <p className="font-display text-2xl text-muted">{item.n}</p>
                 <div>
@@ -287,7 +287,7 @@ export default function WhyLeadershipPage() {
               return (
                 <article
                   key={row.constructId}
-                  className="flex flex-col rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                  className="flex flex-col sc-card p-5 sm:p-6"
                   style={{ boxShadow: `inset 3px 0 0 ${construct.color}` }}
                 >
                   <div className="flex flex-wrap items-center gap-2">

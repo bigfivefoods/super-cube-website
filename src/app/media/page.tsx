@@ -68,7 +68,7 @@ export default function MediaKitPage() {
             </div>
           </div>
           <div className="space-y-6">
-            <div className="rounded-2xl border border-line bg-elevated p-5">
+            <div className="sc-card p-5">
               <SectionHeading title="Overview presentation" />
               <p className="mt-3 text-sm leading-relaxed text-slate">
                 A 12-slide Super-Cube® overview for schools, companies, and
@@ -83,7 +83,7 @@ export default function MediaKitPage() {
                 Download Super-Cube overview (.pptx)
               </a>
             </div>
-            <div className="rounded-2xl border border-line bg-elevated p-5">
+            <div className="sc-card p-5">
               <SectionHeading title="Peer-reviewed journal PDFs" />
               <p className="mt-3 text-sm leading-relaxed text-slate">
                 Open access downloads of the 2022 SAJEMS and Journal of

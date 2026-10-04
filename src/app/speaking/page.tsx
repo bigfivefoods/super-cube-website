@@ -94,7 +94,7 @@ export default function SpeakingPage() {
           />
           <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {topics.map((t) => (
-              <li key={t.title} className="rounded-2xl border border-line bg-elevated p-5">
+              <li key={t.title} className="sc-card p-5">
                 <h3 className="text-base font-semibold tracking-tight text-ink">{t.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-slate">{t.body}</p>
               </li>

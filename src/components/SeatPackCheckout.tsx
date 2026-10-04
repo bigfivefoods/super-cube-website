@@ -167,6 +167,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
           Default programme for learners
         </label>
         <select
+          aria-label="Default programme for learners"
           value={programmeId}
           onChange={(e) => setProgrammeId(e.target.value as ProgrammeId)}
           className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm outline-none focus:border-ink/40"

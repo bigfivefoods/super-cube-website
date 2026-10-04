@@ -30,6 +30,9 @@
   --shadow-sm: 0 4px 16px -6px rgba(0, 0, 0, 0.1);
   --radius: 0.5rem;
   --radius-lg: 0.75rem;
+  /* The six Super-Cube faces as one brand spectrum (decorative only). */
+  --spectrum: linear-gradient(90deg, #b32026, #5d1f5e, #26408c, #16979a, #367638, #ed8f20);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   color-scheme: light;
 }
 
@@ -277,6 +280,16 @@ html.dark ::-webkit-scrollbar-thumb:hover {
   background-color: transparent;
 }
 
+/* Interior photo heroes: a confident band, not a full screen (content sooner). */
+.page-hero--band.page-hero--media {
+  min-height: clamp(30rem, 70svh, 44rem);
+  justify-content: flex-end;
+}
+.page-hero--band.page-hero--media .page-hero__inner {
+  margin-top: auto;
+  margin-bottom: 0;
+}
+
 @media (max-width: 639px) {
   .page-hero--full.page-hero--media {
     min-height: 100svh;
@@ -396,10 +409,11 @@ html.dark ::-webkit-scrollbar-thumb:hover {
 
 .eyebrow::before {
   content: "";
-  width: 1rem;
-  height: 1px;
-  background: var(--ink);
-  opacity: 0.25;
+  width: 1.25rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--spectrum);
+  opacity: 0.9;
 }
 
 a:focus-visible,
@@ -1123,5 +1137,98 @@ html.dark .accent-text {
   }
   body {
     background: white !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   Phase 3 visual system
+   ───────────────────────────────────────────────────────────── */
+
+@layer components {
+/* Buttons: one feel everywhere */
+.sc-btn {
+  transition:
+    background-color 0.2s var(--ease-out),
+    border-color 0.2s var(--ease-out),
+    color 0.2s var(--ease-out),
+    transform 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out);
+}
+.sc-btn:active {
+  transform: scale(0.98);
+}
+.sc-btn-primary {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Cards: consistent surface, gentle lift on hover for linked cards */
+.sc-card {
+  border: 1px solid var(--line);
+  background: var(--elevated);
+  border-radius: 1rem;
+  transition:
+    border-color 0.25s var(--ease-out),
+    box-shadow 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+a.sc-card:hover,
+.sc-card--link:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-2px);
+}
+
+}
+
+/* Thin six-colour brand rule */
+.spectrum-rule {
+  height: 2px;
+  width: 100%;
+  background: var(--spectrum);
+  opacity: 0.85;
+}
+
+/* Mobile menu sheet: soft entrance */
+.mobile-sheet:not([hidden]) {
+  animation: sheet-in 0.28s var(--ease-out) both;
+}
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Body copy rhythm */
+.prose-site p,
+.lede {
+  text-wrap: pretty;
+}
+
+/* Scroll-linked reveal for section headings (no JS). Only where supported and
+   only when the visitor has not asked for reduced motion. Never used on hero
+   text, so it cannot delay LCP. */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal-up linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 35%;
+    }
+  }
+}
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
   }
 }

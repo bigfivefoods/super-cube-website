@@ -75,7 +75,7 @@ export default function PricingPage() {
               </div>
             )}
 
-            <div className="mx-auto mb-8 max-w-2xl rounded-2xl border border-line bg-elevated px-5 py-5 sm:mb-10 sm:px-8 sm:py-6">
+            <div className="mx-auto mb-8 max-w-2xl sc-card px-5 py-5 sm:mb-10 sm:px-8 sm:py-6">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Simple terms
               </p>
@@ -98,7 +98,7 @@ export default function PricingPage() {
               </ul>
             </div>
 
-            <div className="mx-auto mb-8 max-w-xl rounded-2xl border border-line bg-elevated px-6 py-6 text-center shadow-sm sm:mb-10 sm:px-10 sm:py-8">
+            <div className="mx-auto mb-8 max-w-xl sc-card px-6 py-6 text-center shadow-sm sm:mb-10 sm:px-10 sm:py-8">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Launch price · one-time · Paystack
               </p>
@@ -118,7 +118,7 @@ export default function PricingPage() {
                   <article
                     key={p.id}
                     id={p.id}
-                    className="flex flex-col rounded-2xl border border-line bg-elevated p-6 shadow-sm sm:p-8"
+                    className="flex flex-col sc-card p-6 shadow-sm sm:p-8"
                   >
                     <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                       {p.ageLabel}
@@ -193,7 +193,7 @@ export default function PricingPage() {
 
             <div
               id="pilot"
-              className="mx-auto mt-10 max-w-3xl scroll-mt-24 rounded-2xl border border-line bg-elevated p-6 sm:mt-12 sm:p-8"
+              className="mx-auto mt-10 max-w-3xl scroll-mt-24 sc-card p-6 sm:mt-12 sm:p-8"
             >
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 Schools · companies · cohorts · Phase 2
