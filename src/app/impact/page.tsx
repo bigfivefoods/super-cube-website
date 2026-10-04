@@ -40,7 +40,7 @@ export default function ImpactPage() {
       <ImpactResults
         eyebrow="Research results · UKZN doctoral study"
         title="What the research found."
-        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® doctoral research (University of KwaZulu-Natal, 2021). These are research results, not live programme data."
+        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® doctoral research (University of KwaZulu-Natal, 2021), carried out with leaders in an African FMCG business-network. These are research results, not live programme data."
       />
 
       {/* 3. Example pattern (illustrative) */}
