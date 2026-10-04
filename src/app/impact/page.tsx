@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ImpactResults } from "@/components/ImpactResults";
+import { LiveCohortResults } from "@/components/LiveCohortResults";
 import { pageMeta } from "@/lib/seo";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
 export const metadata: Metadata = pageMeta({
   path: "/impact",
-  title: "Impact stories",
+  title: "Impact and results",
   description:
-    "How Super-Cube® leadership development shows up in South African business and education contexts—growth over activity.",
+    "Super-Cube® impact: live, consented cohort results as they arrive, alongside the research results from the UKZN doctoral study, each clearly labelled.",
 });
 
 export default function ImpactPage() {
@@ -15,8 +18,8 @@ export default function ImpactPage() {
       <PageHero
         theme="impact"
         eyebrow="Impact"
-        title="Built in practice. Proven in networks."
-        description="Super-Cube® was shaped in African FMCG business-networks and is designed for schools, companies, and multi-entity alliances that need human-centric capacity—not generic leadership theatre."
+        title="Growth you can see, labelled honestly."
+        description="This page keeps three things apart: live results from real cohorts, results from the original research, and examples that show what a report looks like."
       >
         <Button href="/sample-report" variant="primary">
           View sample report
@@ -24,145 +27,100 @@ export default function ImpactPage() {
         <Button href="/learn/start" variant="ghost">
           Start free baseline
         </Button>
-        <Button href="/pricing#pilot" variant="ghost">
-          Book a pilot
-        </Button>
       </PageHero>
 
-      <section className="border-b border-line bg-bg">
-        <div className="container-site max-w-3xl py-10">
-          <SectionHeading
-            eyebrow="SDG-linked impact certificate"
-            title="Report capacity growth as development impact"
-            description="Schools and NGOs can attach consented pre→post deltas and verify IDs to SDG-aligned education and decent-work narratives—without publishing journals."
-          />
-          <ul className="mt-4 list-disc space-y-1.5 pl-5 text-sm text-slate">
-            <li>SDG 4 Quality education · structured leadership pathway</li>
-            <li>
-              SDG 5 / 8 / 16 · agency, work capability, institutions of trust
-            </li>
-            <li>
-              Export: coach CSV + sample report pattern +{" "}
-              <a href="/verify/SC-DEMO" className="font-semibold text-ink">
-                certificate verify
-              </a>
-            </li>
-          </ul>
-          <div className="mt-5 flex flex-wrap gap-2">
-            <Button href="/facilitator" variant="primary">
-              Facilitator kit
-            </Button>
-            <Button href="/team" variant="ghost">
-              Team cube visual
-            </Button>
-          </div>
+      {/* 1. Live data (empty state until consented aggregates exist) */}
+      <section className="section-pad bg-paper">
+        <div className="container-site max-w-4xl">
+          <LiveCohortResults />
         </div>
       </section>
 
-      <section className="section-pad">
-        <div className="container-site max-w-3xl space-y-12">
-          <article className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
+      {/* 2. Research results */}
+      <ImpactResults
+        eyebrow="Research results · UKZN doctoral study"
+        title="What the research found."
+        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® doctoral research (University of KwaZulu-Natal, 2021). These are research results, not live programme data."
+      />
+
+      {/* 3. Example pattern (illustrative) */}
+      <section className="section-pad border-b border-line">
+        <div className="container-site max-w-4xl">
+          <article className="rounded-2xl border-2 border-dashed border-line-strong bg-elevated p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Case · FMCG network (anonymised composite)
+              Example only · illustrative composite, not live data or a client result
             </p>
             <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-              From “more training hours” to six-face capacity
+              What an 8-week adult cohort report can look like
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-slate sm:text-base">
-              Mid-level leaders in a multi-entity FMCG network completed a
-              Super-Cube® adults pathway: orientation, baseline, deliberate
-              practice across Choices through Spiritual, then re-measure.
-              Facilitators stopped tracking only attendance and started
-              reviewing pre → post deltas by face with consent.
+            <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
+              This example shows the format of a cohort report: an overall
+              score on a 0–100 scale before and after the programme, and the
+              change for each face. Real cohorts will differ. For the measured
+              research result (Emotional +39.5%, UKZN), see the research
+              results above.
             </p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
                 { k: "52 → 68", v: "Mean overall (0–100)" },
-                { k: "+18", v: "Emotional face Δ" },
+                { k: "+16", v: "Overall points (example)" },
                 { k: "8 wks", v: "Pathway length" },
               ].map((s) => (
-                <div
-                  key={s.v}
-                  className="rounded-xl bg-surface px-3 py-3 text-center"
-                >
-                  <p className="text-lg font-semibold tabular-nums text-ink">
-                    {s.k}
-                  </p>
-                  <p className="mt-0.5 text-[0.65rem] text-muted">{s.v}</p>
+                <div key={s.v} className="rounded-xl bg-surface px-3 py-3 text-center">
+                  <p className="text-lg font-semibold tabular-nums text-ink">{s.k}</p>
+                  <p className="mt-0.5 text-xs text-slate">{s.v}</p>
                 </div>
               ))}
             </div>
-            <ul className="mt-4 space-y-2 text-sm text-slate">
-              <li>
-                · <strong className="text-ink">Challenge:</strong> talent
-                abundance next to skills gaps; complex stakeholder webs
-              </li>
-              <li>
-                · <strong className="text-ink">Intervention:</strong> linear
-                pathway + session journals + dual radar report
-              </li>
-              <li>
-                · <strong className="text-ink">Signal:</strong> stronger
-                Emotional and Choices scores; clearer decision language in
-                reviews
-              </li>
-            </ul>
-            <p className="mt-4 text-xs text-muted">
-              Composite narrative for illustration; individual results vary.
-              Research base: CFA and senior interviews (see Research).
-            </p>
           </article>
 
-          <article className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
+          <article className="mt-6 rounded-2xl border border-line bg-elevated p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Case · School pilot pattern
+              How a school cohort works · a pattern, not a result
             </p>
             <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
               Youth pathway with guardian-friendly progress
             </h2>
-            <p className="mt-4 text-sm leading-relaxed text-slate sm:text-base">
-              Schools piloting Super-Cube® Kids or Adolescents use cohort codes
-              so facilitators see completion and growth snapshots—while learner
-              journals stay private. Short sessions and age-adapted language
-              make practice doable between classes.
-            </p>
             <ul className="mt-4 space-y-2 text-sm text-slate">
-              <li>
-                · <strong className="text-ink">Setup:</strong> cohort code +
-                free demo for teachers, then paid seats
-              </li>
-              <li>
-                · <strong className="text-ink">Rhythm:</strong> one face focus
-                per week (weakest-first after baseline)
-              </li>
-              <li>
-                · <strong className="text-ink">Outcome language:</strong>{" "}
-                character, agency, and care—not empty certificates
-              </li>
+              <li>· <strong className="text-ink">Setup:</strong> cohort code and a free demo for teachers, then paid seats</li>
+              <li>· <strong className="text-ink">Rhythm:</strong> one face per week, weakest first after the baseline</li>
+              <li>· <strong className="text-ink">Privacy:</strong> facilitators see completion and growth snapshots; learner journals stay private</li>
             </ul>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button href="/contact" variant="primary">
-                Book a school pilot
-              </Button>
-              <Button href="/learn/org" variant="ghost">
-                Join with a code
-              </Button>
-            </div>
           </article>
+        </div>
+      </section>
 
+      {/* 4. Reporting impact */}
+      <section className="section-pad">
+        <div className="container-site grid max-w-5xl gap-10 lg:grid-cols-2">
           <div>
             <SectionHeading
-              eyebrow="Evidence"
-              title="Underpinned by mixed-methods research."
-              description="Structural validity across six constructs, senior-leader thematic interviews, and a model built for complex environments."
+              eyebrow="For schools, NGOs and funders"
+              title="Report leadership growth as development impact."
+              description="With learners’ consent, cohorts can share before-and-after change and certificate verify IDs in SDG-linked reports, without ever publishing journals."
             />
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button href="/research" variant="primary">
-                Explore research
-              </Button>
-              <Button href="/sample-report" variant="ghost">
-                Sample report
-              </Button>
+            <ul className="mt-4 list-disc space-y-1.5 pl-5 text-sm text-slate">
+              <li>SDG 4 Quality education: a structured leadership pathway</li>
+              <li>SDG 5, 8 and 16: agency, work capability and institutions of trust</li>
+              <li>
+                Exports: coach CSV, cohort report and{" "}
+                <Link href="/verify/SC-DEMO" className="font-semibold text-ink underline underline-offset-2">
+                  certificate verification
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div>
+            <SectionHeading
+              eyebrow="Run a cohort"
+              title="Be part of the first live results."
+              description="Organisations and schools that run a cohort can choose to contribute anonymised results to this page (groups of 10 or more only)."
+            />
+            <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+              <Button href="/organisations" variant="primary">For organisations</Button>
+              <Button href="/schools" variant="ghost">For schools</Button>
+              <Button href="/research" variant="ghost">The research</Button>
+              <Button href="/facilitator" variant="ghost">Facilitator kit</Button>
             </div>
           </div>
         </div>
