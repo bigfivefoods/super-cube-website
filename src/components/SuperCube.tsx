@@ -270,7 +270,7 @@ export function SuperCube({
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Roll"
           >
-            <span aria-hidden="true">⟳</span> Roll
+            <span aria-hidden="true">↷</span> Roll
           </button>
           <button
             type="button"
