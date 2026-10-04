@@ -93,8 +93,8 @@ create or replace function public.is_team_manager(p_team uuid) returns boolean
   language sql stable security definer set search_path = public as $$
   select exists (select 1 from public.teams where id = p_team and manager_user_id = auth.uid())
 $$;
-revoke all on function public.is_team_member(uuid), public.is_team_manager(uuid) from public;
-grant execute on function public.is_team_member(uuid), public.is_team_manager(uuid) to authenticated;
+revoke all on function public.is_team_member(uuid), public.is_team_manager(uuid) from public, anon;
+grant execute on function public.is_team_member(uuid), public.is_team_manager(uuid) to authenticated, service_role;
 drop policy if exists "teams_select_member" on public.teams;
 create policy "teams_select_member" on public.teams for select to authenticated
   using (manager_user_id = auth.uid() or public.is_team_member(id));

@@ -193,7 +193,7 @@ create unique index if not exists lms_attempts_one_post
   on public.lms_attempts (user_id, programme_id) where phase = 'post';
 
 create or replace function public.lms_attempts_block_update()
-returns trigger language plpgsql as $$
+returns trigger language plpgsql set search_path = public as $$
 begin
   raise exception 'lms_attempts rows are immutable';
 end;
