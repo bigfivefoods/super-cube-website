@@ -127,7 +127,7 @@ export function NewsletterSignup({
           name="consent"
           type="checkbox"
           required
-          className="mt-0.5 h-5 w-5 shrink-0 accent-[var(--ink)]"
+          className="h-6 w-6 shrink-0 accent-[var(--ink)]"
         />
         <label htmlFor={`${id}-consent`} className="text-xs leading-relaxed text-slate">
           I agree that Super-Cube® may email me leadership tips and programme
