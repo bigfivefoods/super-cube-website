@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { ContactForm } from "@/components/ContactForm";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
 import { constructs, footerColumns } from "@/lib/content";
@@ -101,13 +102,26 @@ export function Footer() {
 
           <div className="min-w-0 lg:sticky lg:top-24">
             <ContactForm variant="footer" />
+            <div className="mt-6">
+              <NewsletterSignup source="footer" variant="footer" />
+            </div>
           </div>
         </div>
 
         <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:text-sm">
-          <p>
-            © {new Date().getFullYear()} {t("footer.copyright")}
-          </p>
+          <div className="space-y-1">
+            <p>
+              © {new Date().getFullYear()} {t("footer.copyright")}
+            </p>
+            <p>
+              <a
+                href="https://www.bigfivegroup.africa"
+                className="inline-flex min-h-6 items-center font-medium text-slate underline-offset-2 hover:text-ink hover:underline"
+              >
+                Big Five Learn — a Big Five Group company
+              </a>
+            </p>
+          </div>
           <nav className="flex flex-wrap gap-x-4 gap-y-1" aria-label="Legal">
             <Link href="/privacy" className="hover:text-ink">
               {t("footer.privacy")}

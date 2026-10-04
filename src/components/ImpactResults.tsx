@@ -140,9 +140,10 @@ export function ImpactResults({
             light ? "text-cream/45" : "text-muted"
           }`}
         >
-          Gains reflect average percentage improvement following Super-Cube®
-          development interventions (pre- to post-assessment). Highest gains:
-          Principles (+45.1%) and Emotional (+39.5%).
+          Research results: average percentage improvement following
+          Super-Cube® development interventions (pre- to post-assessment), as
+          reported in the doctoral research. Highest gains: Principles (+45.1%)
+          and Emotional (+39.5%). Not live programme data.
         </p>
       </div>
     </section>

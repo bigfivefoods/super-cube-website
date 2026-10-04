@@ -3,6 +3,7 @@ import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { constructs } from "@/lib/content";
 import { SampleReportCharts } from "@/components/learn/SampleReportCharts";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
 export const metadata: Metadata = pageMeta({
@@ -26,7 +27,7 @@ const SAMPLE = {
     { id: "choices" as const, pre: 48, post: 62 },
     { id: "principles" as const, pre: 55, post: 67 },
     { id: "mental" as const, pre: 50, post: 64 },
-    { id: "emotional" as const, pre: 44, post: 62 },
+    { id: "emotional" as const, pre: 45, post: 60 },
     { id: "physical" as const, pre: 58, post: 70 },
     { id: "spiritual" as const, pre: 57, post: 72 },
   ],
@@ -83,13 +84,21 @@ export default function SampleReportPage() {
 
           <div className="rounded-2xl border border-line bg-elevated p-6 sm:p-8">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              Anonymised composite · not a single named learner
+              Example only · illustrative composite, not a real learner or a research result
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink">
               {SAMPLE.name}
             </h2>
             <p className="mt-1 text-sm text-slate">{SAMPLE.programme}</p>
             <p className="mt-1 text-xs text-muted">{SAMPLE.nNote}</p>
+            <p className="mt-2 text-xs text-slate">
+              The measured research result is different: the UKZN doctoral
+              study reported an average Emotional improvement of{" "}
+              <strong className="text-ink">+39.5%</strong>.{" "}
+              <Link href="/impact" className="font-semibold text-ink underline underline-offset-2">
+                See research results
+              </Link>
+            </p>
 
             <div className="mt-6 grid grid-cols-3 gap-3">
               <Stat label="Baseline" value={String(SAMPLE.pre)} />
@@ -167,6 +176,11 @@ export default function SampleReportPage() {
               </Link>
             </div>
           </div>
+        </div>
+      </section>
+      <section className="section-pad border-t border-line bg-paper">
+        <div className="container-site max-w-2xl">
+          <NewsletterSignup source="sample-report" />
         </div>
       </section>
     </>

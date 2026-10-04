@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ImpactResults } from "@/components/ImpactResults";
+import { TheoryOverview } from "@/components/TheoryOverview";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import {
   constructs,
@@ -189,7 +190,13 @@ export default function ResearchPage() {
         </div>
       </section>
 
-      <ImpactResults light />
+      <TheoryOverview />
+
+      <ImpactResults
+        light
+        eyebrow="Research results · UKZN doctoral study"
+        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® research. These are research results, not live programme data."
+      />
 
       <section className="section-pad border-y border-[var(--line)] bg-void text-void-fg">
         <div className="container-site">
