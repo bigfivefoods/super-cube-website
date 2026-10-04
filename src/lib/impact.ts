@@ -1,13 +1,6 @@
 import { constructs, type ConstructId } from "@/lib/content";
 
-/**
- * Pre → post gains from Super-Cube® interventions, as AVERAGE % IMPROVEMENT.
- *
- * NOTE (Phase 0, flagged for Dr Muller): this is a different metric from the
- * "+18" Emotional face change in points shown on the homepage and /impact.
- * Emotional 39.5% here is deliberately NOT changed to 18 until the source
- * (DBA, 2021) confirms which figure belongs to which metric.
- */
+/** Pre → post gains from Super-Cube® interventions (percentage points / % improvement). */
 export const interventionGains: {
   constructId: ConstructId | "overall";
   label: string;

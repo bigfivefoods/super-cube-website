@@ -8,6 +8,9 @@ import { buildAssessmentNarrative } from "@/lib/lms/narrative";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { type ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
+import { NewsletterSignup } from "@/components/NewsletterSignup";
+import { isMinorProfile } from "@/lib/lms/consent";
+import { getProfile } from "@/lib/lms/profile";
 
 /** Post-baseline narrative + score-lit cube */
 export default function AssessmentFeedbackPage() {
@@ -124,6 +127,8 @@ export default function AssessmentFeedbackPage() {
           </li>
         ))}
       </ul>
+      {/* Marketing email opt-in: adults only (no direct marketing to under-18s without guardian consent) */}
+      {!isMinorProfile(getProfile(state)) && <NewsletterSignup source="baseline" className="mt-6" />}
     </LearnShell>
   );
 }
