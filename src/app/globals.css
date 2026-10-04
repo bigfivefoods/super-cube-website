@@ -791,7 +791,8 @@ html.dark .learn-choice-active {
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.15;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  /* No text-shadow: face foreground is chosen per colour for WCAG AA. */
+  text-shadow: none;
 }
 
 .cube-scene--sm .cube-face__name {
@@ -818,7 +819,7 @@ html.dark .learn-choice-active {
   font-weight: 500;
   line-height: 1.2;
   letter-spacing: 0.01em;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--face-fg, #fff);
   text-transform: none;
 }
 
@@ -929,6 +930,34 @@ video,
 svg {
   max-width: 100%;
   height: auto;
+}
+
+/* WCAG 2.2 AA target size (2.5.8): interactive controls at least 24×24 px. */
+.cube-ctrl {
+  min-height: 1.75rem;
+  min-width: 1.75rem;
+}
+@layer base {
+  /* In base layer so Tailwind display utilities on individual links still win. */
+  .site-footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.5rem;
+  }
+}
+
+/* Construct accent text: darkened on light surfaces for AA, brand colour on dark. */
+.accent-text {
+  color: var(--accent-light);
+}
+html.dark .accent-text {
+  color: var(--accent-dark);
+}
+
+/* Eyebrow on always-dark panels (CTA banner). */
+.eyebrow.eyebrow--on-dark {
+  color: var(--void-fg);
+  opacity: 0.72;
 }
 
 @media (pointer: coarse) {

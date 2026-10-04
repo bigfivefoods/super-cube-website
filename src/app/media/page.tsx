@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { publications, site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/media",
   title: "Media kit",
   description:
     "Brand assets, one-page abstract, peer-reviewed journal PDFs, founder bio, and citation guide for Super-Cube®.",
-};
+});
 
 export default function MediaKitPage() {
   return (
@@ -127,7 +129,7 @@ export default function MediaKitPage() {
                 leadership model (six constructs: Choices, Principles, Mental,
                 Emotional, Physical, Spiritual) with the person at the centre.
                 Validated via mixed methods in an African FMCG business-network
-                (UKZN DBA, 2020) and published in SAJEMS and the Journal of
+                (UKZN DBA, 2021) and published in SAJEMS and the Journal of
                 Contemporary Management (2022). Super-Cube® Learn delivers
                 orient → baseline → deliberate practice → re-measure →
                 certificate for kids, adolescents, and adults.
@@ -139,7 +141,7 @@ export default function MediaKitPage() {
               </h3>
               <div className="mt-2 space-y-3">
                 <p className="rounded-xl border border-line bg-elevated p-4 font-mono text-xs leading-relaxed text-slate">
-                  Muller, C. R. (2020). A Leadership Skills Development Model
+                  Muller, C. R. (2021). A Leadership Skills Development Model
                   for the Kwaden Group: A Case Study of an African FMCG
                   Business-Network. Doctor of Business Administration thesis,
                   University of KwaZulu-Natal. Super-Cube® Leadership Model.

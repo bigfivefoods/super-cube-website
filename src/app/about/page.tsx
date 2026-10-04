@@ -1,18 +1,20 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { TestimonialsSection } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/about",
   title: "About · Dr Craig R. Muller",
   description:
     "Dr Craig R. Muller — DBA, UKZN. Creator of Super-Cube® leadership development. Visionary architect of Kingdom-centred leadership and sustainable impact across Africa through Feed, Educate, and Empower.",
-};
+});
 
 const glance = [
   ["Author", "Dr Craig Ross Muller"],
   ["Degree", "Doctor of Business Administration (DBA)"],
   ["Institution", "University of KwaZulu-Natal (2021)"],
-  ["Model", "Super-Cube® (2020 thesis · peer-reviewed)"],
+  ["Model", "Super-Cube® (2021 thesis · peer-reviewed)"],
   ["Case context", "African FMCG business-network"],
   ["Validation", "Mixed-methods · CFA · thematic interviews"],
 ];

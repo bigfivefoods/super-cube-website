@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs, levels } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/programs",
   title: "Programs",
   description:
     "Blended leadership development programmes aligned with the Super-Cube® model—from personal plans to network-scale pipelines.",
-};
+});
 
 const bookCovers = [
   {

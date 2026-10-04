@@ -56,7 +56,7 @@ export default function ResearchPage() {
             <p>
               <strong className="text-ink">Title:</strong> A Leadership Skills
               Development Model for the Kwaden Group: A Case Study of an African
-              FMCG Business-Network (Muller, C. R., 2020, University of
+              FMCG Business-Network (Muller, C. R., 2021, University of
               KwaZulu-Natal, Doctor of Business Administration).
             </p>
             <p>
@@ -355,7 +355,7 @@ export default function ResearchPage() {
                 <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
                   Thesis
                 </span>
-                <span className="text-xs text-muted">2020</span>
+                <span className="text-xs text-muted">2021</span>
               </div>
               <p className="mt-2 font-semibold text-ink">
                 A Leadership Skills Development Model for the Kwaden Group: A
@@ -363,7 +363,7 @@ export default function ResearchPage() {
               </p>
               <p className="mt-1 text-sm text-muted">
                 Craig Ross Muller · DBA thesis · University of KwaZulu-Natal ·
-                2020
+                2021
               </p>
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <a

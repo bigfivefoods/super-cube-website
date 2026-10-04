@@ -100,12 +100,12 @@ export function Header() {
 
   const quietLinkClass = () => {
     if (overDark || (chromeDark && !overLight)) {
-      return "text-xs font-medium tracking-tight text-white/80 transition-colors hover:text-white";
+      return "inline-flex min-h-6 items-center text-xs font-medium tracking-tight text-white/80 transition-colors hover:text-white";
     }
     if (overLight) {
-      return "text-xs font-medium tracking-tight text-ink/75 transition-colors hover:text-ink";
+      return "inline-flex min-h-6 items-center text-xs font-medium tracking-tight text-ink/75 transition-colors hover:text-ink";
     }
-    return "text-xs font-medium tracking-tight text-slate transition-colors hover:text-ink";
+    return "inline-flex min-h-6 items-center text-xs font-medium tracking-tight text-slate transition-colors hover:text-ink";
   };
 
   const headerSurface = overDark

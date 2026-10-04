@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { pageMeta } from "@/lib/seo";
 import { notFound } from "next/navigation";
 import { getInsight, insightPosts } from "@/lib/insights";
 import { Button } from "@/components/ui";
@@ -16,10 +17,11 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getInsight(slug);
   if (!post) return { title: "Insight" };
-  return {
+  return pageMeta({
     title: post.title,
     description: post.excerpt,
-  };
+    path: `/insights/${post.slug}`,
+  });
 }
 
 export default async function InsightPostPage({

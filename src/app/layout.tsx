@@ -12,6 +12,7 @@ import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { site } from "@/lib/content";
+import { SHARE_IMAGE } from "@/lib/seo";
 import "./globals.css";
 
 /** Self-hosted Inter via next/font — no render-blocking Google CSS */
@@ -42,16 +43,8 @@ export const metadata: Metadata = {
     template: "%s | Super-Cube®",
   },
   description: site.description,
-  alternates: {
-    canonical: site.url,
-    languages: {
-      en: site.url,
-      "en-ZA": site.url,
-      zu: site.url,
-      af: site.url,
-      "x-default": site.url,
-    },
-  },
+  // Canonical + hreflang are set per page (see src/lib/seo.ts) so every URL
+  // points to itself rather than inheriting the homepage canonical.
   applicationName: "Super-Cube® Learn",
   appleWebApp: {
     capable: true,
@@ -73,20 +66,13 @@ export const metadata: Metadata = {
     siteName: site.name,
     type: "website",
     locale: "en_ZA",
-    images: [
-      {
-        url: "/images/hero/leadership-hero.jpg",
-        width: 1440,
-        height: 900,
-        alt: "Super-Cube® Leadership Model",
-      },
-    ],
+    images: [{ ...SHARE_IMAGE }],
   },
   twitter: {
     card: "summary_large_image",
     title: "Super-Cube® | Human-Centric Leadership Development",
     description: site.description,
-    images: ["/images/hero/leadership-hero.jpg"],
+    images: [SHARE_IMAGE.url],
   },
   keywords: [
     "Super-Cube® Leadership Model",

@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/privacy",
   title: "Privacy",
   description:
     "How Super-Cube® Learn handles learner data, journals, scores, and coach consent.",
-};
+});
 
 export default function PrivacyPage() {
   return (

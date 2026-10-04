@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/impact",
   title: "Impact stories",
   description:
     "How Super-Cube® leadership development shows up in South African business and education contexts—growth over activity.",
-};
+});
 
 export default function ImpactPage() {
   return (
@@ -76,7 +78,7 @@ export default function ImpactPage() {
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
                 { k: "52 → 68", v: "Mean overall (0–100)" },
-                { k: "+16", v: "Emotional face Δ" },
+                { k: "+18", v: "Emotional face Δ" },
                 { k: "8 wks", v: "Pathway length" },
               ].map((s) => (
                 <div

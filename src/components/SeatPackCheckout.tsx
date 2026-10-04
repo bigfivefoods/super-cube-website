@@ -226,7 +226,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
 
       {configured === false && (
         <p className="text-[0.7rem] text-amber-800">
-          Paystack keys not configured on this deployment yet.
+          Online checkout is temporarily unavailable. Please contact us to arrange seats.
         </p>
       )}
       {error && (

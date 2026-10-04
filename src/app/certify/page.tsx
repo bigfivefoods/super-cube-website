@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/certify",
   title: "Certification ladder",
   description:
     "Learner, Practitioner, and Facilitator pathways with public verify IDs.",
-};
+});
 
 const rungs = [
   {

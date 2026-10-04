@@ -57,7 +57,7 @@ export default function TheModelPage() {
               shortages, and institutional complexity.
             </p>
             <p>
-              Developed in 2020 by Craig Ross Muller as the core output of his
+              Developed in 2021 by Craig Ross Muller as the core output of his
               Doctor of Business Administration thesis at the University of
               KwaZulu-Natal, the model was empirically shaped within an African
               FMCG business-network and is among the first frameworks of its
