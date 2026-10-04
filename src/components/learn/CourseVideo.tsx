@@ -23,7 +23,7 @@ export function CourseVideo({
   variant = "thumb",
   className = "",
   badge = "15s intro · with voice",
-  captionsSrc = "/videos/captions/sample-en.vtt",
+  captionsSrc = null,
 }: {
   programmeId?: ProgrammeId;
   constructId?: ConstructId;
@@ -37,7 +37,7 @@ export function CourseVideo({
   variant?: Variant;
   className?: string;
   badge?: string;
-  /** WebVTT captions (EN). Replace with per-video files when available. */
+  /** WebVTT captions (EN) for THIS video. Omit until a transcript-matched file exists. */
   captionsSrc?: string | null;
 }) {
   const src =
@@ -246,6 +246,14 @@ export function CourseVideo({
 }
 
 /** Session-specific 15s intro (construct visual + lesson voice-over). */
+/** Session intros are switched off when NEXT_PUBLIC_SESSION_VIDEOS is not "true". */
+export const SESSION_VIDEOS_AVAILABLE = process.env.NEXT_PUBLIC_SESSION_VIDEOS === "true";
+
+/**
+ * Session intro clip. Phase 0: per-session videos have not been produced yet
+ * (every /videos/sessions/*.mp4 returned 404), so this renders nothing unless
+ * NEXT_PUBLIC_SESSION_VIDEOS=true.
+ */
 export function SessionVideo({
   lessonId,
   poster,
@@ -261,6 +269,7 @@ export function SessionVideo({
   variant?: Variant;
   className?: string;
 }) {
+  if (!SESSION_VIDEOS_AVAILABLE) return null;
   return (
     <CourseVideo
       lessonId={lessonId}

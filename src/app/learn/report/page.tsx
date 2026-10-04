@@ -10,12 +10,18 @@ import { RadarChart } from "@/components/learn/RadarChart";
 import { ReportMeta } from "@/components/learn/ReportMeta";
 import { Button } from "@/components/ui";
 import { downloadCompletionCertificate } from "@/lib/lms/certificate-pdf";
-import { compareAttempts, recommendations } from "@/lib/lms/scoring";
+import {
+  changeBand,
+  compareAttempts,
+  recommendations,
+  reliableChangeThreshold,
+  type ChangeBand,
+} from "@/lib/lms/scoring";
+import { issueCertificate, syncFromServer } from "@/lib/lms/cloud";
 import { depthLabel } from "@/lib/lms/orientation";
 import {
   buildReportSharePayload,
   encodeShareToken,
-  ensureCertificateId,
   shareReportUrl,
 } from "@/lib/lms/share";
 import {
@@ -30,7 +36,16 @@ export default function ReportPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [shareCopied, setShareCopied] = useState(false);
-  useEffect(() => setState(loadLmsState()), []);
+  const [certBusy, setCertBusy] = useState(false);
+  const [certNote, setCertNote] = useState<string | null>(null);
+  useEffect(() => {
+    const s = loadLmsState();
+    setState(s);
+    const pid = s.subscription?.programmeId || s.user?.programmeId || "adults";
+    void syncFromServer(pid).then((r) => {
+      if (r.kind === "ok") setState(loadLmsState());
+    });
+  }, []);
 
   const orientation = state?.orientation;
   const pre = state?.attempts.find((a) => a.phase === "pre");
@@ -101,14 +116,55 @@ export default function ReportPage() {
   // Capture after null guards so nested handlers satisfy LocalLmsState (not null)
   const liveState = state;
 
+  const overallBand = changeBand(growth, "overall");
+
+  async function downloadCertificate() {
+    if (!post || !programmeId || certBusy) return;
+    setCertBusy(true);
+    setCertNote(null);
+    try {
+      const r = await issueCertificate(
+        programmeId,
+        liveState.profile?.displayName || liveState.user?.fullName || undefined,
+        liveState.orgCode,
+      );
+      if (r.kind === "ok") {
+        const c = r.data.certificate;
+        setState(setCertificateMeta(c.id, c.issued_at));
+        downloadCompletionCertificate({
+          id: c.id,
+          learnerName: c.learner_name,
+          programmeId: c.programme_id,
+          preOverall: Number(c.pre_overall),
+          postOverall: Number(c.post_overall),
+          growth: Number(c.growth),
+          issuedAt: c.issued_at,
+        });
+        track("certificate_download", { certificateId: c.id });
+        return;
+      }
+      if (r.kind === "signed_out" || r.kind === "unavailable") {
+        setCertNote(
+          "Sign in to get a verifiable certificate. Certificates are issued by the server from your recorded baseline and after-test.",
+        );
+        return;
+      }
+      const code = String(r.body.error || "");
+      setCertNote(
+        code === "payment_required"
+          ? "Certificates are part of the full pathway (one-off payment or a cohort seat)."
+          : code === "not_eligible"
+            ? "The server has no recorded baseline and after-test for you yet. Take both while signed in."
+            : `Could not issue the certificate (${code || r.status}).`,
+      );
+    } finally {
+      setCertBusy(false);
+    }
+  }
+
   function generateShare() {
     const payload = buildReportSharePayload(liveState);
     if (!payload) return;
-    if (post) {
-      const certId = ensureCertificateId(liveState);
-      setCertificateMeta(certId);
-      payload.certificateId = certId;
-    }
     setShareUrl(shareReportUrl(encodeShareToken(payload)));
     track("report_share", { hasPost: post != null });
   }
@@ -119,7 +175,7 @@ export default function ReportPage() {
       subtitle={`${programme?.name ?? "Super-Cube®"} · Developmental profile (not a clinical diagnosis)${
         post
           ? "—pre to post growth after your programme."
-          : "—baseline view. Complete all courses, then the post-assessment, to see full growth."
+          : "—baseline view. The after-test opens after the practice period and enough completed sessions."
       }`}
     >
       <div className="report-print-root">
@@ -193,13 +249,13 @@ export default function ReportPage() {
         {!post && (
           <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
             <div>
-              <p className="learn-eyebrow">Step 5 · After the full programme</p>
+              <p className="learn-eyebrow">Step 5 · After practice</p>
               <p className="mt-1 text-sm font-semibold text-ink">
-                Take the post-assessment to measure how you’ve grown
+                The after-test measures change against your locked baseline
               </p>
               <p className="learn-meta mt-0.5">
-                Same six faces as your baseline. Unlocks pre → post comparison
-                on this report and in your PDF download.
+                It opens after the minimum practice period and enough completed
+                sessions, so any change has had time to happen.
               </p>
             </div>
             <Button
@@ -207,7 +263,7 @@ export default function ReportPage() {
               variant="primary"
               className="mt-3 !min-h-10 shrink-0 !text-[0.8125rem] sm:mt-0"
             >
-              Start post-assessment →
+              Check after-test status →
             </Button>
           </div>
         )}
@@ -246,8 +302,9 @@ export default function ReportPage() {
               )}
             </p>
             <p className="learn-meta mt-0.5">
-              {post ? "Pre → post change" : "Complete post-assessment"}
+              {post ? "Pre → post change" : "After-test not taken yet"}
             </p>
+            {overallBand && <BandBadge band={overallBand} />}
           </div>
         </section>
 
@@ -256,44 +313,23 @@ export default function ReportPage() {
             <div>
               <p className="learn-eyebrow">Pathway complete</p>
               <p className="mt-1 text-sm font-semibold text-ink">
-                Certificate of completion + shareable growth PDF
+                Certificate of completion
               </p>
               <p className="learn-meta mt-0.5">
-                Proof of deliberate practice across all six Super-Cube® faces
+                Issued by the server from your recorded baseline and after-test,
+                with an ID anyone can verify.
               </p>
+              {certNote && (
+                <p className="mt-1.5 text-[0.8125rem] font-medium text-amber-900" role="status">
+                  {certNote}
+                </p>
+              )}
             </div>
             <button
               type="button"
               className="learn-btn learn-btn-primary mt-3 sm:mt-0"
-              onClick={() => {
-                const certId = ensureCertificateId(liveState);
-                const next = setCertificateMeta(certId);
-                setState(next);
-                downloadCompletionCertificate({
-                  state: next,
-                  pre,
-                  post,
-                  certificateId: certId,
-                });
-                track("certificate_download", { certificateId: certId });
-                void fetch("/api/certificates/register", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    id: certId,
-                    learnerName:
-                      next.user?.fullName || next.user?.email || "Learner",
-                    programmeId: programmeId,
-                    preOverall: pre.result.overall,
-                    postOverall: post.result.overall,
-                    growth:
-                      Math.round(
-                        (post.result.overall - pre.result.overall) * 10,
-                      ) / 10,
-                    orgCode: next.orgCode,
-                  }),
-                });
-              }}
+              disabled={certBusy}
+              onClick={() => void downloadCertificate()}
             >
               Download certificate (PDF)
             </button>
@@ -358,7 +394,7 @@ export default function ReportPage() {
                           Post
                         </th>
                         <th className="py-2 pl-1 text-right font-semibold">
-                          Growth
+                          Change
                         </th>
                       </>
                     )}
@@ -391,6 +427,7 @@ export default function ReportPage() {
                             {row.delta === null
                               ? "—"
                               : `${row.delta > 0 ? "+" : ""}${row.delta}`}
+                            <BandBadge band={changeBand(row.delta, "face")} compact />
                           </td>
                         </>
                       )}
@@ -412,6 +449,7 @@ export default function ReportPage() {
                           {growth === null
                             ? "—"
                             : `${growth > 0 ? "+" : ""}${growth}`}
+                          <BandBadge band={overallBand} compact />
                         </td>
                       </>
                     )}
@@ -419,6 +457,16 @@ export default function ReportPage() {
                 </tbody>
               </table>
             </div>
+            {post && (
+              <p className="learn-meta mt-3" data-testid="change-bands-note">
+                How to read change: self-report scores move a little between any
+                two sittings. A face needs about ±{reliableChangeThreshold("face")} points
+                (overall ±{reliableChangeThreshold("overall")}) before we call it real
+                change at 95% confidence. Smaller moves are shown as possible
+                change or normal noise. These thresholds are provisional until the
+                instrument&apos;s reliability is measured on Super-Cube® data.
+              </p>
+            )}
           </div>
         </div>
 
@@ -478,5 +526,24 @@ export default function ReportPage() {
         </p>
       </div>
     </LearnShell>
+  );
+}
+
+function BandBadge({ band, compact = false }: { band: ChangeBand | null; compact?: boolean }) {
+  if (!band) return null;
+  const tone =
+    band.tone === "good"
+      ? "border-emerald-300 bg-emerald-50 text-emerald-900"
+      : band.tone === "bad"
+        ? "border-red-300 bg-red-50 text-red-900"
+        : "border-line bg-surface text-slate";
+  return (
+    <span
+      className={`${compact ? "ml-1.5" : "mt-1.5"} inline-block rounded-full border px-1.5 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wide ${tone}`}
+      title={`${band.label} · reliable change index ${band.rci} · real change needs ±${band.threshold} pts`}
+      data-band={band.id}
+    >
+      {compact ? band.short : band.label}
+    </span>
   );
 }

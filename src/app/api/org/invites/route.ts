@@ -54,7 +54,8 @@ export async function POST(request: Request) {
   });
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const site = (process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin).replace(/\/$/, "");
+  // Link points at the deployment that issued it (preview or production)
+  const site = new URL(request.url).origin;
   return NextResponse.json({
     ok: true,
     role,

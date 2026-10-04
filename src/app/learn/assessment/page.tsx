@@ -92,11 +92,11 @@ export default function AssessmentHubPage() {
             </p>
           )}
           <Button
-            href="/learn/assessment/pre"
+            href={pre ? "/learn/feedback" : "/learn/assessment/pre"}
             variant={orientation || pre ? "primary" : "ghost"}
             className="mt-4 !min-h-9 !py-1.5 !text-[0.8125rem] w-full sm:w-auto"
           >
-            {pre ? "Retake pre-assessment" : "Start pre-assessment"}
+            {pre ? "Baseline locked · view narrative" : "Start pre-assessment"}
           </Button>
         </article>
 
@@ -104,8 +104,9 @@ export default function AssessmentHubPage() {
           <p className="learn-eyebrow">Step 5 · After full programme</p>
           <h2 className="learn-card-title mt-1.5">Post-assessment</h2>
           <p className="learn-body mt-2">
-            Same six-face instrument as baseline. Take it after finishing all
-            construct courses so your report can show how you’ve grown.
+            Same six-face instrument as baseline. It opens after a minimum
+            practice period and completed sessions, so the comparison is fair.
+            One after-test per programme.
           </p>
           {post ? (
             <p className="learn-label mt-3">
@@ -119,17 +120,19 @@ export default function AssessmentHubPage() {
           ) : (
             <p className="learn-meta mt-3">
               {pre
-                ? "Best after 100% of courses · then open your growth report"
+                ? "Opens after the practice period and enough completed sessions"
                 : "Complete pre-assessment first"}
             </p>
           )}
-          <Button
-            href="/learn/assessment/post"
-            variant={pre ? "primary" : "ghost"}
-            className="mt-4 !min-h-9 !py-1.5 !text-[0.8125rem] w-full sm:w-auto"
-          >
-            {post ? "Retake post-assessment" : "Start post-assessment"}
-          </Button>
+          {!post && (
+            <Button
+              href="/learn/assessment/post"
+              variant={pre ? "primary" : "ghost"}
+              className="mt-4 !min-h-9 !py-1.5 !text-[0.8125rem] w-full sm:w-auto"
+            >
+              Check after-test status
+            </Button>
+          )}
           {post && (
             <Button
               href="/learn/report"

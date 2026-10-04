@@ -38,13 +38,13 @@ export default function LearnDemoPage() {
   return (
     <LearnShell
       title="Try Super-Cube® free"
-      subtitle="Try sample sessions on this device: orientation, your baseline, and the first sessions of each face. No card required. The full pathway, after-test and certificate need paid access or a cohort seat."
+      subtitle="Try sample sessions on this device: orientation, your baseline, and two sample sessions. No card required. The full pathway, after-test and certificate need paid access or a cohort seat."
     >
       <div className="mb-5 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <p className="learn-eyebrow">What you get</p>
         <ul className="mt-2 space-y-1.5 text-[0.8125rem] leading-relaxed text-slate">
           <li>· Pre-pre orientation + baseline self-assessment</li>
-          <li>· Two free sample sessions in each of the six faces</li>
+          <li>· Two free sample sessions from the Choices face</li>
           <li>· Session reflections, streak, and growth report tools</li>
           <li>
             · Private to this browser until you create an account &amp; sync

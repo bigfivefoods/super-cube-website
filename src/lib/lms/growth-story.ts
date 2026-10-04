@@ -5,7 +5,7 @@
 import { constructs } from "@/lib/content";
 import { deriveFacePattern } from "@/lib/lms/face-tracking";
 import { buildAssessmentNarrative } from "@/lib/lms/narrative";
-import { compareAttempts } from "@/lib/lms/scoring";
+import { changeBand, compareAttempts } from "@/lib/lms/scoring";
 import type { LocalLmsState } from "@/lib/lms/store";
 import { getProfile } from "@/lib/lms/profile";
 
@@ -57,22 +57,38 @@ export function buildGrowthStory(state: LocalLmsState): {
   const top = lifted[0];
   const soft = stalled[0];
 
-  let headline =
-    growth > 0
-      ? `${name}, you grew +${growth} overall — deliberate practice shows.`
-      : growth === 0
-        ? `${name}, overall held steady — refine the stretch faces next.`
-        : `${name}, overall shifted ${growth}. Use this as honest data, not a verdict.`;
+  const band = changeBand(growth, "overall");
+  const sessionsDone = Object.values(state.lessonProgress).filter((v) => v === "completed").length;
+  const signed = `${growth > 0 ? "+" : ""}${growth}`;
+
+  // Honest framing: only call it growth when it is bigger than measurement noise,
+  // and never attribute change to practice that did not happen.
+  const headline =
+    band?.id === "real_growth"
+      ? `${name}, your overall score rose ${signed}, more than normal measurement noise.`
+      : band?.id === "possible_growth"
+        ? `${name}, your overall score rose ${signed}. That may be real growth, but it is not yet bigger than measurement noise.`
+        : band?.id === "within_noise"
+          ? `${name}, your overall score moved ${signed}, which is within normal measurement noise.`
+          : band?.id === "possible_decline"
+            ? `${name}, your overall score dipped ${signed}. That may be noise; treat it as data, not a verdict.`
+            : `${name}, your overall score fell ${signed}. Use this as honest data, not a verdict.`;
 
   const parts: string[] = [];
+  if (sessionsDone === 0) {
+    parts.push("No practice sessions are recorded between your two sittings, so any change cannot be credited to the programme.");
+  } else {
+    parts.push(`${sessionsDone} practice session${sessionsDone === 1 ? "" : "s"} recorded between baseline and after-test.`);
+  }
   if (top && top.delta != null) {
+    const b = changeBand(top.delta, "face");
     parts.push(
-      `Strongest lift: ${top.name} (${top.delta > 0 ? "+" : ""}${top.delta}).`
+      `Largest rise: ${top.name} (+${top.delta}${b ? `, ${b.label.toLowerCase()}` : ""}).`
     );
   }
   if (soft && soft.delta != null) {
     parts.push(
-      `${soft.name} needs more deliberate reps (${soft.delta > 0 ? "+" : ""}${soft.delta}).`
+      `${soft.name} is the face to practise next (${soft.delta > 0 ? "+" : ""}${soft.delta}).`
     );
   }
   if (pattern.pulseCount >= 3) {
