@@ -133,6 +133,16 @@ export default function LessonPlayerPage() {
             <Link href="/pricing" className="learn-btn learn-btn-primary">View pricing</Link>
             <Link href="/learn/org" className="learn-btn learn-btn-secondary">I have a cohort code</Link>
           </div>
+          <p className="learn-meta mt-3">
+            Already paid?{" "}
+            <Link
+              href={`/login?next=${encodeURIComponent(`/learn/courses/${constructId}/${lessonId}`)}`}
+              className="underline"
+            >
+              Sign in
+            </Link>{" "}
+            to open your sessions on this device.
+          </p>
         </div>
       </LearnShell>
     );
