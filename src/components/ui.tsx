@@ -151,6 +151,7 @@ export function PageHero({
             alt={mediaAlt}
             fill
             priority
+            quality={60}
             className={`object-cover ${objectPos}`}
             sizes="100vw"
           />
