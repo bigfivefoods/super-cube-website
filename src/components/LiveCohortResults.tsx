@@ -33,7 +33,7 @@ export function LiveCohortResults() {
   const signed = (n: number) => `${n > 0 ? "+" : ""}${Math.round(n * 10) / 10}`;
 
   return (
-    <div className="rounded-2xl border border-line bg-elevated p-6 sm:p-8" aria-live="polite">
+    <div className="sc-card p-6 sm:p-8" aria-live="polite">
       <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
         Live programme results
       </p>

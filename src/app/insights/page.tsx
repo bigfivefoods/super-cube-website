@@ -36,7 +36,7 @@ export default function InsightsIndexPage() {
               <li key={p.slug}>
                 <Link
                   href={`/insights/${p.slug}`}
-                  className="block h-full rounded-2xl border border-line bg-elevated p-5 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-sm sm:p-6"
+                  className="block h-full sc-card p-5 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-sm sm:p-6"
                 >
                   <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
                     {p.date} · {p.readingMinutes} min

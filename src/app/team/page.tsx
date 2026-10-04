@@ -73,7 +73,7 @@ export default function TeamCubePage() {
               ))}
             </ul>
           </div>
-          <div className="flex flex-col items-center rounded-2xl border border-line bg-elevated p-6">
+          <div className="flex flex-col items-center sc-card p-6">
             <SuperCube
               size="lg"
               showSkills={false}

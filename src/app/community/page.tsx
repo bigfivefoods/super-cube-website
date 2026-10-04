@@ -42,7 +42,7 @@ export default function CommunityPage() {
             <li>Weakest-face weekly plans and micro-practices</li>
             <li>Roadmap preview (apps, languages, enterprise SSO)</li>
           </ul>
-          <div className="rounded-2xl border border-line bg-elevated p-5">
+          <div className="sc-card p-5">
             <p className="text-sm font-semibold text-ink">Next clinic</p>
             <p className="mt-1 text-sm text-slate">
               Published via email to active coaches. Prefer calendar booking?

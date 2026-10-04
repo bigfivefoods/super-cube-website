@@ -26,12 +26,44 @@ const steps = [
   },
 ];
 
-const audiences = [
-  { label: "Ages 5–12", title: "Kids", body: "Character, curiosity and kindness, through stories and play.", href: "/what#kids" },
-  { label: "Ages 13–21", title: "Teens", body: "Identity, influence and wise decisions for school, sport and first jobs.", href: "/what#adolescents" },
-  { label: "Ages 22+", title: "Adults", body: "Human-centric leadership for work and life.", href: "/what#adults" },
-  { label: "Teams", title: "Organisations", body: "Develop and measure leaders across a team, company or network.", href: "/organisations" },
-  { label: "Classrooms", title: "Schools", body: "A leadership pathway for learners, with progress for teachers.", href: "/schools" },
+const paths = [
+  {
+    label: "Individuals",
+    title: "Grow your own leadership",
+    body: "A free baseline, short courses for your age group and a before-and-after report.",
+    href: "/what",
+    cta: "Explore programmes",
+    color: "#26408C",
+    sub: [
+      { label: "Kids 5–12", href: "/what#kids" },
+      { label: "Teens 13–21", href: "/what#adolescents" },
+      { label: "Adults 22+", href: "/what#adults" },
+    ],
+  },
+  {
+    label: "Organisations",
+    title: "Develop leaders across a team",
+    body: "Seat packs, cohort reporting and facilitated programmes for teams, companies and networks.",
+    href: "/organisations",
+    cta: "For organisations",
+    color: "#16979A",
+    sub: [
+      { label: "Pilot pack", href: "/pilot-pack" },
+      { label: "Speaking", href: "/speaking" },
+    ],
+  },
+  {
+    label: "Schools",
+    title: "A pathway for every learner",
+    body: "Age-appropriate leadership for learners, with progress views for teachers.",
+    href: "/schools",
+    cta: "For schools",
+    color: "#ED8F20",
+    sub: [
+      { label: "Pricing", href: "/pricing" },
+      { label: "Sample report", href: "/sample-report" },
+    ],
+  },
 ];
 
 const youGet = [
@@ -74,7 +106,7 @@ export function HomeLanding() {
         />
         <div className="container-site page-hero__inner relative z-10 w-full pb-2">
           <div className="page-hero__copy max-w-2xl md:max-w-[38rem] lg:max-w-[42rem]">
-            <p className="eyebrow eyebrow--on-dark before:bg-white/50">
+            <p className="eyebrow eyebrow--on-dark">
               Super-Cube® leadership development
             </p>
             <h1 className="page-hero__title heading-xl mt-3 text-white sm:mt-4">
@@ -147,28 +179,47 @@ export function HomeLanding() {
         </div>
       </section>
 
-      {/* Who it's for */}
+      {/* Choose your path */}
       <section className="section-pad border-t border-line bg-surface">
         <div className="container-site">
           <SectionHeading
-            eyebrow="Who it’s for"
+            eyebrow="Choose your path"
             title="One model for every stage of life."
-            description="The six faces stay the same as you grow. The language and examples change with your age and your world."
+            description="The six faces stay the same as you grow. The language, examples and reporting change with who you are and where you lead."
           />
-          <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {audiences.map((a) => (
-              <Link
-                key={a.title}
-                href={a.href}
-                className="card-lift group flex flex-col rounded-2xl border border-line bg-elevated p-5"
-              >
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {paths.map((p) => (
+              <div key={p.label} className="sc-card relative flex flex-col overflow-hidden p-6 sm:p-7">
+                <span
+                  className="absolute inset-x-0 top-0 h-1"
+                  style={{ background: p.color }}
+                  aria-hidden
+                />
                 <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                  {a.label}
+                  {p.label}
                 </p>
-                <h3 className="mt-1.5 text-lg font-semibold tracking-tight text-ink">{a.title}</h3>
-                <p className="mt-1.5 flex-1 text-sm leading-relaxed text-slate">{a.body}</p>
-                <span className="mt-4 text-sm font-semibold text-ink">Learn more →</span>
-              </Link>
+                <h3 className="mt-2 text-xl font-semibold tracking-tight text-ink">{p.title}</h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate sm:text-[0.9375rem]">{p.body}</p>
+                <ul className="mt-5 flex flex-wrap gap-2">
+                  {p.sub.map((x) => (
+                    <li key={x.href}>
+                      <Link
+                        href={x.href}
+                        className="inline-flex min-h-9 items-center rounded-full border border-line px-3 text-[0.8125rem] font-medium text-ink hover:border-ink/30"
+                      >
+                        {x.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  href={p.href}
+                  className="mt-6 inline-flex min-h-11 items-center justify-between rounded-full bg-ink px-5 text-sm font-semibold text-bg hover:opacity-90"
+                >
+                  {p.cta}
+                  <span aria-hidden>→</span>
+                </Link>
+              </div>
             ))}
           </div>
         </div>
@@ -205,12 +256,12 @@ export function HomeLanding() {
           <div>
             <SectionHeading eyebrow="Price" title="Start free. Pay once if you continue." />
             <div className="mt-6 grid gap-3">
-              <div className="rounded-2xl border border-line bg-elevated p-5">
+              <div className="sc-card p-5">
                 <p className="text-sm font-semibold text-ink">Free baseline</p>
                 <p className="mt-1 text-3xl font-semibold tracking-tight text-ink">R0</p>
                 <p className="mt-1 text-sm text-slate">Your six-face scores in about 10 minutes. No card needed.</p>
               </div>
-              <div className="rounded-2xl border border-line bg-elevated p-5">
+              <div className="sc-card p-5">
                 <p className="text-sm font-semibold text-ink">Full programme, per person</p>
                 <p className="mt-1 text-3xl font-semibold tracking-tight text-ink">
                   R{COURSE_PRICE_ZAR}{" "}
@@ -218,7 +269,7 @@ export function HomeLanding() {
                 </p>
                 <p className="mt-1 text-sm text-slate">Courses, practice plan, second assessment, report and certificate. No subscription.</p>
               </div>
-              <div className="rounded-2xl border border-line bg-elevated p-5">
+              <div className="sc-card p-5">
                 <p className="text-sm font-semibold text-ink">Groups, schools and organisations</p>
                 <p className="mt-1 text-sm text-slate">
                   Seat packs from {formatSeatPackPrice(smallestPack)} for{" "}
@@ -249,7 +300,7 @@ export function HomeLanding() {
             description="Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (DBA, 2021). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals."
           />
           <div className="lg:justify-self-end">
-            <div className="rounded-2xl border border-line bg-elevated p-5">
+            <div className="sc-card p-5">
               <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
                 UKZN research result
               </p>
@@ -281,6 +332,7 @@ export function HomeLanding() {
       <section className="section-pad">
         <div className="container-site">
           <div className="rounded-2xl bg-void px-6 py-10 text-void-fg sm:px-10 sm:py-14 dark:bg-elevated dark:ring-1 dark:ring-white/10">
+            <div className="spectrum-rule mb-8 max-w-24 rounded-full" aria-hidden />
             <p className="eyebrow eyebrow--on-dark">Next step</p>
             <h2 className="heading-lg mt-3 max-w-2xl text-void-fg">
               Start with a free 10-minute baseline.

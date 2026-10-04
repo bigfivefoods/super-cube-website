@@ -158,7 +158,7 @@ export default function HowPage() {
               <li key={step.n}>
                 <Link
                   href={step.href}
-                  className="grid gap-2 rounded-2xl border border-line bg-elevated p-5 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-sm sm:grid-cols-[4rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
+                  className="grid gap-2 sc-card p-5 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-sm sm:grid-cols-[4rem_1fr_auto] sm:items-center sm:gap-6 sm:p-6"
                 >
                   <span className="font-display text-2xl text-muted">
                     {step.n}
@@ -193,7 +193,7 @@ export default function HowPage() {
               <Link
                 key={c.id}
                 href={`/constructs#${c.id}`}
-                className="rounded-2xl border border-line bg-elevated p-5 transition hover:shadow-sm"
+                className="sc-card p-5 transition hover:shadow-sm"
                 style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
               >
                 <p

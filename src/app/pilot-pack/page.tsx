@@ -116,7 +116,7 @@ export default function PilotPackPage() {
             {cohortCalendar.map((w) => (
               <li
                 key={w.week}
-                className="rounded-2xl border border-line bg-elevated p-4"
+                className="sc-card p-4"
               >
                 <p className="text-[0.65rem] font-bold uppercase tracking-wider text-muted">
                   Week {w.week}

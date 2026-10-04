@@ -226,7 +226,7 @@ export default function WhatPage() {
                 <article
                   key={p.id}
                   id={p.id}
-                  className="flex flex-col overflow-hidden rounded-2xl border border-line bg-elevated shadow-sm"
+                  className="flex flex-col overflow-hidden sc-card shadow-sm"
                 >
                   <div
                     className="h-1.5 w-full"
@@ -378,7 +378,7 @@ export default function WhatPage() {
           </div>
 
           {/* Differentiation callout */}
-          <div className="mt-12 overflow-hidden rounded-2xl border border-line bg-elevated">
+          <div className="mt-12 overflow-hidden sc-card">
             <div className="grid gap-0 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1.4fr)]">
               <div className="border-b border-line bg-void px-6 py-7 text-void-fg sm:px-8 sm:py-9 lg:border-b-0 lg:border-r">
                 <p className="text-[0.65rem] font-bold uppercase tracking-[0.14em] text-void-fg/50">
@@ -449,7 +449,7 @@ export default function WhatPage() {
               <article
                 key={b.id}
                 id={`benefit-${b.id}`}
-                className="flex h-full scroll-mt-28 flex-col overflow-hidden rounded-2xl border border-line bg-elevated shadow-[0_1px_0_rgba(0,0,0,0.02)]"
+                className="flex h-full scroll-mt-28 flex-col overflow-hidden sc-card shadow-[0_1px_0_rgba(0,0,0,0.02)]"
               >
                 {/* Top band */}
                 <div className="flex items-start gap-3 border-b border-line bg-surface px-5 py-5 sm:px-6">

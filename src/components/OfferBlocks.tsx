@@ -19,7 +19,7 @@ export function HowItWorks({
         <SectionHeading eyebrow={eyebrow} title={title} />
         <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
-            <li key={s.title} className="rounded-2xl border border-line bg-elevated p-5">
+            <li key={s.title} className="sc-card p-5">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-bg">
                 {i + 1}
               </span>
@@ -82,7 +82,7 @@ export function OfferList({
         <SectionHeading eyebrow={eyebrow} title={title} description={description} />
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((it) => (
-            <li key={it.title} className="rounded-2xl border border-line bg-elevated p-5">
+            <li key={it.title} className="sc-card p-5">
               <h3 className="text-base font-semibold tracking-tight text-ink">{it.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-slate">{it.body}</p>
             </li>

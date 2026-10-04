@@ -16,7 +16,7 @@ function QuoteCard({
 }) {
   return (
     <article
-      className={`flex h-full flex-col rounded-2xl border border-line bg-elevated ${
+      className={`flex h-full flex-col sc-card ${
         compact ? "p-5" : "p-5 sm:p-6"
       }`}
       style={{ boxShadow: `inset 3px 0 0 ${accent}` }}

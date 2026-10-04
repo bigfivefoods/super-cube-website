@@ -86,7 +86,7 @@ export function EnquiryForm({
 
   if (sent) {
     return (
-      <div className={`rounded-2xl border border-line bg-elevated p-6 ${className}`} role="status">
+      <div className={`sc-card p-6 ${className}`} role="status">
         <p className="text-lg font-semibold tracking-tight text-ink">Request received.</p>
         <p className="mt-2 text-sm text-slate">{thanks}</p>
       </div>
@@ -97,7 +97,7 @@ export function EnquiryForm({
     <form
       onSubmit={onSubmit}
       noValidate
-      className={`grid gap-4 rounded-2xl border border-line bg-elevated p-5 sm:grid-cols-2 sm:p-6 ${className}`}
+      className={`grid gap-4 sc-card p-5 sm:grid-cols-2 sm:p-6 ${className}`}
     >
       {fields.map((f) => {
         const fid = `${id}-${f.name}`;

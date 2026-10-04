@@ -12,7 +12,33 @@ export const site = {
 export const researchGateUrl = site.researchGateUrl;
 
 /**
- * Desktop primary bar — journey order left → right.
+ * Primary navigation (Phase 3): audience paths first, then proof and price.
+ * "Individuals" points at the programmes page (Kids, Teens, Adults).
+ */
+export const audienceNav = [
+  { href: "/what", label: "Individuals", i18n: "nav.individuals" },
+  { href: "/organisations", label: "Organisations", i18n: "nav.organisations" },
+  { href: "/schools", label: "Schools", i18n: "nav.schools" },
+  { href: "/speaking", label: "Speaking", i18n: "nav.speaking" },
+  { href: "/research", label: "Research", i18n: "nav.research" },
+  { href: "/pricing", label: "Pricing", i18n: "nav.pricing" },
+] as const;
+
+/** Secondary links shown in the mobile menu (and footer). */
+export const menuMoreNav = [
+  { href: "/the-model", label: "The model" },
+  { href: "/constructs", label: "Six faces" },
+  { href: "/how", label: "How it works" },
+  { href: "/impact", label: "Impact" },
+  { href: "/sample-report", label: "Sample report" },
+  { href: "/about", label: "About" },
+  { href: "/insights", label: "Insights" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
+] as const;
+
+/**
+ * Legacy desktop primary bar — journey order left → right.
  * Explore (secondary) + Contact / Sign in / Start free sit after primary.
  */
 export const mainNav = [

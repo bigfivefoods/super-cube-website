@@ -75,7 +75,7 @@ export default function PracticesPage() {
               return (
                 <article
                   key={p.id}
-                  className="rounded-2xl border border-line bg-elevated p-5 sm:p-6"
+                  className="sc-card p-5 sm:p-6"
                   style={
                     color ? { boxShadow: `inset 3px 0 0 ${color}` } : undefined
                   }
