@@ -12,6 +12,7 @@ import type {
 } from "@/lib/lms/orientation";
 import type { FacePulse } from "@/lib/lms/face-tracking";
 import type { LearnerProfile } from "@/lib/lms/profile";
+import type { GuardianConsentRecord } from "@/lib/lms/consent";
 
 const KEY = "supercube_lms_v1";
 
@@ -135,6 +136,26 @@ export interface LocalLmsState {
   locale?: "en" | "zu" | "af";
   /** Continuous daily/weekly face pulses for pattern tracking */
   facePulses?: FacePulse[];
+  /** Parent/guardian consent (required for under-18 learners) */
+  guardianConsent?: GuardianConsentRecord;
+  /** Last entitlement confirmed by the server (/api/lms/status) */
+  serverEntitlement?: {
+    kind: "paid" | "cohort" | "open" | "none";
+    programmeId?: ProgrammeId;
+    userId: string;
+    checkedAt: string;
+  };
+}
+
+/** Old builds stored a fake "active" `_demo` subscription that unlocked everything. */
+function stripLegacyDemoSubscription(state: LocalLmsState): LocalLmsState {
+  const sub = state.subscription;
+  if (sub && sub.planId?.endsWith("_demo") && !sub.paystackReference && !state.paystackReference) {
+    const { subscription: _drop, ...rest } = state;
+    void _drop;
+    return { ...rest, demoUnlocked: true } as LocalLmsState;
+  }
+  return state;
 }
 
 const empty = (): LocalLmsState => ({
@@ -150,7 +171,7 @@ export function loadLmsState(): LocalLmsState {
   try {
     const raw = localStorage.getItem(KEY);
     if (!raw) return empty();
-    const parsed = JSON.parse(raw) as LocalLmsState;
+    const parsed = stripLegacyDemoSubscription(JSON.parse(raw) as LocalLmsState);
     return {
       ...empty(),
       ...parsed,
@@ -306,28 +327,36 @@ export function isSupabaseConfigured() {
   );
 }
 
-export function hasLocalAccess(state: LocalLmsState): boolean {
-  // Open demo mode: entire LMS free (set false in production for paywall)
-  if (process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true") return true;
-  return state.subscription?.status === "active";
+const SERVER_ENTITLEMENT_TTL_MS = 7 * 24 * 3600 * 1000;
+
+function serverEntitled(state: LocalLmsState): boolean {
+  const e = state.serverEntitlement;
+  if (!e || e.kind === "none") return false;
+  return Date.now() - new Date(e.checkedAt).getTime() < SERVER_ENTITLEMENT_TTL_MS;
 }
 
+/**
+ * Full pathway on this device. UX gate only: the server re-checks entitlement
+ * before it accepts a post-assessment, a paid session or a certificate.
+ */
+export function hasLocalAccess(state: LocalLmsState): boolean {
+  if (process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true") return true;
+  return hasPaidAccess(state) || serverEntitled(state);
+}
+
+/** Learn area visible (paid, or free sample sessions after "try free") */
 export function hasLearnAccess(state: LocalLmsState): boolean {
   if (hasLocalAccess(state)) return true;
   return Boolean(state.demoUnlocked);
 }
 
-/** Paid via Paystack (not free demo plan) */
+/** Paid via a Paystack reference verified by /api/paystack/verify (never the free demo) */
 export function hasPaidAccess(state: LocalLmsState): boolean {
-  if (state.paystackReference) return true;
-  if (
-    state.subscription?.status === "active" &&
-    state.subscription.planId &&
-    !state.subscription.planId.includes("_demo")
-  ) {
-    return true;
-  }
-  return false;
+  const sub = state.subscription;
+  const ref = sub?.paystackReference || state.paystackReference;
+  return Boolean(
+    sub?.status === "active" && ref && sub.planId && !sub.planId.includes("_demo")
+  );
 }
 
 export function setOrgCode(code: string): LocalLmsState {
@@ -337,22 +366,19 @@ export function setOrgCode(code: string): LocalLmsState {
   return state;
 }
 
+/**
+ * "Try free": opens the free sample sessions only (overview + first skill per face).
+ * It never creates an active subscription.
+ */
 export function unlockDemo(programmeId: ProgrammeId): LocalLmsState {
-  let state = loadLmsState();
+  const state = stripLegacyDemoSubscription(loadLmsState());
   state.demoUnlocked = true;
   state.user = {
-    email: state.user?.email || "demo@super-cube.me",
-    fullName: state.user?.fullName || "Demo Learner",
+    email: state.user?.email || "",
+    fullName: state.user?.fullName || state.profile?.displayName || "Learner",
     programmeId,
   };
-  if (!state.subscription || state.subscription.status !== "active") {
-    state.subscription = {
-      programmeId,
-      planId: `${programmeId}_demo`,
-      status: "active",
-      activatedAt: new Date().toISOString(),
-    };
-  } else {
+  if (state.subscription) {
     state.subscription = { ...state.subscription, programmeId };
   }
   saveLmsState(state);

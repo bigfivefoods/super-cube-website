@@ -54,6 +54,7 @@ export async function middleware(request: NextRequest) {
       path.startsWith("/learn/feedback") ||
       path.startsWith("/learn/practice") ||
       path.startsWith("/learn/account") ||
+      path.startsWith("/learn/consent") ||
       path.startsWith("/learn/welcome");
     if (!user && !publicLearn) {
       const login = new URL("/login", request.url);

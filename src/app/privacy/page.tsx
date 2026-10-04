@@ -114,6 +114,27 @@ export default function PrivacyPage() {
 
           <div>
             <h2 className="text-xl font-semibold tracking-tight text-ink">
+              Children under 18
+            </h2>
+            <p className="mt-3 text-slate">
+              We take extra care with children&apos;s information. Under POPIA section 35, a
+              parent, legal guardian or other person with parental responsibility must consent
+              before a learner under 18 uses Super-Cube® Learn. Where a school runs the
+              programme, the school may collect that consent under its own parental consent
+              process.
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-slate">
+              <li><strong className="text-ink">Purpose:</strong> only to deliver the learner&apos;s programme, progress and growth report, and certificate. No selling, no advertising, no profiling for marketing.</li>
+              <li><strong className="text-ink">What we collect:</strong> first name or nickname, age band, learning context, assessment answers and scores, session progress, certificate, private reflections, and a login email if they sign in. We also keep a record of the consent (guardian&apos;s name, relationship, optional email, date and wording version).</li>
+              <li><strong className="text-ink">Who can see it:</strong> the learner and their parent or guardian. A coach or school sees scores and progress only if the learner joins their cohort. Reflections are never shared. Wider reports are anonymous and aggregated.</li>
+              <li><strong className="text-ink">Retention:</strong> kept while the learner uses Super-Cube®. Deleted on request immediately from live systems and from backups within 30 days. We keep only an anonymous deletion record.</li>
+              <li><strong className="text-ink">Withdrawal and deletion:</strong> a parent or guardian can withdraw consent at any time on the consent screen (learning pauses until consent is given again) and delete all data from You → Delete my data, or by emailing {site.email}. They may also ask to access or correct the information, or complain to the Information Regulator.</li>
+              <li><strong className="text-ink">Not clinical:</strong> results are developmental self-reflection, not a psychological assessment.</li>
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-ink">
               Your rights (POPIA-oriented)
             </h2>
             <p className="mt-3 text-slate">
@@ -124,7 +145,7 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <p className="text-sm text-muted">Last updated: 2026-07-31</p>
+          <p className="text-sm text-muted">Last updated: 2026-10-04</p>
         </div>
       </section>
     </>

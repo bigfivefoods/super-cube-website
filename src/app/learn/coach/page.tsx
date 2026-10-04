@@ -9,12 +9,10 @@ import { track } from "@/lib/analytics";
 import {
   buildReportSharePayload,
   encodeShareToken,
-  ensureCertificateId,
   shareReportUrl,
 } from "@/lib/lms/share";
 import {
   loadLmsState,
-  setCertificateMeta,
   setOrgCode,
   setShareProgressConsent,
   type LocalLmsState,
@@ -72,6 +70,9 @@ function CoachToolsInner() {
   const [createName, setCreateName] = useState("");
   const [createMsg, setCreateMsg] = useState<string | null>(null);
   const [packBanner, setPackBanner] = useState<string | null>(null);
+  const [inviteLink, setInviteLink] = useState<string | null>(null);
+  const [inviteMsg, setInviteMsg] = useState<string | null>(null);
+  const [inviteEmail, setInviteEmail] = useState("");
 
   useEffect(() => {
     const s = loadLmsState();
@@ -117,6 +118,31 @@ function CoachToolsInner() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email]);
 
+  async function createInvite() {
+    setInviteMsg(null);
+    setInviteLink(null);
+    const res = await fetch("/api/org/invites", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        orgCode,
+        role: "coach",
+        email: inviteEmail.trim() || undefined,
+        expiresInDays: 7,
+        maxUses: 1,
+      }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setInviteMsg(j.error || "Could not create an invite");
+      return;
+    }
+    setInviteLink(j.link);
+    setInviteMsg(
+      `Single-use coach invite, valid 7 days${j.lockedToEmail ? ` for ${j.lockedToEmail}` : ""}. Copy it and send it yourself. Super-Cube® does not email it. It is shown only once.`,
+    );
+  }
+
   async function createOrg(e: React.FormEvent) {
     e.preventDefault();
     setCreateMsg(null);
@@ -147,25 +173,7 @@ function CoachToolsInner() {
       setLink(null);
       return;
     }
-    if (s.attempts.some((a) => a.phase === "post")) {
-      const certId = ensureCertificateId(s);
-      setCertificateMeta(certId);
-      payload.certificateId = certId;
-      // Register in cloud when possible
-      void fetch("/api/certificates/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          id: certId,
-          learnerName: payload.name,
-          programmeId: payload.programmeId,
-          preOverall: payload.preOverall,
-          postOverall: payload.postOverall,
-          growth: payload.growth,
-          orgCode: payload.orgCode,
-        }),
-      });
-    }
+    // Only a server-issued certificate id is shared (buildReportSharePayload).
     setError(null);
     const token = encodeShareToken(payload);
     const url = shareReportUrl(token);
@@ -385,11 +393,8 @@ function CoachToolsInner() {
               >
                 Sign in
               </Link>{" "}
-              and join{" "}
-              <Link href="/learn/org" className="font-semibold text-ink">
-                /learn/org
-              </Link>{" "}
-              as coach (try DEMO2026 after SQL).
+              to see your organisation&apos;s roster. Coaches join with an invite
+              link from the organisation&apos;s admin.
             </p>
           )}
           {email && (
@@ -417,6 +422,25 @@ function CoachToolsInner() {
               {rosterMsg && (
                 <p className="learn-meta mt-1 text-amber-800">{rosterMsg}</p>
               )}
+              <div className="mt-3 rounded-xl border border-line bg-surface p-3" data-testid="coach-invite">
+                <p className="learn-label">Invite a coach (organisation admins only)</p>
+                <div className="mt-1.5 flex flex-wrap gap-2">
+                  <input
+                    className="learn-input max-w-[16rem]"
+                    type="email"
+                    value={inviteEmail}
+                    onChange={(e) => setInviteEmail(e.target.value)}
+                    placeholder="Coach's email (optional lock)"
+                  />
+                  <button type="button" className="learn-btn learn-btn-ghost" onClick={() => void createInvite()}>
+                    Create invite link
+                  </button>
+                </div>
+                {inviteLink && (
+                  <p className="mt-2 break-all font-mono text-[0.75rem] text-ink">{inviteLink}</p>
+                )}
+                {inviteMsg && <p className="learn-meta mt-1">{inviteMsg}</p>}
+              </div>
               {roster.length === 0 ? (
                 <p className="learn-body mt-3">
                   No members yet. Learners join the same code on /learn/org and
