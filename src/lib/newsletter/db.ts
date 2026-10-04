@@ -16,7 +16,6 @@ export type Subscriber = {
   created_at: string;
 };
 
-let warned = false;
 let warnedUrl = false;
 
 /** Public project URL (not a secret). Used if the env value is missing/invalid. */
@@ -35,26 +34,14 @@ export function supabaseUrl(): string {
 }
 
 export function serviceKey(): string | null {
-  let key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  if (!key && process.env.UPABASE_SERVICE_ROLE_KEY?.trim()) {
-    key = process.env.UPABASE_SERVICE_ROLE_KEY.trim();
-    if (!warned) {
-      warned = true;
-      console.warn(
-        "[newsletter] using misspelled env UPABASE_SERVICE_ROLE_KEY; rename to SUPABASE_SERVICE_ROLE_KEY"
-      );
-    }
-  }
-  return key || null;
+  return process.env.SUPABASE_SERVICE_ROLE_KEY?.trim() || null;
 }
 
 /**
  * Service-role client for the newsletter table (server only).
  *
- * Reads SUPABASE_SERVICE_ROLE_KEY. The production Vercel project currently
- * has this variable saved as "UPABASE_SERVICE_ROLE_KEY" (missing the S); the
- * fallback below keeps signups working until it is renamed. Remove the
- * fallback once the env var is fixed.
+ * Reads SUPABASE_SERVICE_ROLE_KEY. Without it, signups fall back to the
+ * server log and the admin page reports that the store isn't configured.
  */
 export function newsletterDb(): SupabaseClient | null {
   const key = serviceKey();
