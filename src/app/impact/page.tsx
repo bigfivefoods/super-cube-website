@@ -56,12 +56,14 @@ export default function ImpactPage() {
             <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
               This example shows the format of a cohort report: an overall
               score on a 0–100 scale before and after the programme, and the
-              change for each face. Real cohorts will differ.
+              change for each face. Real cohorts will differ. For the measured
+              research result (Emotional +39.5%, UKZN), see the research
+              results above.
             </p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
                 { k: "52 → 68", v: "Mean overall (0–100)" },
-                { k: "+18", v: "Emotional face change" },
+                { k: "+16", v: "Overall points (example)" },
                 { k: "8 wks", v: "Pathway length" },
               ].map((s) => (
                 <div key={s.v} className="rounded-xl bg-surface px-3 py-3 text-center">

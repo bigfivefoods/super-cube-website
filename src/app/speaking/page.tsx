@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { EnquiryForm } from "@/components/EnquiryForm";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
@@ -72,12 +73,14 @@ export default function SpeakingPage() {
               <Button href="/media" variant="ghost">Media kit, bio and citations</Button>
             </div>
           </div>
-          <div
-            className="flex min-h-56 items-center justify-center rounded-2xl border-2 border-dashed border-line-strong bg-surface p-6 text-center"
-            role="img"
-            aria-label="Placeholder for a speaker photo"
-          >
-            <p className="text-sm text-slate">Speaker photo coming soon</p>
+          <div className="relative mx-auto aspect-[3/4] w-full max-w-sm overflow-hidden rounded-2xl border border-line bg-surface lg:mx-0 lg:justify-self-end">
+            <Image
+              src="/images/people/craig-muller.webp"
+              alt="Dr Craig Muller"
+              fill
+              sizes="(max-width: 440px) 90vw, 384px"
+              className="object-cover object-top"
+            />
           </div>
         </div>
       </section>

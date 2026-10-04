@@ -248,9 +248,29 @@ export function HomeLanding() {
             title="Tested before it was taught."
             description="Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (DBA, 2021). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals."
           />
-          <div className="flex flex-col gap-2.5 sm:flex-row lg:justify-end">
+          <div className="lg:justify-self-end">
+            <div className="rounded-2xl border border-line bg-elevated p-5">
+              <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                UKZN research result
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-4">
+                <div>
+                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink">+39.5%</p>
+                  <p className="mt-0.5 text-sm text-slate">Emotional face</p>
+                </div>
+                <div>
+                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink">+32.2%</p>
+                  <p className="mt-0.5 text-sm text-slate">Overall, all six faces</p>
+                </div>
+              </div>
+              <p className="mt-3 text-xs text-muted">
+                Average pre- to post-assessment improvement reported in the doctoral research. Not live programme data.
+              </p>
+            </div>
+            <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
             <Button href="/research" variant="ghost">Read the research and theory →</Button>
             <Button href="/about" variant="ghost">About Dr Craig Muller</Button>
+            </div>
           </div>
         </div>
       </section>

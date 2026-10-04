@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { createHash } from "node:crypto";
 import { isNonProductionDeploy } from "@/lib/deploy-env";
+import { CONSENT_TEXT, NEWSLETTER_TABLE, newsletterDb } from "@/lib/newsletter/db";
 
 type Body = {
   email?: string;
@@ -13,13 +15,16 @@ type Body = {
 /**
  * Newsletter signup (POPIA: explicit opt-in checkbox required).
  *
- * Provider is chosen by NEWSLETTER_PROVIDER:
+ * Primary store: Supabase table public.newsletter_subscribers (service role,
+ * server-only; RLS on with no public policies). Used on preview and
+ * production whenever the Supabase URL + service key are configured.
+ *
+ * Optional extra forwarding (production only), chosen by NEWSLETTER_PROVIDER:
  *   - "brevo"   → adds the contact to BREVO_LIST_ID via BREVO_API_KEY
  *   - "webhook" → POSTs the signup to NEWSLETTER_WEBHOOK_URL (Zapier/Make/CRM)
  *   - "log" (default, or anything else) → structured server log only
  *
- * Preview / development deployments always log only, so nothing submitted on
- * a preview reaches a real mailing list. No Supabase dependency.
+ * Preview / development deployments never forward to Brevo/webhook.
  */
 export async function POST(req: Request) {
   let body: Body;
@@ -55,10 +60,44 @@ export async function POST(req: Request) {
     name,
     source: `super-cube.me/${source}`,
     consent: true,
-    consentText:
-      "I agree that Super-Cube® may email me leadership tips and programme updates. I can unsubscribe at any time.",
+    consentText: CONSENT_TEXT,
     consentAt: new Date().toISOString(),
   };
+
+  // 1. Durable store (Supabase)
+  let stored = false;
+  const db = newsletterDb();
+  if (db) {
+    const salt = process.env.NEWSLETTER_IP_SALT?.trim();
+    const ip = (req.headers.get("x-forwarded-for") || "").split(",")[0].trim();
+    const ipHash =
+      salt && ip ? createHash("sha256").update(`${salt}:${ip}`).digest("hex").slice(0, 24) : null;
+    const ins = await db.from(NEWSLETTER_TABLE).insert({
+      email,
+      source: signup.source,
+      consent_text: CONSENT_TEXT,
+      consent_at: signup.consentAt,
+      ip_hash: ipHash,
+    });
+    if (!ins.error) {
+      stored = true;
+    } else if (ins.error.code === "23505") {
+      // Already on the list: refresh consent and re-subscribe if they had left.
+      const upd = await db
+        .from(NEWSLETTER_TABLE)
+        .update({
+          consent_text: CONSENT_TEXT,
+          consent_at: signup.consentAt,
+          unsubscribed_at: null,
+          updated_at: signup.consentAt,
+        })
+        .eq("email", email);
+      stored = !upd.error;
+      if (upd.error) console.error("[newsletter] update failed", upd.error.message);
+    } else {
+      console.error("[newsletter] insert failed", ins.error.code, ins.error.message);
+    }
+  }
 
   const preview = isNonProductionDeploy();
   const provider = preview
@@ -96,7 +135,7 @@ export async function POST(req: Request) {
         body: JSON.stringify(signup),
       });
       if (!res.ok) throw new Error(`Webhook ${res.status}`);
-    } else {
+    } else if (!stored) {
       console.info(
         preview ? "[newsletter][preview: not forwarded]" : "[newsletter]",
         JSON.stringify(signup)
@@ -111,5 +150,5 @@ export async function POST(req: Request) {
     );
   }
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, stored });
 }
