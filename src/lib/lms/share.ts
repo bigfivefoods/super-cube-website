@@ -109,7 +109,7 @@ export function buildReportSharePayload(
     growth,
     constructs: constructScores,
     completedAt: post?.completedAt ?? pre.completedAt,
-    certificateId: state.certificateId,
+    certificateId: serverCertificateId(state),
     orgCode: state.orgCode,
   };
 }
@@ -139,16 +139,15 @@ export function shareReportUrl(token: string): string {
   return `${base}/share/report/${token}`;
 }
 
-/** Deterministic certificate id from learner + completion time */
-export function ensureCertificateId(state: LocalLmsState): string {
-  if (state.certificateId) return state.certificateId;
-  const post = state.attempts.find((a) => a.phase === "post");
-  const seed = `${state.user?.email ?? "anon"}|${post?.completedAt ?? Date.now()}`;
-  let h = 0;
-  for (let i = 0; i < seed.length; i++) {
-    h = (Math.imul(31, h) + seed.charCodeAt(i)) | 0;
-  }
-  const hex = Math.abs(h).toString(16).toUpperCase().padStart(8, "0");
-  const day = (post?.completedAt ?? new Date().toISOString()).slice(0, 10).replace(/-/g, "");
-  return `SC-${day}-${hex}`;
+/** Server-issued certificate ids look like SC-YYYYMMDD-XXXXXXXXXX (10 hex). */
+export const SERVER_CERT_ID_RE = /^SC-\d{8}-[0-9A-F]{10}$/;
+
+/**
+ * The learner's certificate id, but only if it was issued by the server
+ * (/api/certificates/issue). Old builds made ids in the browser that could
+ * never be verified; those are ignored.
+ */
+export function serverCertificateId(state: LocalLmsState): string | undefined {
+  const id = state.certificateId;
+  return id && SERVER_CERT_ID_RE.test(id) ? id : undefined;
 }

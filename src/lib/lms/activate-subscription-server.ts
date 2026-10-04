@@ -7,6 +7,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { programmes } from "@/lib/programmes";
 
 export async function activateSubscriptionInSupabase(opts: {
+  /** Buyer's user id from Paystack metadata (set at initialize when signed in) */
+  userId?: string | null;
   email?: string | null;
   programmeId: string;
   planId: string;
@@ -25,14 +27,18 @@ export async function activateSubscriptionInSupabase(opts: {
     return { saved: false, userId: null, reason: "no_admin" };
   }
 
-  const email = opts.email?.trim().toLowerCase();
-  if (!email || email.includes("@demo.local")) {
+  const email = opts.email?.trim().toLowerCase() || null;
+  let userId: string | null = null;
+  if (opts.userId) {
+    const { data } = await admin.auth.admin.getUserById(opts.userId);
+    userId = data?.user?.id ?? null;
+  }
+  if (!userId && (!email || email.includes("@demo.local"))) {
     return { saved: false, userId: null, reason: "no_email" };
   }
 
-  // Find auth user by email (paginated scan is fine at pilot scale)
-  let userId: string | null = null;
-  try {
+  // Fallback: find auth user by email (paginated scan is fine at pilot scale)
+  if (!userId) try {
     const { data: listed } = await admin.auth.admin.listUsers({
       page: 1,
       perPage: 200,
@@ -51,7 +57,7 @@ export async function activateSubscriptionInSupabase(opts: {
 
   await admin.from("profiles").upsert({
     id: userId,
-    email,
+    ...(email ? { email } : {}),
     programme_id: opts.programmeId,
     updated_at: new Date().toISOString(),
   });
@@ -102,6 +108,8 @@ export async function activateSubscriptionInSupabase(opts: {
       .update({
         paystack_subscription_code: opts.paystackReference,
         paystack_customer_code: opts.paystackCustomerCode ?? null,
+        amount_cents: opts.amountCents ?? null,
+        currency: opts.currency ?? null,
         updated_at: new Date().toISOString(),
       })
       .eq("id", active.id);
@@ -115,6 +123,8 @@ export async function activateSubscriptionInSupabase(opts: {
     status: "active",
     paystack_customer_code: opts.paystackCustomerCode ?? null,
     paystack_subscription_code: opts.paystackReference,
+    amount_cents: opts.amountCents ?? null,
+    currency: opts.currency ?? null,
     current_period_end: null,
     updated_at: new Date().toISOString(),
   });

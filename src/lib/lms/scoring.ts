@@ -101,3 +101,64 @@ export function recommendations(result: AttemptResult): string[] {
   });
   return recs;
 }
+
+/* -------------------------------------------------------------------------- */
+/* Honest change bands (reliable change, Jacobson & Truax 1991)               */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * PROVISIONAL psychometric constants until Super-Cube® norms exist.
+ * - Face reliability 0.70 = midpoint of the founding study's α range (0.60–0.80).
+ * - Overall reliability 0.85 = six faces averaged (Spearman-Brown style gain).
+ * - SD 15 (faces) / 12 (overall) on the 0–100 scale are conservative placeholders.
+ * Replace with values from the live norm sample (Phase 1).
+ */
+export const CHANGE_CONSTANTS = {
+  face: { reliability: 0.7, sd: 15 },
+  overall: { reliability: 0.85, sd: 12 },
+} as const;
+
+export type ChangeBandId =
+  | "real_growth"
+  | "possible_growth"
+  | "within_noise"
+  | "possible_decline"
+  | "real_decline";
+
+export interface ChangeBand {
+  id: ChangeBandId;
+  label: string;
+  short: string;
+  /** Reliable change index (delta / standard error of the difference) */
+  rci: number;
+  /** Points needed for "real" change at 95% confidence */
+  threshold: number;
+  tone: "good" | "neutral" | "bad";
+}
+
+export function reliableChangeThreshold(kind: "face" | "overall"): number {
+  const { reliability, sd } = CHANGE_CONSTANTS[kind];
+  const sem = sd * Math.sqrt(1 - reliability);
+  const sDiff = Math.sqrt(2) * sem;
+  return Math.round(1.96 * sDiff * 10) / 10;
+}
+
+export function changeBand(
+  delta: number | null | undefined,
+  kind: "face" | "overall" = "face",
+): ChangeBand | null {
+  if (delta == null || !Number.isFinite(delta)) return null;
+  const { reliability, sd } = CHANGE_CONSTANTS[kind];
+  const sDiff = Math.sqrt(2) * sd * Math.sqrt(1 - reliability);
+  const rci = Math.round((delta / sDiff) * 100) / 100;
+  const threshold = reliableChangeThreshold(kind);
+  if (rci >= 1.96)
+    return { id: "real_growth", label: "Real growth", short: "Real", rci, threshold, tone: "good" };
+  if (rci >= 1)
+    return { id: "possible_growth", label: "Possible growth (not yet certain)", short: "Possible", rci, threshold, tone: "neutral" };
+  if (rci > -1)
+    return { id: "within_noise", label: "Within normal noise", short: "Noise", rci, threshold, tone: "neutral" };
+  if (rci > -1.96)
+    return { id: "possible_decline", label: "Possible dip (not yet certain)", short: "Possible dip", rci, threshold, tone: "neutral" };
+  return { id: "real_decline", label: "Real decline", short: "Decline", rci, threshold, tone: "bad" };
+}

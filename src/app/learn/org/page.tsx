@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
-import { buildFaceScoresFromState } from "@/lib/lms/face-scores";
 import { getProfile } from "@/lib/lms/profile";
 import { loadLmsState, setOrgCode, type LocalLmsState } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
@@ -15,7 +14,7 @@ import { createClient } from "@/lib/supabase/client";
 export default function LearnOrgPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [code, setCode] = useState("");
-  const [role, setRole] = useState<"learner" | "coach">("learner");
+  const [invite, setInvite] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [cloudMsg, setCloudMsg] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
@@ -25,6 +24,8 @@ export default function LearnOrgPage() {
     const s = loadLmsState();
     setState(s);
     setCode(s.orgCode ?? "");
+    const inv = new URLSearchParams(window.location.search).get("invite");
+    if (inv) setInvite(inv.slice(0, 200));
     const supabase = createClient();
     if (!supabase) return;
     void supabase.auth.getUser().then(({ data }) => {
@@ -32,12 +33,36 @@ export default function LearnOrgPage() {
     });
   }, []);
 
+  async function acceptInvite() {
+    if (!invite) return;
+    if (!email) {
+      setCloudMsg("Sign in first, then open the invite link again.");
+      return;
+    }
+    const res = await fetch("/api/org/join", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        invite,
+        displayName: profile?.displayName || email,
+      }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      setCloudMsg(j.error || "This invite is not valid any more. Ask your organisation admin for a new one.");
+      return;
+    }
+    if (j.org?.code) setState(setOrgCode(j.org.code));
+    setCloudMsg(`Joined ${j.org?.name || "the organisation"} as ${j.role || "coach"}.`);
+    track("org_invite_accept", { role: j.role || "coach" });
+  }
+
   async function join(e: React.FormEvent) {
     e.preventDefault();
     const next = setOrgCode(code);
     setState(next);
     setSaved(true);
-    track("org_join", { orgCode: next.orgCode ?? "", role });
+    track("org_join", { orgCode: next.orgCode ?? "", role: "learner" });
 
     if (email) {
       try {
@@ -46,19 +71,15 @@ export default function LearnOrgPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             code: next.orgCode,
-            role,
             displayName:
               next.profile?.displayName || next.user?.fullName || email,
           }),
         });
         const j = await res.json();
         if (!res.ok) {
-          setCloudMsg(
-            j.error ||
-              "Cloud join failed — run org SQL migrations if tables are missing.",
-          );
+          setCloudMsg(j.error || "Could not join this cohort.");
         } else {
-          setCloudMsg(`Joined ${j.org?.name || next.orgCode} as ${role}.`);
+          setCloudMsg(`Joined ${j.org?.name || next.orgCode} as a learner.`);
           void pushProgress(next.orgCode!);
         }
       } catch {
@@ -73,27 +94,13 @@ export default function LearnOrgPage() {
 
   async function pushProgress(orgCode: string) {
     const s = loadLmsState();
-    const pre = s.attempts.find((a) => a.phase === "pre");
-    const post = s.attempts.find((a) => a.phase === "post");
-    const lessonsCompleted = Object.values(s.lessonProgress).filter(
-      (x) => x === "completed",
-    ).length;
+    // Scores, sessions and certificate are read from the server's own records.
     await fetch("/api/org/progress", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         orgCode,
         programmeId: s.subscription?.programmeId || s.user?.programmeId || null,
-        pathwayPct: 0,
-        lessonsCompleted,
-        preOverall: pre?.result.overall ?? null,
-        postOverall: post?.result.overall ?? null,
-        growth:
-          pre && post
-            ? Math.round((post.result.overall - pre.result.overall) * 10) / 10
-            : null,
-        certificateId: s.certificateId ?? null,
-        faceScores: buildFaceScoresFromState(s),
         consent: Boolean(s.shareProgressWithCoach),
       }),
     });
@@ -112,9 +119,21 @@ export default function LearnOrgPage() {
         </p>
       )}
 
+      {invite && (
+        <div className="learn-card mb-4 max-w-md" data-testid="invite-card">
+          <p className="learn-eyebrow">Staff invite</p>
+          <p className="learn-body mt-1">
+            You have been invited to join an organisation as a coach or admin.
+          </p>
+          <button type="button" className="learn-btn learn-btn-primary mt-3" onClick={() => void acceptInvite()}>
+            Accept invite
+          </button>
+        </div>
+      )}
+
       <form onSubmit={join} className="learn-card max-w-md space-y-3">
         <label className="block">
-          <span className="learn-label">Cohort / family code</span>
+          <span className="learn-label">Learner cohort / family code</span>
           <input
             value={code}
             onChange={(e) => {
@@ -122,37 +141,17 @@ export default function LearnOrgPage() {
               setSaved(false);
               setCloudMsg(null);
             }}
-            placeholder="e.g. DEMO2026 or FAMILY-ABC"
+            placeholder="e.g. FAMILY-ABC"
             className="learn-input mt-1.5"
             maxLength={24}
             autoCapitalize="characters"
             aria-describedby="org-help"
           />
         </label>
-        <fieldset className="flex flex-wrap gap-4 text-sm">
-          <legend className="sr-only">Role</legend>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="role"
-              checked={role === "learner"}
-              onChange={() => setRole("learner")}
-            />
-            Learner / family member
-          </label>
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="role"
-              checked={role === "coach"}
-              onChange={() => setRole("coach")}
-            />
-            Coach / parent lead / facilitator
-          </label>
-        </fieldset>
         <p id="org-help" className="learn-meta">
-          Try <strong className="text-ink">DEMO2026</strong> for pilots. Ask
-          your facilitator or family lead for a live code.
+          Learners join with the code from their teacher, facilitator or family lead.
+          Coaches and facilitators join with a personal invite link from the
+          organisation&apos;s admin, so only invited staff can see learners&apos; scores.
         </p>
         <button type="submit" className="learn-btn learn-btn-primary">
           Join cohort

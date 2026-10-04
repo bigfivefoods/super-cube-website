@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { DeleteMyData } from "@/components/learn/DeleteMyData";
 import { FaceMomentum } from "@/components/learn/FaceMomentum";
 import { InlineProfileEdit } from "@/components/learn/InlineProfileEdit";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -765,6 +766,7 @@ function AccountPageInner() {
             />
           </div>
         </section>
+        <DeleteMyData />
       </div>
     </LearnShell>
   );

@@ -2,13 +2,17 @@
  * Access / entitlement model for Super-Cube® Learn.
  *
  * free:     orient + baseline (always)
- * demo:     full path on-device (demo unlock or DEMO_LMS_OPEN)
- * paid:     active subscription from Paystack
- * cohort:   future seat packs
+ * demo:     free sample sessions only (overview + first skill per face)
+ * paid:     Paystack payment verified server-side, or a cohort seat
+ * open:     NEXT_PUBLIC_DEMO_LMS_OPEN=true (whole LMS free; never in production)
+ *
+ * These client checks are UX only. The server enforces entitlement in
+ * /api/lms/attempts, /api/lms/progress and /api/certificates/issue.
  */
 
 import type { ProgrammeId } from "@/lib/programmes";
 import {
+  hasLocalAccess,
   loadLmsState,
   saveLmsState,
   type LocalLmsState,
@@ -23,24 +27,14 @@ export function demoLmsOpen(): boolean {
 
 export function getEntitlementTier(state: LocalLmsState): EntitlementTier {
   if (demoLmsOpen()) return "open";
-  if (state.subscription?.status === "active") {
-    if (state.subscription.planId.endsWith("_demo") && !state.paystackReference) {
-      return state.demoUnlocked ? "demo" : "paid";
-    }
-    if (state.paystackReference || !state.subscription.planId.includes("demo")) {
-      return "paid";
-    }
-    return "demo";
-  }
+  if (hasLocalAccess(state)) return "paid";
   if (state.demoUnlocked) return "demo";
   return "none";
 }
 
-/** Full pathway (courses, post, cert) */
+/** Full pathway (all sessions, post assessment, certificate). Demo = samples only. */
 export function hasFullPathwayAccess(state: LocalLmsState): boolean {
-  if (demoLmsOpen()) return true;
-  if (state.subscription?.status === "active") return true;
-  return Boolean(state.demoUnlocked);
+  return hasLocalAccess(state);
 }
 
 /** Free funnel: orient + pre always allowed */
@@ -83,7 +77,6 @@ export function activatePaidSubscription(
     paystackReference: input.paystackReference,
   };
   state.subscription = sub;
-  state.demoUnlocked = true; // paid includes full device path
   if (input.paystackReference) {
     state.paystackReference = input.paystackReference;
   }

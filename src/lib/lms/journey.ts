@@ -1,4 +1,5 @@
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { evaluatePostGate } from "@/lib/lms/gates";
 import {
   hasLocalAccess,
   type LocalLmsState,
@@ -86,6 +87,16 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
   const preDone = Boolean(pre);
   const learnDone = preDone && totalLessons > 0 && coursePct >= 100;
   const postDone = Boolean(post);
+  const postGate = programmeId
+    ? evaluatePostGate({
+        programmeId,
+        preCompletedAt: pre?.completedAt ?? null,
+        completedLessonIds: Object.entries(state.lessonProgress)
+          .filter(([, v]) => v === "completed")
+          .map(([k]) => k),
+      })
+    : null;
+  const postOpen = Boolean(access && postGate?.ok);
   const reportDone = postDone; // full growth report complete after post
 
   const growthDelta =
@@ -198,8 +209,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
           cta = "Locked";
         } else if (preDone) {
           status = "done";
-          detail = `Overall ${pre!.result.overall}/100`;
-          cta = "Retake baseline";
+          detail = `Overall ${pre!.result.overall}/100 · locked`;
+          cta = "View baseline";
         } else {
           status = "upcoming";
           detail = "Six-face pre-assessment";
@@ -225,21 +236,23 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
         }
         break;
       case "remeasure":
-        if (!learnDone) {
-          status = "locked";
-          detail = learnDone
-            ? "Ready"
-            : preDone
-              ? `Finish all courses first · ${coursePct}%`
-              : "Complete the programme first";
-          cta = "Locked";
-        } else if (postDone) {
+        if (postDone) {
           status = "done";
           detail = `Post overall ${post!.result.overall}/100`;
-          cta = "Retake post-assessment";
+          cta = "View report";
+        } else if (!postOpen) {
+          status = "locked";
+          detail = !preDone
+            ? "Complete your baseline first"
+            : !access
+              ? "Part of the full pathway"
+              : postGate && postGate.daysRemaining > 0
+                ? `Opens in ${postGate.daysRemaining} day${postGate.daysRemaining === 1 ? "" : "s"} · ${postGate.sessionsDone}/${postGate.sessionsRequired} sessions`
+                : `${postGate?.sessionsDone ?? 0}/${postGate?.sessionsRequired ?? 0} sessions needed`;
+          cta = "Locked";
         } else {
           status = "upcoming";
-          detail = "Same instrument as baseline · after full programme";
+          detail = "Same instrument as baseline · practice time done";
           cta = "Start post-assessment";
         }
         break;

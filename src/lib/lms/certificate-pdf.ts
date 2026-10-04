@@ -1,20 +1,43 @@
 import { jsPDF } from "jspdf";
-import type { LocalLmsState, LocalAttempt } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
 import { constructs } from "@/lib/content";
-import { ensureCertificateId } from "@/lib/lms/share";
+import { changeBand } from "@/lib/lms/scoring";
 
 /**
- * Landscape certificate of completion after full pathway + post-assessment.
+ * jsPDF's built-in Helvetica only covers WinAnsi. Characters outside it (e.g. the
+ * arrow "→") were printed as garbage ("!'"), so map them to plain text first.
  */
-export function downloadCompletionCertificate(opts: {
-  state: LocalLmsState;
-  pre: LocalAttempt;
-  post: LocalAttempt;
-  certificateId?: string;
-}): string {
-  const { state, pre, post } = opts;
-  const certificateId = opts.certificateId || ensureCertificateId(state);
+export function pdfSafe(text: string): string {
+  return text
+    .replace(/\s*[→⇒➜]\s*/g, " to ")
+    .replace(/\s*←\s*/g, " from ")
+    .replace(/≥/g, ">=")
+    .replace(/≤/g, "<=")
+    .replace(/Δ/g, "change ")
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/[^\x00-\xFF\u2013\u2014\u2022\u2026\u20AC\u2122]/g, "");
+}
+
+export type CertificatePdfInput = {
+  /** Server-issued certificate (from /api/certificates/issue) */
+  id: string;
+  learnerName: string;
+  programmeId: string;
+  preOverall: number;
+  postOverall: number;
+  growth: number;
+  issuedAt: string;
+  /** Origin used for the verify link (defaults to the current site) */
+  siteOrigin?: string;
+};
+
+/**
+ * Landscape certificate of completion. Only called with a server-issued
+ * certificate, so the ID printed on it can be verified at /verify/{id}.
+ */
+export function downloadCompletionCertificate(cert: CertificatePdfInput): string {
+  const certificateId = cert.id;
   const doc = new jsPDF({
     unit: "mm",
     format: "a4",
@@ -22,22 +45,21 @@ export function downloadCompletionCertificate(opts: {
   });
   const w = doc.internal.pageSize.getWidth();
   const h = doc.internal.pageSize.getHeight();
-  const programmeId =
-    post.programmeId ||
-    state.subscription?.programmeId ||
-    state.user?.programmeId;
-  const programme = programmeId ? getProgramme(programmeId) : undefined;
-  const name =
-    state.user?.fullName?.trim() ||
-    state.user?.email?.trim() ||
-    "Super-Cube® Learner";
-  const growth =
-    Math.round((post.result.overall - pre.result.overall) * 10) / 10;
-  const date = new Date(post.completedAt).toLocaleDateString(undefined, {
+  const programmeId = cert.programmeId;
+  const programme = getProgramme(programmeId);
+  const name = cert.learnerName?.trim() || "Super-Cube® Learner";
+  const growth = Math.round(Number(cert.growth) * 10) / 10;
+  const band = changeBand(growth, "overall");
+  const date = new Date(cert.issuedAt).toLocaleDateString("en-ZA", {
     year: "numeric",
     month: "long",
     day: "numeric",
   });
+  const origin = (
+    cert.siteOrigin ||
+    (typeof window !== "undefined" ? window.location.origin : "https://www.super-cube.me")
+  ).replace(/\/$/, "");
+  const verifyHost = origin.replace(/^https?:\/\//, "");
 
   // Border
   doc.setDrawColor(10, 10, 10);
@@ -78,13 +100,15 @@ export function downloadCompletionCertificate(opts: {
   doc.setTextColor(10, 10, 10);
   doc.setFont("helvetica", "bold");
   doc.setFontSize(22);
-  doc.text(name, w / 2, 74, { align: "center" });
+  doc.text(pdfSafe(name), w / 2, 74, { align: "center" });
 
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
   doc.setTextColor(60, 60, 60);
   const body = doc.splitTextToSize(
-    `has completed the ${programme?.name ?? "Super-Cube®"} pathway—including orientation, six-face baseline and post assessments, and deliberate practice across Choices, Principles, Mental, Emotional, Physical, and Spiritual leadership.`,
+    pdfSafe(
+      `has completed the ${programme?.name ?? "Super-Cube®"} pathway: a locked six-face baseline, practice sessions across Choices, Principles, Mental, Emotional, Physical and Spiritual leadership, and a re-measure after the minimum practice period.`,
+    ),
     w - 50
   );
   doc.text(body, w / 2, 86, { align: "center" });
@@ -93,7 +117,9 @@ export function downloadCompletionCertificate(opts: {
   doc.setFontSize(13);
   doc.setTextColor(10, 10, 10);
   doc.text(
-    `Overall growth: ${pre.result.overall} → ${post.result.overall}  (${growth > 0 ? "+" : ""}${growth} pts)`,
+    pdfSafe(
+      `Overall score: ${cert.preOverall} → ${cert.postOverall}  (${growth > 0 ? "+" : ""}${growth} pts${band ? `, ${band.label.toLowerCase()}` : ""})`,
+    ),
     w / 2,
     108,
     { align: "center" }
@@ -115,7 +141,7 @@ export function downloadCompletionCertificate(opts: {
   doc.setFontSize(8);
   doc.setTextColor(100, 100, 100);
   doc.text(
-    `Verify at www.super-cube.me/verify/${certificateId}`,
+    `Verify at ${verifyHost}/verify/${certificateId}`,
     w / 2,
     135,
     { align: "center" }
@@ -129,8 +155,7 @@ export function downloadCompletionCertificate(opts: {
     { align: "center" }
   );
 
-  const stamp = new Date().toISOString().slice(0, 10);
-  const filename = `super-cube-certificate-${programmeId ?? "learn"}-${stamp}.pdf`;
+  const filename = `super-cube-certificate-${certificateId}.pdf`;
   doc.save(filename);
   return filename;
 }

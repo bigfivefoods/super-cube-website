@@ -24,6 +24,7 @@ import {
   unlockDemo,
 } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
+import { hasValidGuardianConsent, MINOR_AGE_BANDS } from "@/lib/lms/consent";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -86,17 +87,19 @@ export default function WelcomeProfilePage() {
       cohortKind,
       programmeId: band.programmeId,
     });
-    if (cohortKind !== "solo" && !codeInput.trim()) {
-      router.push("/learn/org");
-      return;
-    }
-    // First-pulse onboarding: charts never start empty when possible
     const s = loadLmsState();
-    if (!s.firstRun?.firstPulse && !s.facePulses?.length) {
-      router.push("/learn/pulse?first=1");
+    let dest = "/learn/start";
+    if (cohortKind !== "solo" && !codeInput.trim()) {
+      dest = "/learn/org";
+    } else if (!s.firstRun?.firstPulse && !s.facePulses?.length) {
+      // First-pulse onboarding: charts never start empty when possible
+      dest = "/learn/pulse?first=1";
+    }
+    if (MINOR_AGE_BANDS.includes(ageBand) && !hasValidGuardianConsent(getProfile(s), s.guardianConsent)) {
+      router.push(`/learn/consent?next=${encodeURIComponent(dest)}`);
       return;
     }
-    router.push("/learn/start");
+    router.push(dest);
   }
 
   const programme =
