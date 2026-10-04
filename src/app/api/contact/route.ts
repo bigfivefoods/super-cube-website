@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isNonProductionDeploy } from "@/lib/deploy-env";
+import { newsletterDb } from "@/lib/newsletter/db";
 
 type Body = {
   name?: string;
@@ -13,7 +14,9 @@ type Body = {
 };
 
 /**
- * Contact / quote / keynote intake. Logs a structured payload; in production it
+ * Contact / quote / keynote intake. Every enquiry is saved to the Supabase
+ * table public.enquiries (service role, server-only) when configured, so
+ * nothing is lost while there is no mailbox. Logs a structured payload; in production it
  * also posts to a webhook (CONTACT_WEBHOOK or NEXT_PUBLIC_CONTACT_WEBHOOK) for
  * email/CRM. On preview deployments nothing is forwarded (log only), so test
  * submissions never reach real people.
@@ -71,6 +74,24 @@ export async function POST(req: Request) {
     "";
 
   const preview = isNonProductionDeploy();
+  const willForward = Boolean(webhook && !preview);
+
+  // Durable store first, so an enquiry is never lost.
+  let stored = false;
+  const db = newsletterDb();
+  if (db) {
+    const { error } = await db.from("enquiries").insert({
+      intent,
+      name,
+      email,
+      organisation: organisation || null,
+      message,
+      source,
+      delivered: willForward,
+    });
+    if (error) console.error("[contact] store failed", error.code, error.message);
+    else stored = true;
+  }
 
   if (webhook && !preview) {
     try {
@@ -82,12 +103,13 @@ export async function POST(req: Request) {
     } catch {
       // still accept — mail may be down
     }
-  } else {
+  }
+  if (!willForward && !stored) {
     console.info(
       preview ? "[contact][preview: not forwarded]" : "[contact]",
       JSON.stringify(payload)
     );
   }
 
-  return NextResponse.json({ ok: true, delivered: Boolean(webhook && !preview) });
+  return NextResponse.json({ ok: true, delivered: willForward, stored });
 }
