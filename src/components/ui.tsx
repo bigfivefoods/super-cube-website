@@ -231,7 +231,7 @@ export function CTABanner() {
         <div className="relative overflow-hidden rounded-xl bg-void px-5 py-9 text-void-fg sm:rounded-2xl sm:px-8 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 dark:bg-elevated dark:ring-1 dark:ring-white/10">
           <div className="relative grid items-center gap-6 sm:gap-8 md:grid-cols-[1.5fr_auto] md:gap-10">
             <div className="min-w-0">
-              <p className="eyebrow text-void-fg/45">Next step</p>
+              <p className="eyebrow eyebrow--on-dark">Next step</p>
               <h2 className="heading-md mt-3 text-void-fg sm:mt-4 md:text-[2rem]">
                 Measure growth in your first 10 minutes.
               </h2>

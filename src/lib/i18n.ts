@@ -88,7 +88,7 @@ const en = {
   "footer.allConstructs": "All constructs →",
   "footer.tagline":
     "Human-centric leadership, developed from the core outward.",
-  "footer.credit": "Craig Ross Muller · UKZN · 2020",
+  "footer.credit": "Craig Ross Muller · UKZN · 2021",
   "footer.startFree": "Start free",
   "footer.contact": "Contact",
   "footer.contactUs": "Contact us",
@@ -157,7 +157,7 @@ const en = {
   "home.ctaSample": "See sample report",
   "home.whatChanges":
     "What changes: clarity on weak faces · weekly practice plan · pre→post evidence for you, coach, or school",
-  "home.proof1": "UKZN doctoral research · 2020",
+  "home.proof1": "UKZN doctoral research · 2021",
   "home.proof2": "Pre → post growth measured",
   "home.proof3": "Sample report + verify certificates",
   "home.proof4": "Private journals · consented coach share",
@@ -273,7 +273,7 @@ const en = {
     "Yes. Use the pilot pack for pricing, 8-week calendar, consent notes, and coach tools. Create a cohort code, invite learners, and export roster progress when SQL orgs are enabled.",
   "faq.q7": "Is Super-Cube® research-based?",
   "faq.a7":
-    "Yes. The model draws on doctoral research (UKZN, 2020) in African business networks and synthesises major leadership schools with Ubuntu, I–Thou, and integral frames.",
+    "Yes. The model draws on doctoral research (UKZN, 2021) in African business networks and synthesises major leadership schools with Ubuntu, I–Thou, and integral frames.",
   "faq.q8": "How do certificates work?",
   "faq.a8":
     "After post assessment, you can earn a certificate with a public verify ID. Anyone can check authenticity on the verify page without seeing private journals.",
@@ -342,7 +342,7 @@ const zu: Record<I18nKey, string> = {
   "footer.allConstructs": "Zonke izakhi →",
   "footer.tagline":
     "Ubuholi obugxile kumuntu, bukhuliswa kusukela phakathi kuya ngaphandle.",
-  "footer.credit": "Craig Ross Muller · UKZN · 2020",
+  "footer.credit": "Craig Ross Muller · UKZN · 2021",
   "footer.startFree": "Qala mahhala",
   "footer.contact": "Xhumana",
   "footer.contactUs": "Xhumana nathi",
@@ -407,7 +407,7 @@ const zu: Record<I18nKey, string> = {
   "home.ctaSample": "Buka umbiko wesampula",
   "home.whatChanges":
     "Okushintshayo: ukucaca kwebuso obubuthaka · uhlelo lokuzilolonga lweviki · ubufakazi bangaphambi nangemva kuwe, umqeqeshi, noma isikole",
-  "home.proof1": "Ucwaningo lweziqu e-UKZN · 2020",
+  "home.proof1": "Ucwaningo lweziqu e-UKZN · 2021",
   "home.proof2": "Ukukhula kungaphambi → nangemva kukalwa",
   "home.proof3": "Umbiko wesampula + izitifiketi zokuqinisekisa",
   "home.proof4": "Amadayari ayimfihlo · ukwabelana nomqeqeshi ngemvume",
@@ -521,7 +521,7 @@ const zu: Record<I18nKey, string> = {
     "Yebo. Sebenzisa iphakethe le-pilot lamanani, ikhalenda yamaviki angu-8, amanothi emvume, namathuluzi omqeqeshi. Dala ikhodi yeqembu, mema abafundi, ukhiphe inqubekela phambili uma ama-SQL orgs evuliwe.",
   "faq.q7": "Ingabe i-Super-Cube® isekelwe ocwaningweni?",
   "faq.a7":
-    "Yebo. Imodeli isuselwa ocwaningweni lweziqu (UKZN, 2020) kumanethiwekhi webhizinisi e-Afrika futhi ihlanganisa izikole ezinkulu zobuholi ne-Ubuntu, I–Thou, nohlaka oluhlangene.",
+    "Yebo. Imodeli isuselwa ocwaningweni lweziqu (UKZN, 2021) kumanethiwekhi webhizinisi e-Afrika futhi ihlanganisa izikole ezinkulu zobuholi ne-Ubuntu, I–Thou, nohlaka oluhlangene.",
   "faq.q8": "Izitifiketi zisebenza kanjani?",
   "faq.a8":
     "Ngemva kokuhlolwa kokuphela, ungathola isitifiketi esine-ID yokuqinisekisa esidlangalaleni. Noma ubani angahlola ubuqiniso ekhasini lokuqinisekisa ngaphandle kokubona amadayari ayimfihlo.",
@@ -588,7 +588,7 @@ const af: Record<I18nKey, string> = {
   "footer.allConstructs": "Alle konstrukte →",
   "footer.tagline":
     "Mensgesentreerde leierskap, ontwikkel van die kern na buite.",
-  "footer.credit": "Craig Ross Muller · UKZN · 2020",
+  "footer.credit": "Craig Ross Muller · UKZN · 2021",
   "footer.startFree": "Begin gratis",
   "footer.contact": "Kontak",
   "footer.contactUs": "Kontak ons",
@@ -653,7 +653,7 @@ const af: Record<I18nKey, string> = {
   "home.ctaSample": "Sien voorbeeldverslag",
   "home.whatChanges":
     "Wat verander: helderheid oor swak vlakke · weeklikse oefenplan · pre→post bewys vir jou, afrigter of skool",
-  "home.proof1": "UKZN doktorale navorsing · 2020",
+  "home.proof1": "UKZN doktorale navorsing · 2021",
   "home.proof2": "Pre → post groei gemeet",
   "home.proof3": "Voorbeeldverslag + verifieer sertifikate",
   "home.proof4": "Private joernale · afrigter-deling met toestemming",
@@ -766,7 +766,7 @@ const af: Record<I18nKey, string> = {
     "Ja. Gebruik die loods-pakket vir pryse, 8-week kalender, toestemmingsnotas en afrigter-gereedskap. Skep ’n kohortkode, nooi leerders, en voer rooster-vordering uit wanneer SQL-organisasies aangeskakel is.",
   "faq.q7": "Is Super-Cube® navorsingsgebaseer?",
   "faq.a7":
-    "Ja. Die model steun op doktorale navorsing (UKZN, 2020) in Afrika-besigheidsnetwerke en sintetiseer groot leierskappe-skole met Ubuntu, I–Thou en integrale rame.",
+    "Ja. Die model steun op doktorale navorsing (UKZN, 2021) in Afrika-besigheidsnetwerke en sintetiseer groot leierskappe-skole met Ubuntu, I–Thou en integrale rame.",
   "faq.q8": "Hoe werk sertifikate?",
   "faq.a8":
     "Ná post-assessering kan jy ’n sertifikaat met ’n openbare verifieer-ID verdien. Enigiemand kan egtheid op die verifieer-bladsy nagaan sonder om private joernale te sien.",

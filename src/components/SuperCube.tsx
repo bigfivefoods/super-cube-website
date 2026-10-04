@@ -8,6 +8,7 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import { foregroundFor } from "@/lib/color";
 import { constructs, type ConstructId } from "@/lib/content";
 
 /**
@@ -191,7 +192,9 @@ export function SuperCube({
                 style={
                   {
                     "--face-bg": c.color,
+                    "--face-fg": foregroundFor(c.color),
                     background: c.color,
+                    color: foregroundFor(c.color),
                     opacity: intensity,
                     boxShadow:
                       hasScore && score >= 70
@@ -202,7 +205,7 @@ export function SuperCube({
               >
                 <span className="cube-face__name">{c.name}</span>
                 {showScores && hasScore && (
-                  <span className="mt-1 block text-[0.65rem] font-bold tabular-nums text-white/95">
+                  <span className="mt-1 block text-[0.65rem] font-bold tabular-nums">
                     {Math.round(score)}
                   </span>
                 )}
@@ -235,7 +238,7 @@ export function SuperCube({
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Rotate left"
           >
-            ↺ Y
+            <span aria-hidden="true">↺</span> Left
           </button>
           <button
             type="button"
@@ -243,7 +246,7 @@ export function SuperCube({
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Rotate right"
           >
-            ↻ Y
+            <span aria-hidden="true">↻</span> Right
           </button>
           <button
             type="button"
@@ -251,7 +254,7 @@ export function SuperCube({
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Tilt up"
           >
-            ↑ X
+            <span aria-hidden="true">↑</span> Up
           </button>
           <button
             type="button"
@@ -259,7 +262,7 @@ export function SuperCube({
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Tilt down"
           >
-            ↓ X
+            <span aria-hidden="true">↓</span> Down
           </button>
           <button
             type="button"
@@ -267,7 +270,7 @@ export function SuperCube({
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
             aria-label="Roll"
           >
-            ⟳ Z
+            <span aria-hidden="true">↷</span> Roll
           </button>
           <button
             type="button"

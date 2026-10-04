@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/community",
   title: "Community of practice",
   description:
     "Monthly Super-Cube® facilitator clinic for cohort coaches and partners.",
-};
+});
 
 export default function CommunityPage() {
   return (

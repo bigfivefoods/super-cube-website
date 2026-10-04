@@ -1,11 +1,13 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useLocale } from "@/components/LocaleProvider";
 import { SocialProofStrip } from "@/components/SocialProof";
 import { SuperCube } from "@/components/SuperCube";
 import { Button, SectionHeading } from "@/components/ui";
+import { readableOn } from "@/lib/color";
 import { constructs, stats, theories } from "@/lib/content";
 import { faceI18n, type I18nKey } from "@/lib/i18n";
 import { programmes } from "@/lib/programmes";
@@ -98,7 +100,7 @@ export function HomeHero() {
         />
 
         <div className="container-site page-hero__inner relative z-10 w-full pb-2">
-          <div className="page-hero__copy animate-fade-up max-w-2xl md:max-w-[38rem] lg:max-w-[42rem]">
+          <div className="page-hero__copy max-w-2xl md:max-w-[38rem] lg:max-w-[42rem]">
             <p className="eyebrow text-white/70 before:bg-white/50">
               {t("home.eyebrow")}
             </p>
@@ -196,8 +198,13 @@ export function HomeHero() {
                   />
                   <div className="flex flex-1 flex-col p-5 sm:p-6">
                     <p
-                      className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
-                      style={{ color }}
+                      className="accent-text text-[0.65rem] font-bold uppercase tracking-[0.14em]"
+                      style={
+                        {
+                          "--accent-light": readableOn(color),
+                          "--accent-dark": color,
+                        } as CSSProperties
+                      }
                     >
                       {p.ageLabel}
                     </p>
@@ -301,7 +308,7 @@ export function HomeHero() {
               <div className="border-t border-line px-4 py-3 sm:px-6">
                 <Link
                   href="/the-model#theory"
-                  className="text-sm font-semibold text-ink underline-offset-4 hover:underline"
+                  className="inline-flex min-h-6 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline"
                 >
                   {t("home.ptmTheoryMap")} →
                 </Link>
@@ -358,7 +365,7 @@ export function HomeHero() {
                 <p className="mt-3 text-sm leading-relaxed text-slate">
                   {c.summary}
                 </p>
-                <span className="mt-6 inline-flex text-sm font-semibold text-ink opacity-50 transition group-hover:opacity-100">
+                <span className="mt-6 inline-flex text-sm font-semibold text-ink opacity-80 transition group-hover:opacity-100">
                   {t("cta.learnMore")} →
                 </span>
               </Link>

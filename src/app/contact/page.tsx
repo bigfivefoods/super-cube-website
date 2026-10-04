@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { ContactForm } from "@/components/ContactForm";
 import { PageHero, SectionHeading } from "@/components/ui";
 import { site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/contact",
   title: "Contact",
   description:
     "Begin a conversation about Super-Cube® leadership development—personal plans, organisational pipelines, or network partnerships.",
-};
+});
 
 export default function ContactPage() {
   return (

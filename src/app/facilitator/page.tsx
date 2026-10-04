@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { FacilitatorDownloadButton } from "@/components/FacilitatorDownload";
 import { cohortCalendar, safeguardingKids } from "@/lib/facilitator";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/facilitator",
   title: "Facilitator kit",
   description:
     "8-week Super-Cube® cohort calendar, safeguarding notes, and coach tools for schools and companies.",
-};
+});
 
 export default function FacilitatorPage() {
   return (

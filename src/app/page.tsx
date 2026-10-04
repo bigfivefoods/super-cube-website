@@ -1,9 +1,20 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { HomeHero } from "@/components/HomeHero";
 import { courseJsonLd, JsonLd, organizationJsonLd } from "@/components/JsonLd";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, CTABanner, SectionHeading } from "@/components/ui";
 import { site } from "@/lib/content";
+import { absoluteUrl, pageLanguages } from "@/lib/seo";
+
+const homeUrl = absoluteUrl("/");
+
+export const metadata: Metadata = {
+  alternates: {
+    canonical: homeUrl,
+    languages: pageLanguages(homeUrl),
+  },
+};
 
 export default function HomePage() {
   return (
@@ -131,7 +142,7 @@ export default function HomePage() {
             </div>
             <Link
               href="/sample-report"
-              className="mt-4 inline-block text-sm font-semibold text-ink underline-offset-4 hover:underline"
+              className="mt-4 inline-flex min-h-6 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline"
             >
               Open full sample report →
             </Link>

@@ -108,7 +108,7 @@ export function PaystackCheckout({
       if (data.demo || data.configured === false) {
         setError(
           data.message ||
-            "Paystack is not configured yet. Use free demo or contact us.",
+            "Online checkout is temporarily unavailable. Start free on this device or contact us.",
         );
         if (onDemoFallback) {
           // Don't auto-start demo — let user choose
@@ -170,8 +170,8 @@ export function PaystackCheckout({
 
       {configured === false && (
         <p className="text-[0.7rem] leading-relaxed text-amber-800">
-          Paystack keys are not set on this deployment. Use free demo, or add{" "}
-          <code className="text-ink">PAYSTACK_SECRET_KEY</code> in Vercel.
+          Online checkout is temporarily unavailable. You can still start
+          free on this device, or contact us to arrange access.
         </p>
       )}
       {configured === true && (

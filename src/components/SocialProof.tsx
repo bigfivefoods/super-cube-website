@@ -55,14 +55,14 @@ export function SocialProofStrip() {
             <p className="mt-0.5 text-xs text-muted">
               <Link
                 href="/sample-report"
-                className="font-semibold text-ink underline-offset-2 hover:underline"
+                className="inline-flex min-h-6 items-center font-semibold text-ink underline-offset-2 hover:underline"
               >
                 Sample report
               </Link>
               {" · "}
               <Link
                 href="/verify/SC-DEMO"
-                className="font-semibold text-ink underline-offset-2 hover:underline"
+                className="inline-flex min-h-6 items-center font-semibold text-ink underline-offset-2 hover:underline"
               >
                 Demo certificate
               </Link>

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { constructs } from "@/lib/content";
 import { practiceLibrary } from "@/lib/lms/practices";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/practices",
   title: "I–Thou practice library",
   description:
     "Relational leadership exercises and continuous face tracking grounded in Buber and Super-Cube® whole-person development.",
-};
+});
 
 export default function PracticesPage() {
   return (

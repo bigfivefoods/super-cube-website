@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { pageMeta } from "@/lib/seo";
 import { PracticeReminders } from "@/components/PracticeReminders";
 import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnBottomNav } from "@/components/learn/LearnBottomNav";
@@ -7,9 +8,12 @@ import { ProfileGate } from "@/components/learn/ProfileGate";
 import { StickyContinue } from "@/components/learn/StickyContinue";
 
 export const metadata: Metadata = {
-  title: "Learn",
-  description:
-    "Super-Cube® Learn — leadership pathway: orient, assess, develop six faces, re-measure, and download your growth report.",
+  ...pageMeta({
+    title: "Learning dashboard",
+    description:
+      "Super-Cube® Learn — leadership pathway: orient, assess, develop six faces, re-measure, and download your growth report.",
+    path: "/learn",
+  }),
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

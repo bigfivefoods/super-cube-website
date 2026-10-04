@@ -107,8 +107,7 @@ export default function PricingPage() {
                 <span className="text-lg font-medium text-muted"> ZAR</span>
               </p>
               <p className="mt-1 text-sm text-muted">
-                or ${COURSE_PRICE_USD} USD · set{" "}
-                <code className="text-ink">PAYSTACK_CURRENCY</code>
+                or ${COURSE_PRICE_USD} USD
               </p>
             </div>
 
@@ -240,15 +239,9 @@ export default function PricingPage() {
 
             <div className="mx-auto mt-10 max-w-2xl sm:mt-12">
               <p className="text-sm leading-relaxed text-muted">
-                Payments run on <strong className="text-ink">Paystack</strong>.
-                Set <code className="text-ink">PAYSTACK_SECRET_KEY</code>,{" "}
-                <code className="text-ink">
-                  NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY
-                </code>
-                , optional{" "}
-                <code className="text-ink">PAYSTACK_CURRENCY=ZAR|USD</code>.
-                Webhook: <code className="text-ink">/api/paystack/webhook</code>
-                . See <code className="text-ink">docs/PAYSTACK.md</code>.
+                Payments are processed securely by{" "}
+                <strong className="text-ink">Paystack</strong>. We never see or
+                store your full card details.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Button href="/learn" variant="ghost">

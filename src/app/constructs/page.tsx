@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -6,6 +7,7 @@ import {
   ConstructsHero,
 } from "@/components/ConstructsHero";
 import { Button, CTABanner } from "@/components/ui";
+import { readableOn } from "@/lib/color";
 import { constructs, type ConstructId } from "@/lib/content";
 import { interventionGains } from "@/lib/impact";
 
@@ -186,8 +188,13 @@ export default function ConstructsPage() {
                       </span>
                       <div>
                         <p
-                          className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
-                          style={{ color: c.color }}
+                          className="accent-text text-[0.65rem] font-bold uppercase tracking-[0.14em]"
+                          style={
+                            {
+                              "--accent-light": readableOn(c.color),
+                              "--accent-dark": c.color,
+                            } as CSSProperties
+                          }
                         >
                           Overview
                         </p>

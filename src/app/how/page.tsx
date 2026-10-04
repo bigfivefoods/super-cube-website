@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
 import Link from "next/link";
 import { ImpactResults } from "@/components/ImpactResults";
@@ -6,11 +7,12 @@ import { TestimonialsSection } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/how",
   title: "How — Leadership Education",
   description:
     "How Super-Cube® develops leaders: philosophy to model, orientation, assessment, six construct courses, continuous face tracking, deliberate practice, and growth reports.",
-};
+});
 
 const pathway = [
   {

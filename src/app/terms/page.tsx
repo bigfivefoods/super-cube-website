@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import { Button, PageHero } from "@/components/ui";
 import { site } from "@/lib/content";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/terms",
   title: "Terms of use",
   description: "Terms for using Super-Cube® website and Learn platform.",
-};
+});
 
 export default function TermsPage() {
   return (

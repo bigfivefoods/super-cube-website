@@ -1,13 +1,15 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { insightPosts } from "@/lib/insights";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/insights",
   title: "Insights",
   description:
     "Essays on learnable leadership, Super-Cube® constructs, I–Thou practice, and SDG-linked development.",
-};
+});
 
 export default function InsightsIndexPage() {
   return (

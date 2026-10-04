@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
+import { pageMeta } from "@/lib/seo";
 import Link from "next/link";
 import { constructs } from "@/lib/content";
 import { SampleReportCharts } from "@/components/learn/SampleReportCharts";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMeta({
+  path: "/sample-report",
   title: "Sample growth report",
   description:
     "See what a Super-Cube® pre → post growth report looks like—six faces, dual radar comparison, longitudinal tracking, and developmental (not clinical) language.",
-};
+});
 
 /**
  * Anonymised composite illustration aligned to 0–100 research-style scale.

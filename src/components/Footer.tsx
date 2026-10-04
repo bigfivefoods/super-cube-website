@@ -17,7 +17,7 @@ export function Footer() {
   }
 
   return (
-    <footer className="border-t border-line bg-surface text-ink">
+    <footer className="site-footer border-t border-line bg-surface text-ink">
       <div className="container-site section-pad pb-[max(2rem,env(safe-area-inset-bottom))]">
         <div className="grid items-start gap-10 lg:grid-cols-[1fr_minmax(17rem,22rem)] lg:gap-12">
           <div className="min-w-0">
@@ -74,7 +74,7 @@ export function Footer() {
                 </h3>
                 <Link
                   href="/constructs"
-                  className="text-xs font-semibold tracking-tight text-ink underline-offset-2 hover:underline"
+                  className="inline-flex min-h-6 items-center text-xs font-semibold tracking-tight text-ink underline-offset-2 hover:underline"
                 >
                   {t("footer.allConstructs")}
                 </Link>
@@ -118,7 +118,7 @@ export function Footer() {
             <Link href="/login" className="hover:text-ink">
               {t("nav.signIn")}
             </Link>
-            <span className="text-muted/80">{t("footer.journals")}</span>
+            <span className="text-muted">{t("footer.journals")}</span>
           </nav>
         </div>
       </div>
