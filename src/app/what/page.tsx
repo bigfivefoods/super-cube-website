@@ -235,8 +235,7 @@ export default function WhatPage() {
                   />
                   <div className="flex flex-1 flex-col p-6 sm:p-7">
                     <p
-                      className="text-[0.65rem] font-bold uppercase tracking-[0.14em]"
-                      style={{ color }}
+                      className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-slate"
                     >
                       {p.ageLabel}
                     </p>
@@ -360,7 +359,7 @@ export default function WhatPage() {
                   >
                     <span
                       className="flex h-9 w-9 items-center justify-center rounded-full border border-line bg-elevated text-xs font-bold tabular-nums text-ink"
-                      style={{ color: accent }}
+                      style={{ borderColor: accent }}
                       aria-hidden
                     >
                       {String(i + 1).padStart(2, "0")}
@@ -657,9 +656,9 @@ export default function WhatPage() {
             {constructs.map((c) => (
               <span
                 key={c.id}
-                className="rounded-full px-3 py-1.5 text-xs font-semibold text-white"
-                style={{ background: c.color }}
+                className="inline-flex items-center gap-1.5 rounded-full border border-line bg-elevated px-3 py-1.5 text-xs font-semibold text-ink"
               >
+                <span className="h-1.5 w-1.5 rounded-full" style={{ background: c.color }} aria-hidden />
                 {c.name}
               </span>
             ))}
