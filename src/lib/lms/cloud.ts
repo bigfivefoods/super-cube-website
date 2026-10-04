@@ -25,7 +25,7 @@ export type ServerStatus = {
   userId: string;
   email?: string;
   programmeId: ProgrammeId;
-  entitlement: { kind: "paid" | "cohort" | "open" | "none"; programmeId?: ProgrammeId };
+  entitlement: { tier: "paid" | "cohort" | "open" | "none"; programmeId?: ProgrammeId };
   attempts: ServerAttemptView[];
   completions: string[];
   postGate: PostGate;
@@ -84,7 +84,7 @@ export async function syncFromServer(programmeId: ProgrammeId): Promise<CloudRes
   for (const id of s.completions) progress[id] = "completed";
   state.lessonProgress = progress;
   state.serverEntitlement = {
-    kind: s.entitlement.kind,
+    kind: s.entitlement.tier,
     programmeId: s.entitlement.programmeId,
     userId: s.userId,
     checkedAt: new Date().toISOString(),
