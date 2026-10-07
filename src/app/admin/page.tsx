@@ -647,8 +647,9 @@ export default async function AdminConsolePage({
 
   if (!ctx.ok) {
     return (
-      <section className="section-pad">
-        <div className="container-site max-w-md">
+      <section className="pb-16 pt-[calc(5.5rem+env(safe-area-inset-top,0px))] md:pb-24 md:pt-28">
+        <div className="container-site">
+          <div className="mx-auto max-w-md">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-slate">Admin</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
           {ctx.reason === "not_configured" ? (
@@ -659,6 +660,7 @@ export default async function AdminConsolePage({
               <SignInForm next="/admin" />
             </>
           )}
+          </div>
         </div>
       </section>
     );
