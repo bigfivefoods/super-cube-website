@@ -4,11 +4,14 @@
 
 Built in `src/lib/csp.ts`, sent on every page by `next.config.ts`.
 
-- `CSP_MODE` is read **at build time**: `report-only` (default) or `enforce`.
+- **Enforced** since stage 8b. Report-only ran first (PR #20): the full local suite with
+  CSP enforced, a 23-page production crawl and the production logs showed no
+  violations. `CSP_MODE=report-only` (read **at build time**) falls back to
+  report-only without a code change.
 - Violations are POSTed to `/api/csp-report` and logged as `[csp] {…}` lines in
   the Vercel runtime logs (query strings stripped, nothing stored).
 - Allowed hosts: this site; the Supabase project (https + wss); Google
-  Analytics/Tag Manager; Sentry CDN and ingest; Vercel Live (previews);
+  Analytics/Tag Manager (`*.googletagmanager.com`, `*.google-analytics.com`, `*.analytics.google.com`, per Google's GA4 guidance); Sentry CDN and ingest; Vercel Live (previews);
   YouTube/Vimeo frames; `NEXT_PUBLIC_VIDEO_CDN` and
   `NEXT_PUBLIC_FOUNDER_VIDEO_URL` origins when set. Forms may post only here
   and to `checkout.paystack.com`; the Paystack redirect itself is a normal
@@ -36,7 +39,7 @@ fallback. If the limiter itself fails, requests are allowed through.
 
 | Bucket | Limit | Keyed by |
 | --- | --- | --- |
-| admin sign-in (newsletter/admin console) | 5 / 15 min | IP and email |
+| admin sign-in (newsletter/admin console) | 5 / 15 min per email from one IP, 20 / 15 min per IP | IP+email, IP (never email alone, so the admin can't be locked out remotely) |
 | auth callback | 30 / 10 min | IP |
 | checkout initialise | 20 / 10 min | IP |
 | contact, newsletter | 5, 10 / 10 min | IP |

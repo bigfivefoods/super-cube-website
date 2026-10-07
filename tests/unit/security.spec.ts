@@ -2,10 +2,16 @@ import { expect, test } from "@playwright/test";
 import { buildCsp, cspHeaders, cspMode } from "../../src/lib/csp";
 import { clientIp, hashKey, memoryHit } from "../../src/lib/server/rate-limit";
 
-test("CSP defaults to report-only and switches to enforce", () => {
-  expect(cspMode({})).toBe("report-only");
-  expect(cspHeaders({})[0].key).toBe("Content-Security-Policy-Report-Only");
-  expect(cspHeaders({ CSP_MODE: "enforce" })[0].key).toBe("Content-Security-Policy");
+test("CSP is enforced by default and can fall back to report-only", () => {
+  expect(cspMode({})).toBe("enforce");
+  expect(cspHeaders({})[0].key).toBe("Content-Security-Policy");
+  expect(cspHeaders({ CSP_MODE: "report-only" })[0].key).toBe("Content-Security-Policy-Report-Only");
+});
+
+test("CSP allows GA4 (Google's documented hosts)", () => {
+  const csp = buildCsp({});
+  expect(csp).toMatch(/script-src [^;]*https:\/\/\*\.googletagmanager\.com/);
+  expect(csp).toMatch(/connect-src [^;]*https:\/\/\*\.google-analytics\.com[^;]*https:\/\/\*\.analytics\.google\.com[^;]*https:\/\/\*\.googletagmanager\.com/);
 });
 
 test("CSP lists the Supabase project and optional video hosts, nothing else", () => {

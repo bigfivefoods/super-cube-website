@@ -20,10 +20,12 @@ export async function signInAction(
   const email = String(form.get("email") ?? "");
   const password = String(form.get("password") ?? "");
   if (!email || !password) return { error: "Enter your email and password." };
-  // Slow down password guessing: per IP and per email address.
+  // Slow down password guessing: 5 tries per address from one IP, 20 per IP.
+  // Not per address alone, so nobody can lock the admin out from elsewhere.
   const ip = clientIp(await headers());
-  const limit = await hit("admin-signin", [`ip:${ip}`, `email:${email.trim().toLowerCase()}`]);
-  if (!limit.allowed) return { error: "Too many sign-in attempts. Please wait 15 minutes and try again." };
+  const perPair = await hit("admin-signin", [`ip-email:${ip}:${email.trim().toLowerCase()}`]);
+  const perIp = perPair.allowed ? await hit("admin-signin-ip", [`ip:${ip}`]) : perPair;
+  if (!perPair.allowed || !perIp.allowed) return { error: "Too many sign-in attempts. Please wait 15 minutes and try again." };
   const res = await verifyAdminPassword(email, password);
   if (!res.ok) return { error: res.error };
   const value = makeSessionValue(res.email);

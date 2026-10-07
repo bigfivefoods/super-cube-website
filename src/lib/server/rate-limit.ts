@@ -19,6 +19,7 @@ export type RateRule = { limit: number; windowSec: number };
 export const RATE_RULES = {
   "auth-callback": { limit: 30, windowSec: 600 },
   "admin-signin": { limit: 5, windowSec: 900 },
+  "admin-signin-ip": { limit: 20, windowSec: 900 },
   checkout: { limit: 20, windowSec: 600 },
   "org-join": { limit: 10, windowSec: 600 },
   "guardian-consent": { limit: 10, windowSec: 3600 },
