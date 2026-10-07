@@ -4,6 +4,8 @@ import { formatDateZA } from "@/lib/datetime";
 import { resolveShare, type ResolvedShare } from "@/lib/lms/server/share-links";
 import type { ShareView } from "@/lib/lms/share";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { headers } from "next/headers";
+import { clientIp, hit } from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +34,11 @@ const NOTICES: Record<Exclude<ResolvedShare["state"], "ok">, { title: string; bo
 
 export default async function SharedReportPage({ params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const result = await resolveShare(createAdminClient(), safeDecode(token));
+  // Tokens are unguessable; this just stops anyone hammering the lookup.
+  const limit = await hit("share-view", [`ip:${clientIp(await headers())}`]);
+  const result: ResolvedShare = limit.allowed
+    ? await resolveShare(createAdminClient(), safeDecode(token))
+    : { state: "unavailable" };
 
   if (result.state !== "ok") {
     const n = NOTICES[result.state];

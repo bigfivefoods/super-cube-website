@@ -13,6 +13,7 @@ import {
 } from "@/lib/lms/server/share-links";
 import { DEFAULT_SHARE_DAYS, SHARE_LINK_DAYS, shareLinkPath } from "@/lib/lms/share";
 import { getProgramme } from "@/lib/programmes";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -38,6 +39,8 @@ export async function GET() {
 export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
+  const limited = await limitRequest(request, "shares", [`user:${ctx.user.id}`]);
+  if (limited) return limited;
 
   let body: { programmeId?: string; days?: number; label?: string; showName?: boolean };
   try {

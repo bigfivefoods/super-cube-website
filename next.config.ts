@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { cspHeaders } from "./src/lib/csp";
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -9,6 +10,7 @@ const securityHeaders = [
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=()",
   },
+  ...cspHeaders(),
 ];
 
 const nextConfig: NextConfig = {

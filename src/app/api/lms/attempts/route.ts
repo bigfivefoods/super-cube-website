@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { loadLearning } from "@/lib/lms/server/learning";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 /**
  * Submit an assessment. Scoring happens HERE, never in the browser.
@@ -15,6 +16,8 @@ import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
+  const limited = await limitRequest(request, "attempts", [`user:${ctx.user.id}`]);
+  if (limited) return limited;
 
   let body: { phase?: string; programmeId?: string; responses?: Record<string, unknown>; meta?: AttemptMetaInput };
   try {

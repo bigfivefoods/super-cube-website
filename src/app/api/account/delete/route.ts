@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/lms/server/context";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 /**
  * POPIA "delete my data": removes the signed-in learner's account and all learning
@@ -13,6 +14,8 @@ import { requireUser } from "@/lib/lms/server/context";
 export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
+  const limited = await limitRequest(request, "account-delete", [`user:${ctx.user.id}`]);
+  if (limited) return limited;
 
   const body = (await request.json().catch(() => ({}))) as { confirm?: string };
   if (body.confirm !== "DELETE") {

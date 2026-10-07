@@ -1,6 +1,7 @@
 "use server";
 
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
+import { clientIp, hit } from "@/lib/server/rate-limit";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { newsletterDb } from "@/lib/newsletter/db";
@@ -19,6 +20,10 @@ export async function signInAction(
   const email = String(form.get("email") ?? "");
   const password = String(form.get("password") ?? "");
   if (!email || !password) return { error: "Enter your email and password." };
+  // Slow down password guessing: per IP and per email address.
+  const ip = clientIp(await headers());
+  const limit = await hit("admin-signin", [`ip:${ip}`, `email:${email.trim().toLowerCase()}`]);
+  if (!limit.allowed) return { error: "Too many sign-in attempts. Please wait 15 minutes and try again." };
   const res = await verifyAdminPassword(email, password);
   if (!res.ok) return { error: res.error };
   const value = makeSessionValue(res.email);

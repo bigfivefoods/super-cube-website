@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { CONSENT_TEXT_VERSION } from "@/lib/lms/consent";
 import { requireUser } from "@/lib/lms/server/context";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 /**
  * Record a parent/guardian's consent for a learner under 18 (POPIA s35).
@@ -9,6 +10,8 @@ import { requireUser } from "@/lib/lms/server/context";
 export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
+  const limited = await limitRequest(request, "guardian-consent", [`user:${ctx.user.id}`]);
+  if (limited) return limited;
 
   const b = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   if (b.withdraw === true) {

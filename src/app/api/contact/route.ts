@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isNonProductionDeploy } from "@/lib/deploy-env";
 import { newsletterDb } from "@/lib/newsletter/db";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 type Body = {
   name?: string;
@@ -22,6 +23,8 @@ type Body = {
  * submissions never reach real people.
  */
 export async function POST(req: Request) {
+  const limited = await limitRequest(req, "contact");
+  if (limited) return limited;
   let body: Body;
   try {
     body = (await req.json()) as Body;
