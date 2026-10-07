@@ -80,7 +80,8 @@ export async function NewsTab({ edit, done }: { edit?: string; done?: string }) 
         </Link>
       </div>
       <p className="mt-2 max-w-3xl text-sm text-slate">
-        Write a post, preview it, then publish it to <Link href="/news" className={linkCls}>/news</Link>. Publishing never emails anyone.
+        Write a post, preview it, then publish it to <Link href="/news" className={linkCls}>/news</Link>. Publishing never emails anyone: to email a post to subscribers, use{" "}
+        <Link href="/newsletter/admin?tab=campaigns" className={linkCls}>Campaigns</Link>.
       </p>
       {error && (
         <p className="mt-4 rounded-xl border border-line bg-elevated p-4 text-sm text-ink" role="alert">{error}</p>

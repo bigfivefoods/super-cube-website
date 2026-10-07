@@ -27,6 +27,7 @@ export const RATE_RULES = {
   newsletter: { limit: 10, windowSec: 600 },
   "newsletter-email": { limit: 3, windowSec: 3600 },
   "newsletter-confirm": { limit: 20, windowSec: 600 },
+  "newsletter-campaign-test": { limit: 10, windowSec: 3600 },
   "account-delete": { limit: 5, windowSec: 3600 },
   attempts: { limit: 30, windowSec: 600 },
   "attempts-claim": { limit: 10, windowSec: 600 },

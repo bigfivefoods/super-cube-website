@@ -5,9 +5,12 @@ import { SignInForm } from "./SignInForm";
 import { signOutAction, toggleHandledAction } from "./actions";
 import { EnquiriesTab, type Enquiry } from "./EnquiriesTab";
 import { NewsTab } from "./NewsTab";
+import { CampaignsTab } from "./CampaignsTab";
 import { NEWSLETTER_TABLE, newsletterDb, subscriberStatus, type Subscriber } from "@/lib/newsletter/db";
 
 export const dynamic = "force-dynamic";
+/** Campaign batches send ~40 emails per action (paced for the provider's rate limit). */
+export const maxDuration = 60;
 
 export const metadata: Metadata = {
   title: { absolute: "Super-Cube® admin" },
@@ -26,10 +29,11 @@ function fmt(iso: string | null) {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string; edit?: string; done?: string }>;
+  searchParams: Promise<{ tab?: string; edit?: string; done?: string; id?: string }>;
 }) {
-  const { tab: tabParam, edit, done } = await searchParams;
-  const tab = tabParam === "subscribers" ? "subscribers" : tabParam === "news" ? "news" : "enquiries";
+  const { tab: tabParam, edit, done, id } = await searchParams;
+  const tab =
+    tabParam === "subscribers" || tabParam === "news" || tabParam === "campaigns" ? tabParam : "enquiries";
   const admin = await getNewsletterAdmin();
   if (!admin.ok) {
     return (
@@ -50,8 +54,8 @@ export default async function AdminPage({
   let rows: Subscriber[] = [];
   let enquiries: Enquiry[] = [];
   let error: string | null = null;
-  if (tab === "news") {
-    // NewsTab loads its own data (and reports a missing store itself).
+  if (tab === "news" || tab === "campaigns") {
+    // These tabs load their own data (and report a missing store themselves).
   } else if (!db) error = "The store isn’t configured (Supabase URL / service role key).";
   else if (tab === "subscribers") {
     const res = await db
@@ -100,6 +104,9 @@ export default async function AdminPage({
           <Link href="/newsletter/admin?tab=news" className={tabCls(tab === "news")} aria-current={tab === "news" ? "page" : undefined}>
             News posts
           </Link>
+          <Link href="/newsletter/admin?tab=campaigns" className={tabCls(tab === "campaigns")} aria-current={tab === "campaigns" ? "page" : undefined}>
+            Campaigns
+          </Link>
           <Link href="/admin" className={tabCls(false)}>
             Learning admin →
           </Link>
@@ -107,6 +114,8 @@ export default async function AdminPage({
 
         {tab === "news" ? (
           <NewsTab edit={edit} done={done} />
+        ) : tab === "campaigns" ? (
+          <CampaignsTab id={id} done={done} adminEmail={admin.email} />
         ) : tab === "enquiries" ? (
           error ? (
             <p className="mt-6 rounded-xl border border-line bg-elevated p-4 text-sm text-ink" role="alert">{error}</p>
