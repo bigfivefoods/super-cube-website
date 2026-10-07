@@ -61,6 +61,7 @@ export const menuMoreNav = [
   { href: "/sample-report", label: "Sample report" },
   { href: "/about", label: "About" },
   { href: "/insights", label: "Insights" },
+  { href: "/news", label: "News" },
   { href: "/faq", label: "FAQ" },
   { href: "/contact", label: "Contact" },
 ] as const;

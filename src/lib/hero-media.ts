@@ -103,4 +103,16 @@ export const darkHeroPaths = [
   "/schools",
   "/speaking",
   "/pilot-pack",
+  "/news",
 ] as const;
+
+/** Path prefixes whose pages all open on a dark media hero (every /news/<post>, incl. its 404). */
+export const darkHeroPrefixes = ["/news/"] as const;
+
+/** True when the fixed header and breadcrumbs sit over a dark media hero on this page. */
+export function isDarkHeroPath(path: string): boolean {
+  return (
+    (darkHeroPaths as readonly string[]).includes(path) ||
+    darkHeroPrefixes.some((p) => path.startsWith(p) && path.length > p.length)
+  );
+}

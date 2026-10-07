@@ -47,6 +47,7 @@ const en = {
   "nav.impact": "Impact",
   "nav.practices": "Practices",
   "nav.insights": "Insights",
+  "nav.news": "News",
   "nav.pilotPack": "Pilot pack",
   "nav.facilitator": "Facilitator kit",
   "nav.team": "Team cube",

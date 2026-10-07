@@ -6,7 +6,7 @@
  * not in the map (404s, private or app routes) gets no breadcrumbs at all.
  */
 import { site } from "@/lib/content";
-import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
+import { isDarkHeroPath, lightHeroPaths } from "@/lib/hero-media";
 import type { I18nKey } from "@/lib/i18n";
 import { getInsight } from "@/lib/insights";
 
@@ -47,6 +47,7 @@ export const routeLabels: Record<string, RouteLabel> = {
   },
   "/about": { label: "About", i18n: "nav.about" },
   "/insights": { label: "Insights", i18n: "nav.insights" },
+  "/news": { label: "News", i18n: "nav.news" },
 
   // Help, legal and account
   "/faq": { label: "FAQ", i18n: "nav.faq" },
@@ -71,9 +72,14 @@ function normalise(pathname: string) {
   return p.length > 1 ? p.replace(/\/+$/, "") : p;
 }
 
-function resolve(path: string): RouteLabel | null {
+function resolve(path: string, leafLabel?: string): RouteLabel | null {
   const known = routeLabels[path];
   if (known) return known;
+
+  // News posts: the post page passes its title (posts can come from the database).
+  if (/^\/news\/[^/]+$/.test(path)) {
+    return leafLabel ? { label: leafLabel, parent: "/news" } : null;
+  }
 
   const insight = path.match(/^\/insights\/([^/]+)$/);
   if (insight) {
@@ -86,13 +92,16 @@ function resolve(path: string): RouteLabel | null {
   return null;
 }
 
-/** Full trail starting at Home, or null when the page gets no breadcrumbs. */
-export function breadcrumbTrail(pathname: string): Crumb[] | null {
+/**
+ * Full trail starting at Home, or null when the page gets no breadcrumbs.
+ * `leafLabel` names the current page when the map can't (a News post's title).
+ */
+export function breadcrumbTrail(pathname: string, leafLabel?: string): Crumb[] | null {
   const path = normalise(pathname);
   if (path === "/") return null;
   if (excludedPrefixes.some((p) => path === p || path.startsWith(`${p}/`))) return null;
 
-  const leaf = resolve(path);
+  const leaf = resolve(path, leafLabel);
   if (!leaf) return null;
 
   const trail: Crumb[] = [{ href: path, label: leaf.label, i18n: leaf.i18n }];
@@ -125,7 +134,7 @@ export function breadcrumbJsonLd(trail: Crumb[]) {
 /** What the breadcrumb row sits on, so it can match the hero's text colour. */
 export function breadcrumbTone(pathname: string): "dark" | "light" | "plain" {
   const path = normalise(pathname);
-  if ((darkHeroPaths as readonly string[]).includes(path)) return "dark";
+  if (isDarkHeroPath(path)) return "dark";
   if ((lightHeroPaths as readonly string[]).includes(path)) return "light";
   return "plain";
 }

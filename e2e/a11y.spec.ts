@@ -65,6 +65,8 @@ const PAGES = [
   "/learn/report",
   "/learn/courses/choices/not-a-session",
   "/share/report/not-a-real-token",
+  "/news",
+  "/news/super-cube-lms-accelerating-leadership-development",
 ];
 
 for (const [tag, viewport] of [

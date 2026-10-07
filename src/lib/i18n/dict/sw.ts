@@ -51,6 +51,7 @@ const sw: Dict = {
   "nav.impact": "Matokeo",
   "nav.practices": "Mazoezi",
   "nav.insights": "Makala",
+  "nav.news": "Habari",
   "nav.pilotPack": "Kifurushi cha majaribio",
   "nav.facilitator": "Kifaa cha mwezeshaji",
   "nav.team": "Mchemraba wa timu",

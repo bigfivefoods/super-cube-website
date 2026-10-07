@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { LatestNews } from "@/components/news/LatestNews";
 import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, SectionHeading } from "@/components/ui";
@@ -322,6 +323,11 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
           </div>
         </div>
       </section>
+
+      {/* News posts are written in English: on translated home pages they carry the EN note. */}
+      <EnglishOnly note={locale === DEFAULT_LOCALE ? null : translate(dict, "lang.untranslated")}>
+        <LatestNews />
+      </EnglishOnly>
 
       <EnglishOnly note={locale === DEFAULT_LOCALE ? null : s.testimonialsNote}>
         <TestimonialsStrip />

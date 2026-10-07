@@ -53,6 +53,7 @@ const ar: Dict = {
   "nav.impact": "الأثر",
   "nav.practices": "الممارسات",
   "nav.insights": "مقالات",
+  "nav.news": "الأخبار",
   "nav.pilotPack": "حزمة البرنامج التجريبي",
   "nav.facilitator": "حقيبة الميسّر",
   "nav.team": "مكعب الفريق",
