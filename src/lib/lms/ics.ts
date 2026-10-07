@@ -73,7 +73,7 @@ export function buildPostAssessmentIcs(input: PostInviteInput): string {
     `DTSTAMP:${stamp(input.now ?? new Date())}`,
     `DTSTART;TZID=Africa/Johannesburg:${day}T090000`,
     `DTEND;TZID=Africa/Johannesburg:${day}T093000`,
-    `SUMMARY:${esc("Super-Cube re-measure: see how you've grown")}`,
+    `SUMMARY:${esc("Super-Cube® re-measure: see how you've grown")}`,
     `DESCRIPTION:${esc(
       `Your ${input.programmeName} after-programme assessment opens today. Same six faces as your baseline.\n${url}`,
     )}`,
@@ -81,7 +81,7 @@ export function buildPostAssessmentIcs(input: PostInviteInput): string {
     "TRANSP:TRANSPARENT",
     "BEGIN:VALARM",
     "ACTION:DISPLAY",
-    `DESCRIPTION:${esc("Super-Cube re-measure tomorrow")}`,
+    `DESCRIPTION:${esc("Super-Cube® re-measure tomorrow")}`,
     "TRIGGER:-PT12H",
     "END:VALARM",
     "END:VEVENT",

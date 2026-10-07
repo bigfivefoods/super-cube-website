@@ -51,7 +51,7 @@ export function CohortImpact({
 
   function downloadCsv() {
     const csv = roiCsv({ cohortName, generatedAt, faces, overall, funnel: steps });
-    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
+    const url = URL.createObjectURL(new Blob(["\uFEFF", csv], { type: "text/csv;charset=utf-8" }));
     const a = document.createElement("a");
     a.href = url;
     a.download = `super-cube-impact-${cohortCode.replace(/[^A-Za-z0-9-]/g, "") || "cohort"}.csv`;

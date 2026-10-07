@@ -258,7 +258,7 @@ export function InstallAppBanner() {
                 <div className="min-w-0 pt-0.5">
                   <p className="text-sm font-semibold text-ink">Tap Add</p>
                   <p className="mt-0.5 text-[0.8125rem] text-slate">
-                    Confirm the name “Super-Cube Learn”, then open it from your
+                    Confirm the name “Super-Cube® Learn”, then open it from your
                     Home Screen anytime.
                   </p>
                 </div>

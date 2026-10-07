@@ -57,7 +57,7 @@ export async function POST(request: Request) {
             ${
               code
                 ? `<p><strong>Learner code: ${code}</strong><br/>Share this code with learners (Learn → Org). Create coach invites from Learn → Coach.</p>`
-                : `<p>We could not auto-create a cohort because no Super-Cube account matches this payment. Sign in, then contact hello@super-cube.me with reference ${reference}.</p>`
+                : `<p>We could not auto-create a cohort because no Super-Cube® account matches this payment. Sign in, then contact hello@super-cube.me with reference ${reference}.</p>`
             }
             <p>Seats: ${f.seats} · Amount: ${data.currency} ${amountMajor}<br/>Reference: ${reference}</p>
             <p><a href="${siteUrl}/learn/coach">Open coach tools →</a></p>

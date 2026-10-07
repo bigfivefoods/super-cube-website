@@ -284,7 +284,7 @@ export default function AssessmentRunnerPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             <Link href="/learn/courses" className="learn-btn learn-btn-primary">Continue sessions</Link>
             {existingPre && gate?.daysRemaining ? (
-              <AddToCalendar preCompletedAt={existingPre.completedAt} programmeName={programme?.name ?? "Super-Cube"} />
+              <AddToCalendar preCompletedAt={existingPre.completedAt} programmeName={programme?.name ?? "Super-Cube®"} />
             ) : null}
             {!paid && <Link href="/pricing" className="learn-btn learn-btn-ghost">View pricing</Link>}
           </div>

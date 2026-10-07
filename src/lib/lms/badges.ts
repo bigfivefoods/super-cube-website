@@ -14,12 +14,12 @@ export const BADGE_IDS = [
 export type BadgeId = (typeof BADGE_IDS)[number];
 
 export const BADGES: Record<BadgeId, { name: string; criteria: string; mark: string }> = {
-  "first-session": { name: "First session", criteria: "Completed a first Super-Cube session.", mark: "1" },
+  "first-session": { name: "First session", criteria: "Completed a first Super-Cube® session.", mark: "1" },
   "baseline-set": { name: "Baseline set", criteria: "Measured a starting profile across all six faces.", mark: "B" },
   "streak-3": { name: "3-day streak", criteria: "Practised, checked in or learned on 3 days in a row.", mark: "3" },
   "streak-7": { name: "7-day streak", criteria: "Practised, checked in or learned on 7 days in a row.", mark: "7" },
   "streak-30": { name: "30-day streak", criteria: "Practised, checked in or learned on 30 days in a row.", mark: "30" },
-  "face-complete": { name: "Face complete", criteria: "Finished every session of one Super-Cube face.", mark: "F" },
+  "face-complete": { name: "Face complete", criteria: "Finished every session of one Super-Cube® face.", mark: "F" },
   "pathway-complete": { name: "Pathway complete", criteria: "Took the after-programme re-measure to see growth.", mark: "✓" },
 };
 

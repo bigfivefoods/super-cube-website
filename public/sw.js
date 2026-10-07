@@ -90,7 +90,7 @@ self.addEventListener("fetch", (event) => {
           if (cached) return cached;
           return (
             (await caches.match("/learn")) ||
-            new Response("You are offline. Open Super-Cube Learn when back online.", {
+            new Response("You are offline. Open Super-Cube® Learn when back online.", {
               status: 503,
               headers: { "Content-Type": "text/plain" },
             })
@@ -108,7 +108,7 @@ self.addEventListener("push", (event) => {
   } catch {
     data = { body: event.data ? event.data.text() : "" };
   }
-  const title = data.title || "Super-Cube";
+  const title = data.title || "Super-Cube®";
   const url = typeof data.url === "string" && data.url.startsWith("/") ? data.url : "/learn";
   event.waitUntil(
     self.registration.showNotification(title, {

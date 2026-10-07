@@ -9,7 +9,7 @@ import { NEWSLETTER_TABLE, newsletterDb, type Subscriber } from "@/lib/newslette
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Super-Cube admin" },
+  title: { absolute: "Super-Cube® admin" },
   robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
 };
 
@@ -35,7 +35,7 @@ export default async function AdminPage({
       <section className="section-pad">
         <div className="container-site max-w-md">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">Admin</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube® admin</h1>
           <p className="mt-2 text-sm text-slate">
             Sign in with your Super-Cube® account. Only approved admin emails can open this page.
           </p>
@@ -77,7 +77,7 @@ export default async function AdminPage({
     <section className="section-pad">
       <div className="container-site">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">Admin</p>
-        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
+        <h1 className="mt-1 text-3xl font-semibold tracking-tight text-ink">Super-Cube® admin</h1>
         <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-slate">
           <p>Signed in as {admin.email}. Times in SAST.</p>
           <form action={signOutAction}>

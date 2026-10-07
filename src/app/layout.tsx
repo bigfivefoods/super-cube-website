@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   applicationName: "Super-Cube® Learn",
   appleWebApp: {
     capable: true,
-    title: "Super-Cube Learn",
+    title: "Super-Cube® Learn",
     statusBarStyle: "default",
   },
   icons: {

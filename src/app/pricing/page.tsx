@@ -252,7 +252,7 @@ export default function PricingPage() {
                 <a
                   href={
                     process.env.NEXT_PUBLIC_PILOT_CALENDAR_URL?.trim() ||
-                    "mailto:hello@super-cube.me?subject=Book%20a%20Super-Cube%20pilot"
+                    "mailto:hello@super-cube.me?subject=Book%20a%20Super-Cube%C2%AE%20pilot"
                   }
                   onClick={() => track("pilot_click", { source: "pricing" })}
                   className="inline-flex min-h-11 items-center text-sm font-semibold text-ink underline-offset-2 hover:underline"

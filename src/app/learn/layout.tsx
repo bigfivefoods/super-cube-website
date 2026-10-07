@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Super-Cube Learn",
+    title: "Super-Cube® Learn",
   },
   formatDetection: {
     telephone: false,

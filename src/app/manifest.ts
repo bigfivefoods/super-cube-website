@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     id: "/learn",
     name: "Super-Cube® Learn",
-    short_name: "Super-Cube",
+    short_name: "Super-Cube®",
     description:
       "Human-centric leadership development—orient, assess, learn the six faces, re-measure, and download your growth report.",
     start_url: "/learn",

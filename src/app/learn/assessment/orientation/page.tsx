@@ -332,7 +332,7 @@ export default function OrientationAssessmentPage() {
             value={responses.knownExamples}
             onChange={(e) => patch("knownExamples", e.target.value)}
             rows={3}
-            placeholder="e.g. servant leadership, transformational theory, Super-Cube…"
+            placeholder="e.g. servant leadership, transformational theory, Super-Cube®…"
             className="learn-input mt-3 resize-y"
           />
         </section>

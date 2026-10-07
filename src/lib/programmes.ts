@@ -55,7 +55,7 @@ export const programmes: Programme[] = [
     ageMax: 12,
     tagline: "Growing character, curiosity, and kindness.",
     description:
-      "A guided Super-Cube journey for younger learners—simple language, stories, play-based practice, and parent/teacher support. Builds the six faces of leadership as everyday strengths.",
+      "A guided Super-Cube® journey for younger learners—simple language, stories, play-based practice, and parent/teacher support. Builds the six faces of leadership as everyday strengths.",
     audienceNote: "Ideal for parents, schools, and after-school programmes.",
     tone: "playful, visual, short sessions",
     sortOrder: 1,
@@ -86,7 +86,7 @@ export const programmes: Programme[] = [
     ageMax: 99,
     tagline: "Human-centric leadership for work and life.",
     description:
-      "The full professional Super-Cube pathway: pre-assessment, six construct courses, deliberate practice, post-assessment, and a personal development report for workplace leaders.",
+      "The full professional Super-Cube® pathway: pre-assessment, six construct courses, deliberate practice, post-assessment, and a personal development report for workplace leaders.",
     audienceNote: "Ideal for professionals, managers, and high-potentials.",
     tone: "professional, evidence-informed, workplace-applied",
     sortOrder: 3,

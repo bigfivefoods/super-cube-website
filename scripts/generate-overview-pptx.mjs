@@ -302,7 +302,7 @@ async function main() {
   pptx.author = "Craig Ross Muller";
   pptx.title = "Super-Cube® Overview";
   pptx.subject = "Human-centric leadership developed from the core outward";
-  pptx.company = "Super-Cube";
+  pptx.company = "Super-Cube®";
 
   let page = 0;
   const nextPage = () => ++page;
