@@ -1,14 +1,27 @@
 /**
- * Coach-shareable growth report tokens (client-side, no secrets).
- * Token encodes a compact growth snapshot; anyone with the link can view.
+ * Growth-report share links (Phase 1 · Stage 3).
+ *
+ * Links are created by the server: the URL holds a random token only, and the
+ * scores are read from the server when the link is opened. Links expire and
+ * the learner can revoke them. Journals and answers are never shared.
+ *
+ * Older builds put the whole score snapshot (base64 JSON) into the URL. Those
+ * links are recognised and shown a friendly "this link format has retired"
+ * page; their contents are never displayed.
  */
 
-import type { ConstructId } from "@/lib/content";
-import { constructs } from "@/lib/content";
-import type { LocalAttempt, LocalLmsState } from "@/lib/lms/store";
-import { getProgramme } from "@/lib/programmes";
+import { constructs, type ConstructId } from "@/lib/content";
+import type { ConstructScore } from "@/lib/lms/scoring";
 
-export type ShareConstructScore = {
+/** Expiry choices offered to learners (days). */
+export const SHARE_LINK_DAYS = [7, 30, 90] as const;
+export type ShareLinkDays = (typeof SHARE_LINK_DAYS)[number];
+export const DEFAULT_SHARE_DAYS: ShareLinkDays = 30;
+
+/** New tokens: 32 random bytes, base64url (43 chars). */
+export const SHARE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
+
+export type ShareConstructRow = {
   id: ConstructId;
   name: string;
   pre: number;
@@ -16,138 +29,76 @@ export type ShareConstructScore = {
   delta: number | null;
 };
 
-export type ReportSharePayload = {
-  v: 1;
-  name: string;
+/** What a share-link viewer sees. Built on the server from stored attempts. */
+export type ShareView = {
+  name: string | null;
   programmeName: string;
-  programmeId?: string;
   preOverall: number;
   postOverall: number | null;
   growth: number | null;
-  constructs: ShareConstructScore[];
-  completedAt: string;
-  certificateId?: string;
-  orgCode?: string;
+  constructs: ShareConstructRow[];
+  snapshotAt: string;
+  certificateId: string | null;
+  expiresAt: string;
 };
 
-function b64urlEncode(str: string): string {
-  if (typeof window === "undefined") {
-    return Buffer.from(str, "utf8")
-      .toString("base64")
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
-  }
-  const bytes = new TextEncoder().encode(str);
-  let bin = "";
-  bytes.forEach((b) => {
-    bin += String.fromCharCode(b);
-  });
-  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
+/** A learner's link as listed in their report (never includes the token). */
+export type ShareLinkSummary = {
+  id: string;
+  label: string | null;
+  showName: boolean;
+  createdAt: string;
+  expiresAt: string;
+  revokedAt: string | null;
+  viewCount: number;
+  lastViewedAt: string | null;
+  status: "active" | "expired" | "revoked";
+};
 
-function b64urlDecode(token: string): string {
-  const pad = token.length % 4 === 0 ? "" : "=".repeat(4 - (token.length % 4));
-  const b64 = token.replace(/-/g, "+").replace(/_/g, "/") + pad;
-  if (typeof window === "undefined") {
-    return Buffer.from(b64, "base64").toString("utf8");
-  }
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return new TextDecoder().decode(bytes);
-}
+const round1 = (n: number) => Math.round(n * 10) / 10;
 
-export function buildReportSharePayload(
-  state: LocalLmsState
-): ReportSharePayload | null {
-  const pre = state.attempts.find((a) => a.phase === "pre");
-  if (!pre) return null;
-  const post = state.attempts.find((a) => a.phase === "post") as
-    | LocalAttempt
-    | undefined;
-  const programmeId =
-    post?.programmeId ||
-    pre.programmeId ||
-    state.subscription?.programmeId ||
-    state.user?.programmeId;
-  const programme = programmeId ? getProgramme(programmeId) : undefined;
-
-  const constructScores: ShareConstructScore[] = constructs.map((c) => {
-    const preS =
-      pre.result.constructScores.find((s) => s.constructId === c.id)
-        ?.score ?? 0;
-    const postS = post?.result.constructScores.find(
-      (s) => s.constructId === c.id
-    )?.score;
+export function shareRows(pre: ConstructScore[], post: ConstructScore[] | null): ShareConstructRow[] {
+  return constructs.map((c) => {
+    const preS = pre.find((s) => s.constructId === c.id)?.score ?? 0;
+    const postS = post?.find((s) => s.constructId === c.id)?.score;
     return {
       id: c.id,
       name: c.name,
-      pre: Math.round(preS * 10) / 10,
-      post: postS != null ? Math.round(postS * 10) / 10 : null,
-      delta:
-        postS != null ? Math.round((postS - preS) * 10) / 10 : null,
+      pre: round1(preS),
+      post: postS != null ? round1(postS) : null,
+      delta: postS != null ? round1(postS - preS) : null,
     };
   });
-
-  const growth =
-    post != null
-      ? Math.round((post.result.overall - pre.result.overall) * 10) / 10
-      : null;
-
-  return {
-    v: 1,
-    name:
-      state.user?.fullName?.trim() ||
-      state.user?.email?.trim() ||
-      "Super-Cube® Learner",
-    programmeName: programme?.name ?? "Super-Cube®",
-    programmeId,
-    preOverall: Math.round(pre.result.overall * 10) / 10,
-    postOverall:
-      post != null ? Math.round(post.result.overall * 10) / 10 : null,
-    growth,
-    constructs: constructScores,
-    completedAt: post?.completedAt ?? pre.completedAt,
-    certificateId: serverCertificateId(state),
-    orgCode: state.orgCode,
-  };
 }
 
-export function encodeShareToken(payload: ReportSharePayload): string {
-  return b64urlEncode(JSON.stringify(payload));
+export function linkStatus(
+  l: { expires_at: string; revoked_at: string | null },
+  now = Date.now(),
+): ShareLinkSummary["status"] {
+  if (l.revoked_at) return "revoked";
+  return Date.parse(l.expires_at) <= now ? "expired" : "active";
 }
 
-export function decodeShareToken(token: string): ReportSharePayload | null {
+/** True for the retired "scores in the URL" format (base64url JSON with v:1). */
+export function isLegacyShareToken(token: string): boolean {
+  if (!token || SHARE_TOKEN_RE.test(token) || token.length < 24) return false;
   try {
-    const raw = b64urlDecode(token);
-    const data = JSON.parse(raw) as ReportSharePayload;
-    if (!data || data.v !== 1 || typeof data.preOverall !== "number") {
-      return null;
-    }
-    return data;
+    const pad = token.length % 4 === 0 ? "" : "=".repeat(4 - (token.length % 4));
+    const b64 = token.replace(/-/g, "+").replace(/_/g, "/") + pad;
+    const raw =
+      typeof window === "undefined"
+        ? Buffer.from(b64, "base64").toString("utf8")
+        : new TextDecoder().decode(Uint8Array.from(atob(b64), (ch) => ch.charCodeAt(0)));
+    const data = JSON.parse(raw) as { v?: unknown };
+    return data?.v === 1;
   } catch {
-    return null;
+    return false;
   }
 }
 
-export function shareReportUrl(token: string): string {
-  const base =
-    typeof window !== "undefined"
-      ? window.location.origin
-      : process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me";
-  return `${base}/share/report/${token}`;
+export function shareLinkPath(token: string): string {
+  return `/share/report/${token}`;
 }
 
 /** Server-issued certificate ids look like SC-YYYYMMDD-XXXXXXXXXX (10 hex). */
 export const SERVER_CERT_ID_RE = /^SC-\d{8}-[0-9A-F]{10}$/;
-
-/**
- * The learner's certificate id, but only if it was issued by the server
- * (/api/certificates/issue). Old builds made ids in the browser that could
- * never be verified; those are ignored.
- */
-export function serverCertificateId(state: LocalLmsState): string | undefined {
-  const id = state.certificateId;
-  return id && SERVER_CERT_ID_RE.test(id) ? id : undefined;
-}

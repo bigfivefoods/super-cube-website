@@ -6,11 +6,9 @@ import { useSearchParams } from "next/navigation";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs } from "@/lib/content";
 import { track } from "@/lib/analytics";
-import {
-  buildReportSharePayload,
-  encodeShareToken,
-  shareReportUrl,
-} from "@/lib/lms/share";
+import { ShareLinksPanel } from "@/components/learn/ShareLinksPanel";
+import { isMinorProfile } from "@/lib/lms/consent";
+import type { ProgrammeId } from "@/lib/programmes";
 import {
   loadLmsState,
   setOrgCode,
@@ -62,9 +60,6 @@ export default function CoachToolsPage() {
 function CoachToolsInner() {
   const searchParams = useSearchParams();
   const [state, setState] = useState<LocalLmsState | null>(null);
-  const [link, setLink] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [roster, setRoster] = useState<RosterRow[]>([]);
   const [orgName, setOrgName] = useState<string | null>(null);
@@ -168,38 +163,7 @@ function CoachToolsInner() {
     loadRoster(j.org.code);
   }
 
-  function createShare() {
-    const s = state ?? loadLmsState();
-    const payload = buildReportSharePayload(s);
-    if (!payload) {
-      setError("Complete at least the baseline assessment to share growth.");
-      setLink(null);
-      return;
-    }
-    // Only a server-issued certificate id is shared (buildReportSharePayload).
-    setError(null);
-    const token = encodeShareToken(payload);
-    const url = shareReportUrl(token);
-    setLink(url);
-    track("report_share", {
-      hasPost: payload.postOverall != null,
-      orgCode: payload.orgCode ?? "",
-    });
-  }
-
-  async function copy() {
-    if (!link) return;
-    try {
-      await navigator.clipboard.writeText(link);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      setCopied(false);
-    }
-  }
-
   const pre = state?.attempts.find((a) => a.phase === "pre");
-  const post = state?.attempts.find((a) => a.phase === "post");
 
   // Cohort pulse summary (consented snapshots only)
   const pulseStats = (() => {
@@ -283,58 +247,12 @@ function CoachToolsInner() {
       </section>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <section className="learn-card">
-          <h2 className="learn-card-title">Share this learner’s growth</h2>
-          <p className="learn-body mt-2">
-            Read-only snapshot (pre / post / construct deltas). Journals never
-            leave the device.
-          </p>
-          <ul className="mt-3 space-y-1 text-[0.75rem] text-slate">
-            <li>
-              Baseline:{" "}
-              <strong className="text-ink">
-                {pre ? pre.result.overall : "not yet"}
-              </strong>
-            </li>
-            <li>
-              Post:{" "}
-              <strong className="text-ink">
-                {post ? post.result.overall : "not yet"}
-              </strong>
-            </li>
-            <li>
-              Cohort:{" "}
-              <strong className="text-ink">{state?.orgCode || "none"}</strong>
-            </li>
-          </ul>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <button
-              type="button"
-              onClick={createShare}
-              className="learn-btn learn-btn-primary"
-            >
-              Generate share link
-            </button>
-            <Link href="/learn/report" className="learn-btn learn-btn-ghost">
-              Open full report
-            </Link>
-          </div>
-          {error && (
-            <p className="mt-3 text-[0.8125rem] text-amber-800">{error}</p>
-          )}
-          {link && (
-            <div className="mt-4 rounded-xl bg-cream-dark p-3">
-              <p className="break-all text-[0.7rem] text-slate">{link}</p>
-              <button
-                type="button"
-                onClick={copy}
-                className="mt-2 text-[0.8125rem] font-semibold text-ink"
-              >
-                {copied ? "Copied" : "Copy link"}
-              </button>
-            </div>
-          )}
-        </section>
+        <ShareLinksPanel
+          key={isMinorProfile(state?.profile) ? "minor" : "adult"}
+          programmeId={(pre?.programmeId || state?.subscription?.programmeId || state?.user?.programmeId || "adults") as ProgrammeId}
+          minor={isMinorProfile(state?.profile)}
+          hasBaseline={Boolean(pre)}
+        />
 
         <section className="learn-card">
           <h2 className="learn-card-title">Create organisation</h2>

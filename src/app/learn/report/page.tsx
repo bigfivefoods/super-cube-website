@@ -19,11 +19,9 @@ import {
 } from "@/lib/lms/scoring";
 import { issueCertificate, syncFromServer } from "@/lib/lms/cloud";
 import { depthLabel } from "@/lib/lms/orientation";
-import {
-  buildReportSharePayload,
-  encodeShareToken,
-  shareReportUrl,
-} from "@/lib/lms/share";
+import { ShareLinksPanel } from "@/components/learn/ShareLinksPanel";
+import { isMinorProfile } from "@/lib/lms/consent";
+import type { ProgrammeId } from "@/lib/programmes";
 import {
   loadLmsState,
   setCertificateMeta,
@@ -34,8 +32,6 @@ import { track } from "@/lib/analytics";
 
 export default function ReportPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
-  const [shareUrl, setShareUrl] = useState<string | null>(null);
-  const [shareCopied, setShareCopied] = useState(false);
   const [certBusy, setCertBusy] = useState(false);
   const [certNote, setCertNote] = useState<string | null>(null);
   useEffect(() => {
@@ -162,13 +158,6 @@ export default function ReportPage() {
     }
   }
 
-  function generateShare() {
-    const payload = buildReportSharePayload(liveState);
-    if (!payload) return;
-    setShareUrl(shareReportUrl(encodeShareToken(payload)));
-    track("report_share", { hasPost: post != null });
-  }
-
   return (
     <LearnShell
       title="Step 6 · See your growth report"
@@ -185,13 +174,9 @@ export default function ReportPage() {
 
         <div className="mb-4 flex flex-wrap gap-2 print:hidden">
           <DownloadReportButton state={state} pre={pre} post={post} />
-          <button
-            type="button"
-            className="learn-btn learn-btn-primary"
-            onClick={generateShare}
-          >
+          <a href="#share-growth" className="learn-btn learn-btn-primary">
             Share growth link
-          </button>
+          </a>
           <Button
             href="/learn/feedback"
             variant="ghost"
@@ -221,30 +206,6 @@ export default function ReportPage() {
             Print / PDF view
           </button>
         </div>
-
-        {shareUrl && (
-          <div className="mb-4 rounded-xl border border-line bg-elevated px-3 py-2 print:hidden">
-            <p className="text-[0.7rem] text-muted">
-              Share link (scores only — journals stay private)
-            </p>
-            <p className="mt-1 break-all text-[0.75rem] text-ink">{shareUrl}</p>
-            <button
-              type="button"
-              className="learn-btn learn-btn-ghost mt-2 !min-h-8 !text-[0.75rem]"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(shareUrl);
-                  setShareCopied(true);
-                  setTimeout(() => setShareCopied(false), 2000);
-                } catch {
-                  /* ignore */
-                }
-              }}
-            >
-              {shareCopied ? "Copied" : "Copy link"}
-            </button>
-          </div>
-        )}
 
         {!post && (
           <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
@@ -519,6 +480,15 @@ export default function ReportPage() {
             )}
           </div>
         </section>
+
+        <div id="share-growth" className="mt-4 scroll-mt-24 sm:mt-5 print:hidden">
+          <ShareLinksPanel
+            key={isMinorProfile(state.profile) ? "minor" : "adult"}
+            programmeId={(programmeId || "adults") as ProgrammeId}
+            minor={isMinorProfile(state.profile)}
+            hasBaseline={Boolean(pre)}
+          />
+        </div>
 
         <p className="learn-meta mt-5">
           This report is for developmental use within the Super-Cube® model.

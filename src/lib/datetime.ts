@@ -23,7 +23,8 @@ export function formatDateZA(v: string | number | Date | null | undefined, fallb
   const d = toDate(v);
   if (!d) return fallback;
   const p = parts(d, { day: "numeric", month: "short", year: "numeric" });
-  return `${Number(p.day)} ${p.month} ${p.year}`;
+  // Three-letter months throughout (ICU gives "Sept" for en-ZA)
+  return `${Number(p.day)} ${p.month.slice(0, 3)} ${p.year}`;
 }
 
 /** "7 Oct 2026, 09:43" in SAST. */

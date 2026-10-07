@@ -28,6 +28,15 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
+        // Private growth-report links: never index, cache or leak the token in a Referer
+        source: "/share/:path*",
+        headers: [
+          { key: "Referrer-Policy", value: "no-referrer" },
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+        ],
+      },
+      {
         source: "/icons/:path*",
         headers: [
           {
