@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMeta({
   path: "/impact",
   title: "Impact and results",
   description:
-    "Super-Cube® impact: live, consented cohort results as they arrive, alongside the research results from the UKZN doctoral study, each clearly labelled.",
+    "Super-Cube® impact: live, consented cohort results as they arrive, alongside the results of the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods, each clearly labelled.",
 });
 
 export default function ImpactPage() {
@@ -36,11 +36,11 @@ export default function ImpactPage() {
         </div>
       </section>
 
-      {/* 2. Research results */}
+      {/* 2. Intervention results (Imana Foods and Kerry Foods), not the doctoral study */}
       <ImpactResults
         eyebrow="Results · 12-week Super-Cube® leadership interventions"
         title="+32.2% overall growth across all six faces."
-        description="Aggregated pre- and post-course results from 12-week Super-Cube® leadership interventions at South African and international FMCG organisations, with the gain for each face (source: Super-Cube® company profile, Sept 2023). These are programme results, not live LMS data."
+        description="Aggregated pre- and post-course results from the 12-week Super-Cube® leadership interventions with Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face (source: Super-Cube® company profile, Sept 2023). These are programme results, not live LMS data."
       />
 
       {/* 3. Example pattern (illustrative) */}

@@ -55,11 +55,12 @@ test("every resolved arc has all eight steps and a facilitator guide", () => {
   }
 });
 
-test("no invented statistics: the only percentage is the UKZN Emotional result", () => {
+test("no invented statistics: the only percentage is the Imana Foods and Kerry Foods Emotional result", () => {
   const text = JSON.stringify(FACE_CONTENT);
   const pct = text.match(/[0-9.]+\s?%/g) ?? [];
   expect(pct.every((m) => m.replace(/\s/g, "") === "39.5%")).toBe(true);
-  expect(text).toContain("UKZN");
+  expect(text).toContain("Imana Foods and Kerry Foods");
+  expect(text).not.toContain("UKZN doctoral study");
 });
 
 test("kids sessions use short, kid-specific content (never the adult core)", () => {

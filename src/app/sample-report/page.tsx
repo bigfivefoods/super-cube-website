@@ -92,11 +92,12 @@ export default function SampleReportPage() {
             <p className="mt-1 text-sm text-slate">{SAMPLE.programme}</p>
             <p className="mt-1 text-xs text-muted">{SAMPLE.nNote}</p>
             <p className="mt-2 text-xs text-slate">
-              The measured research result is different: the UKZN doctoral
-              study reported an average Emotional improvement of{" "}
+              The measured result is different: in the 12-week Super-Cube®
+              leadership intervention with Imana Foods and Kerry Foods, the
+              average Emotional score improved by{" "}
               <strong className="text-ink">+39.5%</strong>.{" "}
               <Link href="/impact" className="font-semibold text-ink underline underline-offset-2">
-                See research results
+                See the results
               </Link>
             </p>
 

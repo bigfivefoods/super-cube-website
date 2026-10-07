@@ -170,7 +170,7 @@ const en: HomeStrings = {
   researchEmotional: "Emotional gain",
   researchOverall: "Overall growth across all six faces",
   researchNote:
-    "Aggregated pre- and post-course results, South African and international FMCG organisations. Source: Super-Cube® company profile, Sept 2023.",
+    "Aggregated pre- and post-course results from leaders at Imana Foods and Kerry Foods (South African and international FMCG), not from the doctoral study. Source: Super-Cube® company profile, Sept 2023.",
   readResearch: "Read the research and theory",
   readCaseStudy: "Read the FMCG case study",
   aboutCraig: "About Dr Craig Muller",
@@ -282,7 +282,7 @@ const fr: Draft = {
   researchEmotional: "Gain, face émotionnelle",
   researchOverall: "Croissance globale sur les six faces",
   researchNote:
-    "Résultats agrégés avant et après la formation, organisations FMCG sud-africaines et internationales. Source" + NB + ": profil d’entreprise Super-Cube®, sept. 2023.",
+    "Résultats agrégés avant et après la formation, chez des dirigeants d’Imana Foods et de Kerry Foods (FMCG, Afrique du Sud et international), et non issus de l’étude doctorale. Source" + NB + ": profil d’entreprise Super-Cube®, sept. 2023.",
   readResearch: "Lire la recherche et la théorie",
   readCaseStudy: "Lire l’étude de cas FMCG",
   aboutCraig: "À propos du Dr Craig Muller",
@@ -393,7 +393,7 @@ const pt: Draft = {
   researchEmotional: "Ganho, face emocional",
   researchOverall: "Crescimento global nas seis faces",
   researchNote:
-    "Resultados agregados antes e depois do curso, organizações FMCG sul-africanas e internacionais. Fonte: perfil da empresa Super-Cube®, set. 2023.",
+    "Resultados agregados antes e depois do curso, com líderes da Imana Foods e da Kerry Foods (FMCG, África do Sul e internacional), e não do estudo de doutoramento. Fonte: perfil da empresa Super-Cube®, set. 2023.",
   readResearch: "Ler a investigação e a teoria",
   readCaseStudy: "Ler o estudo de caso FMCG",
   aboutCraig: "Sobre o Dr. Craig Muller",
@@ -502,7 +502,7 @@ const sw: Draft = {
   researchEmotional: "Ongezeko, upande wa hisia",
   researchOverall: "Ukuaji wa jumla katika pande zote sita",
   researchNote:
-    "Matokeo ya jumla kabla na baada ya kozi, mashirika ya FMCG ya Afrika Kusini na ya kimataifa. Chanzo: wasifu wa kampuni ya Super-Cube®, Sept 2023.",
+    "Matokeo ya jumla kabla na baada ya kozi, kwa viongozi wa Imana Foods na Kerry Foods (FMCG, Afrika Kusini na kimataifa), si kutoka kwenye utafiti wa udaktari. Chanzo: wasifu wa kampuni ya Super-Cube®, Sept 2023.",
   readResearch: "Soma utafiti na nadharia",
   readCaseStudy: "Soma uchunguzi kifani wa FMCG",
   aboutCraig: "Kuhusu Dkt. Craig Muller",
@@ -608,7 +608,7 @@ const ar: Draft = {
   researchEmotional: "المكسب في الوجه العاطفي",
   researchOverall: "النمو الإجمالي عبر الأوجه الستة كلها",
   researchNote:
-    `نتائج مجمّعة قبل الدورة وبعدها، من مؤسسات السلع الاستهلاكية سريعة التداول (FMCG) في جنوب أفريقيا وخارجها. المصدر: الملف التعريفي لشركة ${SC}، سبتمبر 2023.`,
+    `نتائج مجمّعة قبل الدورة وبعدها لقادة في شركتي Imana Foods وKerry Foods (السلع الاستهلاكية سريعة التداول FMCG، جنوب أفريقيا وخارجها)، وليست من دراسة الدكتوراه. المصدر: الملف التعريفي لشركة ${SC}، سبتمبر 2023.`,
   readResearch: "اقرأ البحث والنظرية",
   readCaseStudy: "اقرأ دراسة حالة قطاع السلع الاستهلاكية (FMCG)",
   aboutCraig: "عن الدكتور كريغ مولر",
@@ -716,7 +716,7 @@ const zu: Draft = {
   researchEmotional: "Inzuzo, uhlangothi lwemizwa",
   researchOverall: "Ukukhula okuphelele kuzo zonke izinhlangothi eziyisithupha",
   researchNote:
-    "Imiphumela ehlanganisiwe ngaphambi nangemva kwesifundo, ezinhlanganweni ze-FMCG zaseNingizimu Afrika nezamazwe ngamazwe. Umthombo: iphrofayela yenkampani ye-Super-Cube®, Sept 2023.",
+    "Imiphumela ehlanganisiwe ngaphambi nangemva kwesifundo, yabaholi base-Imana Foods nase-Kerry Foods (i-FMCG, eNingizimu Afrika nakwamanye amazwe), hhayi ocwaningweni lobudokotela. Umthombo: iphrofayela yenkampani ye-Super-Cube®, Sept 2023.",
   readResearch: "Funda ucwaningo nethiyori",
   readCaseStudy: "Funda ucwaningo lwesimo lwe-FMCG",
   aboutCraig: "Mayelana noDkt Craig Muller",
@@ -825,7 +825,7 @@ const af: Draft = {
   researchEmotional: "Groei, emosionele vlak",
   researchOverall: "Algehele groei oor al ses vlakke",
   researchNote:
-    "Saamgestelde voor- en ná-kursusresultate, Suid-Afrikaanse en internasionale FMCG-organisasies. Bron: Super-Cube®-maatskappyprofiel, Sept. 2023.",
+    "Saamgestelde voor- en ná-kursusresultate van leiers by Imana Foods en Kerry Foods (FMCG, Suid-Afrika en internasionaal), nie uit die doktorale studie nie. Bron: Super-Cube®-maatskappyprofiel, Sept. 2023.",
   readResearch: "Lees die navorsing en teorie",
   readCaseStudy: "Lees die FMCG-gevallestudie",
   aboutCraig: "Oor dr. Craig Muller",

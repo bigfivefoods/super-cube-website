@@ -11,7 +11,7 @@ export const EMOTIONAL: FaceContent = {
 
 The model draws on the *ability* view of emotional intelligence (Mayer, Salovey and Caruso): **perceiving**, **using**, **understanding** and **managing** emotions, as skills that can be trained.
 
-In Dr Craig R. Muller's UKZN doctoral study, participants' average Emotional score improved by **+39.5%** following Super-Cube® development interventions (pre- to post-assessment).
+In the 12-week, accredited Super-Cube® leadership intervention with Imana Foods and Kerry Foods, leaders' average Emotional score improved by **+39.5%** (pre- to post-assessment).
 
 A starting habit: **name it to tame it**. Putting a precise word to a feeling (\"frustrated\", not just \"bad\") helps you choose a response instead of reacting.`,
     coreKids: `**Emotional** is about your **feelings** and other people's feelings.
@@ -47,7 +47,7 @@ All feelings are OK. What matters is what we **do** with them.
     check: [
       { q: "Which model of emotional intelligence does Super-Cube® draw on?", options: ["A personality type model", "The ability model (Mayer, Salovey & Caruso)", "An IQ test", "A fitness model"], answer: 1, why: "The ability model treats perceiving, using, understanding and managing emotions as trainable skills." },
       { q: "What does \"name it to tame it\" mean?", options: ["Ignore feelings", "Putting a precise word to a feeling helps you manage it", "Blame someone", "Give your feelings a nickname"], answer: 1, why: "Precise labelling helps you respond rather than react." },
-      { q: "What Emotional result did the UKZN doctoral study report?", options: ["No change", "An average improvement of +39.5% pre to post", "A small decline", "It wasn't measured"], answer: 1, why: "The doctoral research reported an average Emotional improvement of +39.5%." },
+      { q: "What Emotional result did the 12-week Imana Foods and Kerry Foods intervention report?", options: ["No change", "An average improvement of +39.5% pre to post", "A small decline", "It wasn't measured"], answer: 1, why: "Leaders in the 12-week Super-Cube® intervention improved their average Emotional score by +39.5%, pre to post." },
     ],
     checkKids: [
       { q: "Are all feelings OK?", options: ["Yes, what matters is what we do with them", "No, only happy ones", "Only on weekends"], answer: 0, why: "Every feeling is OK. We choose kind ways to handle them." },

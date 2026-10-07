@@ -993,7 +993,7 @@ async function main() {
       },
       {
         t: "+45.1%",
-        d: "Largest construct gain in Principles—integrity, context, and accountable practice.",
+        d: "Largest gain (Principles) in the 12-week Super-Cube® intervention with Imana Foods and Kerry Foods.",
         c: faces[1].color,
       },
       {

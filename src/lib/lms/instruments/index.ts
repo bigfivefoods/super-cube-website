@@ -1,7 +1,8 @@
 /**
  * Instrument registry.
- *  - v1 (research form): the original 28-item (Adults) instrument from Dr Muller's
- *    DBA research model. Unchanged, so results stay comparable with the study.
+ *  - v1 (standard form): the 28-item (Adults) instrument used on the platform today.
+ *    It is a later version of the 18-item survey in Dr Muller's DBA research, not the
+ *    thesis survey itself. Unchanged, so baseline and after-test results stay comparable.
  *  - v2 (draft): behaviourally anchored frequency items (about one-third
  *    reverse-keyed) plus situational judgement items, with Kids and Teens forms
  *    and a parallel observer (360) form. OFF in production until Dr Muller signs off.
@@ -15,7 +16,7 @@ import { HONESTY_ITEM, V2_BANK, V2_SCALE } from "@/lib/lms/instruments/v2-bank";
 export type InstrumentVersion = "v1" | "v2";
 
 export const INSTRUMENT_LABELS: Record<InstrumentVersion, string> = {
-  v1: "v1 (research form)",
+  v1: "v1 (standard form)",
   v2: "v2 (behavioural + situational judgement, draft for sign-off)",
 };
 

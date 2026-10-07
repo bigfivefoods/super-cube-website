@@ -24,7 +24,7 @@ test("flags are OFF by default", () => {
   expect(is360EnabledServer()).toBe(false);
 });
 
-test("v1 research form is unchanged: 28 Likert items, same ids, same scoring", () => {
+test("v1 standard form is unchanged: 28 Likert items, same ids, same scoring", () => {
   for (const p of PROGRAMMES) {
     const v1 = buildInstrumentItems(p, "v1");
     expect(v1).toEqual(buildAssessmentItems(p));
