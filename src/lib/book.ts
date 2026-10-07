@@ -11,7 +11,7 @@ export const BOOK = {
   href: "/super-cube-leadership-book.pdf",
   /** Saved file name (the `download` attribute). */
   fileName: "super-cube-leadership-book.pdf",
-  pages: 67,
+  pages: 71,
   size: "1.9 MB",
   page: "/book",
   cover: { src: "/images/book/super-cube-leadership-book-cover.jpg", width: 1000, height: 1500 },
