@@ -53,7 +53,8 @@ jobs:
       - name: Start the app
         run: |
           npm run start -- -p 3000 > /tmp/app.log 2>&1 &
-          npx --yes wait-on@8 -t 60000 http://127.0.0.1:3000/
+          for i in $(seq 1 60); do curl -sf -o /dev/null http://127.0.0.1:3000/ && exit 0; sleep 1; done
+          echo "app did not start"; tail -50 /tmp/app.log; exit 1
       - name: Playwright
         # Specs that need the Supabase stack (LMS_STACK=1) skip themselves.
         run: npx playwright test --workers=2

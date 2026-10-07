@@ -40,8 +40,10 @@ async function signIn(page: Page, email: string) {
 
 test.describe("engagement", () => {
   test("signed-out callers can't log activity or read engagement", async ({ request }) => {
-    expect((await request.post("/api/lms/events", { data: { kind: "pulse" } })).status()).toBe(401);
-    expect((await request.get("/api/lms/engagement")).status()).toBe(401);
+    // 401 with Supabase; 503 on a build with no service key (CI)
+    const refused = stack ? [401] : [401, 503];
+    expect(refused).toContain((await request.post("/api/lms/events", { data: { kind: "pulse" } })).status());
+    expect(refused).toContain((await request.get("/api/lms/engagement")).status());
     // Push is off until VAPID keys arrive through the env flow
     expect((await request.post("/api/lms/push", { data: {} })).status()).toBe(501);
   });

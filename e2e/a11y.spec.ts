@@ -150,6 +150,25 @@ test.describe("keyboard and screen reader", () => {
     await expect(first.getByRole("button", { name: /^4\b/ })).toHaveAttribute("aria-pressed", "true");
   });
 
+  test("anchor jumps land below the fixed header on a phone", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await seed(page);
+    await page.goto("/learn/account#habits");
+    const habits = page.locator("#habits");
+    await expect(habits).toBeVisible();
+    await expect
+      .poll(async () =>
+        habits.evaluate((el) => {
+          const header = document.querySelector("header");
+          const top = el.getBoundingClientRect().top;
+          return Math.round(top - (header?.getBoundingClientRect().bottom ?? 0));
+        }),
+      )
+      .toBeGreaterThanOrEqual(0);
+    // ...and the section really was scrolled to (not left at the top of the page).
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
+  });
+
   test("the cube respects reduced motion and has a text alternative", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");

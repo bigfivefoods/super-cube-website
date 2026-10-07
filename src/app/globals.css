@@ -89,6 +89,9 @@ html.dark {
 
 html {
   scroll-behavior: smooth;
+  /* Anchor jumps and keyboard focus stop below the fixed site header
+     (WCAG 2.4.11 Focus Not Obscured). */
+  scroll-padding-top: calc(4.5rem + env(safe-area-inset-top, 0px));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   tab-size: 4;
@@ -1364,5 +1367,12 @@ a.sc-card:hover,
 @media (prefers-reduced-motion: reduce) {
   .mega-panel:not([hidden]) {
     animation: none;
+  }
+}
+
+/* Learn on phones: keep focus and anchor targets clear of the bottom tab bar too. */
+@media (max-width: 1023px) {
+  html:has(.learn-surface) {
+    scroll-padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
   }
 }

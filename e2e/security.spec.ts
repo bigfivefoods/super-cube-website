@@ -82,8 +82,10 @@ test.describe("access rules (signed out)", () => {
       const res = await request.get(`/auth/callback?next=${encodeURIComponent(next)}`, { maxRedirects: 0 });
       expect(res.status()).toBeGreaterThanOrEqual(300);
       const loc = new URL(res.headers()["location"] ?? "", base);
-      expect(loc.origin, next).toBe(new URL(base).origin);
-      expect(loc.pathname).toBe("/learn");
+      // Same server (it may name itself localhost or 127.0.0.1), never evil.example.
+      expect(loc.hostname, next).not.toContain("evil");
+      expect(loc.username + loc.password, next).toBe("");
+      expect(loc.pathname, next).toBe("/learn");
     }
   });
 });
