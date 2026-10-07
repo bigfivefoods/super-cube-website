@@ -164,8 +164,17 @@ test.describe("keyboard and screen reader", () => {
           return Math.round(top - (header?.getBoundingClientRect().bottom ?? 0));
         }),
       )
+      // Scrolled to (smooth scroll may take a moment) and just under the header, not behind it.
       .toBeGreaterThanOrEqual(0);
-    // ...and the section really was scrolled to (not left at the top of the page).
+    await expect
+      .poll(async () =>
+        habits.evaluate((el) => {
+          const header = document.querySelector("header");
+          return Math.round(el.getBoundingClientRect().top - (header?.getBoundingClientRect().bottom ?? 0));
+        }),
+        { timeout: 8000 },
+      )
+      .toBeLessThanOrEqual(48);
     expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
   });
 
