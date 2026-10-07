@@ -19,7 +19,7 @@ export function PaywallCard() {
 
   return (
     <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 sm:px-5">
-      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-amber-900/70">
+      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-amber-900">
         Full pathway
       </p>
       <p className="mt-1 text-sm font-semibold text-ink">

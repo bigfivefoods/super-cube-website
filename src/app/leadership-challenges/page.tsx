@@ -12,6 +12,7 @@ import {
 } from "@/lib/leadership-challenges";
 import { sdgGoals } from "@/lib/sdgs";
 import { pageMeta } from "@/lib/seo";
+import { faceInkStyle } from "@/lib/contrast";
 
 export const metadata: Metadata = pageMeta({
   title: "Leadership challenges · UN SDGs & SOFI",
@@ -180,8 +181,8 @@ export default function LeadershipChallengesPage() {
                       </div>
                       <div className="text-center">
                         <p
-                          className="text-[0.65rem] font-bold uppercase tracking-[0.12em]"
-                          style={{ color: goal.color }}
+                          className="text-[0.65rem] font-bold uppercase tracking-[0.12em] face-ink"
+                          style={faceInkStyle(goal.color)}
                         >
                           Goal {goal.id}
                         </p>

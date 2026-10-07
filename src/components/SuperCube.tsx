@@ -226,6 +226,21 @@ export function SuperCube({
         </div>
       </div>
 
+      {/* Scores drawn on the faces are part of the picture; repeat them as text for screen readers. */}
+      {scores && Object.keys(scores).length > 0 && (
+        <ul className="sr-only" aria-label="Super-Cube® face scores out of 100">
+          {faceLayout.map((face) => {
+            const c = byId[face.id];
+            const score = scores[face.id];
+            return (
+              <li key={face.id}>
+                {c.name}: {typeof score === "number" ? `${Math.round(score)} out of 100` : "no score yet"}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
       {/* The 3D faces are a picture (role="img"); give screen readers the faces and skills as text. */}
       {showSkills && !showScores && (
         <ul className="sr-only" aria-label="Super-Cube® faces and the skills each develops">

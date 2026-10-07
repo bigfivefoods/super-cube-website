@@ -9,6 +9,7 @@ import { constructs } from "@/lib/content";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
+import { faceInkStyle } from "@/lib/contrast";
 
 export default function CoursesPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -68,8 +69,8 @@ export default function CoursesPage() {
                   </h2>
                 </div>
                 <p
-                  className="mt-0.5 truncate text-[0.7rem] font-medium"
-                  style={{ color }}
+                  className="face-ink mt-0.5 truncate text-[0.7rem] font-medium"
+                  style={faceInkStyle(color)}
                 >
                   {construct?.tagline}
                 </p>

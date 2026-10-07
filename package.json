@@ -39,6 +39,7 @@
     "react-dom": "19.2.4"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.51.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

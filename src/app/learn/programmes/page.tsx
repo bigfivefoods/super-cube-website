@@ -67,7 +67,7 @@ export default function LearnProgrammesPage() {
               </p>
               <p
                 className={`mt-2.5 text-[0.7rem] ${
-                  active ? "text-white/45" : "text-muted"
+                  active ? "text-white/65" : "text-muted"
                 }`}
               >
                 {p.audienceNote}

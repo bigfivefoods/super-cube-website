@@ -306,7 +306,7 @@ function AccountPageInner() {
             {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white/45">
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white/65">
               Learner profile
             </p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
@@ -351,11 +351,11 @@ function AccountPageInner() {
             ["Pulses", String(pulseCount), "face checks"],
           ].map(([k, v, sub]) => (
             <div key={k} className="bg-ink px-4 py-3">
-              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.1em] text-white/40">
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.1em] text-white/65">
                 {k}
               </p>
               <p className="mt-0.5 text-lg font-semibold tabular-nums">{v}</p>
-              <p className="text-[0.65rem] text-white/45">{sub}</p>
+              <p className="text-[0.65rem] text-white/65">{sub}</p>
             </div>
           ))}
         </div>

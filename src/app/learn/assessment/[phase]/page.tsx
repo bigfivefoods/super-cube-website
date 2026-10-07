@@ -390,6 +390,19 @@ export default function AssessmentRunnerPage() {
             <fieldset
               key={item.id}
               className="border-b border-line pb-5 last:border-0 last:pb-0"
+              aria-describedby={`${item.id}-scale`}
+              onKeyDown={(e) => {
+                // Keys 1–5 answer the statement that has focus.
+                if (e.altKey || e.ctrlKey || e.metaKey) return;
+                const n = Number(e.key);
+                if (!Number.isInteger(n) || n < 1 || n > 5) return;
+                e.preventDefault();
+                setValue(item.id, n);
+                const target = e.currentTarget.querySelector<HTMLButtonElement>(
+                  `button[data-value="${n}"]`,
+                );
+                target?.focus();
+              }}
             >
               <legend className="text-[0.8125rem] font-medium leading-relaxed text-ink">
                 {item.prompt}
@@ -408,16 +421,26 @@ export default function AssessmentRunnerPage() {
                           : "border-line-strong bg-surface text-slate hover:border-ink/40"
                       }`}
                       title={LIKERT_LABELS[v - 1]}
+                      aria-label={`${v}, ${LIKERT_LABELS[v - 1]}`}
                       aria-pressed={selected}
+                      data-value={v}
                     >
                       {v}
                     </button>
                   );
                 })}
               </div>
-              <div className="learn-meta mt-1.5 flex justify-between">
-                <span>Strongly disagree</span>
-                <span>Strongly agree</span>
+              <div
+                id={`${item.id}-scale`}
+                className="learn-meta mt-1.5 flex justify-between"
+              >
+                <span>
+                  Strongly disagree<span className="sr-only"> is 1, </span>
+                </span>
+                <span>
+                  <span className="sr-only">and </span>Strongly agree
+                  <span className="sr-only"> is 5. Keys 1 to 5 answer.</span>
+                </span>
               </div>
             </fieldset>
           ))}

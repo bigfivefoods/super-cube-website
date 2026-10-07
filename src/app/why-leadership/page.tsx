@@ -12,6 +12,7 @@ import {
 } from "@/lib/sdgs";
 
 import { pageMeta } from "@/lib/seo";
+import { faceInkStyle } from "@/lib/contrast";
 
 export const metadata: Metadata = pageMeta({
   title: "Why leadership matters for the UN SDGs",
@@ -191,8 +192,8 @@ export default function WhyLeadershipPage() {
                   style={{ background: goal.soft }}
                 >
                   <p
-                    className="text-[0.65rem] font-bold uppercase tracking-[0.1em]"
-                    style={{ color: goal.color }}
+                    className="text-[0.65rem] font-bold uppercase tracking-[0.1em] face-ink"
+                    style={faceInkStyle(goal.color, goal.soft)}
                   >
                     Goal {goal.id}
                   </p>
@@ -203,8 +204,8 @@ export default function WhyLeadershipPage() {
                     {goal.title}
                   </p>
                   <p
-                    className="mt-2 text-[0.65rem] font-semibold uppercase tracking-[0.08em]"
-                    style={{ color: goal.color }}
+                    className="mt-2 text-[0.65rem] font-semibold uppercase tracking-[0.08em] face-ink"
+                    style={faceInkStyle(goal.color, goal.soft)}
                   >
                     {goal.focus}
                   </p>

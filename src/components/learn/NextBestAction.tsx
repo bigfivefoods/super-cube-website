@@ -22,7 +22,7 @@ export function NextBestActionCard({ action }: { action: Action }) {
         <div className="min-w-0 flex-1">
           <p
             className={`text-[0.65rem] font-semibold uppercase tracking-[0.12em] ${
-              action.urgency === "high" ? "text-white/45" : "text-muted"
+              action.urgency === "high" ? "text-white/65" : "text-muted"
             }`}
           >
             {process}
