@@ -142,7 +142,7 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       title: "Develop the six faces",
       short: "Learn",
       description:
-        "Work through each construct with Read · Engage · Apply—deliberate practice, not passive scrolling.",
+        "Work through each construct in short eight-step sessions: deliberate practice, not passive scrolling.",
       promise: "Small sessions that compound into real leadership capacity.",
       href: "/learn/courses",
     },

@@ -55,7 +55,7 @@ export default function CourseDetailPage() {
   return (
     <LearnShell
       title={construct.name}
-      subtitle={`${programme?.name} · ${course.lessons.length} sessions · Read · Engage · Apply`}
+      subtitle={`${programme?.name} · ${course.lessons.length} sessions · eight-step learning arc`}
     >
       {/* Module hero with intro video */}
       <div

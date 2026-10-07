@@ -8,9 +8,16 @@ import {
 } from "@/lib/programmes";
 import {
   COURSE_COPY,
-  skillCopyFor,
   type SessionSection,
 } from "@/lib/lms/course-content";
+import {
+  arcToMarkdown,
+  faceCheck,
+  overviewArc,
+  skillArc,
+  type ResolvedArc,
+  type RetrievalQ,
+} from "@/lib/lms/sessions";
 
 export type { SessionSection } from "@/lib/lms/course-content";
 
@@ -29,6 +36,19 @@ export interface Lesson {
   durationMinutes: number;
   /** One-line session outcome */
   outcome: string;
+  /** Eight-step learning arc (overview and skill sessions) */
+  arc?: ResolvedArc;
+  /** Practice lab (WOOP) */
+  lab?: PracticeLab;
+  /** End-of-module retrieval check (one question per skill) */
+  faceCheck?: RetrievalQ[];
+}
+
+export interface PracticeLab {
+  challenge: string;
+  checklist: string[];
+  /** WOOP prompts: wish, outcome, obstacle, plan */
+  woop: { id: "wish" | "outcome" | "obstacle" | "plan"; label: string; prompt: string }[];
 }
 
 export interface Course {
@@ -44,13 +64,37 @@ export interface Course {
   lessons: Lesson[];
 }
 
+export interface AssessmentOption {
+  /** Stored response value (1-based option number) */
+  value: number;
+  text: string;
+  /** Provisional expert effectiveness key, 1 (least) to 4 (most effective) */
+  key: number;
+  /** Key on the 0–100 scale used for face scores */
+  score: number;
+  /** Feedback shown after the attempt (never during it) */
+  why?: string;
+}
+
 export interface AssessmentItem {
   id: string;
   instrumentId: string;
   constructId: ConstructId;
+  /** Likert statement, or the SJT scenario */
   prompt: string;
-  itemType: "likert_5";
+  /** v1 items are all likert_5; v2 adds situational judgement items */
+  itemType: "likert_5" | "sjt";
   sortOrder: number;
+  /** Reverse-keyed Likert item: scored as 6 − answer */
+  reverse?: boolean;
+  /** Skill (element) the item samples */
+  skill?: string;
+  /** Likert labels 1..5 when they differ from the v1 agreement scale */
+  scaleLabels?: readonly string[];
+  /** SJT options */
+  options?: AssessmentOption[];
+  /** Third-person wording for the observer (360) form; {name} is replaced */
+  observerPrompt?: string;
 }
 
 function sectionsToMd(sections: SessionSection[]): string {
@@ -59,131 +103,128 @@ function sectionsToMd(sections: SessionSection[]): string {
     .join("\n\n");
 }
 
-function programmeCue(programmeId: ProgrammeId): string {
-  if (programmeId === "kids") {
-    return "Keep it simple, kind, and playful. Use short stories and one clear try.";
-  }
-  if (programmeId === "adolescents") {
-    return "Use real school, sport, digital, and peer situations. Keep it honest and practical.";
-  }
-  return "Connect every idea to workplace leadership: meetings, teams, stakeholders, and delivery.";
+function arcSections(arc: ResolvedArc, extraRead = ""): SessionSection[] {
+  const md = arcToMarkdown(arc);
+  return [
+    { block: "read", title: "Read · hook, idea and example", body: md.read + extraRead },
+    { block: "engage", title: "Engage · reflect and check", body: md.engage },
+    { block: "apply", title: "Apply · practise and plan", body: md.apply },
+  ];
 }
 
-function overviewSections(
+function overviewSessions(
   programmeId: ProgrammeId,
   constructId: ConstructId,
   constructName: string,
   skills: string[]
-): { sections: SessionSection[]; outcome: string } {
-  const copy = COURSE_COPY[constructId];
-  const sections: SessionSection[] = [
-    {
-      block: "read",
-      title: "Read · why this face matters",
-      body: `${copy.overviewRead}\n\n### Skills in this module\n${skills.map((s) => `- **${s}**`).join("\n")}\n\n### Programme note\n${programmeCue(programmeId)}`,
-    },
-    {
-      block: "engage",
-      title: "Engage · make it personal",
-      body: copy.overviewEngage,
-    },
-    {
-      block: "apply",
-      title: "Apply · this week",
-      body: copy.overviewApply,
-    },
-  ];
+): { sections: SessionSection[]; outcome: string; arc: ResolvedArc } {
+  const arc = overviewArc(programmeId, constructId);
   return {
-    sections,
+    arc,
+    sections: arcSections(arc, `\n\n### Skills in this module\n${skills.map((s) => `- **${s}**`).join("\n")}`),
     outcome: `Understand the ${constructName} face and start one deliberate practice.`,
   };
 }
 
-function skillSections(
+function skillSessions(
   programmeId: ProgrammeId,
   constructId: ConstructId,
-  constructName: string,
-  skill: string,
-  skillIndex: number
-): { sections: SessionSection[]; outcome: string } {
-  const sc = skillCopyFor(constructId, skillIndex);
-  const sections: SessionSection[] = [
-    {
-      block: "read",
-      title: `Read · ${skill}`,
-      body: `### What it is\n**${skill}** is a developable Super-Cube® skill on the **${constructName}** face.\n\n${sc.insight}\n\n### Practical tip\n${sc.practiceTip}\n\n### Common trap\n${sc.commonTrap}\n\n### Programme note\n${programmeCue(programmeId)}`,
-    },
-    {
-      block: "engage",
-      title: "Engage · scenario",
-      body: `### Real situation\n${sc.scenario[programmeId]}\n\n### Your response\n1. What would a weak response look like?\n2. What would a Super-Cube® response look like?\n3. Which value or skill is most at stake?\n\nWrite 4–8 lines (or talk it through with a parent, mentor, or peer).`,
-    },
-    {
-      block: "apply",
-      title: "Apply · micro-action",
-      body: `### Do this\n${sc.apply[programmeId]}\n\n### Close the loop\nAfter you try it, note:\n- What I did\n- What happened\n- What I will repeat next time\n\nMark the session complete when you have taken the action (or scheduled it with a real date).`,
-    },
-  ];
+  skill: string
+): { sections: SessionSection[]; outcome: string; arc: ResolvedArc } {
+  const arc = skillArc(programmeId, constructId, skill);
   return {
-    sections,
-    outcome: `Practise ${skill} with a real scenario and a micro-action.`,
+    arc,
+    sections: arcSections(arc),
+    outcome:
+      programmeId === "kids"
+        ? `Learn about ${skill.toLowerCase()} with a story and one small try.`
+        : `Practise ${skill} with a real example, a micro-practice and an if–then plan.`,
   };
 }
 
-function practiceSections(
+const WOOP_PROMPTS: Record<ProgrammeId, PracticeLab["woop"]> = {
+  adults: [
+    { id: "wish", label: "Wish", prompt: "What do you want to achieve with this face in the next 7 days? Make it challenging but realistic." },
+    { id: "outcome", label: "Outcome", prompt: "What is the best result of reaching it? Picture it for a moment: for you, your team and the people you serve." },
+    { id: "obstacle", label: "Obstacle", prompt: "What is the main thing inside you (a habit, an emotion, an assumption) that could get in the way?" },
+    { id: "plan", label: "Plan", prompt: "If [obstacle] happens, then I will [action]. Write it as one sentence." },
+  ],
+  adolescents: [
+    { id: "wish", label: "Wish", prompt: "What do you want to get better at this week? Pick something that matters to you." },
+    { id: "outcome", label: "Outcome", prompt: "What's the best thing that would happen if you did? Imagine it." },
+    { id: "obstacle", label: "Obstacle", prompt: "What in you might get in the way, like a habit, a feeling or an excuse?" },
+    { id: "plan", label: "Plan", prompt: "If [obstacle] happens, then I will [action]." },
+  ],
+  kids: [
+    { id: "wish", label: "My wish", prompt: "What do I want to try this week?" },
+    { id: "outcome", label: "The best bit", prompt: "How will I feel when I do it?" },
+    { id: "obstacle", label: "What might stop me", prompt: "What could get in the way?" },
+    { id: "plan", label: "My plan", prompt: "If that happens, then I will…" },
+  ],
+};
+
+function practiceSessions(
   programmeId: ProgrammeId,
   constructId: ConstructId,
   constructName: string
-): { sections: SessionSection[]; outcome: string } {
+): { sections: SessionSection[]; outcome: string; lab: PracticeLab } {
   const copy = COURSE_COPY[constructId];
+  const lab: PracticeLab = {
+    challenge: copy.practiceLab.challenge[programmeId],
+    checklist: copy.practiceLab.checklist,
+    woop: WOOP_PROMPTS[programmeId],
+  };
   const sections: SessionSection[] = [
     {
       block: "read",
-      title: "Read · deliberate practice",
-      body: `## Practice lab · ${constructName}\n\nDeliberate practice is how Super-Cube® becomes real. This session is not more theory—it is a **field lab**.\n\n### Challenge\n${copy.practiceLab.challenge[programmeId]}\n\n### Success checklist\n${copy.practiceLab.checklist.map((c) => `- [ ] ${c}`).join("\n")}`,
+      title: "Read · the challenge",
+      body: `## Practice lab · ${constructName}\n\nThis session is a **field lab**: one real-world challenge, planned with WOOP (Wish, Outcome, Obstacle, Plan), a method from motivation research that pairs a positive picture of the goal with an honest look at what could get in the way.\n\n### Challenge\n${lab.challenge}\n\n### Success checklist\n${lab.checklist.map((c) => `- [ ] ${c}`).join("\n")}`,
     },
     {
       block: "engage",
-      title: "Engage · design your week",
-      body: `### Plan\n1. When will you practise (day + time)?\n2. Where (context)?\n3. Who will notice or support you?\n4. How will you know it worked?\n\nWrite a simple plan you can actually keep.`,
+      title: "Engage · WOOP plan",
+      body: lab.woop.map((w) => `### ${w.label}\n${w.prompt}`).join("\n\n"),
     },
     {
       block: "apply",
       title: "Apply · complete the lab",
-      body: `### Execute and reflect\nComplete the challenge, then answer:\n1. What did I try?\n2. What happened for me and for others?\n3. What will I systematise (habit, checklist, calendar)?\n\nMark complete when the checklist is mostly true and your reflection is written.`,
+      body: `### Do it, then reflect\n1. What did I try?\n2. What happened, for me and for others?\n3. What will I keep doing (habit, checklist, calendar)?\n\nMark complete when most of the checklist is true and your reflection is written.`,
     },
   ];
   return {
+    lab,
     sections,
-    outcome: `Run a real-world ${constructName.toLowerCase()} practice lab and reflect.`,
+    outcome: `Plan and run a real-world ${constructName.toLowerCase()} challenge with WOOP.`,
   };
 }
 
-function quizSections(
+function quizSessions(
+  programmeId: ProgrammeId,
   constructId: ConstructId,
   constructName: string
-): { sections: SessionSection[]; outcome: string } {
-  const copy = COURSE_COPY[constructId];
+): { sections: SessionSection[]; outcome: string; faceCheck: RetrievalQ[] } {
+  const qs = faceCheck(programmeId, constructId);
   const sections: SessionSection[] = [
     {
       block: "read",
-      title: "Read · quick recap",
-      body: `## Quick check · ${constructName}\n\n${copy.relevance}\n\n### Self-rate (1 = not yet · 5 = consistently)\n${copy.quizPrompts.map((p, i) => `${i + 1}. ${p}`).join("\n")}`,
+      title: "Read · face check",
+      body: `## Face check · ${constructName}\n\nAnswer from memory first. Pulling ideas back out of memory helps them stick far better than re-reading.\n\n${qs.map((q, i) => `${i + 1}. ${q.q}`).join("\n")}`,
     },
     {
       block: "engage",
       title: "Engage · teach-back",
-      body: `### Explain it simply\nIn 60 seconds (or 5 sentences), teach the ${constructName} face to someone else:\n- What it is\n- Why it matters\n- One practice they can try today\n\nIf you can teach it, you own it.`,
+      body: `### Explain it simply\nIn 60 seconds (or five sentences), teach the ${constructName} face to someone else:\n- What it is\n- Why it matters\n- One practice they can try today\n\nIf you can teach it, you own it.`,
     },
     {
       block: "apply",
-      title: "Apply · next module ready",
-      body: `### Lock one habit\nChoose **one** micro-habit from this module to keep for the next 14 days.\n\nWrite it as: **When** [trigger], **I will** [action], **so that** [purpose].\n\nThen mark complete and move on—or retake a skill session if a score felt low.`,
+      title: "Apply · lock one habit",
+      body: `### Lock one habit\nChoose **one** micro-habit from this module to keep for the next 14 days. Write it as an if–then plan: **If** [situation], **then I will** [action].`,
     },
   ];
   return {
+    faceCheck: qs,
     sections,
-    outcome: `Check understanding and lock one ${constructName.toLowerCase()} habit.`,
+    outcome: `Check what stuck from ${constructName} and lock one habit.`,
   };
 }
 
@@ -200,7 +241,7 @@ export function buildCurriculum(): Course[] {
       const lessons: Lesson[] = [];
       let order = 0;
 
-      const overview = overviewSections(
+      const overview = overviewSessions(
         programme.id,
         construct.id,
         construct.name,
@@ -216,16 +257,11 @@ export function buildCurriculum(): Course[] {
         sortOrder: order++,
         durationMinutes: programme.id === "kids" ? 10 : 15,
         outcome: overview.outcome,
+        arc: overview.arc,
       });
 
       skills.forEach((skill, i) => {
-        const built = skillSections(
-          programme.id,
-          construct.id,
-          construct.name,
-          skill,
-          i
-        );
+        const built = skillSessions(programme.id, construct.id, skill);
         lessons.push({
           id: `${id}-skill-${i + 1}`,
           courseId: id,
@@ -236,10 +272,11 @@ export function buildCurriculum(): Course[] {
           sortOrder: order++,
           durationMinutes: programme.id === "kids" ? 8 : 12,
           outcome: built.outcome,
+          arc: built.arc,
         });
       });
 
-      const practice = practiceSections(
+      const practice = practiceSessions(
         programme.id,
         construct.id,
         construct.name
@@ -254,19 +291,21 @@ export function buildCurriculum(): Course[] {
         sortOrder: order++,
         durationMinutes: 20,
         outcome: practice.outcome,
+        lab: practice.lab,
       });
 
-      const quiz = quizSections(construct.id, construct.name);
+      const quiz = quizSessions(programme.id, construct.id, construct.name);
       lessons.push({
         id: `${id}-quiz`,
         courseId: id,
-        title: "Quick check",
+        title: "Face check",
         sections: quiz.sections,
         bodyMd: sectionsToMd(quiz.sections),
         lessonType: "quiz",
         sortOrder: order++,
         durationMinutes: 8,
         outcome: quiz.outcome,
+        faceCheck: quiz.faceCheck,
       });
 
       courses.push({

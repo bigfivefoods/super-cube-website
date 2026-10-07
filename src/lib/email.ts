@@ -106,7 +106,7 @@ export function welcomeEmailHtml(opts: {
     <ol style="color:#5c5c5c;font-size:14px;padding-left:18px">
       <li>Orient (pre-pre)</li>
       <li>Baseline assessment</li>
-      <li>Six faces · Read · Engage · Apply</li>
+      <li>Six faces · eight-step sessions</li>
       <li>Re-measure &amp; download your growth report</li>
     </ol>
     <p style="font-size:13px;color:#8a8a8a">Questions? Reply to this email or write hello@super-cube.me</p>
