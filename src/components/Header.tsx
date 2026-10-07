@@ -6,9 +6,10 @@ import { useEffect, useRef, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
+import { MobileModelSection, ModelMegaMenu } from "@/components/ModelMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useTheme } from "@/components/ThemeProvider";
-import { audienceNav, menuMoreNav } from "@/lib/content";
+import { audienceNav, menuMoreNav, modelMenuFoldedHrefs } from "@/lib/content";
 import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
 import { mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
 
@@ -17,9 +18,22 @@ function linkActive(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+/**
+ * Hero lists name exact pages. (A prefix match made /insights/[slug], a plain
+ * white article page, inherit the dark /insights hero and hide the header.)
+ */
 function matchesPath(pathname: string, paths: readonly string[]) {
-  return paths.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  return paths.includes(pathname);
 }
+
+/** Pages that live under "The Model" in the top bar. */
+const modelPaths = ["/the-model", "/constructs", ...modelMenuFoldedHrefs];
+
+/** Desktop bar: Research is folded into The Model menu (see content.ts). */
+const desktopNav = audienceNav.filter((item) => !modelMenuFoldedHrefs.includes(item.href));
+
+/** Mobile "More" list: the model pages now sit in The Model section. */
+const mobileMoreNav = menuMoreNav.filter((item) => item.href !== "/the-model" && item.href !== "/constructs");
 
 function Chevron() {
   return (
@@ -40,13 +54,16 @@ export function Header() {
   const { t } = useLocale();
   const { resolvedDark } = useTheme();
   const [open, setOpen] = useState(false);
+  const [modelOpen, setModelOpen] = useState(false);
+  const [mobileModelOpen, setMobileModelOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   const isLightHero = matchesPath(pathname, lightHeroPaths);
   const isDarkHero = matchesPath(pathname, darkHeroPaths);
-  const overHero = (isDarkHero || isLightHero) && !scrolled && !open;
+  // An open menu (mobile sheet or The Model panel) always gets a solid header.
+  const overHero = (isDarkHero || isLightHero) && !scrolled && !open && !modelOpen;
   const overDark = overHero && isDarkHero;
   const overLight = overHero && isLightHero;
   const onDark = overDark || (resolvedDark && !overLight);
@@ -63,6 +80,8 @@ export function Header() {
   if (menuPath !== pathname) {
     setMenuPath(pathname);
     setOpen(false);
+    setModelOpen(false);
+    setMobileModelOpen(false);
   }
 
   useEffect(() => {
@@ -93,7 +112,7 @@ export function Header() {
 
   // When the menu is open the header must be solid with no backdrop-filter:
   // a backdrop-filter would become the containing block for the fixed sheet.
-  const surface = open
+  const surface = open || modelOpen
     ? "border-line bg-paper"
     : overDark
     ? "border-transparent bg-transparent"
@@ -104,7 +123,7 @@ export function Header() {
         : "border-line bg-paper/80 backdrop-blur-xl backdrop-saturate-150";
 
   const linkCls = (active: boolean) =>
-    `relative inline-flex min-h-9 items-center rounded-full px-3 text-[0.8125rem] font-medium tracking-tight transition-colors ${
+    `relative inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-2.5 text-[0.8125rem] font-medium tracking-tight transition-colors ${
       onDark
         ? active
           ? "text-white"
@@ -112,7 +131,7 @@ export function Header() {
         : active
           ? "text-ink"
           : "text-slate hover:text-ink"
-    } ${active ? "after:absolute after:inset-x-3 after:-bottom-0.5 after:h-px after:bg-current" : ""}`;
+    } ${active ? "after:absolute after:inset-x-2.5 after:-bottom-0.5 after:h-px after:bg-current" : ""}`;
 
   return (
     <header
@@ -124,8 +143,14 @@ export function Header() {
           className={`min-w-0 max-w-[min(100%,10rem)] shrink sm:max-w-none ${onDark ? "brightness-0 invert" : ""}`}
         />
 
-        <nav className="hidden items-center gap-0.5 lg:flex" aria-label={t("nav.main")}>
-          {audienceNav.map((item) => (
+        <nav className="hidden items-center self-stretch lg:flex" aria-label={t("nav.main")}>
+          <ModelMegaMenu
+            open={modelOpen}
+            onOpenChange={setModelOpen}
+            active={modelPaths.some((p) => linkActive(pathname, p))}
+            buttonClassName={linkCls(modelPaths.some((p) => linkActive(pathname, p)))}
+          />
+          {desktopNav.map((item) => (
             <Link
               key={item.href}
               href={item.href}
@@ -141,7 +166,7 @@ export function Header() {
           <LanguageSwitcher overDark={onDark} variant="compact" />
           <Link
             href="/login"
-            className={`hidden min-h-9 items-center text-[0.8125rem] font-medium tracking-tight xl:inline-flex ${
+            className={`hidden min-h-9 items-center whitespace-nowrap text-[0.8125rem] font-medium tracking-tight xl:inline-flex ${
               onDark ? "text-white/70 hover:text-white" : "text-slate hover:text-ink"
             }`}
           >
@@ -149,7 +174,7 @@ export function Header() {
           </Link>
           <Link
             href="/learn/start"
-            className={`inline-flex min-h-9 items-center rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight transition ${
+            className={`inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight transition ${
               onDark ? "bg-white text-black hover:bg-white/90" : "sc-btn-primary"
             }`}
           >
@@ -194,6 +219,13 @@ export function Header() {
       >
         <nav className="container-site flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2" aria-label={t("nav.menu")}>
           <ul className="divide-y divide-line">
+            <li>
+              <MobileModelSection
+                expanded={mobileModelOpen}
+                onToggle={() => setMobileModelOpen((v) => !v)}
+                onNavigate={() => setOpen(false)}
+              />
+            </li>
             {audienceNav.map((item) => {
               const active = linkActive(pathname, item.href);
               return (
@@ -213,7 +245,7 @@ export function Header() {
 
           <p className="eyebrow mt-8">{t("nav.moreLinks")}</p>
           <ul className="mt-3 grid grid-cols-2 gap-x-4">
-            {menuMoreNav.map((item) => (
+            {mobileMoreNav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}

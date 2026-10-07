@@ -14,7 +14,7 @@ export default async function UnsubscribePage({
 }) {
   const { t } = await searchParams;
   return (
-    <section className="section-pad">
+    <section className="section-pad !pt-28 lg:!pt-32">
       <div className="container-site max-w-xl">
         <h1 className="text-3xl font-semibold tracking-tight text-ink">Unsubscribe</h1>
         {t ? (

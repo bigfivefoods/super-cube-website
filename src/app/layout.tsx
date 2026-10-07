@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -127,6 +128,7 @@ export default function RootLayout({
             </div>
             <ErrorBoundary>
               <main id="main-content" className="flex-1" tabIndex={-1}>
+                <Breadcrumbs />
                 {children}
               </main>
             </ErrorBoundary>

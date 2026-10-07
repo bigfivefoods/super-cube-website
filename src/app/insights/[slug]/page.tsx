@@ -36,7 +36,7 @@ export default async function InsightPostPage({
   return (
     <article>
       <header className="border-b border-line bg-bg">
-        <div className="container-site max-w-3xl py-12 sm:py-16">
+        <div className="container-site max-w-3xl pb-12 pt-28 sm:pb-16 lg:pt-32">
           <p className="eyebrow">Insights</p>
           <h1 className="heading-lg mt-3 text-ink">{post.title}</h1>
           <p className="mt-3 text-sm text-muted">

@@ -50,7 +50,7 @@ export default function VerifyCertificatePage() {
     : null;
 
   return (
-    <main className="mx-auto max-w-lg px-4 py-16 sm:py-20">
+    <main className="mx-auto max-w-lg px-4 pb-16 pt-28 sm:pb-20 lg:pt-32">
       <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
         Certificate verification
       </p>
