@@ -16,6 +16,9 @@ const alertBox = (page: Page) => page.locator('[role="alert"]:not(#__next-route-
 test.describe("LMS admin console", () => {
   test.skip(!stack, "needs the local Supabase stack (LMS_STACK=1)");
   test.describe.configure({ mode: "serial" });
+  // Own client IP per run, so the admin sign-in rate limit (stage 8) doesn't
+  // carry over between local runs.
+  test.use({ extraHTTPHeaders: { "x-forwarded-for": `198.51.100.${Math.floor(Math.random() * 250) + 1}` } });
 
   async function signIn(page: Page, email: string) {
     await page.goto("/admin");

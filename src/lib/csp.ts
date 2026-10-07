@@ -1,8 +1,10 @@
 /**
  * Content-Security-Policy for every page (wired in next.config.ts).
  *
- * Mode is set by CSP_MODE: "report-only" (default) or "enforce". Violations go
- * to /api/csp-report, which logs them for Vercel runtime logs.
+ * Enforced by default (since stage 8b: report-only on production raised no
+ * violations). Build with CSP_MODE=report-only to fall back to report-only
+ * without a code change. Violations go to /api/csp-report, which logs them
+ * for Vercel runtime logs.
  *
  * Scripts keep 'unsafe-inline' because Next.js inlines its bootstrap and the
  * theme script on statically rendered pages (nonces would force every page to
@@ -27,7 +29,7 @@ function originOf(url: string | undefined): string | null {
 export type CspMode = "report-only" | "enforce";
 
 export function cspMode(env: Record<string, string | undefined> = process.env): CspMode {
-  return env.CSP_MODE === "enforce" ? "enforce" : "report-only";
+  return env.CSP_MODE === "report-only" ? "report-only" : "enforce";
 }
 
 export function buildCsp(env: Record<string, string | undefined> = process.env): string {
@@ -46,7 +48,7 @@ export function buildCsp(env: Record<string, string | undefined> = process.env):
       "'self'",
       "'unsafe-inline'",
       dev && "'unsafe-eval'",
-      "https://www.googletagmanager.com",
+      "https://*.googletagmanager.com",
       "https://browser.sentry-cdn.com",
       "https://vercel.live",
     ),
@@ -59,7 +61,7 @@ export function buildCsp(env: Record<string, string | undefined> = process.env):
       supabaseWs ?? "wss://*.supabase.co",
       "https://*.google-analytics.com",
       "https://*.analytics.google.com",
-      "https://www.googletagmanager.com",
+      "https://*.googletagmanager.com",
       "https://*.sentry.io",
       "https://vercel.live",
       "wss://ws-us3.pusher.com",
