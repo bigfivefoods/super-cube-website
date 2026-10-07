@@ -178,7 +178,7 @@ const pt: Dict = {
     "Sim. O pacote piloto inclui preços, um calendário de 8 semanas, notas sobre consentimento e ferramentas para o coach. Crie um código de turma, convide os formandos e exporte o progresso do grupo quando as organizações estiverem ativas.",
   "faq.q7": "O Super-Cube® baseia-se em investigação?",
   "faq.a7":
-    "Sim. O modelo assenta numa investigação de doutoramento (UKZN, 2021) em redes empresariais africanas e sintetiza as grandes escolas de liderança com o Ubuntu, a relação Eu–Tu e os quadros integrais.",
+    "Sim. O modelo assenta numa investigação de doutoramento (UKZN, 2020) em redes empresariais africanas e sintetiza as grandes escolas de liderança com o Ubuntu, a relação Eu–Tu e os quadros integrais.",
   "faq.q8": "Como funcionam os certificados?",
   "faq.a8":
     "Depois da avaliação final, pode obter um certificado com um código de verificação público. Qualquer pessoa pode confirmar a autenticidade na página de verificação, sem ver os seus diários privados.",

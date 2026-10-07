@@ -15,7 +15,7 @@ const glance = [
   ["Author", "Dr Craig Ross Muller"],
   ["Degree", "Doctor of Business Administration (DBA)"],
   ["Institution", "University of KwaZulu-Natal (2021)"],
-  ["Model", "Super-Cube® (2021 thesis · peer-reviewed)"],
+  ["Model", "Super-Cube® (2020 thesis · peer-reviewed)"],
   ["Case context", "African FMCG business-network"],
   ["Validation", "Mixed-methods · CFA · thematic interviews"],
 ];
@@ -199,12 +199,9 @@ export default function AboutPage() {
               <Link href="/the-model#theory">the full theory map</Link>.
             </p>
             <p>
-              The thesis—
-              <em>
-                A Leadership Skills Development Model for the Kwaden Group: A
-                Case Study of an African FMCG Business-Network
-              </em>
-              —addressed leadership capacity challenges in Africa’s fast-moving
+              The thesis (December 2020), a leadership skills development model
+              built as a case study of an African FMCG business network,
+              addressed leadership capacity challenges in Africa’s fast-moving
               consumer goods sector: rapid population growth, talent abundance
               alongside skills shortages, corruption pressures, poverty,
               conflict, and institutional weaknesses.

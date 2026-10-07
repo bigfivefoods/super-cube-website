@@ -9,7 +9,7 @@ import type { NewsPost } from "./types";
 
 const LMS_BODY = `*By Dr Craig R. Muller, author of the Super-Cube® Leadership Model*
 
-For much of my working life I have asked one question: can leadership be developed on purpose? My doctoral research at the University of KwaZulu-Natal (DBA, 2021) said yes, and it gave us the **Super-Cube®** model. Today I am proud to share the next step: the new **Super-Cube® LMS** here at super-cube.me, built so that anyone, from a child in primary school to a senior executive, can grow as a leader and see the change.
+For much of my working life I have asked one question: can leadership be developed on purpose? My doctoral research at the University of KwaZulu-Natal (DBA thesis, 2020) said yes, and it gave us the **Super-Cube®** model. Today I am proud to share the next step: the new **Super-Cube® LMS** here at super-cube.me, built so that anyone, from a child in primary school to a senior executive, can grow as a leader and see the change.
 
 ![The Super-Cube® home page on a laptop beside the Super-Cube® LMS Today screen on a phone](/news/super-cube-lms-screens.jpg)
 
@@ -151,7 +151,7 @@ That before-and-after loop now sits at the heart of every Super-Cube® programme
 - **Organisations:** run a Super-Cube® pilot for your managers: a baseline for every leader, six short courses, a re-assessment and a before-and-after cohort report you can take to your board: [plan a pilot for your organisation](/organisations)
 
 
-**About these results.** These are aggregated pre- and post-course assessment results from Super-Cube® leadership development interventions (NQF levels 3–5) at South African and international FMCG organisations, including Imana Foods and Kerry Foods, as reported in the Super-Cube® company profile (September 2023). Gains are changes in average assessment scores in percentage points. They describe these cohorts and are not a guarantee of results for any individual or organisation. Separately, the structure of the six-face model was validated in Dr Craig Muller's doctoral research at the University of KwaZulu-Natal (2021).
+**About these results.** These are aggregated pre- and post-course assessment results from Super-Cube® leadership development interventions (NQF levels 3–5) at South African and international FMCG organisations, including Imana Foods and Kerry Foods, as reported in the Super-Cube® company profile (September 2023). Gains are changes in average assessment scores in percentage points. They describe these cohorts and are not a guarantee of results for any individual or organisation. Separately, the structure of the six-face model was validated in Dr Craig Muller's doctoral research at the University of KwaZulu-Natal (thesis, 2020).
 
 *Quotes are reproduced verbatim from learner feedback, with permission.*`;
 

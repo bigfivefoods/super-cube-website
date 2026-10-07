@@ -56,10 +56,11 @@ export default function ResearchPage() {
           />
           <div className="prose-site mt-6 space-y-4 text-slate">
             <p>
-              <strong className="text-ink">Title:</strong> A Leadership Skills
-              Development Model for the Kwaden Group: A Case Study of an African
-              FMCG Business-Network (Muller, C. R., 2021, University of
-              KwaZulu-Natal, Doctor of Business Administration).
+              <strong className="text-ink">Thesis:</strong> a leadership skills
+              development model (Super-Cube®), a case study of an African FMCG
+              business network (Muller, C. R., December 2020, University of
+              KwaZulu-Natal, Doctor of Business Administration; degree conferred
+              2021).
             </p>
             <p>
               Leadership capacity in emerging-market business networks is
@@ -364,15 +365,15 @@ export default function ResearchPage() {
                 <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
                   Thesis
                 </span>
-                <span className="text-xs text-muted">2021</span>
+                <span className="text-xs text-muted">2020</span>
               </div>
               <p className="mt-2 font-semibold text-ink">
-                A Leadership Skills Development Model for the Kwaden Group: A
-                Case Study of an African FMCG Business-Network
+                A leadership skills development model (Super-Cube®): a case study
+                of an African FMCG business network
               </p>
               <p className="mt-1 text-sm text-muted">
                 Craig Ross Muller · DBA thesis · University of KwaZulu-Natal ·
-                2021
+                December 2020
               </p>
               <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                 <a

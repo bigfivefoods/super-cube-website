@@ -205,7 +205,7 @@ const zu: Dict = {
     "Yebo. Sebenzisa iphakethe le-pilot lamanani, ikhalenda yamaviki angu-8, amanothi emvume, namathuluzi omqeqeshi. Dala ikhodi yeqembu, mema abafundi, ukhiphe inqubekela phambili uma ama-SQL orgs evuliwe.",
   "faq.q7": "Ingabe i-Super-Cube® isekelwe ocwaningweni?",
   "faq.a7":
-    "Yebo. Imodeli isuselwa ocwaningweni lweziqu (UKZN, 2021) kumanethiwekhi webhizinisi e-Afrika futhi ihlanganisa izikole ezinkulu zobuholi ne-Ubuntu, I–Thou, nohlaka oluhlangene.",
+    "Yebo. Imodeli isuselwa ocwaningweni lweziqu (UKZN, 2020) kumanethiwekhi webhizinisi e-Afrika futhi ihlanganisa izikole ezinkulu zobuholi ne-Ubuntu, I–Thou, nohlaka oluhlangene.",
   "faq.q8": "Izitifiketi zisebenza kanjani?",
   "faq.a8":
     "Ngemva kokuhlolwa kokuphela, ungathola isitifiketi esine-ID yokuqinisekisa esidlangalaleni. Noma ubani angahlola ubuqiniso ekhasini lokuqinisekisa ngaphandle kokubona amadayari ayimfihlo.",

@@ -84,7 +84,7 @@ const en: HomeStrings = {
     "Measure your leadership in 10 minutes. Practise the areas that need it most. Measure again, and see the change in a report you can share.",
   heroCtaBaseline: "Start free baseline · 10 min",
   heroCtaSample: "See a sample report",
-  heroResearch: "Built on doctoral research at the University of KwaZulu-Natal (DBA, 2021).",
+  heroResearch: "Built on doctoral research at the University of KwaZulu-Natal (2020).",
   whatEyebrow: "What it is",
   whatTitle: "A simple loop: measure, practise, prove.",
   whatDescription:
@@ -165,7 +165,7 @@ const en: HomeStrings = {
   researchEyebrow: "The research",
   researchTitle: "Tested before it was taught.",
   researchDescription:
-    "Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (DBA, 2021). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.",
+    "Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (2020). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.",
   researchCardLabel: "12-week Super-Cube® leadership interventions",
   researchEmotional: "Emotional gain",
   researchOverall: "Overall growth across all six faces",
@@ -194,7 +194,7 @@ const fr: Draft = {
     "Mesurez votre leadership en 10 minutes. Travaillez les points qui en ont le plus besoin. Mesurez à nouveau et constatez les progrès dans un rapport que vous pouvez partager.",
   heroCtaBaseline: "Bilan initial gratuit · 10 min",
   heroCtaSample: "Voir un exemple de rapport",
-  heroResearch: "Fondé sur une recherche doctorale menée à l’Université du KwaZulu-Natal (DBA, 2021).",
+  heroResearch: "Fondé sur une recherche doctorale menée à l’Université du KwaZulu-Natal (2020).",
   whatEyebrow: "De quoi s’agit-il" + NB + "?",
   whatTitle: "Une boucle simple" + NB + ": mesurer, pratiquer, prouver.",
   whatDescription:
@@ -277,7 +277,7 @@ const fr: Draft = {
   researchEyebrow: "La recherche",
   researchTitle: "Testé avant d’être enseigné.",
   researchDescription:
-    "Super-Cube® est issu de la recherche doctorale du Dr Craig Muller à l’Université du KwaZulu-Natal (DBA, 2021). Le modèle a été testé au moyen d’une enquête auprès de 132 employés et d’entretiens avec 10 dirigeants, puis publié dans des revues à comité de lecture.",
+    "Super-Cube® est issu de la recherche doctorale du Dr Craig Muller à l’Université du KwaZulu-Natal (2020). Le modèle a été testé au moyen d’une enquête auprès de 132 employés et d’entretiens avec 10 dirigeants, puis publié dans des revues à comité de lecture.",
   researchCardLabel: "Interventions Super-Cube® de 12 semaines",
   researchEmotional: "Gain, face émotionnelle",
   researchOverall: "Croissance globale sur les six faces",
@@ -307,7 +307,7 @@ const pt: Draft = {
     "Meça a sua liderança em 10 minutos. Pratique as áreas que mais precisam. Volte a medir e veja a mudança num relatório que pode partilhar.",
   heroCtaBaseline: "Avaliação inicial grátis · 10 min",
   heroCtaSample: "Ver um relatório de exemplo",
-  heroResearch: "Baseado em investigação de doutoramento na Universidade de KwaZulu-Natal (DBA, 2021).",
+  heroResearch: "Baseado em investigação de doutoramento na Universidade de KwaZulu-Natal (2020).",
   whatEyebrow: "O que é",
   whatTitle: "Um ciclo simples: medir, praticar, comprovar.",
   whatDescription:
@@ -388,7 +388,7 @@ const pt: Draft = {
   researchEyebrow: "A investigação",
   researchTitle: "Testado antes de ser ensinado.",
   researchDescription:
-    "O Super-Cube® nasceu da investigação de doutoramento do Dr. Craig Muller na Universidade de KwaZulu-Natal (DBA, 2021). O modelo foi testado com um inquérito a 132 colaboradores e entrevistas a 10 líderes seniores, e publicado em revistas com revisão por pares.",
+    "O Super-Cube® nasceu da investigação de doutoramento do Dr. Craig Muller na Universidade de KwaZulu-Natal (2020). O modelo foi testado com um inquérito a 132 colaboradores e entrevistas a 10 líderes seniores, e publicado em revistas com revisão por pares.",
   researchCardLabel: "Intervenções Super-Cube® de 12 semanas",
   researchEmotional: "Ganho, face emocional",
   researchOverall: "Crescimento global nas seis faces",
@@ -416,7 +416,7 @@ const sw: Draft = {
     "Pima uongozi wako kwa dakika 10. Fanyia mazoezi maeneo yanayohitaji zaidi. Pima tena, na uone mabadiliko katika ripoti unayoweza kushiriki.",
   heroCtaBaseline: "Anza tathmini ya bure · dak. 10",
   heroCtaSample: "Tazama mfano wa ripoti",
-  heroResearch: "Umejengwa juu ya utafiti wa uzamivu katika Chuo Kikuu cha KwaZulu-Natal (DBA, 2021).",
+  heroResearch: "Umejengwa juu ya utafiti wa uzamivu katika Chuo Kikuu cha KwaZulu-Natal (2020).",
   whatEyebrow: "Ni nini",
   whatTitle: "Mzunguko rahisi: pima, fanya mazoezi, thibitisha.",
   whatDescription:
@@ -497,7 +497,7 @@ const sw: Draft = {
   researchEyebrow: "Utafiti",
   researchTitle: "Ulijaribiwa kabla ya kufundishwa.",
   researchDescription:
-    "Super-Cube® ulitokana na utafiti wa uzamivu wa Dkt. Craig Muller katika Chuo Kikuu cha KwaZulu-Natal (DBA, 2021). Modeli ilijaribiwa kwa utafiti wa wafanyakazi 132 na mahojiano na viongozi wakuu 10, na ikachapishwa katika majarida yanayokaguliwa na wataalamu.",
+    "Super-Cube® ulitokana na utafiti wa uzamivu wa Dkt. Craig Muller katika Chuo Kikuu cha KwaZulu-Natal (2020). Modeli ilijaribiwa kwa utafiti wa wafanyakazi 132 na mahojiano na viongozi wakuu 10, na ikachapishwa katika majarida yanayokaguliwa na wataalamu.",
   researchCardLabel: "Mafunzo ya uongozi ya Super-Cube® ya wiki 12",
   researchEmotional: "Ongezeko, upande wa hisia",
   researchOverall: "Ukuaji wa jumla katika pande zote sita",
@@ -526,7 +526,7 @@ const ar: Draft = {
     "قِس قيادتك في 10 دقائق. تدرّب على الجوانب الأكثر حاجة. ثم قِس من جديد وشاهد التغيير في تقرير يمكنك مشاركته.",
   heroCtaBaseline: "ابدأ التقييم المجاني · 10 دقائق",
   heroCtaSample: "اطّلع على نموذج تقرير",
-  heroResearch: "مبني على بحث دكتوراه في جامعة كوازولو-ناتال (DBA، 2021).",
+  heroResearch: "مبني على بحث دكتوراه في جامعة كوازولو-ناتال (2020).",
   whatEyebrow: "ما هو",
   whatTitle: "حلقة بسيطة: قِس، تدرّب، أثبِت.",
   whatDescription: `ينظر ${SC} إلى القائد ككل، لا إلى مهارة واحدة. فهو يقيس ستة أوجه: الخيارات، والمبادئ، والعقلي، والعاطفي، والجسدي، والروحي. ثم يساعدك على تنمية الأوجه الأهم بالنسبة إليك.`,
@@ -603,7 +603,7 @@ const ar: Draft = {
   fullPricing: "اطّلع على جميع الأسعار",
   researchEyebrow: "البحث",
   researchTitle: "اختُبر قبل أن يُدرَّس.",
-  researchDescription: `انبثق ${SC} من بحث الدكتوراه الذي أجراه الدكتور كريغ مولر في جامعة كوازولو-ناتال (DBA، 2021). اختُبر النموذج عبر استطلاع شمل 132 موظفًا ومقابلات مع 10 من كبار القادة، ونُشر في مجلات علمية محكّمة.`,
+  researchDescription: `انبثق ${SC} من بحث الدكتوراه الذي أجراه الدكتور كريغ مولر في جامعة كوازولو-ناتال (2020). اختُبر النموذج عبر استطلاع شمل 132 موظفًا ومقابلات مع 10 من كبار القادة، ونُشر في مجلات علمية محكّمة.`,
   researchCardLabel: `تدخلات ${SC} القيادية لمدة 12 أسبوعًا`,
   researchEmotional: "المكسب في الوجه العاطفي",
   researchOverall: "النمو الإجمالي عبر الأوجه الستة كلها",
@@ -630,7 +630,7 @@ const zu: Draft = {
     "Linganisa ubuholi bakho emizuzwini eyi-10. Zilolonge ezindaweni ezidinga ukuthuthukiswa kakhulu. Phinda ulinganise, ubone ushintsho embikweni ongawabelana nabanye.",
   heroCtaBaseline: "Qala isisekelo samahhala · imiz. 10",
   heroCtaSample: "Bona umbiko wesampula",
-  heroResearch: "Kusekelwe ocwaningweni lobudokotela eNyuvesi yaKwaZulu-Natali (DBA, 2021).",
+  heroResearch: "Kusekelwe ocwaningweni lobudokotela eNyuvesi yaKwaZulu-Natali (2020).",
   whatEyebrow: "Kuyini",
   whatTitle: "Umjikelezo olula: linganisa, zilolonge, fakazela.",
   whatDescription:
@@ -711,7 +711,7 @@ const zu: Draft = {
   researchEyebrow: "Ucwaningo",
   researchTitle: "Kwahlolwa ngaphambi kokuba kufundiswe.",
   researchDescription:
-    "I-Super-Cube® yavela ocwaningweni lobudokotela lukaDkt Craig Muller eNyuvesi yaKwaZulu-Natali (DBA, 2021). Imodeli yahlolwa ngenhlolovo yabasebenzi abayi-132 nezingxoxo nabaholi abaphezulu abayi-10, futhi yashicilelwa kumajenali abuyekezwa ngontanga.",
+    "I-Super-Cube® yavela ocwaningweni lobudokotela lukaDkt Craig Muller eNyuvesi yaKwaZulu-Natali (2020). Imodeli yahlolwa ngenhlolovo yabasebenzi abayi-132 nezingxoxo nabaholi abaphezulu abayi-10, futhi yashicilelwa kumajenali abuyekezwa ngontanga.",
   researchCardLabel: "Izinhlelo zobuholi ze-Super-Cube® zamasonto ayi-12",
   researchEmotional: "Inzuzo, uhlangothi lwemizwa",
   researchOverall: "Ukukhula okuphelele kuzo zonke izinhlangothi eziyisithupha",
@@ -739,7 +739,7 @@ const af: Draft = {
     "Meet jou leierskap in 10 minute. Oefen die areas wat dit die meeste nodig het. Meet weer, en sien die verandering in ’n verslag wat jy kan deel.",
   heroCtaBaseline: "Begin gratis basislyn · 10 min",
   heroCtaSample: "Sien ’n voorbeeldverslag",
-  heroResearch: "Gebou op doktorale navorsing aan die Universiteit van KwaZulu-Natal (DBA, 2021).",
+  heroResearch: "Gebou op doktorale navorsing aan die Universiteit van KwaZulu-Natal (2020).",
   whatEyebrow: "Wat dit is",
   whatTitle: "’n Eenvoudige kringloop: meet, oefen, bewys.",
   whatDescription:
@@ -820,7 +820,7 @@ const af: Draft = {
   researchEyebrow: "Die navorsing",
   researchTitle: "Getoets voordat dit geleer is.",
   researchDescription:
-    "Super-Cube® het uit dr. Craig Muller se doktorale navorsing aan die Universiteit van KwaZulu-Natal (DBA, 2021) voortgespruit. Die model is getoets met ’n opname onder 132 werknemers en onderhoude met 10 senior leiers, en is in eweknie-beoordeelde vaktydskrifte gepubliseer.",
+    "Super-Cube® het uit dr. Craig Muller se doktorale navorsing aan die Universiteit van KwaZulu-Natal (2020) voortgespruit. Die model is getoets met ’n opname onder 132 werknemers en onderhoude met 10 senior leiers, en is in eweknie-beoordeelde vaktydskrifte gepubliseer.",
   researchCardLabel: "12-week Super-Cube®-leierskapsintervensies",
   researchEmotional: "Groei, emosionele vlak",
   researchOverall: "Algehele groei oor al ses vlakke",

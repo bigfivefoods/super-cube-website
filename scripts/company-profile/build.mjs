@@ -250,7 +250,7 @@ function build(L, img) {
           <p class="sub">Visionary architect of Kingdom-centred leadership and sustainable impact in Africa</p>
           <p>Dr Craig Muller is a driven innovator—a DBA-credentialed executive with over 20 years of blue-chip experience in FMCG, supply chain optimisation, and global consulting.</p>
           <p>His goal is to <b>feed</b> (Big Five Foods), <b>educate</b> (Super-Cube® leadership development), and <b>empower</b> (SupplierAdvisor®) people across the African continent—to help progress humanity.</p>
-          <p>The Super-Cube® Leadership Model was developed as the core output of his Doctor of Business Administration thesis at the University of KwaZulu-Natal (2021): <i>A Leadership Skills Development Model for the Kwaden Group: A Case Study of an African FMCG Business-Network.</i></p>
+          <p>The Super-Cube® Leadership Model was developed as the core output of his Doctor of Business Administration thesis at the University of KwaZulu-Natal (December 2020; degree conferred 2021), a case study of an African FMCG business network.</p>
           <div class="chips">${["Integrity", "Excellence", "Compassionate empowerment"].map((v) => `<span>${v}</span>`).join("")}</div>
         </div>
       </div>
@@ -269,7 +269,7 @@ function build(L, img) {
           <dl class="dl kv">
             <dt>Degree</dt><dd>Doctor of Business Administration (DBA)</dd>
             <dt>Institution</dt><dd>University of KwaZulu-Natal (2021)</dd>
-            <dt>Model</dt><dd>Super-Cube® (2021 thesis · peer-reviewed)</dd>
+            <dt>Model</dt><dd>Super-Cube® (2020 thesis · peer-reviewed)</dd>
             <dt>Case context</dt><dd>African FMCG business-network</dd>
             <dt>Validation</dt><dd>Mixed-methods · CFA · thematic interviews</dd>
           </dl>
@@ -356,7 +356,7 @@ function build(L, img) {
     <div class="pad">
       ${eyebrow("The research")}
       <h2>Tested before it was taught.</h2>
-      <p class="lede">Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (DBA, 2021). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.</p>
+      <p class="lede">Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (thesis, 2020). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.</p>
       <div class="research-top">
         <div class="hero-num"><p class="k">12-week intervention result · Emotional face</p><p class="huge">+${interventionGains.find((g) => g.constructId === "emotional").gainPct}%</p><p class="small">Overall, all six faces: <b>+${overallInterventionGain}%</b></p></div>
         <figure class="photo"><img src="${img.research}" alt="A university library reading room"></figure>

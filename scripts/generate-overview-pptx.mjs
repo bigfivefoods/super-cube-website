@@ -394,7 +394,7 @@ async function main() {
     });
 
     s.addText(
-      "Craig Ross Muller  ·  UKZN DBA 2020  ·  Schools · Corporate L&D · Coaches",
+      "Craig Ross Muller  ·  UKZN DBA 2021  ·  Schools · Corporate L&D · Coaches",
       {
         x: M,
         y: 4.7,
@@ -936,7 +936,7 @@ async function main() {
       charSpacing: 1.5,
       margin: 0,
     });
-    s.addText("UKZN · DBA · 2020", {
+    s.addText("UKZN · DBA thesis · 2020", {
       x: M + 0.4,
       y: 2.45,
       w: 5.3,
@@ -948,7 +948,7 @@ async function main() {
       margin: 0,
     });
     s.addText(
-      "A Leadership Skills Development Model for the Kwaden Group: A Case Study of an African FMCG Business-Network (Muller, C. R.).",
+      "A leadership skills development model (Super-Cube®): a case study of an African FMCG business network (Muller, C. R., 2020).",
       {
         x: M + 0.4,
         y: 3.05,

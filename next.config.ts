@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
       ...((TRANSLATED_PATHS as readonly string[]).includes("/")
         ? []
         : [{ source: `/:locale(${PREFIXED_LOCALES.join("|")})`, destination: "/", permanent: false }]),
+      // The JCM paper's file was renamed (no case-company name in the URL); old links keep working.
+      {
+        source: "/research/jcm-2022-kwaden-leadership-skills-model.pdf",
+        destination: "/research/jcm-2022-leadership-skills-model.pdf",
+        permanent: true,
+      },
     ];
   },
   async headers() {

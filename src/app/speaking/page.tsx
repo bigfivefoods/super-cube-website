@@ -37,7 +37,7 @@ const topics = [
 
 const facts = [
   "Doctor of Business Administration (DBA), University of KwaZulu-Natal, 2021",
-  "Creator of the Super-Cube® leadership model, developed in his 2021 doctoral thesis",
+  "Creator of the Super-Cube® leadership model, developed in his 2020 doctoral thesis",
   "Research published in peer-reviewed journals (SAJEMS and the Journal of Contemporary Management)",
   "Over 20 years of blue-chip experience in FMCG, supply chain and consulting",
 ];
