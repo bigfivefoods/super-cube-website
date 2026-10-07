@@ -123,6 +123,11 @@ const pt: Dict = {
   "footer.legal": "Informação legal",
   "footer.rights": "Todos os direitos reservados.",
   "footer.partOf": "Parte da Big Five Learn, a divisão Educar do Big Five Group",
+  "footer.companyProfile": "Perfil da empresa (PDF)",
+  // Company profile download (home hero)
+  "home.profileCta": "Baixar o perfil da empresa",
+  "home.profileMeta": "{pages} páginas · PDF",
+  "home.profileLabel": "Baixar o perfil da empresa (PDF, {pages} páginas, {size})",
 
   "cta.tryFree": "Avaliação inicial grátis",
   "cta.bookPilot": "Marcar um piloto",

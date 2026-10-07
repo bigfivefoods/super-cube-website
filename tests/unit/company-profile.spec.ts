@@ -1,6 +1,8 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 import { expect, test } from "@playwright/test";
+import { COMPANY_PROFILE } from "../../src/lib/company-profile";
+import en from "../../src/lib/i18n/dict/en";
 
 /**
  * The downloadable company profile (public/super-cube-company-profile.pdf,
@@ -36,6 +38,32 @@ test("media kit and pilot pack link to the company profile PDF", () => {
     expect(src, rel).toContain('href="/super-cube-company-profile.pdf"');
     expect(src, rel).toContain("Download company profile (PDF)");
   }
+});
+
+test("the size hint (pages · MB) shown in the hero matches the PDF", () => {
+  expect(COMPANY_PROFILE.href).toBe("/super-cube-company-profile.pdf");
+  const buf = readFileSync(PDF);
+  const pages = (buf.toString("latin1").match(/\/Type\s*\/Page(?![s\w])/g) ?? []).length;
+  expect(pages).toBe(COMPANY_PROFILE.pages);
+  const mb = Number.parseFloat(COMPANY_PROFILE.size);
+  expect(COMPANY_PROFILE.size).toMatch(/^\d+(\.\d)? MB$/);
+  expect(Math.abs(buf.length / 1_000_000 - mb)).toBeLessThan(0.1);
+});
+
+test("home hero and footer link to the company profile PDF (download)", () => {
+  const hero = readFileSync(path.join(ROOT, "src/components/home/HomeLanding.tsx"), "utf8");
+  expect(hero).toContain("href={COMPANY_PROFILE.href}");
+  expect(hero).toMatch(/href=\{COMPANY_PROFILE\.href\}[\s\S]{0,120}\bdownload\s+variant="light"/);
+  expect(hero).toContain('translate(dict, "home.profileCta")');
+  expect(hero).toContain('translate(dict, "home.profileLabel"');
+  expect(en["home.profileCta"]).toBe("Download company profile");
+  expect(en["home.profileMeta"]).toBe("{pages} pages · PDF");
+  // Label in name: the accessible label starts with the visible words.
+  expect(en["home.profileLabel"].startsWith(en["home.profileCta"])).toBe(true);
+
+  const footer = readFileSync(path.join(ROOT, "src/components/Footer.tsx"), "utf8");
+  expect(footer).toMatch(/href: COMPANY_PROFILE\.href, label: "Company profile \(PDF\)", key: "footer\.companyProfile", file: true/);
+  expect(en["footer.companyProfile"]).toBe("Company profile (PDF)");
 });
 
 test("no page links to the retired overview deck", () => {

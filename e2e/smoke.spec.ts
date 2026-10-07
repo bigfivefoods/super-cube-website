@@ -16,6 +16,33 @@ test.describe("Super-Cube smoke", () => {
     ).toBeVisible();
   });
 
+  test("home hero: company profile PDF download next to the primary CTA", async ({ page }) => {
+    await page.goto(base + "/");
+    const hero = page.locator("main section").first();
+    const primary = hero.getByRole("link", { name: /start free baseline/i });
+    const pdf = hero.getByRole("link", { name: /^download company profile/i });
+    await expect(pdf).toBeVisible();
+    await expect(pdf).toHaveAttribute("href", "/super-cube-company-profile.pdf");
+    await expect(pdf).toHaveAttribute("download", "");
+    await expect(pdf).toHaveAccessibleName(/^Download company profile \(PDF, 15 pages, [\d.]+ MB\)$/);
+    await expect(pdf).toContainText("15 pages · PDF");
+    // Secondary sits straight after the primary CTA.
+    const order = await hero.locator("a").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
+    expect(order.indexOf("/super-cube-company-profile.pdf")).toBe(order.indexOf("/learn/start") + 1);
+    for (const width of [1280, 1024, 768, 390]) {
+      await page.setViewportSize({ width, height: width < 640 ? 844 : 900 });
+      const box = await pdf.boundingBox();
+      const primaryBox = await primary.boundingBox();
+      // 44px target, one line of text (no wrapping inside the button), inside the viewport.
+      expect(box!.height, `${width}px`).toBeGreaterThanOrEqual(44);
+      expect(box!.height, `${width}px`).toBeLessThanOrEqual(primaryBox!.height + 1);
+      expect(box!.x + box!.width, `${width}px`).toBeLessThanOrEqual(width);
+    }
+    const res = await page.request.get(base + "/super-cube-company-profile.pdf");
+    expect(res.status()).toBe(200);
+    expect(res.headers()["content-type"]).toContain("application/pdf");
+  });
+
   test("privacy and terms", async ({ page }) => {
     await page.goto(base + "/privacy");
     await expect(page.getByText(/journals stay private/i).first()).toBeVisible();
@@ -87,6 +114,9 @@ test.describe("Super-Cube smoke", () => {
       "href",
       "https://www.supplieradvisor.com"
     );
+    const profile = footer.getByRole("link", { name: "Company profile (PDF)", exact: true });
+    await expect(profile).toHaveAttribute("href", "/super-cube-company-profile.pdf");
+    await expect(profile).toHaveAttribute("download", "");
     await expect(footer.getByRole("link", { name: "Privacy", exact: true }).last()).toBeVisible();
     await expect(footer.getByRole("textbox", { name: /email address/i })).toBeVisible();
     await expect(footer.getByRole("button", { name: /subscribe/i })).toBeVisible();

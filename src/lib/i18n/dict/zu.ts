@@ -114,6 +114,11 @@ const zu: Dict = {
   "footer.legal": "Okomthetho",
   "footer.rights": "Wonke amalungelo agodliwe.",
   "footer.partOf": "Ingxenye ye-Big Five Learn, uphiko lwe-Big Five Group oluthi Fundisa",
+  "footer.companyProfile": "Iphrofayela yenkampani (PDF)",
+  // Company profile download (home hero)
+  "home.profileCta": "Landa iphrofayela yenkampani",
+  "home.profileMeta": "Amakhasi angu-{pages} · PDF",
+  "home.profileLabel": "Landa iphrofayela yenkampani (PDF, amakhasi angu-{pages}, {size})",
 
   "cta.tryFree": "Qala isisekelo samahhala",
   "cta.bookPilot": "Bhuka i-pilot",

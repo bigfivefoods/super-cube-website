@@ -122,6 +122,11 @@ const sw: Dict = {
   "footer.legal": "Kisheria",
   "footer.rights": "Haki zote zimehifadhiwa.",
   "footer.partOf": "Sehemu ya Big Five Learn, kitengo cha Elimisha cha Big Five Group",
+  "footer.companyProfile": "Wasifu wa kampuni (PDF)",
+  // Company profile download (home hero)
+  "home.profileCta": "Pakua wasifu wa kampuni",
+  "home.profileMeta": "Kurasa {pages} · PDF",
+  "home.profileLabel": "Pakua wasifu wa kampuni (PDF, kurasa {pages}, {size})",
 
   "cta.tryFree": "Anza tathmini ya bure",
   "cta.bookPilot": "Panga majaribio",

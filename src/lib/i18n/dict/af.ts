@@ -112,6 +112,11 @@ const af: Dict = {
   "footer.legal": "Regsake",
   "footer.rights": "Alle regte voorbehou.",
   "footer.partOf": "Deel van Big Five Learn, die Opvoed-afdeling van die Big Five Group",
+  "footer.companyProfile": "Maatskappyprofiel (PDF)",
+  // Company profile download (home hero)
+  "home.profileCta": "Laai maatskappyprofiel af",
+  "home.profileMeta": "{pages} bladsye · PDF",
+  "home.profileLabel": "Laai maatskappyprofiel af (PDF, {pages} bladsye, {size})",
 
   "cta.tryFree": "Begin gratis basislyn",
   "cta.bookPilot": "Bespreek ’n loods",

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSyncExternalStore, type ReactNode } from "react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { useLocale } from "@/components/LocaleProvider";
+import { COMPANY_PROFILE } from "@/lib/company-profile";
 import { constructs, site } from "@/lib/content";
 import { faceI18n, isEnglishOnlyHref, mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
 
@@ -32,6 +33,8 @@ type FooterLink = {
   external?: boolean;
   /** Construct colour dot (six faces). */
   dot?: string;
+  /** A file (PDF): plain <a download>, never language-prefixed (the file is English). */
+  file?: boolean;
 };
 type FooterGroup = { label: string; key?: I18nKey; links: FooterLink[] };
 
@@ -102,6 +105,7 @@ const resourceGroups: FooterGroup[] = [
       { href: "/insights", label: "Insights" },
       { href: "/news", label: "News", key: "nav.news" },
       { href: "/media", label: "Media kit" },
+      { href: COMPANY_PROFILE.href, label: "Company profile (PDF)", key: "footer.companyProfile", file: true },
     ],
   },
   {
@@ -238,12 +242,15 @@ function GroupedNav({
   label,
   t,
   to,
+  fileLang,
 }: {
   groups: FooterGroup[];
   ariaLabel: string;
   label: LabelFn;
   t: TFn;
   to: HrefFn;
+  /** "en" on translated pages: downloadable files are in English. */
+  fileLang?: string;
 }) {
   return (
     <nav className="space-y-4 sm:space-y-5" aria-label={ariaLabel}>
@@ -253,7 +260,11 @@ function GroupedNav({
           <ul className="space-y-0.5 sm:space-y-1">
             {group.links.map((l) => (
               <li key={l.href}>
-                {l.external ? (
+                {l.file ? (
+                  <a href={l.href} download hrefLang={fileLang} className={linkClass}>
+                    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">{label(l)}</span>
+                  </a>
+                ) : l.external ? (
                   <a href={l.href} className={linkClass}>
                     {/* Brand names read left to right (with their mark after) in every language */}
                     <span className="whitespace-nowrap" dir="ltr">
@@ -368,7 +379,14 @@ export function Footer() {
                 <GroupedNav groups={programmeGroups} ariaLabel={t("footer.programmes")} label={label} t={t} to={to} />
               </FooterNav>
               <FooterNav title={t("footer.resources")}>
-                <GroupedNav groups={resourceGroups} ariaLabel={t("footer.resources")} label={label} t={t} to={to} />
+                <GroupedNav
+                  groups={resourceGroups}
+                  ariaLabel={t("footer.resources")}
+                  label={label}
+                  t={t}
+                  to={to}
+                  fileLang={locale === "en" ? undefined : "en"}
+                />
               </FooterNav>
             </div>
           </div>
