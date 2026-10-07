@@ -503,8 +503,9 @@ export const levels = [
 export const stats = [
   {
     value: "+32.2%",
-    label: "Overall intervention gain",
-    detail: "Average improvement across all six constructs after Super-Cube® development",
+    label: "Overall growth across all six faces",
+    detail:
+      "12-week Super-Cube® leadership interventions: aggregated pre/post results, South African and international FMCG organisations (Super-Cube® company profile, Sept 2023)",
   },
   {
     value: "+45.1%",

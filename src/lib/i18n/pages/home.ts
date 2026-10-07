@@ -56,7 +56,7 @@ export type HomeStrings = {
   researchOverall: string;
   researchNote: string;
   readResearch: string;
-  /** Link to the FMCG case study post (English post; other languages fall back to this label). */
+  /** Link to the FMCG case study post (the post itself is in English). */
   readCaseStudy: string;
   aboutCraig: string;
   nextEyebrow: string;
@@ -166,11 +166,11 @@ const en: HomeStrings = {
   researchTitle: "Tested before it was taught.",
   researchDescription:
     "Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (DBA, 2021). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.",
-  researchCardLabel: "UKZN research result",
-  researchEmotional: "Emotional face",
-  researchOverall: "Overall, all six faces",
+  researchCardLabel: "12-week Super-Cube® leadership interventions",
+  researchEmotional: "Emotional gain",
+  researchOverall: "Overall growth across all six faces",
   researchNote:
-    "Average pre- to post-assessment improvement reported in the doctoral research. Not live programme data.",
+    "Aggregated pre- and post-course results, South African and international FMCG organisations. Source: Super-Cube® company profile, Sept 2023.",
   readResearch: "Read the research and theory",
   readCaseStudy: "Read the FMCG case study",
   aboutCraig: "About Dr Craig Muller",
@@ -278,12 +278,13 @@ const fr: Draft = {
   researchTitle: "Testé avant d’être enseigné.",
   researchDescription:
     "Super-Cube® est issu de la recherche doctorale du Dr Craig Muller à l’Université du KwaZulu-Natal (DBA, 2021). Le modèle a été testé au moyen d’une enquête auprès de 132 employés et d’entretiens avec 10 dirigeants, puis publié dans des revues à comité de lecture.",
-  researchCardLabel: "Résultat de la recherche (UKZN)",
-  researchEmotional: "Face émotionnelle",
-  researchOverall: "Global, les six faces",
+  researchCardLabel: "Interventions Super-Cube® de 12 semaines",
+  researchEmotional: "Gain, face émotionnelle",
+  researchOverall: "Croissance globale sur les six faces",
   researchNote:
-    "Amélioration moyenne entre l’évaluation initiale et finale rapportée dans la recherche doctorale. Il ne s’agit pas de données du programme en cours.",
+    "Résultats agrégés avant et après la formation, organisations FMCG sud-africaines et internationales. Source" + NB + ": profil d’entreprise Super-Cube®, sept. 2023.",
   readResearch: "Lire la recherche et la théorie",
+  readCaseStudy: "Lire l’étude de cas FMCG",
   aboutCraig: "À propos du Dr Craig Muller",
   nextEyebrow: "Prochaine étape",
   nextTitle: "Commencez par un bilan initial gratuit de 10 minutes.",
@@ -388,12 +389,13 @@ const pt: Draft = {
   researchTitle: "Testado antes de ser ensinado.",
   researchDescription:
     "O Super-Cube® nasceu da investigação de doutoramento do Dr. Craig Muller na Universidade de KwaZulu-Natal (DBA, 2021). O modelo foi testado com um inquérito a 132 colaboradores e entrevistas a 10 líderes seniores, e publicado em revistas com revisão por pares.",
-  researchCardLabel: "Resultado da investigação (UKZN)",
-  researchEmotional: "Face emocional",
-  researchOverall: "Global, as seis faces",
+  researchCardLabel: "Intervenções Super-Cube® de 12 semanas",
+  researchEmotional: "Ganho, face emocional",
+  researchOverall: "Crescimento global nas seis faces",
   researchNote:
-    "Melhoria média entre a avaliação inicial e a final, reportada na investigação de doutoramento. Não são dados do programa em curso.",
+    "Resultados agregados antes e depois do curso, organizações FMCG sul-africanas e internacionais. Fonte: perfil da empresa Super-Cube®, set. 2023.",
   readResearch: "Ler a investigação e a teoria",
+  readCaseStudy: "Ler o estudo de caso FMCG",
   aboutCraig: "Sobre o Dr. Craig Muller",
   nextEyebrow: "Próximo passo",
   nextTitle: "Comece com uma avaliação inicial gratuita de 10 minutos.",
@@ -496,12 +498,13 @@ const sw: Draft = {
   researchTitle: "Ulijaribiwa kabla ya kufundishwa.",
   researchDescription:
     "Super-Cube® ulitokana na utafiti wa uzamivu wa Dkt. Craig Muller katika Chuo Kikuu cha KwaZulu-Natal (DBA, 2021). Modeli ilijaribiwa kwa utafiti wa wafanyakazi 132 na mahojiano na viongozi wakuu 10, na ikachapishwa katika majarida yanayokaguliwa na wataalamu.",
-  researchCardLabel: "Matokeo ya utafiti wa UKZN",
-  researchEmotional: "Upande wa hisia",
-  researchOverall: "Jumla, pande zote sita",
+  researchCardLabel: "Mafunzo ya uongozi ya Super-Cube® ya wiki 12",
+  researchEmotional: "Ongezeko, upande wa hisia",
+  researchOverall: "Ukuaji wa jumla katika pande zote sita",
   researchNote:
-    "Wastani wa maboresho kati ya tathmini ya awali na ya mwisho yaliyoripotiwa katika utafiti wa uzamivu. Si data ya programu inayoendelea.",
+    "Matokeo ya jumla kabla na baada ya kozi, mashirika ya FMCG ya Afrika Kusini na ya kimataifa. Chanzo: wasifu wa kampuni ya Super-Cube®, Sept 2023.",
   readResearch: "Soma utafiti na nadharia",
+  readCaseStudy: "Soma uchunguzi kifani wa FMCG",
   aboutCraig: "Kuhusu Dkt. Craig Muller",
   nextEyebrow: "Hatua inayofuata",
   nextTitle: "Anza na tathmini ya awali ya bure ya dakika 10.",
@@ -601,11 +604,13 @@ const ar: Draft = {
   researchEyebrow: "البحث",
   researchTitle: "اختُبر قبل أن يُدرَّس.",
   researchDescription: `انبثق ${SC} من بحث الدكتوراه الذي أجراه الدكتور كريغ مولر في جامعة كوازولو-ناتال (DBA، 2021). اختُبر النموذج عبر استطلاع شمل 132 موظفًا ومقابلات مع 10 من كبار القادة، ونُشر في مجلات علمية محكّمة.`,
-  researchCardLabel: "نتيجة بحث جامعة كوازولو-ناتال",
-  researchEmotional: "الوجه العاطفي",
-  researchOverall: "الإجمالي، الأوجه الستة كلها",
-  researchNote: "متوسط التحسّن بين التقييم الأولي والنهائي كما ورد في بحث الدكتوراه. ليست بيانات حيّة من البرنامج.",
+  researchCardLabel: `تدخلات ${SC} القيادية لمدة 12 أسبوعًا`,
+  researchEmotional: "المكسب في الوجه العاطفي",
+  researchOverall: "النمو الإجمالي عبر الأوجه الستة كلها",
+  researchNote:
+    `نتائج مجمّعة قبل الدورة وبعدها، من مؤسسات السلع الاستهلاكية سريعة التداول (FMCG) في جنوب أفريقيا وخارجها. المصدر: الملف التعريفي لشركة ${SC}، سبتمبر 2023.`,
   readResearch: "اقرأ البحث والنظرية",
+  readCaseStudy: "اقرأ دراسة حالة قطاع السلع الاستهلاكية (FMCG)",
   aboutCraig: "عن الدكتور كريغ مولر",
   nextEyebrow: "الخطوة التالية",
   nextTitle: "ابدأ بتقييم أولي مجاني مدته 10 دقائق.",
@@ -707,12 +712,13 @@ const zu: Draft = {
   researchTitle: "Kwahlolwa ngaphambi kokuba kufundiswe.",
   researchDescription:
     "I-Super-Cube® yavela ocwaningweni lobudokotela lukaDkt Craig Muller eNyuvesi yaKwaZulu-Natali (DBA, 2021). Imodeli yahlolwa ngenhlolovo yabasebenzi abayi-132 nezingxoxo nabaholi abaphezulu abayi-10, futhi yashicilelwa kumajenali abuyekezwa ngontanga.",
-  researchCardLabel: "Umphumela wocwaningo lwe-UKZN",
-  researchEmotional: "Uhlangothi lwemizwa",
-  researchOverall: "Isamba, zonke izinhlangothi eziyisithupha",
+  researchCardLabel: "Izinhlelo zobuholi ze-Super-Cube® zamasonto ayi-12",
+  researchEmotional: "Inzuzo, uhlangothi lwemizwa",
+  researchOverall: "Ukukhula okuphelele kuzo zonke izinhlangothi eziyisithupha",
   researchNote:
-    "Intuthuko emaphakathi phakathi kokuhlolwa kokuqala nokokugcina okubikwe ocwaningweni lobudokotela. Akuyona idatha yohlelo oluqhubekayo.",
+    "Imiphumela ehlanganisiwe ngaphambi nangemva kwesifundo, ezinhlanganweni ze-FMCG zaseNingizimu Afrika nezamazwe ngamazwe. Umthombo: iphrofayela yenkampani ye-Super-Cube®, Sept 2023.",
   readResearch: "Funda ucwaningo nethiyori",
+  readCaseStudy: "Funda ucwaningo lwesimo lwe-FMCG",
   aboutCraig: "Mayelana noDkt Craig Muller",
   nextEyebrow: "Isinyathelo esilandelayo",
   nextTitle: "Qala ngesisekelo samahhala semizuzu eyi-10.",
@@ -815,12 +821,13 @@ const af: Draft = {
   researchTitle: "Getoets voordat dit geleer is.",
   researchDescription:
     "Super-Cube® het uit dr. Craig Muller se doktorale navorsing aan die Universiteit van KwaZulu-Natal (DBA, 2021) voortgespruit. Die model is getoets met ’n opname onder 132 werknemers en onderhoude met 10 senior leiers, en is in eweknie-beoordeelde vaktydskrifte gepubliseer.",
-  researchCardLabel: "UKZN-navorsingsresultaat",
-  researchEmotional: "Emosionele vlak",
-  researchOverall: "Algeheel, al ses vlakke",
+  researchCardLabel: "12-week Super-Cube®-leierskapsintervensies",
+  researchEmotional: "Groei, emosionele vlak",
+  researchOverall: "Algehele groei oor al ses vlakke",
   researchNote:
-    "Gemiddelde verbetering van voor- tot ná-assessering soos in die doktorale navorsing gerapporteer. Nie lewendige programdata nie.",
+    "Saamgestelde voor- en ná-kursusresultate, Suid-Afrikaanse en internasionale FMCG-organisasies. Bron: Super-Cube®-maatskappyprofiel, Sept. 2023.",
   readResearch: "Lees die navorsing en teorie",
+  readCaseStudy: "Lees die FMCG-gevallestudie",
   aboutCraig: "Oor dr. Craig Muller",
   nextEyebrow: "Volgende stap",
   nextTitle: "Begin met ’n gratis basislyn van 10 minute.",

@@ -38,9 +38,9 @@ export default function ImpactPage() {
 
       {/* 2. Research results */}
       <ImpactResults
-        eyebrow="Research results · UKZN doctoral study"
-        title="What the research found."
-        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® doctoral research (University of KwaZulu-Natal, 2021), carried out with leaders in an African FMCG business-network. These are research results, not live programme data."
+        eyebrow="Results · 12-week Super-Cube® leadership interventions"
+        title="+32.2% overall growth across all six faces."
+        description="Aggregated pre- and post-course results from 12-week Super-Cube® leadership interventions at South African and international FMCG organisations, with the gain for each face (source: Super-Cube® company profile, Sept 2023). These are programme results, not live LMS data."
       />
 
       {/* 3. Example pattern (illustrative) */}
@@ -56,9 +56,10 @@ export default function ImpactPage() {
             <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
               This example shows the format of a cohort report: an overall
               score on a 0–100 scale before and after the programme, and the
-              change for each face. Real cohorts will differ. For the measured
-              research result (Emotional +39.5%, UKZN), see the research
-              results above.
+              change for each face. Real cohorts will differ. For measured
+              results, see the 12-week intervention results above: +32.2%
+              overall growth across all six faces, with an Emotional gain of
+              +39.5%.
             </p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[
