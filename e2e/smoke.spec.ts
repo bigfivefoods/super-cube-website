@@ -54,9 +54,15 @@ test.describe("Super-Cube smoke", () => {
       const band = page.getByTestId(`programme-band-${id}`);
       await expect(band).toBeVisible();
       await expect(band.getByRole("heading", { level: 2 })).toBeVisible();
+      const card = page.getByTestId(`programme-card-${id}`);
+      await expect(card.getByText("· Lifetime access", { exact: true })).toBeVisible();
+      await expect(card.getByText(/R99\s*· lifetime access/)).toBeVisible();
       bgs.push(await band.evaluate((el) => getComputedStyle(el).backgroundImage));
     }
     expect(new Set(bgs).size).toBe(3);
+    await expect(page.locator("#pilot")).toContainText("Each seat is lifetime access");
+    // Checkout is closed until a Buy button is pressed
+    await expect(page.locator("dialog[open]")).toHaveCount(0);
   });
 
   test("pricing pilot anchor", async ({ page }) => {

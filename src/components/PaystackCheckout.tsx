@@ -178,7 +178,7 @@ export function PaystackCheckout({
         <p className="text-[0.7rem] leading-relaxed text-muted">
           Secure checkout via Paystack · {currency === "ZAR" ? "R" : "$"}
           {currency === "ZAR" ? COURSE_PRICE_ZAR : COURSE_PRICE_USD} one-time ·
-          no subscription
+          lifetime access · no subscription
         </p>
       )}
       {error && (

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { PaystackCheckout } from "@/components/PaystackCheckout";
 import { SeatPackCheckout } from "@/components/SeatPackCheckout";
 import { PageHero, Button } from "@/components/ui";
@@ -18,7 +18,22 @@ import {
 
 export default function PricingPage() {
   const router = useRouter();
-  const [expanded, setExpanded] = useState<ProgrammeId | null>("adults");
+  // Checkout opens in a dialog for whichever card was chosen; nothing is
+  // pre-selected (no link or query pre-selects a programme).
+  const [checkoutFor, setCheckoutFor] = useState<ProgrammeId | null>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const openerRef = useRef<HTMLElement | null>(null);
+
+  function openCheckout(id: ProgrammeId, opener: HTMLElement) {
+    openerRef.current = opener;
+    setCheckoutFor(id);
+    track("programme_selected", { programmeId: id, mode: "checkout_open" });
+  }
+
+  function closedCheckout() {
+    setCheckoutFor(null);
+    openerRef.current?.focus();
+  }
   const [alreadyPaid, setAlreadyPaid] = useState(false);
 
   useEffect(() => {
@@ -56,7 +71,7 @@ export default function PricingPage() {
         theme="leadership"
         eyebrow="Pricing"
         title="Start free. Unlock the full pathway once."
-        description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Free baseline on this device—then pay once with Paystack (R${COURSE_PRICE_ZAR} / $${COURSE_PRICE_USD} USD). No subscription.`}
+        description={`Kids (5–12), Adolescents (13–21), and Adults (22+). Free baseline on this device—then pay once with Paystack (R${COURSE_PRICE_ZAR} / $${COURSE_PRICE_USD} USD) for lifetime access. No subscription.`}
       />
 
       <section className="relative z-0 border-t border-line bg-surface">
@@ -89,7 +104,7 @@ export default function PricingPage() {
                   <strong className="text-ink">
                     R{COURSE_PRICE_ZAR} once (≈ ${COURSE_PRICE_USD} USD)
                   </strong>{" "}
-                  — full programme, report, certificate via{" "}
+                  — lifetime access to the full programme, report and certificate via{" "}
                   <strong className="text-ink">Paystack</strong>.
                 </li>
                 <li>
@@ -112,108 +127,93 @@ export default function PricingPage() {
               </p>
             </div>
 
-            <div className="grid gap-5 sm:gap-6 lg:grid-cols-3">
-              {programmes.map((p) => {
-                const open = expanded === p.id;
-                return (
-                  <article
-                    key={p.id}
-                    id={p.id}
-                    className="flex flex-col overflow-hidden sc-card shadow-sm"
-                    data-testid={`programme-card-${p.id}`}
+            {/* Cards share row tracks on desktop (CSS subgrid), so the
+                description, price, features and buttons line up across all
+                three whatever the copy length. */}
+            <div className="grid gap-5 sm:gap-6 lg:grid-cols-3 lg:gap-y-0">
+              {programmes.map((p) => (
+                <article
+                  key={p.id}
+                  id={p.id}
+                  className="flex flex-col overflow-hidden sc-card shadow-sm lg:row-span-5 lg:grid lg:grid-rows-subgrid lg:gap-y-0"
+                  data-testid={`programme-card-${p.id}`}
+                >
+                  {/* Programme colour band (src/lib/programme-theme.ts) */}
+                  <div
+                    className="relative flex min-h-[7.5rem] items-start justify-between gap-3 px-6 pb-5 pt-6 sm:min-h-[8.5rem] sm:px-8"
+                    style={programmeBandStyle(p.id)}
+                    data-testid={`programme-band-${p.id}`}
                   >
-                    {/* Programme colour band (src/lib/programme-theme.ts) */}
-                    <div
-                      className="relative flex min-h-[7.5rem] items-start justify-between gap-3 px-6 pb-5 pt-6 sm:min-h-[8.5rem] sm:px-8"
-                      style={programmeBandStyle(p.id)}
-                      data-testid={`programme-band-${p.id}`}
+                    <div className="min-w-0">
+                      <p
+                        className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em]"
+                        style={{ color: PROGRAMME_THEME[p.id].accent }}
+                      >
+                        {p.ageLabel}
+                      </p>
+                      <h2 className="mt-1.5 text-xl font-semibold tracking-tight sm:text-2xl">
+                        {p.name}
+                      </h2>
+                    </div>
+                    <ProgrammeIcon id={p.id} />
+                    {p.id === "adults" && (
+                      <span
+                        aria-hidden
+                        className="absolute inset-x-0 bottom-0 h-px"
+                        style={{ background: "linear-gradient(90deg, transparent, #E9CF97, transparent)" }}
+                      />
+                    )}
+                  </div>
+
+                  <div className="px-6 pt-6 sm:px-8">
+                    <p className="text-sm font-medium text-ink">{p.tagline}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-slate">
+                      {p.description}
+                    </p>
+                  </div>
+
+                  <div className="mx-6 mt-6 border-t border-line pt-6 sm:mx-8" data-testid="programme-price">
+                    <p className="text-3xl font-semibold tracking-tight text-ink">
+                      R{p.priceZar}
+                      <span className="text-sm font-medium text-muted"> · lifetime access</span>
+                    </p>
+                  </div>
+
+                  <ul className="mt-5 space-y-2 px-6 text-sm text-slate sm:px-8">
+                    <li className="font-medium text-ink">· Lifetime access</li>
+                    <li>· Pre-assessment baseline</li>
+                    <li>· 6 construct courses (age-adapted)</li>
+                    <li>· Practice labs & checks</li>
+                    <li>· Post-assessment & personal report</li>
+                  </ul>
+
+                  <div className="mt-6 flex flex-col gap-2 px-6 pb-6 sm:px-8 sm:pb-8">
+                    <button
+                      type="button"
+                      onClick={(e) => openCheckout(p.id, e.currentTarget)}
+                      aria-haspopup="dialog"
+                      className="min-h-11 rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90"
                     >
-                      <div className="min-w-0">
-                        <p
-                          className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em]"
-                          style={{ color: PROGRAMME_THEME[p.id].accent }}
-                        >
-                          {p.ageLabel}
-                        </p>
-                        <h2 className="mt-1.5 text-xl font-semibold tracking-tight sm:text-2xl">
-                          {p.name}
-                        </h2>
-                      </div>
-                      <ProgrammeIcon id={p.id} />
-                      {p.id === "adults" && (
-                        <span
-                          aria-hidden
-                          className="absolute inset-x-0 bottom-0 h-px"
-                          style={{ background: "linear-gradient(90deg, transparent, #E9CF97, transparent)" }}
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-1 flex-col p-6 sm:p-8">
-                      <p className="text-sm font-medium text-slate">
-                        {p.tagline}
-                      </p>
-                      <p className="mt-4 flex-1 text-sm leading-relaxed text-slate">
-                        {p.description}
-                      </p>
-
-                      <div className="mt-6 border-t border-line pt-6">
-                        <p className="text-3xl font-semibold tracking-tight text-ink">
-                          R{p.priceZar}
-                          <span className="text-sm font-medium text-muted">
-                            {" "}
-                            once
-                          </span>
-                        </p>
-                      </div>
-
-                      <ul className="mt-5 space-y-2 text-sm text-slate">
-                        <li>· Pre-assessment baseline</li>
-                        <li>· 6 construct courses (age-adapted)</li>
-                        <li>· Practice labs & checks</li>
-                        <li>· Post-assessment & personal report</li>
-                      </ul>
-
-                      <div className="mt-6 flex flex-col gap-2">
-                        {!open ? (
-                          <button
-                            type="button"
-                            onClick={() => setExpanded(p.id)}
-                            className="min-h-11 rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90"
-                          >
-                            Buy with Paystack · R{COURSE_PRICE_ZAR}
-                          </button>
-                        ) : (
-                          <div className="rounded-2xl border border-line bg-surface p-4">
-                            <p className="mb-3 text-[0.75rem] font-semibold text-ink">
-                              Checkout · {p.name}
-                            </p>
-                            <PaystackCheckout
-                              programmeId={p.id}
-                              programmeName={p.name}
-                              onDemoFallback={() => startDemo(p.id)}
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setExpanded(null)}
-                              className="mt-2 w-full text-center text-[0.7rem] font-semibold text-muted hover:text-ink"
-                            >
-                              Cancel
-                            </button>
-                          </div>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => startDemo(p.id)}
-                          className="text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
-                        >
-                          Start free on this device (no payment)
-                        </button>
-                      </div>
-                    </div>
-                  </article>
-                );
-              })}
+                      Buy with Paystack · R{COURSE_PRICE_ZAR}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => startDemo(p.id)}
+                      className="min-h-11 text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+                    >
+                      Start free on this device (no payment)
+                    </button>
+                  </div>
+                </article>
+              ))}
             </div>
+
+            <CheckoutDialog
+              dialogRef={dialogRef}
+              programmeId={checkoutFor}
+              onClosed={closedCheckout}
+              onDemo={startDemo}
+            />
 
             <div
               id="pilot"
@@ -226,7 +226,8 @@ export default function PricingPage() {
                 Seat packs — pay once, get a cohort code
               </h2>
               <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
-                Buy 10, 20, or 50 learner seats. We create a cohort code after
+                Buy 10, 20, or 50 learner seats. Each seat is lifetime access to
+                the programme for that learner. We create a cohort code after
                 payment. Learners join under Learn → Org. Coaches see scores and
                 completion only when learners consent—never journal text.
               </p>
@@ -315,5 +316,88 @@ function ProgrammeIcon({ id }: { id: ProgrammeId }) {
       <circle cx="12" cy="12" r="9" />
       <path d="M15.5 8.5l-2 5-5 2 2-5z" />
     </svg>
+  );
+}
+
+/**
+ * Checkout for one programme in a native modal dialog: focus moves in and is
+ * kept there, Esc or the close button dismisses it, and focus returns to the
+ * card's Buy button. Opening it never moves the page layout.
+ */
+function CheckoutDialog({
+  dialogRef,
+  programmeId,
+  onClosed,
+  onDemo,
+}: {
+  dialogRef: RefObject<HTMLDialogElement | null>;
+  programmeId: ProgrammeId | null;
+  onClosed: () => void;
+  onDemo: (id: ProgrammeId) => void;
+}) {
+  const p = programmes.find((x) => x.id === programmeId);
+  // Open once the chosen programme's form has rendered, then put the cursor
+  // in the first field (email) so buyers can type straight away.
+  useEffect(() => {
+    const d = dialogRef.current;
+    if (!programmeId || !d) return;
+    if (!d.open) d.showModal();
+    d.querySelector<HTMLInputElement>("input")?.focus();
+  }, [programmeId, dialogRef]);
+  return (
+    <dialog
+      ref={dialogRef}
+      onClose={onClosed}
+      onClick={(e) => {
+        // Click on the backdrop (outside the panel) closes it.
+        if (e.target === e.currentTarget) e.currentTarget.close();
+      }}
+      aria-labelledby="checkout-title"
+      className="m-auto w-[calc(100%-2rem)] max-w-md overflow-hidden rounded-3xl border border-line bg-elevated p-0 text-ink shadow-2xl backdrop:bg-black/55 backdrop:backdrop-blur-[2px]"
+      data-testid="checkout-dialog"
+    >
+      {p && (
+        <div>
+          <div
+            className="flex items-start justify-between gap-3 px-6 pb-5 pt-5"
+            style={programmeBandStyle(p.id)}
+          >
+            <div className="min-w-0">
+              <p
+                className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em]"
+                style={{ color: PROGRAMME_THEME[p.id].accent }}
+              >
+                Checkout · {p.ageLabel}
+              </p>
+              <h2 id="checkout-title" className="mt-1 text-lg font-semibold tracking-tight">
+                {p.name}
+              </h2>
+            </div>
+            <button
+              type="button"
+              onClick={() => dialogRef.current?.close()}
+              aria-label="Close checkout"
+              className="-mr-2 -mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-xl leading-none hover:bg-black/10"
+            >
+              <span aria-hidden>×</span>
+            </button>
+          </div>
+          <div className="p-6">
+            <PaystackCheckout
+              programmeId={p.id}
+              programmeName={p.name}
+              onDemoFallback={() => onDemo(p.id)}
+            />
+            <button
+              type="button"
+              onClick={() => onDemo(p.id)}
+              className="mt-3 min-h-11 w-full text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+            >
+              Start free on this device instead (no payment)
+            </button>
+          </div>
+        </div>
+      )}
+    </dialog>
   );
 }

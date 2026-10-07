@@ -8,7 +8,9 @@ export type ServerEntitlement = {
 
 /**
  * Server truth for "may this learner use the full pathway?"
- *  - paid:   an active subscription written by the Paystack-verified server path
+ *  - paid:   an active subscription written by the Paystack-verified server path.
+ *            Lifetime: there is no expiry check (current_period_end is written
+ *            as null and never read). Seat-pack seats don't expire either.
  *  - cohort: learner seat in an organisation with a purchased seat_limit
  *  - open:   NEXT_PUBLIC_DEMO_LMS_OPEN=true (dev/pilot only)
  * A free demo never grants full access.
