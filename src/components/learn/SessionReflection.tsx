@@ -15,10 +15,16 @@ export function SessionReflection({
   lessonId,
   constructId,
   color,
+  journalPrompt,
+  embedded = false,
 }: {
   lessonId: string;
   constructId: ConstructId;
   color: string;
+  /** Session-specific journal prompt (content v2); replaces the generic title */
+  journalPrompt?: string;
+  /** Rendered inside a session step: no top margin */
+  embedded?: boolean;
 }) {
   const [text, setText] = useState("");
   const [savedAt, setSavedAt] = useState<string | null>(null);
@@ -39,7 +45,11 @@ export function SessionReflection({
     );
   }, [lessonId]);
 
-  const prompt = reflectionPrompt(constructId, programmeId);
+  const generic = reflectionPrompt(constructId, programmeId);
+  const prompt = journalPrompt
+    ? { ...generic, title: journalPrompt, hint: "Write a few lines. Your journal is private to this device until you share or sync.",
+        placeholder: programmeId === "kids" ? "Write here, or ask a grown-up to write for you…" : "Write here…" }
+    : generic;
 
   function save() {
     const next = saveReflection(lessonId, constructId, text);
@@ -50,7 +60,7 @@ export function SessionReflection({
 
   return (
     <section
-      className="mt-6 overflow-hidden rounded-2xl border border-line bg-elevated"
+      className={`${embedded ? "" : "mt-6 "}overflow-hidden rounded-2xl border border-line bg-elevated`}
       style={{ boxShadow: `inset 3px 0 0 ${color}` }}
       aria-labelledby={`reflect-title-${lessonId}`}
     >

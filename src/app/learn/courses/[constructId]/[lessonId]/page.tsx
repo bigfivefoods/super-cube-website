@@ -6,6 +6,9 @@ import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { LessonContent } from "@/components/learn/LessonContent";
 import { SessionReflection } from "@/components/learn/SessionReflection";
+import { SessionArc } from "@/components/learn/session/SessionArc";
+import { PracticeLabView } from "@/components/learn/session/PracticeLabView";
+import { FaceCheckView } from "@/components/learn/session/FaceCheckView";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
 import { recordCompletion } from "@/lib/lms/cloud";
@@ -25,7 +28,7 @@ import { courseId, type ProgrammeId } from "@/lib/programmes";
 const TYPE_LABEL: Record<string, string> = {
   content: "Session",
   practice: "Practice lab",
-  quiz: "Quick check",
+  quiz: "Face check",
 };
 
 export default function LessonPlayerPage() {
@@ -209,24 +212,50 @@ export default function LessonPlayerPage() {
             ))}
           </div>
           <p className="learn-meta mt-1.5">
-            Path: <strong className="font-semibold text-ink">Read</strong> →{" "}
-            <strong className="font-semibold text-ink">Engage</strong> →{" "}
-            <strong className="font-semibold text-ink">Apply</strong>
+            {data.lesson.arc
+              ? "Eight short steps: tap any step below to jump to it."
+              : data.lesson.lab
+                ? "Challenge → WOOP plan → checklist → reflect"
+                : data.lesson.faceCheck
+                  ? "Recall every skill → teach it back → lock one habit"
+                  : "Read → Engage → Apply"}
           </p>
         </div>
       </div>
 
-      <LessonContent
-        sections={data.lesson.sections}
-        color={color}
-        colorSoft={colorSoft}
-      />
-
-      <SessionReflection
-        lessonId={data.lesson.id}
-        constructId={constructId}
-        color={color}
-      />
+      {data.lesson.arc ? (
+        <SessionArc
+          arc={data.lesson.arc}
+          lessonId={data.lesson.id}
+          color={color}
+          colorSoft={colorSoft}
+          programmeId={data.course.programmeId}
+          constructId={constructId}
+        />
+      ) : data.lesson.lab ? (
+        <PracticeLabView
+          lab={data.lesson.lab}
+          lessonId={data.lesson.id}
+          color={color}
+          colorSoft={colorSoft}
+          programmeId={data.course.programmeId}
+          constructId={constructId}
+        />
+      ) : data.lesson.faceCheck ? (
+        <FaceCheckView
+          questions={data.lesson.faceCheck}
+          lessonId={data.lesson.id}
+          color={color}
+          programmeId={data.course.programmeId}
+          constructId={constructId}
+          faceName={construct.name}
+        />
+      ) : (
+        <>
+          <LessonContent sections={data.lesson.sections} color={color} colorSoft={colorSoft} />
+          <SessionReflection lessonId={data.lesson.id} constructId={constructId} color={color} />
+        </>
+      )}
 
       {syncNote && (
         <p className="learn-meta mt-4 rounded-xl border border-line bg-elevated px-3 py-2" role="status">

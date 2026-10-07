@@ -65,7 +65,7 @@ test.describe("learner UX at 390x844", () => {
     await expect(page.getByTestId("mobile-pathway")).toBeHidden();
     const h1 = page.getByRole("heading", { level: 1 });
     await expect(h1).toHaveText(/Overview/);
-    const read = page.getByText(/Read · understand the idea/i).first();
+    const read = page.locator("#step-hook");
     await expect(read).toBeVisible();
     const box = await read.boundingBox();
     expect(box && box.y).toBeLessThan(MOBILE.height * 0.6);
