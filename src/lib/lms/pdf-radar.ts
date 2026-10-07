@@ -91,8 +91,8 @@ export function drawPdfRadar(
       doc.setFont("helvetica", "normal");
       doc.setFontSize(Math.max(4.5, labelSize - 2.5));
       doc.setTextColor(150, 148, 142);
-      // On the edge midpoint between Choices and Mental, clear of the markers
-      const a = -Math.PI / 2 + Math.PI / n;
+      // On the edge midpoint between Choices and Spiritual (matches the web radar), clear of the markers
+      const a = -Math.PI / 2 - Math.PI / n;
       const rr = (g / 100) * radius * Math.cos(Math.PI / n);
       doc.text(String(g), cx + rr * Math.cos(a), cy + rr * Math.sin(a), { align: "center", baseline: "middle" });
     }
@@ -184,7 +184,13 @@ export function drawPdfRadar(
 }
 
 /** One-line legend under the radar (before/after styles). */
-export function drawPdfRadarLegend(doc: jsPDF, x: number, y: number, size = 7) {
+export function drawPdfRadarLegend(
+  doc: jsPDF,
+  x: number,
+  y: number,
+  size = 7,
+  labels: [string, string] = ["Before (dashed, hollow markers)", "After (solid, filled markers)"],
+) {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(size);
   doc.setTextColor(70, 70, 70);
@@ -195,12 +201,12 @@ export function drawPdfRadarLegend(doc: jsPDF, x: number, y: number, size = 7) {
   doc.setLineDashPattern([], 0);
   doc.setFillColor(255, 255, 255);
   doc.circle(x + 3.5, y, 0.9, "FD");
-  doc.text("Before (dashed, hollow markers)", x + 9, y, { baseline: "middle" });
-  const x2 = x + 9 + doc.getTextWidth("Before (dashed, hollow markers)") + 6;
+  doc.text(labels[0], x + 9, y, { baseline: "middle" });
+  const x2 = x + 9 + doc.getTextWidth(labels[0]) + 6;
   doc.setDrawColor(40, 40, 40);
   doc.setLineWidth(0.8);
   doc.line(x2, y, x2 + 7, y);
   doc.setFillColor(40, 40, 40);
   doc.circle(x2 + 3.5, y, 0.9, "F");
-  doc.text("After (solid, filled markers)", x2 + 9, y, { baseline: "middle" });
+  doc.text(labels[1], x2 + 9, y, { baseline: "middle" });
 }
