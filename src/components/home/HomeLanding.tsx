@@ -338,13 +338,13 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 {s.researchCardLabel}
               </p>
               <div className="mt-2 grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr">+39.5%</p>
-                  <p className="mt-0.5 text-sm text-slate">{s.researchEmotional}</p>
-                </div>
-                <div>
+                <div data-testid="home-results-overall">
                   <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr">+32.2%</p>
                   <p className="mt-0.5 text-sm text-slate">{s.researchOverall}</p>
+                </div>
+                <div data-testid="home-results-emotional">
+                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr">+39.5%</p>
+                  <p className="mt-0.5 text-sm text-slate">{s.researchEmotional}</p>
                 </div>
               </div>
               <p className="mt-3 text-xs text-muted">

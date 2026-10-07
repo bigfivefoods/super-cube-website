@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   interventionGainScaleMax,
   interventionGains,
@@ -7,7 +8,7 @@ import {
 export function ImpactResults({
   eyebrow = "Intervention outcomes",
   title = "Measurable growth across every face.",
-  description = "Average improvement following Super-Cube® development interventions—pre- to post-assessment gains by construct.",
+  description = "Average pre- to post-course gains by face from 12-week Super-Cube® leadership interventions.",
   light = false,
 }: {
   eyebrow?: string;
@@ -65,12 +66,12 @@ export function ImpactResults({
                 light ? "text-cream/50" : "text-muted"
               }`}
             >
-              Overall improvement
+              Overall growth
             </p>
             <p
               className={`mt-1 text-sm ${light ? "text-cream/70" : "text-slate"}`}
             >
-              Across all six Super-Cube® constructs
+              Across all six Super-Cube® faces
             </p>
           </div>
           <p
@@ -139,11 +140,24 @@ export function ImpactResults({
           className={`mt-5 max-w-2xl text-xs leading-relaxed ${
             light ? "text-cream/65" : "text-muted"
           }`}
+          data-testid="impact-results-source"
         >
-          Research results: average percentage improvement following
-          Super-Cube® development interventions (pre- to post-assessment), as
-          reported in the doctoral research. Highest gains: Principles (+45.1%)
-          and Emotional (+39.5%). Not live programme data.
+          +{overallInterventionGain}% overall growth across all six faces, from
+          12-week Super-Cube® leadership interventions: aggregated pre- and
+          post-course results, South African and international FMCG
+          organisations. Source: Super-Cube® company profile, Sept 2023.
+          Highest gains: Principles (+45.1%) and Emotional (+39.5%). Not live
+          programme data.
+        </p>
+        <p className="mt-3 text-sm">
+          <Link
+            href="/news/twelve-weeks-six-faces-fmcg-leadership"
+            className={`inline-flex min-h-6 items-center gap-1 font-semibold underline underline-offset-2 ${
+              light ? "text-cream" : "text-ink"
+            }`}
+          >
+            Read the FMCG case study <span aria-hidden>→</span>
+          </Link>
         </p>
       </div>
     </section>

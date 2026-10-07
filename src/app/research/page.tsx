@@ -195,8 +195,9 @@ export default function ResearchPage() {
 
       <ImpactResults
         light
-        eyebrow="Research results · UKZN doctoral study"
-        description="Average pre- to post-assessment improvement by construct reported in the Super-Cube® research. These are research results, not live programme data."
+        eyebrow="Intervention results · 12-week Super-Cube® programmes"
+        title="+32.2% overall growth across all six faces."
+        description="Aggregated pre- and post-course results from 12-week Super-Cube® leadership interventions at South African and international FMCG organisations, with the gain for each face (source: Super-Cube® company profile, Sept 2023). Not live programme data."
       />
 
       <section className="section-pad border-y border-[var(--line)] bg-void text-void-fg">

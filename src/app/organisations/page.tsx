@@ -70,7 +70,7 @@ export default function OrganisationsPage() {
         title="Twelve weeks, six faces, +32.2%."
         body="Leaders at Imana Foods and Kerry Foods completed a 12-week, accredited Super-Cube® leadership development intervention, assessed on every face before and after the course."
         stats={[
-          { value: "+32.2%", label: "Overall, all six faces" },
+          { value: "+32.2%", label: "Overall growth, all six faces" },
           { value: "+45.1%", label: "Principles" },
           { value: "+39.5%", label: "Emotional" },
         ]}
