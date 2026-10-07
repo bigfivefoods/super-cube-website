@@ -9,14 +9,23 @@
 import type { AssessmentItem } from "@/lib/lms/curriculum";
 import type { ProgrammeId } from "@/lib/programmes";
 
-export type QualityFlag = "attention_failed" | "attention_missing" | "straight_lining" | "too_fast";
+export type QualityFlag =
+  | "attention_failed"
+  | "attention_missing"
+  | "straight_lining"
+  | "too_fast"
+  | "honesty_low";
 
 export const QUALITY_FLAG_LABELS: Record<QualityFlag, string> = {
   attention_failed: "Attention check missed",
   attention_missing: "No attention check (older app)",
   straight_lining: "Same answer to (almost) every item",
   too_fast: "Finished unusually fast",
+  honesty_low: "Said answers only partly describe what they do (v2)",
 };
+
+/** v2 honesty item: an answer at or below this is flagged (EQ-i 2.0 uses the same idea). */
+export const HONESTY_FLAG_AT_OR_BELOW = 3;
 
 /** The attention check asks for "Agree" (4) on a 1–5 scale. */
 export const ATTENTION_EXPECTED = 4;
@@ -29,7 +38,15 @@ export const RELIABILITY_MIN_N = 50;
 
 export type AttentionItem = { id: string; prompt: string };
 
-export function attentionItem(programmeId: ProgrammeId): AttentionItem {
+export function attentionItem(programmeId: ProgrammeId, version: "v1" | "v2" = "v1"): AttentionItem {
+  if (version === "v2") {
+    // v2 uses a frequency scale, so the check names "Often" (still 4)
+    const prompt =
+      programmeId === "kids"
+        ? "This one checks that you are reading. Please tap 4 (Often)."
+        : "To show you are reading each statement, please choose 4 (Often) for this one.";
+    return { id: `super_cube_${programmeId}_v2-attention-1`, prompt };
+  }
   const prompt =
     programmeId === "kids"
       ? "This one is a check that you are reading. Please tap 4 (Agree)."
@@ -63,11 +80,21 @@ export function seededShuffle<T>(arr: readonly T[], seed: number): T[] {
   return out;
 }
 
-export type ShownItem = { id: string; prompt: string; constructId: string; attention?: boolean };
+export type ShownItem = {
+  id: string;
+  prompt: string;
+  constructId: string;
+  attention?: boolean;
+  itemType?: AssessmentItem["itemType"];
+  options?: AssessmentItem["options"];
+  scaleLabels?: AssessmentItem["scaleLabels"];
+};
 
 /**
  * Items for one face in a stable random order for this attempt. The attention
- * check is placed on one face (chosen by the seed) at a random position.
+ * check is placed on one face (chosen by the seed) at a random position among
+ * the statements. v2 situational judgement items follow the statements, in
+ * their own random order. (v1 has no SJTs, so its order is unchanged.)
  */
 export function itemsForFace(
   items: AssessmentItem[],
@@ -77,18 +104,38 @@ export function itemsForFace(
   attention: AttentionItem,
 ): ShownItem[] {
   const faceIndex = faceIds.indexOf(faceId);
+  const toShown = (i: AssessmentItem): ShownItem => {
+    const s: ShownItem = { id: i.id, prompt: i.prompt, constructId: i.constructId };
+    if (i.itemType === "sjt") {
+      s.itemType = "sjt";
+      s.options = i.options;
+    }
+    if (i.scaleLabels) s.scaleLabels = i.scaleLabels;
+    return s;
+  };
+  const faceItems = items.filter((i) => i.constructId === faceId);
   const own: ShownItem[] = seededShuffle(
-    items.filter((i) => i.constructId === faceId),
+    faceItems.filter((i) => i.itemType !== "sjt"),
     seed + faceIndex * 7919,
-  ).map((i) => ({ id: i.id, prompt: i.prompt, constructId: i.constructId }));
+  ).map(toShown);
+  const sjts: ShownItem[] = seededShuffle(
+    faceItems.filter((i) => i.itemType === "sjt"),
+    seed + faceIndex * 7919 + 1,
+  ).map(toShown);
   const r = rng(seed ^ 0x5bd1e995);
   const attentionFace = Math.floor(r() * faceIds.length);
   if (attentionFace === faceIndex && own.length > 0) {
     // never first on the face, so it doesn't stand out
     const pos = 1 + Math.floor(r() * own.length);
-    own.splice(pos, 0, { id: attention.id, prompt: attention.prompt, constructId: "attention", attention: true });
+    own.splice(pos, 0, {
+      id: attention.id,
+      prompt: attention.prompt,
+      constructId: "attention",
+      attention: true,
+      ...(own[0]?.scaleLabels ? { scaleLabels: own[0].scaleLabels } : {}),
+    });
   }
-  return own;
+  return [...own, ...sjts];
 }
 
 /** Full order shown for an attempt (face by face), used to store item positions. */
@@ -108,6 +155,8 @@ export function qualityFlags(input: {
   scoredValues: number[];
   attentionValue: number | null | undefined;
   durationMs?: number | null;
+  /** v2 only */
+  honestyValue?: number | null;
 }): QualityFlag[] {
   const flags: QualityFlag[] = [];
   if (input.attentionValue == null) flags.push("attention_missing");
@@ -115,6 +164,7 @@ export function qualityFlags(input: {
   if (isStraightLining(input.scoredValues)) flags.push("straight_lining");
   const n = input.scoredValues.length + (input.attentionValue == null ? 0 : 1);
   if (input.durationMs != null && input.durationMs > 0 && input.durationMs < n * MIN_MS_PER_ITEM) flags.push("too_fast");
+  if (input.honestyValue != null && input.honestyValue <= HONESTY_FLAG_AT_OR_BELOW) flags.push("honesty_low");
   return flags;
 }
 

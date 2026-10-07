@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { constructs } from "@/lib/content";
-import { buildAssessmentItems, type AssessmentItem } from "@/lib/lms/curriculum";
+import type { AssessmentItem } from "@/lib/lms/curriculum";
+import { buildInstrumentItems, honestyItem, type InstrumentVersion } from "@/lib/lms/instruments";
 import { attentionItem, itemOrder, qualityFlags, type QualityFlag } from "@/lib/lms/integrity";
 import { scoreAttempt } from "@/lib/lms/scoring";
 import type { ProgrammeId } from "@/lib/programmes";
@@ -9,47 +10,73 @@ export type AttemptMetaInput = {
   seed?: unknown;
   durationMs?: unknown;
   attention?: unknown;
+  /** v2 only: the honesty (validity) answer, 1..5 */
+  honesty?: unknown;
+  /** Requested instrument version; the route decides which version is allowed */
+  instrument?: unknown;
 };
 
 export type ParsedAttempt = {
   items: AssessmentItem[];
   responses: Record<string, number>;
   attentionValue: number | null;
+  honestyValue: number | null;
+  version: InstrumentVersion;
   seed: number | null;
   durationMs: number | null;
   flags: QualityFlag[];
 };
 
-/** Validate answers (every item 1..5, no extras) and work out quality flags. */
+/** Validate answers (every item answered in range, no extras needed) and work out quality flags. */
 export function parseAttempt(
   programmeId: ProgrammeId,
   rawResponses: unknown,
   meta: AttemptMetaInput = {},
+  version: InstrumentVersion = "v1",
 ): { ok: true; value: ParsedAttempt } | { ok: false; error: string; itemId?: string } {
-  const items = buildAssessmentItems(programmeId);
+  const items = buildInstrumentItems(programmeId, version);
   const raw = rawResponses && typeof rawResponses === "object" ? (rawResponses as Record<string, unknown>) : {};
   const responses: Record<string, number> = {};
   for (const item of items) {
     const v = Number(raw[item.id]);
-    if (!Number.isInteger(v) || v < 1 || v > 5) {
-      return { ok: false, error: "Every item needs an answer from 1 to 5", itemId: item.id };
+    const max = item.itemType === "sjt" ? (item.options?.length ?? 0) : 5;
+    if (!Number.isInteger(v) || v < 1 || v > max) {
+      return {
+        ok: false,
+        error: item.itemType === "sjt" ? "Every situation needs one chosen response" : "Every item needs an answer from 1 to 5",
+        itemId: item.id,
+      };
     }
     responses[item.id] = v;
   }
-  const att = attentionItem(programmeId);
+  const att = attentionItem(programmeId, version);
   const attRaw = meta.attention ?? raw[att.id];
   const attNum = Number(attRaw);
   const attentionValue = attRaw == null || attRaw === "" ? null : Number.isInteger(attNum) && attNum >= 1 && attNum <= 5 ? attNum : null;
+  let honestyValue: number | null = null;
+  if (version === "v2") {
+    const hRaw = meta.honesty ?? raw[honestyItem(programmeId).id];
+    const hNum = Number(hRaw);
+    honestyValue = hRaw == null || hRaw === "" ? null : Number.isInteger(hNum) && hNum >= 1 && hNum <= 5 ? hNum : null;
+  }
   const seedNum = Number(meta.seed);
   const seed = Number.isInteger(seedNum) && seedNum >= 0 && seedNum < 2 ** 31 ? seedNum : null;
   const durNum = Number(meta.durationMs);
   const durationMs = Number.isFinite(durNum) && durNum > 0 && durNum < 30 * 86_400_000 ? Math.round(durNum) : null;
+  const likertItems = items.filter((i) => i.itemType !== "sjt");
   const flags = qualityFlags({
-    scoredValues: items.map((i) => responses[i.id]),
+    // straight-lining is about the rating scale, so SJT choices are left out
+    scoredValues: likertItems.map((i) => responses[i.id]),
     attentionValue,
     durationMs,
+    honestyValue,
   });
-  return { ok: true, value: { items, responses, attentionValue, seed, durationMs, flags } };
+  // "too fast" counts every answer shown, including SJTs
+  if (version === "v2" && durationMs != null && !flags.includes("too_fast")) {
+    const n = items.length + (attentionValue == null ? 0 : 1);
+    if (durationMs < n * 1500) flags.push("too_fast");
+  }
+  return { ok: true, value: { items, responses, attentionValue, honestyValue, version, seed, durationMs, flags } };
 }
 
 /**
@@ -67,10 +94,10 @@ export async function recordAttempt(
     createdAt?: string;
   },
 ) {
-  const { items, responses, attentionValue, seed, durationMs, flags } = opts.parsed;
+  const { items, responses, attentionValue, honestyValue, version, seed, durationMs, flags } = opts.parsed;
   const result = scoreAttempt(items, responses);
   const instrumentId = items[0]?.instrumentId ?? `super_cube_${opts.programmeId}_v1`;
-  const att = attentionItem(opts.programmeId);
+  const att = attentionItem(opts.programmeId, version);
   const faceIds = constructs.map((c) => c.id);
   const order = seed != null ? itemOrder(items, faceIds, seed, att) : items.map((i) => i.id);
   const meta = {
@@ -79,6 +106,7 @@ export async function recordAttempt(
     duration_ms: durationMs,
     attention: attentionValue,
     item_order: order,
+    ...(version === "v2" ? { instrument_version: "v2", honesty: honestyValue } : {}),
   };
   const insert: Record<string, unknown> = {
     user_id: opts.userId,
@@ -127,6 +155,19 @@ export async function recordAttempt(
       construct_id: "attention",
       value: attentionValue,
       position: pos.get(att.id) ?? null,
+    });
+  }
+  if (version === "v2" && honestyValue != null) {
+    rows.push({
+      attempt_id: data.id,
+      user_id: opts.userId,
+      programme_id: opts.programmeId,
+      instrument_id: instrumentId,
+      phase: opts.phase,
+      item_id: honestyItem(opts.programmeId).id,
+      construct_id: "honesty",
+      value: honestyValue,
+      position: null,
     });
   }
   const { error: itemErr } = await admin.from("lms_item_responses").insert(rows);

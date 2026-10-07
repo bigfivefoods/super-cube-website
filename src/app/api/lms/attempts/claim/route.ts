@@ -3,6 +3,7 @@ import { awardBadges } from "@/lib/lms/server/engagement";
 import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/server/attempts";
 import { requireUser } from "@/lib/lms/server/context";
 import { loadLearning } from "@/lib/lms/server/learning";
+import { isInstrumentV2EnabledServer, versionOfResponses } from "@/lib/lms/instruments";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { limitRequest } from "@/lib/server/rate-limit";
 
@@ -51,7 +52,12 @@ export async function POST(request: Request) {
     });
   }
 
-  const parsed = parseAttempt(programmeId, body.responses, body.meta ?? {});
+  // The device's answers say which instrument they used. v2 is only accepted while it is switched on.
+  const version = versionOfResponses(body.responses);
+  if (version === "v2" && !isInstrumentV2EnabledServer()) {
+    return NextResponse.json({ error: "instrument_v2_disabled" }, { status: 400 });
+  }
+  const parsed = parseAttempt(programmeId, body.responses, body.meta ?? {}, version);
   if (!parsed.ok) return NextResponse.json({ error: parsed.error, itemId: parsed.itemId }, { status: 400 });
 
   const now = Date.now();

@@ -3,6 +3,7 @@
 import { formatDateZA } from "@/lib/datetime";
 import { useEffect, useMemo, useState } from "react";
 import { ConstructDeepDive } from "@/components/learn/ConstructDeepDive";
+import { Feedback360Panel } from "@/components/learn/Feedback360Panel";
 import { DownloadReportButton } from "@/components/learn/DownloadReportButton";
 import { GrowthStoryCard } from "@/components/learn/GrowthStoryCard";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -439,6 +440,12 @@ export default function ReportPage() {
         </div>
 
         <ConstructDeepDive state={state} pre={pre} post={post} />
+
+        {programmeId === "adults" && (
+          <div className="mt-4 sm:mt-5 print:hidden">
+            <Feedback360Panel self={(post ?? pre).result.constructScores} minor={isMinorProfile(state.profile)} />
+          </div>
+        )}
 
         <section className="learn-card mt-4 sm:mt-5 print:break-inside-avoid">
           <h2 className="learn-card-title">Recommendations</h2>
