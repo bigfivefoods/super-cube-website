@@ -1,8 +1,11 @@
-import { NextResponse } from "next/server";
+import { after, NextResponse } from "next/server";
 import { paystackConfigured, verifyTransaction } from "@/lib/paystack";
 import { fulfilPaystackCharge } from "@/lib/lms/server/paystack-fulfil";
 import { programmes } from "@/lib/programmes";
 import { sendEmail } from "@/lib/email";
+import { emailSiteUrl } from "@/lib/email/layout";
+import { receiptEmail, seatPackEmail } from "@/lib/email/templates";
+import { hit } from "@/lib/server/rate-limit";
 
 /**
  * Verify Paystack transaction after redirect.
@@ -41,30 +44,26 @@ export async function POST(request: Request) {
     }
     const email = data.customer?.email || "";
     const programme = programmes.find((p) => p.id === f.programmeId);
-    const amountMajor = (Number(data.amount) / 100).toFixed(2);
-    const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.super-cube.me").replace(/\/$/, "");
+    const siteUrl = emailSiteUrl();
 
     if (f.productType === "seat_pack") {
       const code = f.org?.code;
       if (email) {
-        void sendEmail({
+        const mail = seatPackEmail({
+          site: siteUrl,
+          programmeId: f.programmeId,
+          code: code ?? null,
+          seats: Number(f.seats) || 0,
+          amountMinor: Number(data.amount) || 0,
+          currency: data.currency,
+          reference,
+          paidAt: data.paid_at,
+        });
+        sendReceiptOnce(reference, {
           to: email,
-          subject: code
-            ? `Cohort ready · Super-Cube® code ${code}`
-            : `Payment confirmed · Super-Cube® seat pack`,
-          html: `
-            <p>Thank you for your seat pack purchase.</p>
-            ${
-              code
-                ? `<p><strong>Learner code: ${code}</strong><br/>Share this code with learners (Learn → Org). Create coach invites from Learn → Coach.</p>`
-                : `<p>We could not auto-create a cohort because no Super-Cube® account matches this payment. Sign in, then contact hello@super-cube.me with reference ${reference}.</p>`
-            }
-            <p>Seats: ${f.seats} · Amount: ${data.currency} ${amountMajor}<br/>Reference: ${reference}</p>
-            <p><a href="${siteUrl}/learn/coach">Open coach tools →</a></p>
-          `,
-          text: code
-            ? `Learner code ${code}. Reference ${reference}.`
-            : `Seat pack paid. Sign in to claim your cohort. Reference ${reference}.`,
+          subject: mail.subject,
+          html: mail.html,
+          text: mail.text,
           tags: ["paystack-seat-pack"],
         });
       }
@@ -95,16 +94,20 @@ export async function POST(request: Request) {
     }
 
     if (email && programme) {
-      void sendEmail({
+      const mail = receiptEmail({
+        site: siteUrl,
+        programmeId: programme.id,
+        amountMinor: Number(data.amount) || 0,
+        currency: data.currency,
+        reference,
+        paidAt: data.paid_at,
+        email,
+      });
+      sendReceiptOnce(reference, {
         to: email,
-        subject: `Payment confirmed · Super-Cube® ${programme.name}`,
-        html: `
-          <p>Thank you for your payment.</p>
-          <p><strong>${programme.name}</strong> is unlocked on Super-Cube® Learn.</p>
-          <p>Amount: ${data.currency} ${amountMajor}<br/>Reference: ${reference}</p>
-          <p><a href="${siteUrl}/learn">Open Learn →</a></p>
-        `,
-        text: `Payment confirmed for ${programme.name}. Reference ${reference}.`,
+        subject: mail.subject,
+        html: mail.html,
+        text: mail.text,
         tags: ["paystack-receipt"],
       });
     }
@@ -131,6 +134,20 @@ export async function POST(request: Request) {
     const message = e instanceof Error ? e.message : "Verify failed";
     return NextResponse.json({ error: message }, { status: 500 });
   }
+}
+
+/**
+ * Send the receipt after the response, at most once a day per reference:
+ * this route is public (anyone holding a reference can call it), so repeat
+ * calls must not turn into repeat emails to the payer.
+ */
+function sendReceiptOnce(reference: string, payload: Parameters<typeof sendEmail>[0]) {
+  after(async () => {
+    const first = await hit("email-receipt", [`ref:${reference}`]);
+    if (!first.allowed) return;
+    const r = await sendEmail(payload);
+    if (!r.ok) console.error("[paystack verify] receipt send failed", r.provider);
+  });
 }
 
 export async function GET(request: Request) {

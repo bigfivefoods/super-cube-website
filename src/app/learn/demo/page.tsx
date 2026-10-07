@@ -21,16 +21,12 @@ export default function LearnDemoPage() {
     track("demo_start", { programmeId });
     const email = next.user?.email;
     if (email && !email.includes("demo@") && !email.includes("@demo.local")) {
+      // The server sends only to the signed-in account's own confirmed email.
       void fetch("/api/email/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          name: next.user?.fullName,
-          programmeId,
-          mode: "demo",
-        }),
-      });
+        body: JSON.stringify({ programmeId, mode: "demo" }),
+      }).catch(() => {});
     }
     router.push(`/learn/onboarding?mode=demo&programme=${programmeId}`);
   }

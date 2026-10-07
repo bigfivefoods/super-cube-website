@@ -20,6 +20,7 @@ import { SignInForm } from "@/app/newsletter/admin/SignInForm";
 import { signOutAction, toggleHandledAction } from "@/app/newsletter/admin/actions";
 import { EnquiriesTab, type Enquiry } from "@/app/newsletter/admin/EnquiriesTab";
 import { reinstateCertificateAction, revokeInviteAction, revokeSeatGrantAction, setCohortActiveAction } from "./actions";
+import { EmailTestCard } from "./EmailTestCard";
 import { CopyField, CreateCohortForm, GrantSeatsForm, InviteForm, RevokeCertificateForm } from "./forms";
 
 export const dynamic = "force-dynamic";
@@ -150,6 +151,7 @@ async function Overview({ db }: { db: Parameters<typeof loadLearners>[0] }) {
         </ol>
         <p className="mt-3 text-xs text-muted">{consents.length} consent record{consents.length === 1 ? "" : "s"} on file.</p>
       </section>
+      <EmailTestCard className={`${card} mt-6`} />
     </>
   );
 }
