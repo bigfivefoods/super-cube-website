@@ -298,6 +298,8 @@ export function Footer() {
                   width={151}
                   height={32}
                   className="h-8 w-auto shrink-0 object-contain group-hover:opacity-70 transition-opacity dark:brightness-0 dark:invert"
+                  // Inline size: the unlayered global `img { height: auto }` rule beats Tailwind's h-8.
+                  style={{ height: 32, width: "auto" }}
                 />
               </Link>
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#6b7280] dark:text-slate">
