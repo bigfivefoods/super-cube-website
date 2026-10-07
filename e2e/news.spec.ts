@@ -96,3 +96,53 @@ test("homepage shows the Latest strip and the footer links News", async ({ page 
   await expect(strip.getByRole("link", { name: /All news/ })).toHaveAttribute("href", "/news");
   await expect(page.locator("footer").getByRole("link", { name: "News", exact: true })).toHaveAttribute("href", "/news");
 });
+
+/* Case studies: the FMCG case study (named) and the school field snapshot (anonymised). */
+const CASE_STUDIES = [
+  {
+    path: "/news/twelve-weeks-six-faces-fmcg-leadership",
+    og: /\/images\/og\/news\/fmcg-leadership-case-study\.jpg$/,
+    figures: ["+32.2%", "+45.1%", "+39.5%"],
+    chart: "/news/fmcg-leadership-results-chart.png",
+    landing: { path: "/organisations", testId: "case-study-fmcg" },
+  },
+  {
+    path: "/news/grade-12-boarders-leadership-field-snapshot",
+    og: /\/images\/og\/news\/grade-12-leadership-snapshot\.jpg$/,
+    figures: ["0%", "88%", "94%"],
+    chart: "/news/grade-12-leadership-snapshot-chart.png",
+    landing: { path: "/schools", testId: "case-study-school" },
+  },
+];
+
+for (const cs of CASE_STUDIES) {
+  test(`case study ${cs.path}: share card, chart alt text, hero size and landing block`, async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 800 });
+    await page.goto("/");
+    const home = await page.locator(".page-hero").first().boundingBox();
+    await page.goto(cs.path);
+    const hero = await page.locator("header.page-hero").first().boundingBox();
+    expect(Math.abs(home!.height - hero!.height)).toBeLessThanOrEqual(1);
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", cs.og);
+    const chart = page.locator(".news-body figure img").first();
+    await expect(chart).toHaveAttribute("src", new RegExp(encodeURIComponent(cs.chart).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    expect(((await chart.getAttribute("alt")) || "").length).toBeGreaterThan(60);
+
+    await page.goto(cs.landing.path);
+    const block = page.getByTestId(cs.landing.testId);
+    for (const f of cs.figures) await expect(block).toContainText(f);
+    await expect(block).not.toContainText("coming soon");
+    await expect(block.getByRole("link", { name: /Read the/ })).toHaveAttribute("href", cs.path);
+  });
+}
+
+test("the school field snapshot never names the school", async ({ page }) => {
+  await page.goto("/news/grade-12-boarders-leadership-field-snapshot");
+  await expect(page.locator("main")).not.toContainText(/maritzburg|pietermaritzburg|old collegian/i);
+  await expect(page.getByText("Field snapshot · School leadership").first()).toBeVisible();
+});
+
+test("RSS feed includes both case studies", async ({ request }) => {
+  const xml = await (await request.get("/news/feed.xml")).text();
+  for (const cs of CASE_STUDIES) expect(xml).toContain(`https://www.super-cube.me${cs.path}</link>`);
+});

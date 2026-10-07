@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EnquiryForm } from "@/components/EnquiryForm";
-import { CaseStudyComingSoon, HowItWorks, OfferList } from "@/components/OfferBlocks";
+import { CaseStudyFeature, HowItWorks, OfferList } from "@/components/OfferBlocks";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
 import { SEAT_PACKS, formatSeatPackPrice } from "@/lib/seat-packs";
@@ -64,7 +64,26 @@ export default function OrganisationsPage() {
         </div>
       </section>
 
-      <CaseStudyComingSoon audience="workplace" />
+      <CaseStudyFeature
+        testId="case-study-fmcg"
+        eyebrow="Case study · FMCG leadership"
+        title="Twelve weeks, six faces, +32.2%."
+        body="Leaders at Imana Foods and Kerry Foods completed a 12-week, accredited Super-Cube® leadership development intervention, assessed on every face before and after the course."
+        stats={[
+          { value: "+32.2%", label: "Overall, all six faces" },
+          { value: "+45.1%", label: "Principles" },
+          { value: "+39.5%", label: "Emotional" },
+        ]}
+        quote={{
+          text: "More than the word influence, it provokes your behaviour and calls for change.",
+          cite: "Theolen Thevan, Kerry Foods",
+        }}
+        source="Average gain in assessment score, pre- to post-course, in percentage points. 12-week Super-Cube® interventions (NQF levels 3–5) at Imana Foods and Kerry Foods. Source: Super-Cube® company profile, September 2023."
+        href="/news/twelve-weeks-six-faces-fmcg-leadership"
+        linkLabel="Read the case study"
+        image="/news/fmcg-leadership-case-study-cover.jpg"
+        imageAlt="Super-Cube® results card: overall leadership development +32.2% across all six faces, with gains by face: Choices +26.6%, Principles +45.1%, Mental +29.7%, Emotional +39.5%, Physical +27.7%, Spiritual +24.6%."
+      />
 
       <section id="quote" className="section-pad scroll-mt-24 border-t border-line bg-surface">
         <div className="container-site grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">
