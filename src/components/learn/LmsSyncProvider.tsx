@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { syncLearnerState, type SyncStatus } from "@/lib/lms/sync";
+import { claimDeviceBaselines } from "@/lib/lms/cloud";
 
 /**
  * On Learn mount / auth change: pull → merge → push cloud progress.
@@ -29,6 +30,8 @@ export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
       setStatus(result.status);
       setMessage(result.message ?? null);
       if (result.status === "synced") {
+        // A baseline taken before signing in becomes the account's locked baseline
+        void claimDeviceBaselines();
         // Clear success banner shortly
         window.setTimeout(() => {
           if (!cancelled) setStatus("idle");

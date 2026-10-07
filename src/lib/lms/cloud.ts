@@ -63,12 +63,48 @@ export function toLocalAttempt(a: ServerAttemptView): LocalAttempt {
     responses: a.responses,
     result: { constructScores: a.constructScores, overall: Number(a.overall) },
     completedAt: a.completedAt,
+    serverId: a.id,
   };
+}
+
+/**
+ * Baselines taken while signed out live only on this device. Once the learner
+ * is signed in, hand each one to the server (first one wins, re-scored there),
+ * so the baseline can't be retaken "for real" after signing up.
+ */
+export async function claimDeviceBaselines(): Promise<number> {
+  const state = loadLmsState();
+  const pending = state.attempts.filter((a) => a.phase === "pre" && !a.serverId);
+  let claimed = 0;
+  for (const a of pending) {
+    const r = await call<{ ok: true; claimed: boolean; attempt: ServerAttemptView }>("/api/lms/attempts/claim", {
+      method: "POST",
+      body: JSON.stringify({
+        programmeId: a.programmeId,
+        responses: a.responses,
+        completedAt: a.completedAt,
+        meta: { seed: a.seed, durationMs: a.durationMs },
+      }),
+    });
+    if (r.kind !== "ok") continue;
+    const next = loadLmsState();
+    next.attempts = [
+      ...next.attempts.filter((x) => !(x.phase === "pre" && x.programmeId === a.programmeId)),
+      toLocalAttempt(r.data.attempt),
+    ];
+    saveLmsState(next);
+    if (r.data.claimed) claimed += 1;
+  }
+  return claimed;
 }
 
 /** Pull server state and mirror it locally (server attempts replace local pre/post). */
 export async function syncFromServer(programmeId: ProgrammeId): Promise<CloudResult<ServerStatus>> {
-  const r = await call<ServerStatus>(`/api/lms/status?programme=${programmeId}`);
+  let r = await call<ServerStatus>(`/api/lms/status?programme=${programmeId}`);
+  if (r.kind === "ok" && !r.data.attempts.some((a) => a.phase === "pre")) {
+    // Signed in with no server baseline: claim one taken on this device first
+    if ((await claimDeviceBaselines()) > 0) r = await call<ServerStatus>(`/api/lms/status?programme=${programmeId}`);
+  }
   if (r.kind !== "ok") return r;
   const s = r.data;
   const state = loadLmsState();
@@ -97,10 +133,15 @@ export async function syncFromServer(programmeId: ProgrammeId): Promise<CloudRes
   return r;
 }
 
-export function submitAttempt(phase: "pre" | "mid" | "post", programmeId: ProgrammeId, responses: ResponseMap) {
+export function submitAttempt(
+  phase: "pre" | "mid" | "post",
+  programmeId: ProgrammeId,
+  responses: ResponseMap,
+  meta: { seed?: number; durationMs?: number } = {},
+) {
   return call<{ ok: true; attempt: ServerAttemptView }>("/api/lms/attempts", {
     method: "POST",
-    body: JSON.stringify({ phase, programmeId, responses }),
+    body: JSON.stringify({ phase, programmeId, responses, meta }),
   });
 }
 

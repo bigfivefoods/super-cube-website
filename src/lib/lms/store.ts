@@ -35,6 +35,11 @@ export interface LocalAttempt {
   responses: ResponseMap;
   result: AttemptResult;
   completedAt: string;
+  /** Set when the server holds this attempt (signed in, or claimed after sign-up) */
+  serverId?: string;
+  /** Per-attempt item-order seed and time taken (integrity checks) */
+  seed?: number;
+  durationMs?: number;
 }
 
 export interface LocalOrientation {
@@ -119,6 +124,9 @@ export interface LocalLmsState {
     responses: ResponseMap;
     step: number;
     updatedAt: string;
+    /** Item-order seed, kept so a resumed attempt shows the same order */
+    seed?: number;
+    startedAt?: string;
   };
   /** ISO date of last "done for today" acknowledgment */
   doneForTodayAt?: string;

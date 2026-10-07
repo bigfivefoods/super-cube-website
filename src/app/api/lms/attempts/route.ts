@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import { buildAssessmentItems } from "@/lib/lms/curriculum";
-import { scoreAttempt } from "@/lib/lms/scoring";
+import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/server/attempts";
 import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { loadLearning } from "@/lib/lms/server/learning";
@@ -16,7 +15,7 @@ export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
 
-  let body: { phase?: string; programmeId?: string; responses?: Record<string, unknown> };
+  let body: { phase?: string; programmeId?: string; responses?: Record<string, unknown>; meta?: AttemptMetaInput };
   try {
     body = await request.json();
   } catch {
@@ -31,19 +30,10 @@ export async function POST(request: Request) {
   if (!programme) return NextResponse.json({ error: "Unknown programme" }, { status: 400 });
   const programmeId = programme.id as ProgrammeId;
 
-  // Validate every item: integer 1..5, no extras
-  const items = buildAssessmentItems(programmeId);
-  const raw = body.responses && typeof body.responses === "object" ? body.responses : {};
-  const responses: Record<string, number> = {};
-  for (const item of items) {
-    const v = Number(raw[item.id]);
-    if (!Number.isInteger(v) || v < 1 || v > 5) {
-      return NextResponse.json(
-        { error: "Every item needs an answer from 1 to 5", itemId: item.id },
-        { status: 400 },
-      );
-    }
-    responses[item.id] = v;
+  // Validate every item (integer 1..5, no extras) and work out data-quality flags
+  const parsed = parseAttempt(programmeId, body.responses, body.meta ?? {});
+  if (!parsed.ok) {
+    return NextResponse.json({ error: parsed.error, itemId: parsed.itemId }, { status: 400 });
   }
 
   const learning = await loadLearning(ctx.admin, ctx.user.id, programmeId);
@@ -71,39 +61,19 @@ export async function POST(request: Request) {
     }
   }
 
-  const result = scoreAttempt(items, responses);
-  const { data, error } = await ctx.admin
-    .from("lms_attempts")
-    .insert({
-      user_id: ctx.user.id,
-      programme_id: programmeId,
-      instrument_id: items[0]?.instrumentId ?? `super_cube_${programmeId}_v1`,
-      phase,
-      responses,
-      construct_scores: result.constructScores,
-      overall: result.overall,
-    })
-    .select("id, phase, programme_id, construct_scores, overall, responses, created_at")
-    .single();
-
-  if (error) {
-    const locked = /duplicate key|unique/i.test(error.message);
+  const saved = await recordAttempt(ctx.admin, {
+    userId: ctx.user.id,
+    programmeId,
+    phase,
+    parsed: parsed.value,
+    source: "live",
+  });
+  if (!saved.ok) {
+    const locked = /duplicate key|unique/i.test(saved.error);
     return NextResponse.json(
-      { error: locked ? `${phase}_locked` : error.message },
+      { error: locked ? `${phase}_locked` : saved.error },
       { status: locked ? 409 : 500 },
     );
   }
-
-  return NextResponse.json({
-    ok: true,
-    attempt: {
-      id: data.id,
-      phase: data.phase,
-      programmeId: data.programme_id,
-      overall: data.overall,
-      constructScores: data.construct_scores,
-      responses: data.responses,
-      completedAt: data.created_at,
-    },
-  });
+  return NextResponse.json({ ok: true, attempt: saved.attempt });
 }
