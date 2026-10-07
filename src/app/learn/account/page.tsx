@@ -39,6 +39,7 @@ import {
 } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function AccountPage() {
   return (
@@ -302,7 +303,7 @@ function AccountPageInner() {
   return (
     <LearnShell
       title="You"
-      subtitle="Your identity, growth snapshot, cohort, and device tools—one place to know yourself in Super-Cube®."
+      subtitle={programmeCopy("account.subtitle", programme?.id)}
     >
       {msg && (
         <p className="mb-4 rounded-xl border border-line bg-elevated px-3 py-2 text-[0.8125rem] text-ink">

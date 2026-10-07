@@ -11,6 +11,7 @@ import { track } from "@/lib/analytics";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { isMinorProfile } from "@/lib/lms/consent";
 import { getProfile } from "@/lib/lms/profile";
+import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
 
 /** Post-baseline narrative + score-lit cube */
 export default function AssessmentFeedbackPage() {
@@ -48,7 +49,7 @@ export default function AssessmentFeedbackPage() {
     return (
       <LearnShell
         title="Your baseline"
-        subtitle="Complete the pre-assessment to unlock narrative feedback and your lit cube."
+        subtitle={programmeCopy("feedback.locked.subtitle", learnerProgrammeId(state))}
       >
         <Link
           href="/learn/assessment/pre"
@@ -63,7 +64,7 @@ export default function AssessmentFeedbackPage() {
   return (
     <LearnShell
       title="Your baseline narrative"
-      subtitle="Your strengths first, then one growth edge and one practice per face."
+      subtitle={programmeCopy("feedback.subtitle", pre.programmeId)}
     >
       <div className="mb-5 grid gap-5 lg:grid-cols-[1fr_0.9fr] lg:items-start">
         <div className="rounded-2xl border border-ink bg-elevated p-5 sm:p-6">

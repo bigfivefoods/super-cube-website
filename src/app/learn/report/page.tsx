@@ -29,6 +29,7 @@ import {
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function ReportPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -112,11 +113,10 @@ export default function ReportPage() {
   return (
     <LearnShell
       title="Step 6 of 6 · See your growth report"
-      subtitle={`${programme?.name ?? "Super-Cube®"} · Developmental profile (not a clinical diagnosis)${
-        post
-          ? "—pre to post growth after your programme."
-          : "—baseline view. The after-test opens after the practice period and enough completed sessions."
-      }`}
+      subtitle={`${programmeCopy("report.subtitle", programmeId, { programme: programme?.name ?? "Super-Cube®" })}${programmeCopy(
+        post ? "report.subtitle.post" : "report.subtitle.baseline",
+        programmeId,
+      )}`}
     >
       <div className="report-print-root">
         <ReportMeta state={state} />

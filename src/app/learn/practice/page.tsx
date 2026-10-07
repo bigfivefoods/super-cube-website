@@ -13,6 +13,7 @@ import {
 } from "@/lib/lms/store";
 import { track } from "@/lib/analytics";
 import { recordHabit } from "@/lib/lms/cloud";
+import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function MicroPracticePage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -50,7 +51,7 @@ export default function MicroPracticePage() {
   return (
     <LearnShell
       title="Micro-practice"
-      subtitle="3–5 minutes. Guided by your face patterns and baseline. Streak counts."
+      subtitle={programmeCopy("practice.subtitle", learnerProgrammeId(state))}
     >
       {pattern.insight && (
         <p className="mb-3 rounded-xl border border-line bg-surface px-3 py-2.5 text-[0.8125rem] text-slate">
