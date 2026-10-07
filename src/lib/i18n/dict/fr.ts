@@ -128,6 +128,17 @@ const fr: Dict = {
   "home.profileCta": "Télécharger le profil de l’entreprise",
   "home.profileMeta": "{pages} pages · PDF",
   "home.profileLabel": "Télécharger le profil de l’entreprise (PDF, {pages} pages, {size})",
+  // Free book (home section, footer, /book breadcrumb)
+  "footer.book": "Livre gratuit",
+  "home.bookEyebrow": "Livre gratuit",
+  "home.bookHeading": "Lisez le livre qui accompagne le modèle",
+  "home.bookBody": "Le livre du Dr Craig R. Muller explique simplement les six faces, avec 36 pratiques, six pages d’auto-évaluation et un plan d’action de 30 jours. Gratuit à télécharger et à partager.",
+  "home.bookCta": "Télécharger le livre gratuit",
+  "home.bookMeta": "{pages} pages · PDF",
+  "home.bookLabel": "Télécharger le livre gratuit (PDF, {pages} pages, {size})",
+  "home.bookMore": "À propos du livre",
+  "home.bookLang": "En anglais",
+  "home.bookCoverAlt": "Couverture de The Super-Cube® Leadership Model, du Dr Craig R. Muller",
 
   "cta.tryFree": "Bilan initial gratuit",
   "cta.bookPilot": "Réserver un pilote",

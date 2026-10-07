@@ -129,6 +129,17 @@ const ar: Dict = {
   "home.profileCta": "تنزيل ملف الشركة",
   "home.profileMeta": "{pages} صفحة · PDF",
   "home.profileLabel": "تنزيل ملف الشركة (PDF، {pages} صفحة، {size})",
+  // Free book (home section, footer, /book breadcrumb)
+  "footer.book": "كتاب مجاني",
+  "home.bookEyebrow": "كتاب مجاني",
+  "home.bookHeading": "اقرأ الكتاب الذي يشرح النموذج",
+  "home.bookBody": "يشرح كتاب الدكتور كريغ ر. مولر الأوجه الستة ببساطة، مع 36 ممارسة وست صفحات للتقييم الذاتي وخطة عمل لمدة 30 يومًا. مجاني للتنزيل والمشاركة.",
+  "home.bookCta": "تنزيل الكتاب المجاني",
+  "home.bookMeta": "{pages} صفحة · PDF",
+  "home.bookLabel": "تنزيل الكتاب المجاني (PDF، {pages} صفحة، {size})",
+  "home.bookMore": "عن الكتاب",
+  "home.bookLang": "باللغة الإنجليزية",
+  "home.bookCoverAlt": "غلاف كتاب ⁦The Super-Cube® Leadership Model⁩ للدكتور كريغ ر. مولر",
 
   "cta.tryFree": "ابدأ التقييم المجاني",
   "cta.bookPilot": "احجز برنامجًا تجريبيًا",

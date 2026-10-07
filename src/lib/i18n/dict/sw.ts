@@ -127,6 +127,17 @@ const sw: Dict = {
   "home.profileCta": "Pakua wasifu wa kampuni",
   "home.profileMeta": "Kurasa {pages} · PDF",
   "home.profileLabel": "Pakua wasifu wa kampuni (PDF, kurasa {pages}, {size})",
+  // Free book (home section, footer, /book breadcrumb)
+  "footer.book": "Kitabu cha bure",
+  "home.bookEyebrow": "Kitabu cha bure",
+  "home.bookHeading": "Soma kitabu kinachoeleza modeli",
+  "home.bookBody": "Kitabu cha Dkt. Craig R. Muller kinaeleza nyuso sita kwa urahisi, pamoja na mazoezi 36, kurasa sita za kujitathmini na mpango wa vitendo wa siku 30. Ni bure kupakua na kushiriki.",
+  "home.bookCta": "Pakua kitabu cha bure",
+  "home.bookMeta": "Kurasa {pages} · PDF",
+  "home.bookLabel": "Pakua kitabu cha bure (PDF, kurasa {pages}, {size})",
+  "home.bookMore": "Kuhusu kitabu",
+  "home.bookLang": "Kwa Kiingereza",
+  "home.bookCoverAlt": "Jalada la The Super-Cube® Leadership Model, la Dkt. Craig R. Muller",
 
   "cta.tryFree": "Anza tathmini ya bure",
   "cta.bookPilot": "Panga majaribio",

@@ -104,6 +104,7 @@ export const darkHeroPaths = [
   "/speaking",
   "/pilot-pack",
   "/news",
+  "/book",
 ] as const;
 
 /** Path prefixes whose pages all open on a dark media hero (every /news/<post>, incl. its 404). */

@@ -5,6 +5,7 @@ import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
+import { BOOK } from "@/lib/book";
 import { COMPANY_PROFILE } from "@/lib/company-profile";
 import { constructs } from "@/lib/content";
 import { COURSE_PRICE_USD, COURSE_PRICE_ZAR } from "@/lib/programmes";
@@ -48,6 +49,8 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   // Links stay on this language where the page is translated; others go to English (hrefLang="en").
   const L = (href: string) => localizedPath(locale, href);
   const hl = (href: string) => (isEnglishOnlyHref(locale, href) ? "en" : undefined);
+  /** The free book (PDF and /book) is English: hrefLang/lang "en" on translated pages. */
+  const en = locale === DEFAULT_LOCALE ? undefined : "en";
   const steps = s.steps.map((x, i) => ({ n: String(i + 1), ...x }));
   const paths = [
     {
@@ -364,6 +367,62 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               <Button href="/about" hrefLang={hl("/about")} variant="ghost">
                 {s.aboutCraig}
               </Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Free book: the PDF and /book are English (hrefLang="en" on translated home pages). */}
+      <section className="section-pad border-t border-line bg-paper" data-testid="home-book" aria-labelledby="home-book-title">
+        <div className="container-site">
+          <div className="sc-card relative grid items-center gap-8 overflow-hidden p-6 sm:grid-cols-[minmax(0,10rem)_minmax(0,1fr)] sm:p-8 md:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] md:gap-10 lg:p-10">
+            <span className="spectrum-rule absolute inset-x-0 top-0 h-1" aria-hidden />
+            <div className="mx-auto w-36 sm:mx-0 sm:w-full">
+              <Image
+                src={BOOK.cover.src}
+                width={BOOK.cover.width}
+                height={BOOK.cover.height}
+                alt={translate(dict, "home.bookCoverAlt")}
+                sizes="(min-width: 768px) 208px, 160px"
+                className="h-auto w-full rounded-md shadow-[0_18px_40px_-16px_rgba(0,0,0,0.5)] ring-1 ring-black/10 dark:ring-white/10"
+              />
+            </div>
+            <div className="min-w-0">
+              <p className="eyebrow">{translate(dict, "home.bookEyebrow")}</p>
+              <h2 id="home-book-title" className="heading-lg mt-2.5 text-ink sm:mt-3">
+                {translate(dict, "home.bookHeading")}
+              </h2>
+              <p className="mt-2 text-base font-semibold tracking-tight text-ink">
+                {/* Book title: English, read left to right in every language */}
+                <bdi lang={en} dir="ltr">
+                  {BOOK.title}
+                </bdi>
+              </p>
+              <p className="mt-3 text-base leading-relaxed text-slate sm:text-[1.0625rem]">
+                {translate(dict, "home.bookBody")}
+              </p>
+              <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
+                <Button
+                  href={BOOK.href}
+                  hrefLang={en}
+                  download
+                  variant="primary"
+                  ariaLabel={translate(dict, "home.bookLabel", { pages: BOOK.pages, size: BOOK.size })}
+                  className="flex-wrap gap-y-0.5"
+                >
+                  <PdfDownloadIcon />
+                  <span className="whitespace-nowrap">{translate(dict, "home.bookCta")}</span>
+                  <span className="whitespace-nowrap text-xs font-medium opacity-75">
+                    {translate(dict, "home.bookMeta", { pages: BOOK.pages })}
+                  </span>
+                </Button>
+                <Button href={BOOK.page} hrefLang={en} variant="ghost">
+                  {translate(dict, "home.bookMore")} <span aria-hidden className="rtl:-scale-x-100">→</span>
+                </Button>
+                {locale !== DEFAULT_LOCALE && (
+                  <span className="text-sm text-muted">{translate(dict, "home.bookLang")}</span>
+                )}
+              </div>
             </div>
           </div>
         </div>
