@@ -109,7 +109,7 @@ export function buildCertificatePdf(cert: CertificatePdfInput): jsPDF {
     subject: "Super-Cube® certificate of completion",
     author: CERT_AUTHOR,
     creator: "Super-Cube®",
-    keywords: `Super-Cube, certificate, ${cert.id}`,
+    keywords: `Super-Cube®, certificate, ${cert.id}`,
   });
 
   // Paper and frames
