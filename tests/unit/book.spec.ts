@@ -74,7 +74,7 @@ test("/book: download links, share card, chapters, sitemap and breadcrumbs", () 
   expect(page).toMatch(/href=\{BOOK\.href\}[\s\S]{0,40}\bdownload\b/);
   expect(page).toContain("BOOK.share.url");
   expect(page).toContain('"@type": "Book"');
-  expect(BOOK_CHAPTERS.filter((c) => c.n).map((c) => c.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+  expect(BOOK_CHAPTERS.filter((c) => c.n).map((c) => c.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
   expect(read("src/app/sitemap.ts")).toContain('"/book"');
   expect(read("src/lib/breadcrumbs.ts")).toContain('"/book": { label: "Free book", i18n: "footer.book" }');
   expect(read("src/lib/hero-media.ts")).toMatch(/darkHeroPaths = \[[\s\S]*"\/book"/);
