@@ -1,6 +1,7 @@
 import type { ConstructId } from "@/lib/content";
 import { constructs } from "@/lib/content";
 import type { AssessmentItem } from "@/lib/lms/curriculum";
+import { SJT_WEIGHT } from "@/lib/lms/instruments/v2-bank";
 
 export type ResponseMap = Record<string, number>; // itemId -> 1..5
 
@@ -8,9 +9,14 @@ export interface ConstructScore {
   constructId: ConstructId;
   name: string;
   color: string;
+  /** Mean Likert answer after reverse keying (1–5); 0 when the face has no Likert answers */
   rawMean: number;
   score: number; // 0-100
   itemCount: number;
+  /** v2 only: Likert part (0–100) */
+  likertScore?: number | null;
+  /** v2 only: situational judgement part (0–100) */
+  sjtScore?: number | null;
 }
 
 export interface AttemptResult {
@@ -24,38 +30,74 @@ export function likertToScore(value: number): number {
   return ((v - 1) / 4) * 100;
 }
 
+/** Answer after keying: reverse-keyed items score 6 − answer. */
+export function keyedValue(item: Pick<AssessmentItem, "reverse">, value: number): number {
+  return item.reverse ? 6 - value : value;
+}
+
+const round1 = (n: number) => Math.round(n * 10) / 10;
+
+/**
+ * Score an attempt. Works for every instrument version:
+ *  - v1: Likert only, no reverse keying, so results are identical to the
+ *    original engine (existing attempts keep their scores).
+ *  - v2: reverse-keyed Likert items, plus SJT items scored by their
+ *    effectiveness key. A face with both parts blends them
+ *    (1 − SJT_WEIGHT) × Likert + SJT_WEIGHT × SJT.
+ * Items or answers that don't belong (attention/honesty checks) are ignored.
+ */
 export function scoreAttempt(
   items: AssessmentItem[],
-  responses: ResponseMap
+  responses: ResponseMap,
+  sjtWeight: number = SJT_WEIGHT,
 ): AttemptResult {
   const constructScores: ConstructScore[] = constructs.map((c) => {
     const cItems = items.filter((i) => i.constructId === c.id);
-    const values = cItems
-      .map((i) => responses[i.id])
-      .filter((v): v is number => typeof v === "number" && v >= 1 && v <= 5);
+    const likertValues: number[] = [];
+    const sjtScores: number[] = [];
+    for (const i of cItems) {
+      const v = responses[i.id];
+      if (typeof v !== "number" || !Number.isFinite(v)) continue;
+      if (i.itemType === "sjt") {
+        const opt = i.options?.find((o) => o.value === v);
+        if (opt) sjtScores.push(opt.score);
+      } else if (v >= 1 && v <= 5) {
+        likertValues.push(keyedValue(i, v));
+      }
+    }
 
     const rawMean =
-      values.length === 0
+      likertValues.length === 0
         ? 0
-        : values.reduce((a, b) => a + b, 0) / values.length;
+        : likertValues.reduce((a, b) => a + b, 0) / likertValues.length;
+    const likertScore = likertValues.length ? likertToScore(rawMean) : null;
+    const sjtScore = sjtScores.length ? sjtScores.reduce((a, b) => a + b, 0) / sjtScores.length : null;
+    const score =
+      likertScore != null && sjtScore != null
+        ? (1 - sjtWeight) * likertScore + sjtWeight * sjtScore
+        : (likertScore ?? sjtScore ?? 0);
 
-    return {
+    const base: ConstructScore = {
       constructId: c.id,
       name: c.name,
       color: c.color,
       rawMean,
-      score: Math.round(likertToScore(rawMean) * 10) / 10,
-      itemCount: values.length,
+      score: round1(score),
+      itemCount: likertValues.length + sjtScores.length,
     };
+    // Only v2 attempts carry the part scores, so v1 results stay byte-identical.
+    if (sjtScores.length || cItems.some((i) => i.reverse)) {
+      base.likertScore = likertScore == null ? null : round1(likertScore);
+      base.sjtScore = sjtScore == null ? null : round1(sjtScore);
+    }
+    return base;
   });
 
   const scored = constructScores.filter((s) => s.itemCount > 0);
   const overall =
     scored.length === 0
       ? 0
-      : Math.round(
-          (scored.reduce((a, s) => a + s.score, 0) / scored.length) * 10
-        ) / 10;
+      : round1(scored.reduce((a, s) => a + s.score, 0) / scored.length);
 
   return { constructScores, overall };
 }
@@ -96,7 +138,7 @@ export function recommendations(result: AttemptResult): string[] {
   });
   lowest.forEach((s) => {
     recs.push(
-      `Priority: develop **${s.name}** (${s.score}). Start with that course module and complete the practice lab this week.`
+      `Growth edge: **${s.name}** (${s.score}). Start with that course module and complete the practice lab this week.`
     );
   });
   return recs;

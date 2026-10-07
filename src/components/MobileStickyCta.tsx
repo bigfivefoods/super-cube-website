@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLocale } from "@/components/LocaleProvider";
 import { track } from "@/lib/analytics";
@@ -13,8 +12,7 @@ const HIDDEN_PREFIXES = ["/learn", "/login", "/signup", "/auth"];
  * Hidden on Learn product routes and after user dismisses for the session.
  */
 export function MobileStickyCta() {
-  const pathname = usePathname() || "/";
-  const { t } = useLocale();
+  const { t, locale, basePath: pathname } = useLocale();
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -48,6 +46,7 @@ export function MobileStickyCta() {
         <div className="mb-1 flex items-center gap-2 rounded-2xl border border-line bg-paper/95 p-2 shadow-lg backdrop-blur-md supports-[backdrop-filter]:bg-paper/90 dark:bg-elevated/95">
           <Link
             href="/learn/start"
+            hrefLang={locale === "en" ? undefined : "en"}
             onClick={() => track("sticky_cta_click", { path: pathname })}
             className="sc-btn-primary flex min-h-11 flex-1 items-center justify-center rounded-xl px-3 text-sm font-semibold touch-manipulation"
           >
@@ -55,7 +54,7 @@ export function MobileStickyCta() {
           </Link>
           <button
             type="button"
-            aria-label="Dismiss"
+            aria-label={t("common.dismiss")}
             onClick={() => {
               setDismissed(true);
               try {

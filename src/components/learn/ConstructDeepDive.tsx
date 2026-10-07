@@ -6,7 +6,7 @@ import { constructs, type ConstructId } from "@/lib/content";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
 import { deriveFacePattern, pulseSeries } from "@/lib/lms/face-tracking";
 import { getMicroPracticesFor } from "@/lib/lms/micro-practices";
-import { buildAssessmentNarrative } from "@/lib/lms/narrative";
+import { buildAssessmentNarrative, faceGrowthLine } from "@/lib/lms/narrative";
 import type { LocalAttempt } from "@/lib/lms/store";
 import type { LocalLmsState } from "@/lib/lms/store";
 
@@ -20,7 +20,7 @@ export function ConstructDeepDive({
   post?: LocalAttempt;
 }) {
   const [open, setOpen] = useState<ConstructId | null>(null);
-  const narrative = buildAssessmentNarrative(post?.result ?? pre.result);
+  const narrative = buildAssessmentNarrative(post?.result ?? pre.result, (post ?? pre).programmeId);
   const pattern = deriveFacePattern(state);
   const series = pulseSeries(state, 14);
 
@@ -81,9 +81,14 @@ export function ConstructDeepDive({
                   <p className="text-[0.8125rem] font-semibold text-ink">
                     {face.headline}
                   </p>
-                  <p className="mt-1 text-[0.8125rem] text-slate">
-                    {face.insight}
+                  {preScore != null && postScore != null && (
+                    <p className="mt-1 text-[0.8125rem] text-ink">{faceGrowthLine(c.name, preScore, postScore)}</p>
+                  )}
+                  <p className="mt-1 text-[0.8125rem] text-ink">
+                    <span className="font-semibold">What&apos;s working: </span>
+                    {face.strength}
                   </p>
+                  <p className="mt-1 text-[0.8125rem] text-slate">{face.nextStep}</p>
                   <div className="mt-2">
                     <FaceSparkline values={vals} stroke={c.color} height={40} />
                   </div>

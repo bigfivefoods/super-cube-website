@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 import { cspHeaders } from "./src/lib/csp";
+import { PREFIXED_LOCALES, TRANSLATED_PATHS } from "./src/lib/i18n/config";
+
+/** First path segments of the translated pages ("/faq" → "faq"; the home page needs none). */
+const TRANSLATED_SEGMENTS = TRANSLATED_PATHS.map((p) => p.slice(1)).filter(Boolean);
 
 const securityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
@@ -22,6 +26,23 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256],
     qualities: [60, 75],
     minimumCacheTTL: 60 * 60 * 24 * 30,
+  },
+  async redirects() {
+    return [
+      {
+        // Languages (src/lib/i18n/config.ts): only the pages in TRANSLATED_PATHS have /fr, /ar, /pt,
+        // /sw, /zu and /af versions. Any other page under a language prefix goes to its English page
+        // (temporary: more pages may be translated later). Learn, the assessment, account, admin and
+        // API routes are never language-prefixed.
+        source: `/:locale(${PREFIXED_LOCALES.join("|")})/:path((?!(?:${TRANSLATED_SEGMENTS.join("|")})(?:/|$)).+)`,
+        destination: "/:path",
+        permanent: false,
+      },
+      // While the home page is English-only, a bare /fr, /ar … goes to it.
+      ...((TRANSLATED_PATHS as readonly string[]).includes("/")
+        ? []
+        : [{ source: `/:locale(${PREFIXED_LOCALES.join("|")})`, destination: "/", permanent: false }]),
+    ];
   },
   async headers() {
     return [

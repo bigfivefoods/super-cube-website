@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/content";
+import {
+  LOCALE_OG,
+  hreflangAlternates,
+  isTranslatedPath,
+  localizedPath,
+  stripLocale,
+  type PrefixedLocale,
+  type TranslatedPath,
+} from "@/lib/i18n/config";
 
 const base = site.url.replace(/\/$/, "");
 
@@ -12,12 +21,46 @@ export const SHARE_IMAGE = {
 } as const;
 
 /**
- * hreflang: isiZulu and Afrikaans are a client-side toggle on the same URL
- * (English is server-rendered), so there are no separate language URLs to
- * advertise. Declare only the English page + x-default, both self-referencing.
+ * hreflang (the bigfivegroup.africa pattern): a translated page lists every language's URL plus
+ * x-default (English), on the English and the translated URLs alike. Pages that exist in English
+ * only declare just themselves.
  */
-export function pageLanguages(url: string) {
-  return { "en-ZA": url, "x-default": url };
+export function pageLanguages(url: string): Record<string, string> {
+  const path = stripLocale(url.startsWith(base) ? url.slice(base.length) || "/" : "/");
+  if (!isTranslatedPath(path)) return { en: url, "x-default": url };
+  const out: Record<string, string> = {};
+  for (const [lang, p] of Object.entries(hreflangAlternates(path))) out[lang] = absoluteUrl(p);
+  return out;
+}
+
+/**
+ * Metadata for a translated page: localised title and description, canonical on its own URL,
+ * the full hreflang cluster and the Open Graph locale. Super-Cube® keeps its ® in every language.
+ */
+export function localeMeta(opts: {
+  locale: PrefixedLocale;
+  path: TranslatedPath;
+  title: string;
+  description: string;
+  absoluteTitle?: boolean;
+}): Metadata {
+  const url = absoluteUrl(localizedPath(opts.locale, opts.path));
+  const title = opts.absoluteTitle ? opts.title : `${opts.title} | Super-Cube®`;
+  return {
+    title: { absolute: title },
+    description: opts.description,
+    alternates: { canonical: url, languages: pageLanguages(url) },
+    openGraph: {
+      title,
+      description: opts.description,
+      url,
+      siteName: site.name,
+      type: "website",
+      locale: LOCALE_OG[opts.locale],
+      images: [{ ...SHARE_IMAGE }],
+    },
+    twitter: { card: "summary_large_image", title, description: opts.description, images: [SHARE_IMAGE.url] },
+  };
 }
 
 export function absoluteUrl(path: string) {

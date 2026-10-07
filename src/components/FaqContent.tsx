@@ -16,7 +16,8 @@ const ITEMS: { q: I18nKey; a: I18nKey }[] = [
 ];
 
 export function FaqContent() {
-  const { t } = useLocale();
+  const { t, L, locale } = useLocale();
+  const enLang = locale === "en" ? undefined : "en";
 
   return (
     <>
@@ -27,10 +28,10 @@ export function FaqContent() {
         title={t("faq.title")}
         description={t("faq.lede")}
       >
-        <Button href="/learn/start" variant="primary">
+        <Button href="/learn/start" hrefLang={enLang} variant="primary">
           {t("faq.ctaStart")}
         </Button>
-        <Button href="/contact" variant="ghost">
+        <Button href={L("/contact")} hrefLang={L("/contact") === "/contact" ? enLang : undefined} variant="ghost">
           {t("faq.ctaContact")}
         </Button>
       </PageHero>
