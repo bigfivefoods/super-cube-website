@@ -14,7 +14,18 @@ export type Subscriber = {
   unsubscribe_token: string;
   unsubscribed_at: string | null;
   created_at: string;
+  /** Double opt-in: set when the confirmation link was used. */
+  confirmed_at?: string | null;
+  confirm_sent_at?: string | null;
 };
+
+export type SubscriberStatus = "active" | "pending" | "unsubscribed";
+
+/** Active = confirmed and not unsubscribed (the only people campaigns go to). */
+export function subscriberStatus(s: Pick<Subscriber, "unsubscribed_at" | "confirmed_at">): SubscriberStatus {
+  if (s.unsubscribed_at) return "unsubscribed";
+  return s.confirmed_at ? "active" : "pending";
+}
 
 let warnedUrl = false;
 

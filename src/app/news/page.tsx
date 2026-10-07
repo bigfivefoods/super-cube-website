@@ -121,7 +121,7 @@ export default async function NewsPage() {
           <NewsletterSignup
             source="news"
             title="Get Super-Cube® News by email"
-            description="New posts, programme updates and one practical leadership idea at a time. You can unsubscribe from any email."
+            description="New posts, programme updates and one practical leadership idea at a time. We email you a link to confirm first, and you can unsubscribe from any email."
           />
         </div>
       </section>

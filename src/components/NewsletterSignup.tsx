@@ -5,7 +5,8 @@ import { useId, useState, type FormEvent } from "react";
 import { track } from "@/lib/analytics";
 
 /**
- * Email capture with an explicit POPIA opt-in. Posts to /api/newsletter.
+ * Email capture with an explicit POPIA opt-in and double opt-in (a confirmation
+ * link by email). Posts to /api/newsletter.
  * Drop-in for the end of the free baseline: <NewsletterSignup source="baseline" />
  */
 export function NewsletterSignup({
@@ -69,11 +70,11 @@ export function NewsletterSignup({
     return (
       <div className={wrap} role="status">
         <p className="text-base font-semibold tracking-tight text-ink">
-          You’re on the list. Thank you.
+          Almost done: check your inbox.
         </p>
         <p className="mt-1.5 text-sm text-slate">
-          We’ll only email you about leadership growth and Super-Cube®. You can
-          unsubscribe from any email.
+          If this address isn’t subscribed yet, we’ve sent it a link to confirm.
+          Nothing is sent until you press it. Can’t see it? Check your spam folder.
         </p>
       </div>
     );
@@ -211,7 +212,7 @@ export function NewsletterSignup({
         />
         <label htmlFor={`${id}-consent`} className="text-xs leading-relaxed text-slate">
           I agree that Super-Cube® may email me leadership tips and programme
-          updates. I can unsubscribe at any time. See our{" "}
+          updates. I’ll confirm by email and can unsubscribe at any time. See our{" "}
           <Link href="/privacy" className="font-semibold text-ink underline underline-offset-2">
             privacy notice
           </Link>

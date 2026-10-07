@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import { getNewsletterAdmin } from "@/lib/newsletter/admin-auth";
-import { NEWSLETTER_TABLE, newsletterDb, siteOrigin, unsubscribeUrl, type Subscriber } from "@/lib/newsletter/db";
+import { NEWSLETTER_TABLE, newsletterDb, siteOrigin, subscriberStatus, unsubscribeUrl, type Subscriber } from "@/lib/newsletter/db";
 
 export const dynamic = "force-dynamic";
 
-/** CSV export of the subscriber list (admin only). ?status=active|all */
+/** CSV export of the subscriber list (admin only). ?status=active (confirmed, not unsubscribed)|all */
 export async function GET(req: Request) {
   const admin = await getNewsletterAdmin(req);
   if (!admin.ok) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -14,22 +14,23 @@ export async function GET(req: Request) {
   const status = new URL(req.url).searchParams.get("status") || "all";
   let q = db
     .from(NEWSLETTER_TABLE)
-    .select("id,email,source,consent_text,consent_at,unsubscribe_token,unsubscribed_at,created_at")
+    .select("id,email,source,consent_text,consent_at,unsubscribe_token,unsubscribed_at,created_at,confirmed_at")
     .order("created_at", { ascending: false })
     .limit(50000);
-  if (status === "active") q = q.is("unsubscribed_at", null);
+  if (status === "active") q = q.is("unsubscribed_at", null).not("confirmed_at", "is", null);
   const { data, error } = await q;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const origin = siteOrigin();
   const rows: string[][] = [
-    ["email", "status", "source", "consent_at", "consent_text", "unsubscribed_at", "created_at", "unsubscribe_url"],
+    ["email", "status", "source", "consent_at", "consent_text", "confirmed_at", "unsubscribed_at", "created_at", "unsubscribe_url"],
     ...((data ?? []) as Subscriber[]).map((s) => [
       s.email,
-      s.unsubscribed_at ? "unsubscribed" : "active",
+      subscriberStatus(s),
       s.source ?? "",
       s.consent_at,
       s.consent_text,
+      s.confirmed_at ?? "",
       s.unsubscribed_at ?? "",
       s.created_at,
       unsubscribeUrl(s.unsubscribe_token, origin),

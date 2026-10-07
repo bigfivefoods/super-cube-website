@@ -4,7 +4,7 @@ import { getNewsletterAdmin } from "@/lib/newsletter/admin-auth";
 import { SignInForm } from "./SignInForm";
 import { signOutAction, toggleHandledAction } from "./actions";
 import { EnquiriesTab, type Enquiry } from "./EnquiriesTab";
-import { NEWSLETTER_TABLE, newsletterDb, type Subscriber } from "@/lib/newsletter/db";
+import { NEWSLETTER_TABLE, newsletterDb, subscriberStatus, type Subscriber } from "@/lib/newsletter/db";
 
 export const dynamic = "force-dynamic";
 
@@ -53,7 +53,7 @@ export default async function AdminPage({
   else if (tab === "subscribers") {
     const res = await db
       .from(NEWSLETTER_TABLE)
-      .select("id,email,source,consent_text,consent_at,unsubscribe_token,unsubscribed_at,created_at")
+      .select("id,email,source,consent_text,consent_at,unsubscribe_token,unsubscribed_at,created_at,confirmed_at")
       .order("created_at", { ascending: false })
       .limit(2000);
     if (res.error) error = res.error.message;
@@ -67,7 +67,9 @@ export default async function AdminPage({
     if (res.error) error = res.error.message;
     enquiries = (res.data ?? []) as Enquiry[];
   }
-  const active = rows.filter((r) => !r.unsubscribed_at).length;
+  const active = rows.filter((r) => subscriberStatus(r) === "active").length;
+  const pending = rows.filter((r) => subscriberStatus(r) === "pending").length;
+  const unsubscribed = rows.length - active - pending;
   const tabCls = (on: boolean) =>
     `inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold ${
       on ? "bg-ink text-paper" : "border border-line-strong text-ink"
@@ -109,10 +111,14 @@ export default async function AdminPage({
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <div className="rounded-xl border border-line bg-elevated px-4 py-3">
             <p className="text-2xl font-semibold tabular-nums text-ink">{active}</p>
-            <p className="text-xs text-slate">Active</p>
+            <p className="text-xs text-slate">Active (confirmed)</p>
           </div>
           <div className="rounded-xl border border-line bg-elevated px-4 py-3">
-            <p className="text-2xl font-semibold tabular-nums text-ink">{rows.length - active}</p>
+            <p className="text-2xl font-semibold tabular-nums text-ink">{pending}</p>
+            <p className="text-xs text-slate">Awaiting confirmation</p>
+          </div>
+          <div className="rounded-xl border border-line bg-elevated px-4 py-3">
+            <p className="text-2xl font-semibold tabular-nums text-ink">{unsubscribed}</p>
             <p className="text-xs text-slate">Unsubscribed</p>
           </div>
           {/* File download from an API route: a plain link is intended. */}
@@ -133,7 +139,7 @@ export default async function AdminPage({
           </a>
         </div>
         <p className="mt-3 text-xs text-muted">
-          The CSV includes each person’s personal unsubscribe link. Put it in every newsletter you send.
+          Double opt-in: people count as active only after they press the link in the confirmation email. Campaigns go to active subscribers only, and the CSV includes each person’s unsubscribe link.
         </p>
 
         {error ? (
@@ -142,13 +148,14 @@ export default async function AdminPage({
           <p className="mt-6 text-slate">No subscribers yet.</p>
         ) : (
           <div className="mt-6 overflow-x-auto rounded-xl border border-line">
-            <table className="w-full min-w-[40rem] text-left text-sm">
+            <table className="w-full min-w-[48rem] text-left text-sm">
               <thead className="bg-surface text-xs uppercase tracking-wide text-muted">
                 <tr>
                   <th scope="col" className="px-3 py-2">Email</th>
                   <th scope="col" className="px-3 py-2">Status</th>
                   <th scope="col" className="px-3 py-2">Source</th>
                   <th scope="col" className="px-3 py-2">Consent given</th>
+                  <th scope="col" className="px-3 py-2">Confirmed</th>
                   <th scope="col" className="px-3 py-2">Unsubscribed</th>
                 </tr>
               </thead>
@@ -156,9 +163,10 @@ export default async function AdminPage({
                 {rows.map((r) => (
                   <tr key={r.id} className="border-t border-line">
                     <td className="px-3 py-2 text-ink">{r.email}</td>
-                    <td className="px-3 py-2 text-slate">{r.unsubscribed_at ? "Unsubscribed" : "Active"}</td>
+                    <td className="px-3 py-2 text-slate">{{ active: "Active", pending: "Awaiting confirmation", unsubscribed: "Unsubscribed" }[subscriberStatus(r)]}</td>
                     <td className="px-3 py-2 text-slate">{r.source ?? "—"}</td>
                     <td className="px-3 py-2 text-slate">{fmt(r.consent_at)}</td>
+                    <td className="px-3 py-2 text-slate">{fmt(r.confirmed_at ?? null)}</td>
                     <td className="px-3 py-2 text-slate">{fmt(r.unsubscribed_at)}</td>
                   </tr>
                 ))}
