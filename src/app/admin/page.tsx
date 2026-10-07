@@ -710,6 +710,11 @@ export default async function AdminConsolePage({
                 Newsletter
               </Link>
             </li>
+            <li>
+              <Link href="/newsletter/admin?tab=news" className="-mb-px inline-flex min-h-11 items-center whitespace-nowrap border-b-2 border-transparent px-3 text-sm font-semibold text-slate hover:text-ink">
+                News
+              </Link>
+            </li>
           </ul>
         </nav>
 
