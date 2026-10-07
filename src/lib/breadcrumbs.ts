@@ -48,6 +48,7 @@ export const routeLabels: Record<string, RouteLabel> = {
   "/about": { label: "About", i18n: "nav.about" },
   "/insights": { label: "Insights", i18n: "nav.insights" },
   "/news": { label: "News", i18n: "nav.news" },
+  "/book": { label: "Free book", i18n: "footer.book" },
 
   // Help, legal and account
   "/faq": { label: "FAQ", i18n: "nav.faq" },

@@ -71,6 +71,7 @@ const PAGES = [
   "/news/grade-12-boarders-leadership-field-snapshot",
   "/schools",
   "/organisations",
+  "/book",
 ];
 
 for (const [tag, viewport] of [

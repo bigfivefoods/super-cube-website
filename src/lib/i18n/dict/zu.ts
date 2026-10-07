@@ -119,6 +119,17 @@ const zu: Dict = {
   "home.profileCta": "Landa iphrofayela yenkampani",
   "home.profileMeta": "Amakhasi angu-{pages} · PDF",
   "home.profileLabel": "Landa iphrofayela yenkampani (PDF, amakhasi angu-{pages}, {size})",
+  // Free book (home section, footer, /book breadcrumb)
+  "footer.book": "Incwadi yamahhala",
+  "home.bookEyebrow": "Incwadi yamahhala",
+  "home.bookHeading": "Funda incwadi echaza imodeli",
+  "home.bookBody": "Incwadi kaDkt Craig R. Muller ichaza izinhlangothi eziyisithupha kalula, nemikhuba engu-36, amakhasi ayisithupha okuzihlola kanye nohlelo lokwenza lwezinsuku ezingu-30. Mahhala ukuyilanda nokuyabelana.",
+  "home.bookCta": "Landa incwadi yamahhala",
+  "home.bookMeta": "Amakhasi angu-{pages} · PDF",
+  "home.bookLabel": "Landa incwadi yamahhala (PDF, amakhasi angu-{pages}, {size})",
+  "home.bookMore": "Mayelana nencwadi",
+  "home.bookLang": "NgesiNgisi",
+  "home.bookCoverAlt": "Ikhava ye-The Super-Cube® Leadership Model kaDkt Craig R. Muller",
 
   "cta.tryFree": "Qala isisekelo samahhala",
   "cta.bookPilot": "Bhuka i-pilot",

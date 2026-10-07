@@ -117,6 +117,17 @@ const af: Dict = {
   "home.profileCta": "Laai maatskappyprofiel af",
   "home.profileMeta": "{pages} bladsye · PDF",
   "home.profileLabel": "Laai maatskappyprofiel af (PDF, {pages} bladsye, {size})",
+  // Free book (home section, footer, /book breadcrumb)
+  "footer.book": "Gratis boek",
+  "home.bookEyebrow": "Gratis boek",
+  "home.bookHeading": "Lees die boek agter die model",
+  "home.bookBody": "Dr. Craig R. Muller se boek verduidelik die ses gesigte eenvoudig, met 36 praktyke, ses selfassesseringsbladsye en ’n 30-dag-aksieplan. Gratis om af te laai en te deel.",
+  "home.bookCta": "Laai die gratis boek af",
+  "home.bookMeta": "{pages} bladsye · PDF",
+  "home.bookLabel": "Laai die gratis boek af (PDF, {pages} bladsye, {size})",
+  "home.bookMore": "Oor die boek",
+  "home.bookLang": "In Engels",
+  "home.bookCoverAlt": "Voorblad van The Super-Cube® Leadership Model deur Dr. Craig R. Muller",
 
   "cta.tryFree": "Begin gratis basislyn",
   "cta.bookPilot": "Bespreek ’n loods",

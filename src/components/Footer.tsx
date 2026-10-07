@@ -104,6 +104,7 @@ const resourceGroups: FooterGroup[] = [
       { href: "/impact", label: "Impact" },
       { href: "/insights", label: "Insights" },
       { href: "/news", label: "News", key: "nav.news" },
+      { href: "/book", label: "Free book", key: "footer.book" },
       { href: "/media", label: "Media kit" },
       { href: COMPANY_PROFILE.href, label: "Company profile (PDF)", key: "footer.companyProfile", file: true },
     ],

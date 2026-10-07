@@ -125,6 +125,17 @@ const en = {
   "home.profileCta": "Download company profile",
   "home.profileMeta": "{pages} pages · PDF",
   "home.profileLabel": "Download company profile (PDF, {pages} pages, {size})",
+  // Free book (home section, footer, /book breadcrumb)
+  "footer.book": "Free book",
+  "home.bookEyebrow": "Free book",
+  "home.bookHeading": "Read the book behind the model",
+  "home.bookBody": "Dr Craig R. Muller’s book explains the six faces simply, with 36 practices, six self-assessment workbook pages and a 30-day action plan. Free to download and share.",
+  "home.bookCta": "Download the free book",
+  "home.bookMeta": "{pages} pages · PDF",
+  "home.bookLabel": "Download the free book (PDF, {pages} pages, {size})",
+  "home.bookMore": "About the book",
+  "home.bookLang": "In English",
+  "home.bookCoverAlt": "Cover of The Super-Cube® Leadership Model by Dr Craig R. Muller",
 
   // CTAs & common
   "cta.tryFree": "Start free baseline",
