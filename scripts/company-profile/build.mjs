@@ -236,7 +236,7 @@ function build(L, img) {
       <div class="statrow">
         ${stats.map((s) => `<div><p class="big">${esc(s.value)}</p><p class="k">${esc(s.label)}</p><p class="small">${esc(s.detail)}</p></div>`).join("")}
       </div>
-      <p class="note">+32.2% and +45.1% are research results from the founding doctoral study (UKZN, 2021)—see page 7. They are not live programme data or a promised outcome.</p>
+      <p class="note">+32.2% and +45.1% are average gains from the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods (see page 7), not from the doctoral study. They are not live programme data or a promised outcome.</p>
     </div>`));
 
   // 3 · Founder
@@ -358,13 +358,13 @@ function build(L, img) {
       <h2>Tested before it was taught.</h2>
       <p class="lede">Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (DBA, 2021). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.</p>
       <div class="research-top">
-        <div class="hero-num"><p class="k">UKZN research result · Emotional face</p><p class="huge">+${interventionGains.find((g) => g.constructId === "emotional").gainPct}%</p><p class="small">Overall, all six faces: <b>+${overallInterventionGain}%</b></p></div>
+        <div class="hero-num"><p class="k">12-week intervention result · Emotional face</p><p class="huge">+${interventionGains.find((g) => g.constructId === "emotional").gainPct}%</p><p class="small">Overall, all six faces: <b>+${overallInterventionGain}%</b></p></div>
         <figure class="photo"><img src="${img.research}" alt="A university library reading room"></figure>
       </div>
       <div class="bars card">
         <p class="k">Average pre- to post-assessment improvement, by face</p>
         ${interventionGains.map((g) => `<div class="bar"><span class="bn"><i style="background:${g.color}"></i>${esc(g.label)}</span><span class="track"><span style="width:${((g.gainPct / max) * 100).toFixed(1)}%;background:${g.color}"></span></span><span class="bv">+${g.gainPct}%</span></div>`).join("")}
-        <p class="note">Research results: average percentage improvement following Super-Cube® development interventions (pre- to post-assessment), as reported in the doctoral research. Highest gains: Principles (+45.1%) and Emotional (+39.5%). A research finding, not a promised outcome and not live programme data.</p>
+        <p class="note">Intervention results: average pre- to post-assessment improvement in the 12-week, accredited Super-Cube® leadership intervention (NQF levels 3–5) with leaders at Imana Foods and Kerry Foods. The doctoral study built the model; it did not measure these gains. Highest gains: Principles (+45.1%) and Emotional (+39.5%). Not a promised outcome and not live programme data.</p>
       </div>
       <div class="grid4">${researchHighlights.map((h) => `<div><p class="lt">${esc(h.title)}</p><p class="small">${esc(h.body)}</p></div>`).join("")}</div>
       <div class="pubs">${publications.map((p) => `<p><span class="badge">${esc(p.badge)}</span> ${esc(p.authors)} (${p.year}). <b>${esc(p.title)}</b>. <i>${esc(p.journal)}</i>. ${link(p.doi, esc(p.doi.replace("https://", "")))}</p>`).join("")}</div>
@@ -604,7 +604,7 @@ function build(L, img) {
       <div class="credit">
         <p class="motto">Feed. Educate. Empower.</p>
         <p>Super-Cube® is part of ${link("https://bigfivegroup.africa/leadership", "Big Five Learn")}, the Educate pillar of ${link("https://bigfivegroup.africa", "Big Five Group™")}.</p>
-        <p class="small">© ${new Date().getFullYear()} Super-Cube® Leadership Model. All rights reserved. Research figures are from the founding doctoral study (UKZN, 2021) and are not live programme data.</p>
+        <p class="small">© ${new Date().getFullYear()} Super-Cube® Leadership Model. All rights reserved. Gains are from the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods and are not live programme data.</p>
       </div>
     </div>`, { dark: true, cls: "backpage", footer: false }));
 

@@ -87,7 +87,7 @@ export default function AssessmentRunnerPage() {
     "adults") as ProgrammeId;
   const programme = getProgramme(programmeId);
   // Instrument version: the baseline's version for re-measures; otherwise v1
-  // (research form) unless v2 is switched on for this deployment.
+  // (standard form) unless v2 is switched on for this deployment.
   const preForVersion = state?.attempts.find((a) => a.phase === "pre" && a.programmeId === programmeId);
   const draftVersion =
     state?.assessmentDraft?.phase === phase ? versionOfResponses(state.assessmentDraft.responses) : null;

@@ -50,8 +50,8 @@ test.describe("newsletter campaigns", () => {
     for (const s of t) {
       expect(s.text).not.toMatch(/\*\*|\]\(|^#/);
       expect(s.text.length).toBeLessThanOrEqual(300);
-      // A research figure is never cut away from its source.
-      if (s.text.includes("+39.5%")) expect(s.text).toContain("UKZN");
+      // A result is never cut away from its source (the Imana Foods and Kerry Foods intervention).
+      if (s.text.includes("+39.5%")) expect(s.text).toContain("Imana Foods");
     }
   });
 

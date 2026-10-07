@@ -197,7 +197,7 @@ export default function ResearchPage() {
         light
         eyebrow="Intervention results · 12-week Super-Cube® programmes"
         title="+32.2% overall growth across all six faces."
-        description="Aggregated pre- and post-course results from 12-week Super-Cube® leadership interventions at South African and international FMCG organisations, with the gain for each face (source: Super-Cube® company profile, Sept 2023). Not live programme data."
+        description="Aggregated pre- and post-course results from the 12-week Super-Cube® leadership interventions with Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face (source: Super-Cube® company profile, Sept 2023). These gains come from the interventions, not from the doctoral study, which tested the model’s structure. Not live programme data."
       />
 
       <section className="section-pad border-y border-[var(--line)] bg-void text-void-fg">

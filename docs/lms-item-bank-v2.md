@@ -2,7 +2,7 @@
 
 _Generated from `src/lib/lms/instruments/v2-bank.ts`. Edit the code, not this file._
 
-- **v1 (research form)**: the original 28-item instrument, unchanged and still the live default.
+- **v1 (standard form)**: the 28-item instrument (a later version of the 18-item DBA survey), unchanged and still the live default.
 - **v2 (behavioural + situational judgement, draft for sign-off)**: behind `LMS_INSTRUMENT_V2=on` (server) and `NEXT_PUBLIC_LMS_INSTRUMENT_V2=on` (browser). Default **OFF**. Admin preview: `/admin/instrument-v2` (never writes learner data).
 - Observer (360) form: parallel third-person wording of every v2 Likert item, behind `LMS_360=on` / `NEXT_PUBLIC_LMS_360=on`, adults only. Results show only when at least 3 raters in a group have answered, and per face only when 3 raters observed that face.
 

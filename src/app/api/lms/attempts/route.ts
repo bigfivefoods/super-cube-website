@@ -38,7 +38,7 @@ export async function POST(request: Request) {
   const learning = await loadLearning(ctx.admin, ctx.user.id, programmeId);
   const pre = learning.attempts.find((a) => a.phase === "pre");
 
-  // Instrument version: a new baseline uses v1 (research form) unless v2 is
+  // Instrument version: a new baseline uses v1 (standard form) unless v2 is
   // switched on AND requested. Re-measures always use the baseline's version,
   // so pre and post stay comparable.
   let version: InstrumentVersion = "v1";

@@ -58,7 +58,7 @@ Prepared 7 October 2026 (SAST) for Dr Craig R. Muller. This compares how world-l
 ## 3. Design rules for Super-Cube® (what the new content follows)
 
 ### Assessment
-1. **Keep v1 intact as the research form.** The 28-item instrument stays exactly as it is, labelled *v1 (research form)*, so results remain comparable with the DBA study. Pre and post always use the **same** instrument version.
+1. **Keep v1 intact as the standard form.** The 28-item instrument (a later version of the 18-item survey used in the DBA research) stays exactly as it is, labelled *v1 (standard form)*, so baseline and after-test results remain comparable. Pre and post always use the **same** instrument version.
 2. **v2 behaviourally anchored Likert:** 6–8 items per face per form (Adults, Teens, Kids), each describing observable behaviour. About one-third reverse-keyed, written as positive descriptions of the opposite behaviour (no "not").
 3. **Frequency scale** (Never / Rarely / Sometimes / Often / Almost always) for v2, because behaviour is better reported as frequency, and it is the format children handle best.
 4. **SJTs on every face, weighted towards Choices and Principles** (3 each; 2 for the other faces), using "most effective" instructions and a 1–4 expert effectiveness key per option. The face score blends Likert and SJT (70/30 by default) so neither dominates.

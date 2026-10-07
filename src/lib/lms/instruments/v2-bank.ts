@@ -14,7 +14,7 @@
  *   360 form ({name} is replaced with the learner's first name).
  *
  * Item content is Dr Muller's academic model: change wording here only with his approval.
- * v1 (research form) is untouched and still lives in curriculum.ts.
+ * v1 (standard form) is untouched and still lives in curriculum.ts.
  */
 import type { ConstructId } from "@/lib/content";
 import type { ProgrammeId } from "@/lib/programmes";

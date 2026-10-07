@@ -2,7 +2,8 @@ import type { NewsPost } from "./types";
 
 /*
  * Seeded posts. Every fact here is already on super-cube.me (pricing, programmes, the six faces,
- * the 21-day re-measure, verify IDs) or in the published UKZN research (+39.5% Emotional).
+ * the 21-day re-measure, verify IDs) or in the 12-week Super-Cube® leadership intervention results
+ * with Imana Foods and Kerry Foods (+39.5% Emotional).
  * The LMS post matches the bigfivegroup.africa update of 7 October 2026.
  */
 
@@ -14,7 +15,7 @@ For much of my working life I have asked one question: can leadership be develop
 
 ## Six faces, with you at the centre
 
-Super-Cube® looks at the whole person, not one skill. It has six developable faces: **Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**, with the individual at the centre. Each face can be practised and strengthened. In the published research, the Emotional face improved by **+39.5% (UKZN)** from the first assessment to the second. That is a research result, not a promise for every learner, and it is why we built a platform that measures before it teaches.
+Super-Cube® looks at the whole person, not one skill. It has six developable faces: **Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**, with the individual at the centre. Each face can be practised and strengthened. In the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods, the Emotional face improved by **+39.5%** from the first assessment to the second. That is a result for those cohorts, not a promise for every learner, and it is why we built a platform that measures before it teaches.
 
 ## The learning journey
 
