@@ -7,6 +7,7 @@ import { CourseVideo } from "@/components/learn/CourseVideo";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs, type ConstructId } from "@/lib/content";
 import { faceTagline } from "@/lib/lms/face-taglines";
+import { faceDescription, faceSkills } from "@/lib/lms/face-copy";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { getCourse } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
@@ -82,8 +83,8 @@ export default function CourseDetailPage() {
             {faceTagline(construct.id, programmeId)}
           </p>
           <p className="learn-body mt-1.5 max-w-2xl">{course.promise}</p>
-          <p className="learn-body-sm mt-1.5 max-w-2xl line-clamp-2">
-            {construct.description}
+          <p className={`learn-body-sm mt-1.5 max-w-2xl ${programmeId === "adults" ? "line-clamp-2" : ""}`}>
+            {faceDescription(construct.id, programmeId)}
           </p>
           <div className="mt-3.5 flex flex-col gap-2.5 sm:flex-row sm:items-center">
             <Link
@@ -112,7 +113,7 @@ export default function CourseDetailPage() {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-1.5">
-        {construct.elements.map((el) => (
+        {faceSkills(construct.id, programmeId).map((el) => (
           <span
             key={el}
             className="rounded-full border px-2.5 py-0.5 text-[0.7rem] font-medium text-ink"
