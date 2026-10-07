@@ -49,12 +49,16 @@ export function EnquiriesTab({
           <p className="text-2xl font-semibold tabular-nums text-ink">{rows.length - open}</p>
           <p className="text-xs text-slate">Handled</p>
         </div>
+        {/* File download from an API route: a plain link is intended. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/api/admin/enquiries/export?status=open"
           className="sc-btn-primary inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold"
         >
           Export open (CSV)
         </a>
+        {/* File download from an API route: a plain link is intended. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/api/admin/enquiries/export?status=all"
           className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-5 text-sm font-semibold text-ink"

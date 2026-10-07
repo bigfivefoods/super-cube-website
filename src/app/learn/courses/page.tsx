@@ -6,6 +6,7 @@ import Image from "next/image";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { PaywallCard } from "@/components/learn/PaywallCard";
 import { constructs } from "@/lib/content";
+import { faceTagline } from "@/lib/lms/face-taglines";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
@@ -24,7 +25,7 @@ export default function CoursesPage() {
   return (
     <LearnShell
       title="Step 4 of 6 · Develop the six faces"
-      subtitle={`${programme?.name ?? "Programme"} · Work through each construct with Read · Engage · Apply. Small sessions that compound into real capacity.`}
+      subtitle={`${programme?.name ?? "Programme"} · Short eight-step sessions: an idea, a real example, a practice, a plan and a quick check. Small sessions that compound into real capacity.`}
     >
       <PaywallCard />
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-3.5 xl:grid-cols-3">
@@ -69,10 +70,10 @@ export default function CoursesPage() {
                   </h2>
                 </div>
                 <p
-                  className="face-ink mt-0.5 truncate text-[0.7rem] font-medium"
+                  className="face-ink mt-0.5 line-clamp-2 text-[0.7rem] font-medium"
                   style={faceInkStyle(color)}
                 >
-                  {construct?.tagline}
+                  {construct ? faceTagline(construct.id, programmeId) : null}
                 </p>
                 <p className="mt-1.5 line-clamp-2 text-[0.75rem] leading-snug text-slate">
                   {course.promise}
@@ -89,7 +90,27 @@ export default function CoursesPage() {
         })}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
+      <div className="mt-6 rounded-2xl border border-line bg-elevated p-4 sm:p-5" data-testid="review-card">
+        <p className="learn-eyebrow">Make it stick</p>
+        <p className="mt-1 text-sm font-semibold text-ink">Spaced review on Day 3, 7 and 14, then the capstone</p>
+        <p className="learn-meta mt-0.5">
+          Three short mixed reviews bring back what you learned just as you start to forget it. The capstone
+          brings all six faces together in one case and a personal leadership plan.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-3">
+          <Link href="/learn/review" className="text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline">
+            Spaced review →
+          </Link>
+          <Link
+            href="/learn/review/capstone"
+            className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+          >
+            Capstone
+          </Link>
+        </div>
+      </div>
+
+      <div className="mt-3 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <p className="learn-eyebrow">After the full programme</p>
         <p className="mt-1 text-sm font-semibold text-ink">
           Steps 5 and 6 of 6 · Re-measure, then see your report

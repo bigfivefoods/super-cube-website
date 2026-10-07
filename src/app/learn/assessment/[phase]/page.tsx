@@ -27,6 +27,7 @@ import {
 } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { constructs } from "@/lib/content";
+import { faceTagline } from "@/lib/lms/face-taglines";
 import { track } from "@/lib/analytics";
 import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 import { submitAttempt, syncFromServer, toLocalAttempt } from "@/lib/lms/cloud";
@@ -406,7 +407,7 @@ export default function AssessmentRunnerPage() {
           />
           <div>
             <h2 className="learn-card-title">{constructMeta?.name}</h2>
-            <p className="learn-meta mt-0.5">{constructMeta?.tagline}</p>
+            <p className="learn-meta mt-0.5">{constructMeta ? faceTagline(constructMeta.id, programmeId) : null}</p>
           </div>
         </div>
 

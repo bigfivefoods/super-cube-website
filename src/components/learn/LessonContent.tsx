@@ -1,21 +1,24 @@
 import type { ReactNode } from "react";
 import { BLOCK_META, type SessionSection } from "@/lib/lms/curriculum";
 
-function renderInline(text: string): ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+export function renderInline(text: string): ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*)/g);
   return parts.map((part, i) => {
-    if (part.startsWith("**") && part.endsWith("**")) {
+    if (part.startsWith("**") && part.endsWith("**") && part.length > 4) {
       return (
         <strong key={i} className="font-semibold text-ink">
           {part.slice(2, -2)}
         </strong>
       );
     }
+    if (part.length > 2 && part.startsWith("*") && part.endsWith("*")) {
+      return <em key={i}>{part.slice(1, -1)}</em>;
+    }
     return <span key={i}>{part}</span>;
   });
 }
 
-function renderBody(md: string) {
+export function renderBody(md: string) {
   const lines = md.split("\n");
   const nodes: ReactNode[] = [];
   let listBuffer: { ordered: boolean; items: string[] } | null = null;

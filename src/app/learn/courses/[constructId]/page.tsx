@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { CourseVideo } from "@/components/learn/CourseVideo";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs, type ConstructId } from "@/lib/content";
+import { faceTagline } from "@/lib/lms/face-taglines";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { getCourse } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
@@ -55,7 +56,7 @@ export default function CourseDetailPage() {
   return (
     <LearnShell
       title={construct.name}
-      subtitle={`${programme?.name} · ${course.lessons.length} sessions · Read · Engage · Apply`}
+      subtitle={`${programme?.name} · ${course.lessons.length} sessions · eight-step learning arc`}
     >
       {/* Module hero with intro video */}
       <div
@@ -78,7 +79,7 @@ export default function CourseDetailPage() {
             Super-Cube® · {construct.shortName}
           </p>
           <p className="mt-1 text-[0.875rem] font-medium text-ink sm:text-[0.9375rem]">
-            {construct.tagline}
+            {faceTagline(construct.id, programmeId)}
           </p>
           <p className="learn-body mt-1.5 max-w-2xl">{course.promise}</p>
           <p className="learn-body-sm mt-1.5 max-w-2xl line-clamp-2">

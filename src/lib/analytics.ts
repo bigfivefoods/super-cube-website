@@ -38,6 +38,9 @@ export type FunnelEvent =
   | "guided_start_open"
   | "guided_start_cta"
   | "peer_pulse_complete"
+  | "retrieval_check"
+  | "review_complete"
+  | "certificate_share"
   | "client_error";
 
 /** Conversion funnel steps to watch in GA4 + local debug */
