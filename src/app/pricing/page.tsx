@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { PaystackCheckout } from "@/components/PaystackCheckout";
 import { SeatPackCheckout } from "@/components/SeatPackCheckout";
 import { PageHero, Button } from "@/components/ui";
+import { PROGRAMME_THEME, programmeBandStyle } from "@/lib/programme-theme";
 import { track } from "@/lib/analytics";
 import { loadLmsState, unlockDemo, hasPaidAccess } from "@/lib/lms/store";
 import {
@@ -118,73 +119,96 @@ export default function PricingPage() {
                   <article
                     key={p.id}
                     id={p.id}
-                    className="flex flex-col sc-card p-6 shadow-sm sm:p-8"
+                    className="flex flex-col overflow-hidden sc-card shadow-sm"
+                    data-testid={`programme-card-${p.id}`}
                   >
-                    <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                      {p.ageLabel}
-                    </p>
-                    <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-                      {p.name}
-                    </h2>
-                    <p className="mt-2 text-sm font-medium text-slate">
-                      {p.tagline}
-                    </p>
-                    <p className="mt-4 flex-1 text-sm leading-relaxed text-slate">
-                      {p.description}
-                    </p>
-
-                    <div className="mt-6 border-t border-line pt-6">
-                      <p className="text-3xl font-semibold tracking-tight text-ink">
-                        R{p.priceZar}
-                        <span className="text-sm font-medium text-muted">
-                          {" "}
-                          once
-                        </span>
-                      </p>
-                    </div>
-
-                    <ul className="mt-5 space-y-2 text-sm text-slate">
-                      <li>· Pre-assessment baseline</li>
-                      <li>· 6 construct courses (age-adapted)</li>
-                      <li>· Practice labs & checks</li>
-                      <li>· Post-assessment & personal report</li>
-                    </ul>
-
-                    <div className="mt-6 flex flex-col gap-2">
-                      {!open ? (
-                        <button
-                          type="button"
-                          onClick={() => setExpanded(p.id)}
-                          className="min-h-11 rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90"
+                    {/* Programme colour band (src/lib/programme-theme.ts) */}
+                    <div
+                      className="relative flex min-h-[7.5rem] items-start justify-between gap-3 px-6 pb-5 pt-6 sm:min-h-[8.5rem] sm:px-8"
+                      style={programmeBandStyle(p.id)}
+                      data-testid={`programme-band-${p.id}`}
+                    >
+                      <div className="min-w-0">
+                        <p
+                          className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em]"
+                          style={{ color: PROGRAMME_THEME[p.id].accent }}
                         >
-                          Buy with Paystack · R{COURSE_PRICE_ZAR}
-                        </button>
-                      ) : (
-                        <div className="rounded-2xl border border-line bg-surface p-4">
-                          <p className="mb-3 text-[0.75rem] font-semibold text-ink">
-                            Checkout · {p.name}
-                          </p>
-                          <PaystackCheckout
-                            programmeId={p.id}
-                            programmeName={p.name}
-                            onDemoFallback={() => startDemo(p.id)}
-                          />
+                          {p.ageLabel}
+                        </p>
+                        <h2 className="mt-1.5 text-xl font-semibold tracking-tight sm:text-2xl">
+                          {p.name}
+                        </h2>
+                      </div>
+                      <ProgrammeIcon id={p.id} />
+                      {p.id === "adults" && (
+                        <span
+                          aria-hidden
+                          className="absolute inset-x-0 bottom-0 h-px"
+                          style={{ background: "linear-gradient(90deg, transparent, #E9CF97, transparent)" }}
+                        />
+                      )}
+                    </div>
+                    <div className="flex flex-1 flex-col p-6 sm:p-8">
+                      <p className="text-sm font-medium text-slate">
+                        {p.tagline}
+                      </p>
+                      <p className="mt-4 flex-1 text-sm leading-relaxed text-slate">
+                        {p.description}
+                      </p>
+
+                      <div className="mt-6 border-t border-line pt-6">
+                        <p className="text-3xl font-semibold tracking-tight text-ink">
+                          R{p.priceZar}
+                          <span className="text-sm font-medium text-muted">
+                            {" "}
+                            once
+                          </span>
+                        </p>
+                      </div>
+
+                      <ul className="mt-5 space-y-2 text-sm text-slate">
+                        <li>· Pre-assessment baseline</li>
+                        <li>· 6 construct courses (age-adapted)</li>
+                        <li>· Practice labs & checks</li>
+                        <li>· Post-assessment & personal report</li>
+                      </ul>
+
+                      <div className="mt-6 flex flex-col gap-2">
+                        {!open ? (
                           <button
                             type="button"
-                            onClick={() => setExpanded(null)}
-                            className="mt-2 w-full text-center text-[0.7rem] font-semibold text-muted hover:text-ink"
+                            onClick={() => setExpanded(p.id)}
+                            className="min-h-11 rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90"
                           >
-                            Cancel
+                            Buy with Paystack · R{COURSE_PRICE_ZAR}
                           </button>
-                        </div>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => startDemo(p.id)}
-                        className="text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
-                      >
-                        Start free on this device (no payment)
-                      </button>
+                        ) : (
+                          <div className="rounded-2xl border border-line bg-surface p-4">
+                            <p className="mb-3 text-[0.75rem] font-semibold text-ink">
+                              Checkout · {p.name}
+                            </p>
+                            <PaystackCheckout
+                              programmeId={p.id}
+                              programmeName={p.name}
+                              onDemoFallback={() => startDemo(p.id)}
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setExpanded(null)}
+                              className="mt-2 w-full text-center text-[0.7rem] font-semibold text-muted hover:text-ink"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => startDemo(p.id)}
+                          className="text-center text-xs font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
+                        >
+                          Start free on this device (no payment)
+                        </button>
+                      </div>
                     </div>
                   </article>
                 );
@@ -256,5 +280,40 @@ export default function PricingPage() {
         </div>
       </section>
     </>
+  );
+}
+
+/** Small decorative mark per programme: sparkle (Kids), bolt (Adolescents), compass (Adults). */
+function ProgrammeIcon({ id }: { id: ProgrammeId }) {
+  const common = {
+    width: 36,
+    height: 36,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: 1.6,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    "aria-hidden": true,
+    className: "shrink-0 opacity-90",
+  };
+  if (id === "kids")
+    return (
+      <svg {...common}>
+        <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9z" />
+        <path d="M19 15.5l.8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8z" />
+      </svg>
+    );
+  if (id === "adolescents")
+    return (
+      <svg {...common}>
+        <path d="M13 2L4.5 13.5H11L10 22l8.5-11.5H12z" />
+      </svg>
+    );
+  return (
+    <svg {...common} style={{ color: PROGRAMME_THEME.adults.accent }}>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M15.5 8.5l-2 5-5 2 2-5z" />
+    </svg>
   );
 }
