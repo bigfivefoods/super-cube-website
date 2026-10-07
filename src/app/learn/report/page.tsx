@@ -320,22 +320,24 @@ export default function ReportPage() {
           </section>
         )}
 
-        <div className="grid gap-3 sm:gap-4 lg:grid-cols-2 print:break-inside-avoid">
-          <div className="learn-card">
+        <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1.25fr_1fr] print:break-inside-avoid">
+          <div className="learn-card" data-testid="report-radar">
             <h2 className="learn-card-title">
-              {post ? "Growth radar" : "Profile radar"}
+              {post ? "Your growth across the six faces" : "Your six-face profile"}
             </h2>
             <p className="learn-meta mt-1">
               {post
-                ? "Grey dashed = pre · Coloured solid = post"
-                : "Colours = constructs"}
+                ? "Before is the dashed outline with hollow markers; after is the filled shape. Each face shows its change."
+                : "Your baseline across the six faces. Higher means you rated yourself higher on that face."}
             </p>
-            <div className="mt-3">
+            <div className="mt-2">
               <RadarChart
                 scores={pre.result.constructScores}
                 compareScores={post?.result.constructScores}
-                preLabel="Pre"
-                postLabel="Post"
+                preLabel="Before"
+                postLabel="After"
+                size={380}
+                table="none"
               />
             </div>
           </div>

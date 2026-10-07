@@ -512,8 +512,8 @@ function AccountPageInner() {
                 <RadarChart
                   scores={pre.result.constructScores}
                   compareScores={post?.result.constructScores}
-                  preLabel="Pre"
-                  postLabel="Post"
+                  preLabel="Before"
+                  postLabel="After"
                 />
               </div>
             </>
