@@ -7,6 +7,7 @@ import { Button } from "@/components/ui";
 import { depthLabel } from "@/lib/lms/orientation";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function AssessmentHubPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -22,7 +23,7 @@ export default function AssessmentHubPage() {
   return (
     <LearnShell
       title="Assessment hub"
-      subtitle="Orientation (step 2 of 6) and your baseline (step 3) start the pathway. After the practice period, the after-test (step 5) measures your growth."
+      subtitle={programmeCopy("assessment.hub.subtitle", programmeId)}
     >
       {!programme && (
         <div className="learn-card mb-4 learn-body">

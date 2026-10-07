@@ -8,6 +8,7 @@ import { track } from "@/lib/analytics";
 import { getProfile, profileComplete } from "@/lib/lms/profile";
 import { loadLmsState, unlockDemo, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 /**
  * Guided 10-minute first run — never dump users on full dashboard.
@@ -103,7 +104,7 @@ export default function GuidedStartPage() {
           ? `${name.split(" ")[0]}, your first 10 minutes`
           : "Your first 10 minutes"
       }
-      subtitle={`${programme?.name ?? "Super-Cube®"} · Guided path. Skip anytime—this is the fastest route to a real baseline and first practice.`}
+      subtitle={programmeCopy("start.subtitle", programmeId, { programme: programme?.name ?? "Super-Cube®" })}
       hideJourneyRail
     >
       <div className="mb-5 rounded-2xl border border-ink bg-void p-5 text-white sm:p-6">

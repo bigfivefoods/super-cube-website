@@ -12,6 +12,7 @@ import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { getCourse } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { faceInkStyle } from "@/lib/contrast";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 const TYPE_LABEL: Record<string, string> = {
   content: "Session",
@@ -57,7 +58,7 @@ export default function CourseDetailPage() {
   return (
     <LearnShell
       title={construct.name}
-      subtitle={`${programme?.name} · ${course.lessons.length} sessions · eight-step learning arc`}
+      subtitle={programmeCopy("course.subtitle", programmeId, { programme: programme?.name ?? "", n: course.lessons.length })}
     >
       {/* Module hero with intro video */}
       <div

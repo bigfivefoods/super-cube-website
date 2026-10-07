@@ -34,6 +34,7 @@ import { submitAttempt, syncFromServer, toLocalAttempt } from "@/lib/lms/cloud";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
 import { evaluatePostGate, type PostGate } from "@/lib/lms/gates";
 import { attentionItem, isStraightLining, itemsForFace, newSeed } from "@/lib/lms/integrity";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function AssessmentRunnerPage() {
   const params = useParams();
@@ -330,10 +331,10 @@ export default function AssessmentRunnerPage() {
       }
       subtitle={
         phase === "pre"
-          ? `${programme?.name ?? "Programme"} · ${totalItems} statements across the six faces (rate each 1–5). Developmental self-report—not clinical. Save anytime.`
+          ? programmeCopy("assessment.pre.subtitle", programmeId, { programme: programme?.name ?? "Programme", n: totalItems })
           : phase === "mid"
-            ? `${programme?.name ?? "Programme"} · Short re-measure to refresh your weekly plan. Same faces, honest scores.`
-            : `${programme?.name ?? "Programme"} · Same statements as your baseline. Opens after practice time and completed sessions.`
+            ? programmeCopy("assessment.mid.subtitle", programmeId, { programme: programme?.name ?? "Programme" })
+            : programmeCopy("assessment.post.subtitle", programmeId, { programme: programme?.name ?? "Programme" })
       }
     >
       {fromOrientation && phase === "pre" && state?.orientation && (

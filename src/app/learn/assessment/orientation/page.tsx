@@ -15,6 +15,7 @@ import {
   type YesSomeNo,
 } from "@/lib/lms/orientation";
 import { loadLmsState, saveLmsState } from "@/lib/lms/store";
+import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
 
 function ChoiceGroup<T extends string>({
   name,
@@ -66,11 +67,13 @@ function ChoiceGroup<T extends string>({
 export default function OrientationAssessmentPage() {
   const router = useRouter();
   const [ready, setReady] = useState(false);
+  const [programmeId, setProgrammeId] = useState<string | undefined>(undefined);
   const [responses, setResponses] =
     useState<OrientationResponses>(ORIENTATION_EMPTY);
 
   useEffect(() => {
     const state = loadLmsState();
+    setProgrammeId(learnerProgrammeId(state));
     if (state.orientation?.responses) {
       setResponses({ ...ORIENTATION_EMPTY, ...state.orientation.responses });
     }
@@ -110,7 +113,7 @@ export default function OrientationAssessmentPage() {
   return (
     <LearnShell
       title="Step 2 of 6 · Orient your mind"
-      subtitle="Before the six-face baseline: map how you already think about leadership—philosophy, theory, and models. We meet you where you are."
+      subtitle={programmeCopy("orientation.subtitle", programmeId)}
     >
       <section className="learn-card mb-5 sm:mb-6">
         <p className="learn-eyebrow">How leadership knowledge is layered</p>

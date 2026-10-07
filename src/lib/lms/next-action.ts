@@ -12,6 +12,7 @@ import {
 import { profileComplete, getProfile } from "@/lib/lms/profile";
 import type { LocalLmsState } from "@/lib/lms/store";
 import { localDayKey } from "@/lib/lms/store";
+import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
 
 export type NextActionKind =
   | "profile"
@@ -81,7 +82,7 @@ export function getLearningAction(
     return {
       kind: "orient",
       title: "Orient your leadership frame",
-      detail: "Short knowledge check before your six-face baseline.",
+      detail: programmeCopy("next.orient.detail", learnerProgrammeId(state)),
       href: "/learn/assessment/orientation",
       cta: "Start orientation →",
       urgency: "high",
@@ -94,7 +95,7 @@ export function getLearningAction(
     return {
       kind: "baseline",
       title: "Take your baseline assessment",
-      detail: "Map all six Super-Cube® faces — your growth reference point.",
+      detail: programmeCopy("next.baseline.detail", learnerProgrammeId(state)),
       href: "/learn/assessment/pre",
       cta: "Start baseline →",
       urgency: "high",
@@ -111,8 +112,7 @@ export function getLearningAction(
     return {
       kind: "post",
       title: "Re-measure your growth",
-      detail:
-        "You’ve practised enough — take the post-assessment for pre→post proof.",
+      detail: programmeCopy("next.post.detail", learnerProgrammeId(state)),
       href: "/learn/assessment/post",
       cta: "Start post-assessment →",
       urgency: "medium",
@@ -139,7 +139,7 @@ export function getLearningAction(
     return {
       kind: "report",
       title: "Open your growth report",
-      detail: "Pre→post radar, story, and shareable PDF.",
+      detail: programmeCopy("next.report.detail", learnerProgrammeId(state)),
       href: "/learn/report",
       cta: "View report →",
       urgency: "low",
@@ -150,7 +150,7 @@ export function getLearningAction(
   return {
     kind: "celebrate",
     title: "Pathway on track",
-    detail: "Browse courses or open Progress when you want a deeper look.",
+    detail: programmeCopy("next.celebrate.detail", learnerProgrammeId(state)),
     href: "/learn/courses",
     cta: "Open courses →",
     urgency: "low",

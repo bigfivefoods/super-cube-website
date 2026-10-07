@@ -11,6 +11,7 @@ import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { faceInkStyle } from "@/lib/contrast";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function CoursesPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -25,7 +26,7 @@ export default function CoursesPage() {
   return (
     <LearnShell
       title="Step 4 of 6 · Develop the six faces"
-      subtitle={`${programme?.name ?? "Programme"} · Short eight-step sessions: an idea, a real example, a practice, a plan and a quick check. Small sessions that compound into real capacity.`}
+      subtitle={programmeCopy("courses.subtitle", programmeId, { programme: programme?.name ?? "Programme" })}
     >
       <PaywallCard />
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-3.5 xl:grid-cols-3">
@@ -116,9 +117,7 @@ export default function CoursesPage() {
           Steps 5 and 6 of 6 · Re-measure, then see your report
         </p>
         <p className="learn-meta mt-0.5">
-          Finish every construct session, take the post-assessment (same six
-          faces as baseline), then open your growth report to see how you’ve
-          developed.
+          {programmeCopy("courses.after", programmeId)}
         </p>
         <div className="mt-3 flex flex-wrap gap-3">
           <Link

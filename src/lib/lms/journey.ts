@@ -8,6 +8,7 @@ import {
   getProgramme,
   type ProgrammeId,
 } from "@/lib/programmes";
+import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export type JourneyStepId =
   | "programme"
@@ -111,9 +112,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       n: 1,
       title: "Choose your programme",
       short: "Choose",
-      description:
-        "Kids, Adolescents, or Adults—same six faces, language matched to your season of life.",
-      promise: "Start with the pathway that fits you.",
+      description: programmeCopy("journey.programme.description", programmeId),
+      promise: programmeCopy("journey.programme.promise", programmeId),
       href: "/learn/programmes",
     },
     {
@@ -121,9 +121,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       n: 2,
       title: "Orient your mind",
       short: "Orient",
-      description:
-        "Map how you already think about leadership—philosophy, theory, and models.",
-      promise: "We meet you where you are—not where a textbook says you should be.",
+      description: programmeCopy("journey.orient.description", programmeId),
+      promise: programmeCopy("journey.orient.promise", programmeId),
       href: "/learn/assessment/orientation",
     },
     {
@@ -131,9 +130,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       n: 3,
       title: "Measure your baseline",
       short: "Baseline",
-      description:
-        "A short self-report across all six Super-Cube® faces—your starting profile.",
-      promise: "Clarity before change. You’ll see strengths and growth edges.",
+      description: programmeCopy("journey.baseline.description", programmeId),
+      promise: programmeCopy("journey.baseline.promise", programmeId),
       href: "/learn/assessment/pre",
     },
     {
@@ -141,9 +139,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       n: 4,
       title: "Develop the six faces",
       short: "Learn",
-      description:
-        "Work through each construct in short eight-step sessions: deliberate practice, not passive scrolling.",
-      promise: "Small sessions that compound into real leadership capacity.",
+      description: programmeCopy("journey.learn.description", programmeId),
+      promise: programmeCopy("journey.learn.promise", programmeId),
       href: "/learn/courses",
     },
     {
@@ -151,10 +148,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       n: 5,
       title: "Re-measure after the programme",
       short: "Re-measure",
-      description:
-        "Take the post-assessment once you’ve finished all construct courses—same six faces as your baseline.",
-      promise:
-        "See how you have grown. Pre → post comparison makes development visible, not assumed.",
+      description: programmeCopy("journey.remeasure.description", programmeId),
+      promise: programmeCopy("journey.remeasure.promise", programmeId),
       href: "/learn/assessment/post",
     },
     {
@@ -162,9 +157,8 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
       n: 6,
       title: "See your growth report",
       short: "Report",
-      description:
-        "Your personal development report—baseline, post scores, deltas, and recommendations.",
-      promise: "Evidence of progress you can feel proud of and act on.",
+      description: programmeCopy("journey.report.description", programmeId),
+      promise: programmeCopy("journey.report.promise", programmeId),
       href: pre ? "/learn/report" : "/learn/assessment/pre",
     },
   ];
