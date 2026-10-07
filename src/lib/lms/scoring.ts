@@ -96,7 +96,7 @@ export function recommendations(result: AttemptResult): string[] {
   });
   lowest.forEach((s) => {
     recs.push(
-      `Priority: develop **${s.name}** (${s.score}). Start with that course module and complete the practice lab this week.`
+      `Growth edge: **${s.name}** (${s.score}). Start with that course module and complete the practice lab this week.`
     );
   });
   return recs;

@@ -23,7 +23,7 @@ export default function AssessmentFeedbackPage() {
 
   const pre = state?.attempts.find((a) => a.phase === "pre");
   const narrative = useMemo(
-    () => (pre ? buildAssessmentNarrative(pre.result) : null),
+    () => (pre ? buildAssessmentNarrative(pre.result, pre.programmeId) : null),
     [pre],
   );
 
@@ -63,7 +63,7 @@ export default function AssessmentFeedbackPage() {
   return (
     <LearnShell
       title="Your baseline narrative"
-      subtitle="Strengths, stretch faces, and first practices—not just numbers."
+      subtitle="Your strengths first, then one growth edge and one practice per face."
     >
       <div className="mb-5 grid gap-5 lg:grid-cols-[1fr_0.9fr] lg:items-start">
         <div className="rounded-2xl border border-ink bg-elevated p-5 sm:p-6">
@@ -111,18 +111,28 @@ export default function AssessmentFeedbackPage() {
             style={{ boxShadow: `inset 3px 0 0 ${f.color}` }}
           >
             <div className="flex flex-wrap items-baseline justify-between gap-2">
-              <h3 className="font-semibold text-ink">{f.headline}</h3>
+              <h3 className="font-semibold text-ink">
+                {f.name}
+                <span className="ml-2 rounded-full border border-line px-2 py-0.5 align-middle text-[0.6875rem] font-semibold text-slate">
+                  {f.bandLabel}
+                </span>
+              </h3>
               <span className="text-sm font-bold tabular-nums text-ink">
                 {Math.round(f.score)}
                 <span className="font-medium text-muted"> / 100</span>
               </span>
             </div>
-            <p className="mt-2 text-sm leading-relaxed text-slate">
-              {f.insight}
+            <p className="mt-2 text-sm leading-relaxed text-ink">
+              <span className="font-semibold">What&apos;s working: </span>
+              {f.strength}
             </p>
+            <p className="mt-1.5 text-sm leading-relaxed text-slate">{f.nextStep}</p>
             <p className="mt-2 text-[0.8125rem] text-ink">
               <span className="font-semibold">First practice: </span>
-              {f.firstPractice}
+              {f.firstPractice}{" "}
+              <Link href={f.sessionHref} className="font-semibold underline underline-offset-2">
+                Sessions
+              </Link>
             </p>
           </li>
         ))}

@@ -31,7 +31,7 @@ export function buildGrowthStory(state: LocalLmsState): {
   }
 
   if (!post) {
-    const narrative = buildAssessmentNarrative(pre.result);
+    const narrative = buildAssessmentNarrative(pre.result, pre.programmeId);
     const weak =
       narrative.weakestIds
         .map((id) => constructs.find((c) => c.id === id)?.name)
@@ -39,7 +39,7 @@ export function buildGrowthStory(state: LocalLmsState): {
         .join(" and ") || "your stretch faces";
     return {
       headline: narrative.overallHeadline,
-      body: `${narrative.overallBody} Right now ${weak} offer the highest leverage. ${pattern.insight}`,
+      body: `${narrative.overallBody} ${weak} are your growth faces for the next 21 days. ${pattern.insight}`,
       focusLine: narrative.weekFocus,
     };
   }
