@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { ImpactResults } from "@/components/ImpactResults";
 import { TheoryOverview } from "@/components/TheoryOverview";
@@ -97,9 +98,9 @@ export default function ResearchPage() {
               entrepreneurial leadership), skills-development debates, and
               higher-order frames—AQAL, I–Thou, and Ubuntu—which collectively
               underpin the six-dimensional model. See{" "}
-              <a href="/the-model#theory" className="font-semibold text-ink">
+              <Link href="/the-model#theory" className="font-semibold text-ink">
                 The Model · Theory map
-              </a>
+              </Link>
               .
             </p>
           </div>

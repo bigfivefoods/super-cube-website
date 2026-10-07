@@ -115,12 +115,16 @@ export default async function AdminPage({
             <p className="text-2xl font-semibold tabular-nums text-ink">{rows.length - active}</p>
             <p className="text-xs text-slate">Unsubscribed</p>
           </div>
+          {/* File download from an API route: a plain link is intended. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/api/newsletter/admin/export?status=active"
             className="sc-btn-primary inline-flex min-h-11 items-center rounded-full px-5 text-sm font-semibold"
           >
             Export active (CSV)
           </a>
+          {/* File download from an API route: a plain link is intended. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/api/newsletter/admin/export?status=all"
             className="inline-flex min-h-11 items-center rounded-full border border-line-strong px-5 text-sm font-semibold text-ink"

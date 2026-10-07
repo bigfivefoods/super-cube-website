@@ -9,6 +9,8 @@ import {
   type ProgrammeId,
 } from "@/lib/programmes";
 import { loadLmsState, saveLmsState } from "@/lib/lms/store";
+import { CHECKOUT_FORM_EN, type CheckoutFormStrings } from "@/lib/i18n/pages/checkout-form";
+import { fill } from "@/lib/i18n/pages/format";
 
 type Props = {
   programmeId: ProgrammeId;
@@ -17,6 +19,8 @@ type Props = {
   /** Label for primary button */
   label?: string;
   onDemoFallback?: () => void;
+  /** Form labels in the page language (pricing passes them); English by default. */
+  strings?: Partial<CheckoutFormStrings>;
 };
 
 /**
@@ -29,7 +33,9 @@ export function PaystackCheckout({
   className = "",
   label,
   onDemoFallback,
+  strings,
 }: Props) {
+  const t = { ...CHECKOUT_FORM_EN, ...strings };
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
@@ -60,7 +66,7 @@ export function PaystackCheckout({
     setError(null);
     const cleanEmail = email.trim().toLowerCase();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
-      setError("Enter a valid email for your payment receipt.");
+      setError(t.invalidEmail);
       return;
     }
 
@@ -107,8 +113,8 @@ export function PaystackCheckout({
 
       if (data.demo || data.configured === false) {
         setError(
-          data.message ||
-            "Online checkout is temporarily unavailable. Start free on this device or contact us.",
+          // the server's English message only on English pages
+          (strings ? t.unavailableShort : data.message || t.unavailableShort),
         );
         if (onDemoFallback) {
           // Don't auto-start demo — let user choose
@@ -117,10 +123,10 @@ export function PaystackCheckout({
         return;
       }
 
-      setError(data.error || "Checkout could not start. Try again.");
+      setError(strings ? t.couldNotStart : data.error || t.couldNotStart);
       setBusy(false);
     } catch {
-      setError("Network error. Check your connection and try again.");
+      setError(t.network);
       setBusy(false);
     }
   }
@@ -132,27 +138,27 @@ export function PaystackCheckout({
     <div className={`space-y-3 ${className}`}>
       <div>
         <label className="block text-[0.75rem] font-semibold text-muted">
-          Email (required for receipt)
+          {t.email}
         </label>
         <input
           type="email"
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@school.co.za"
+          placeholder={t.emailPlaceholder}
           className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-ink/40"
         />
       </div>
       <div>
         <label className="block text-[0.75rem] font-semibold text-muted">
-          Name (optional)
+          {t.name}
         </label>
         <input
           type="text"
           autoComplete="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Your name"
+          placeholder={t.namePlaceholder}
           className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-sm text-ink outline-none focus:border-ink/40"
         />
       </div>
@@ -163,22 +169,19 @@ export function PaystackCheckout({
         onClick={() => void pay()}
         className="flex min-h-11 w-full items-center justify-center rounded-full sc-btn-primary px-4 py-2.5 text-sm font-semibold hover:opacity-90 disabled:opacity-50"
       >
-        {busy
-          ? "Redirecting to Paystack…"
-          : label || `Pay ${priceLabel} · unlock ${programmeName}`}
+        {busy ? t.redirecting : label || fill(t.pay, { price: priceLabel, programme: programmeName })}
       </button>
 
       {configured === false && (
         <p className="text-[0.7rem] leading-relaxed text-amber-800">
-          Online checkout is temporarily unavailable. You can still start
-          free on this device, or contact us to arrange access.
+          {t.unavailable}
         </p>
       )}
       {configured === true && (
         <p className="text-[0.7rem] leading-relaxed text-muted">
-          Secure checkout via Paystack · {currency === "ZAR" ? "R" : "$"}
-          {currency === "ZAR" ? COURSE_PRICE_ZAR : COURSE_PRICE_USD} one-time ·
-          lifetime access · no subscription
+          {fill(t.secure, {
+            price: currency === "ZAR" ? `R${COURSE_PRICE_ZAR}` : `$${COURSE_PRICE_USD}`,
+          })}
         </p>
       )}
       {error && (

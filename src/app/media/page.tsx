@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import Image from "next/image";
@@ -115,12 +116,12 @@ export default function MediaKitPage() {
                   </li>
                 ))}
               </ul>
-              <a
+              <Link
                 href="/research#journal-articles"
                 className="mt-4 inline-block text-sm font-semibold text-ink underline-offset-2 hover:underline"
               >
                 Full research page →
-              </a>
+              </Link>
             </div>
             <div>
               <SectionHeading title="One-page abstract" />
