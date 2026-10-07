@@ -123,6 +123,11 @@ const ar: Dict = {
   "footer.legal": "الشؤون القانونية",
   "footer.rights": "جميع الحقوق محفوظة.",
   "footer.partOf": "جزء من Big Five Learn، قسم التعليم في Big Five Group",
+  "footer.companyProfile": "ملف الشركة (PDF)",
+  // Company profile download (home hero)
+  "home.profileCta": "تنزيل ملف الشركة",
+  "home.profileMeta": "{pages} صفحة · PDF",
+  "home.profileLabel": "تنزيل ملف الشركة (PDF، {pages} صفحة، {size})",
 
   "cta.tryFree": "ابدأ التقييم المجاني",
   "cta.bookPilot": "احجز برنامجًا تجريبيًا",

@@ -119,6 +119,11 @@ const en = {
   "footer.legal": "Legal",
   "footer.rights": "All rights reserved.",
   "footer.partOf": "Part of Big Five Learn, the Educate division of the Big Five Group",
+  "footer.companyProfile": "Company profile (PDF)",
+  // Company profile download (home hero)
+  "home.profileCta": "Download company profile",
+  "home.profileMeta": "{pages} pages · PDF",
+  "home.profileLabel": "Download company profile (PDF, {pages} pages, {size})",
 
   // CTAs & common
   "cta.tryFree": "Start free baseline",

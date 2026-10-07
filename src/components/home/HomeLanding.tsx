@@ -4,6 +4,7 @@ import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
+import { COMPANY_PROFILE } from "@/lib/company-profile";
 import { constructs } from "@/lib/content";
 import { COURSE_PRICE_USD, COURSE_PRICE_ZAR } from "@/lib/programmes";
 import { SEAT_PACKS, formatSeatPackPrice } from "@/lib/seat-packs";
@@ -12,6 +13,27 @@ import { DEFAULT_LOCALE, faceI18n, isEnglishOnlyHref, localizedPath, translate, 
 import { DICTS } from "@/lib/i18n/dictionaries";
 import { around, fill } from "@/lib/i18n/pages/format";
 import { homeStrings } from "@/lib/i18n/pages/home";
+
+/** Document with a download arrow (decorative: the link carries the name). */
+function PdfDownloadIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      aria-hidden
+      className="h-4 w-4 shrink-0"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+      <path d="M12 11v6" />
+      <path d="m9 14 3 3 3-3" />
+    </svg>
+  );
+}
 
 /**
  * Plain-language homepage: one big idea, who it's for, what you get, price,
@@ -98,6 +120,20 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 className="w-full !bg-white !text-ink hover:!bg-white/90 sm:w-auto"
               >
                 {s.heroCtaBaseline}
+              </Button>
+              <Button
+                href={COMPANY_PROFILE.href}
+                hrefLang={locale === DEFAULT_LOCALE ? undefined : "en"}
+                download
+                variant="light"
+                ariaLabel={translate(dict, "home.profileLabel", { pages: COMPANY_PROFILE.pages, size: COMPANY_PROFILE.size })}
+                className="w-full flex-wrap gap-y-0.5 border-white/35 focus-visible:!outline-white sm:w-auto"
+              >
+                <PdfDownloadIcon />
+                <span className="whitespace-nowrap">{translate(dict, "home.profileCta")}</span>
+                <span className="whitespace-nowrap text-xs font-medium text-white/80">
+                  {translate(dict, "home.profileMeta", { pages: COMPANY_PROFILE.pages })}
+                </span>
               </Button>
               <Button
                 href="/sample-report"

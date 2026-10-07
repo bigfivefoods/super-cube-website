@@ -57,6 +57,8 @@ export function Button({
   variant = "primary",
   className = "",
   hrefLang,
+  download,
+  ariaLabel,
 }: {
   href: string;
   children: ReactNode;
@@ -64,6 +66,10 @@ export function Button({
   className?: string;
   /** "en" when the link leaves a translated page for an English-only one. */
   hrefLang?: string;
+  /** A file (e.g. a PDF): plain <a download>, saved rather than routed. */
+  download?: boolean;
+  /** Accessible name when it should say more than the visible text (start with the visible words). */
+  ariaLabel?: string;
 }) {
   const base =
     "sc-btn inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight sm:w-auto sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink touch-manipulation";
@@ -76,8 +82,16 @@ export function Button({
       "border border-white/30 bg-white/10 text-white backdrop-blur-sm hover:bg-white/15",
   };
 
+  const cls = `${base} ${variants[variant]} ${className}`;
+  if (download) {
+    return (
+      <a href={href} hrefLang={hrefLang} download aria-label={ariaLabel} className={cls}>
+        {children}
+      </a>
+    );
+  }
   return (
-    <Link href={href} hrefLang={hrefLang} className={`${base} ${variants[variant]} ${className}`}>
+    <Link href={href} hrefLang={hrefLang} aria-label={ariaLabel} className={cls}>
       {children}
     </Link>
   );
