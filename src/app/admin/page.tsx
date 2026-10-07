@@ -12,6 +12,8 @@ import {
   type Cohort,
 } from "@/lib/admin/data";
 import { STAGES, type LearnerRow } from "@/lib/admin/learners";
+import { loadReliability } from "@/lib/admin/reliability";
+import { alphaBand, QUALITY_FLAG_LABELS, RELIABILITY_MIN_N, type QualityFlag } from "@/lib/lms/integrity";
 import { formatDateTimeZA, formatDateZA } from "@/lib/datetime";
 import { getProgramme } from "@/lib/programmes";
 import { SignInForm } from "@/app/newsletter/admin/SignInForm";
@@ -34,6 +36,7 @@ const TABS = [
   { id: "invites", label: "Invites" },
   { id: "consents", label: "Consents" },
   { id: "certificates", label: "Certificates" },
+  { id: "assessment", label: "Assessment quality" },
   { id: "audit", label: "Audit log" },
   { id: "enquiries", label: "Enquiries" },
 ] as const;
@@ -478,6 +481,85 @@ async function Certificates({ db }: { db: Parameters<typeof loadCertificates>[0]
   );
 }
 
+async function AssessmentQuality({ db }: { db: Parameters<typeof loadAudit>[0] }) {
+  const { programmes, error } = await loadReliability(db);
+  const fmtA = (a: number | null) => (a == null ? "—" : a.toFixed(2));
+  return (
+    <section className="mt-6" aria-labelledby="aq-h">
+      <h2 id="aq-h" className={h2}>Assessment quality and reliability</h2>
+      <p className="mt-1 max-w-3xl text-sm text-slate">
+        Live Cronbach’s α per face from stored item answers. Attempts that missed the attention check,
+        gave the same answer to almost everything, or were finished unusually fast are left out. Estimates
+        stay provisional until at least {RELIABILITY_MIN_N} usable attempts per programme.
+      </p>
+      <ErrorNote error={error} />
+      {programmes.length === 0 ? (
+        <p className={`${card} mt-4 text-sm text-slate`}>No server-recorded attempts yet. Reliability appears here as learners take the baseline.</p>
+      ) : (
+        <div className="mt-4 space-y-6">
+          {programmes.map((p) => {
+            const provisional = p.usable < RELIABILITY_MIN_N;
+            return (
+              <section key={`${p.programmeId}-${p.phase}`} className={card} aria-label={`${programmeName(p.programmeId)} ${p.phase === "pre" ? "baseline" : "after-test"}`}>
+                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                  <h3 className="text-base font-semibold text-ink">
+                    {programmeName(p.programmeId)} · {p.phase === "pre" ? "Baseline" : "After-test"}
+                  </h3>
+                  <p className="text-sm text-slate">
+                    {p.usable} usable of {p.attempts} attempts
+                    {provisional && <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-semibold text-amber-900 dark:bg-amber-950 dark:text-amber-100">Provisional</span>}
+                  </p>
+                </div>
+                {Object.keys(p.flagCounts).length > 0 && (
+                  <ul className="mt-2 flex flex-wrap gap-2 text-xs">
+                    {Object.entries(p.flagCounts).map(([f, n]) => (
+                      <li key={f} className="rounded-full bg-surface px-2.5 py-1 text-ink ring-1 ring-line">
+                        {QUALITY_FLAG_LABELS[f as QualityFlag] ?? f}: <strong>{n}</strong>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <div className="mt-3 overflow-x-auto">
+                  <table className="w-full min-w-[30rem] text-left text-sm">
+                    <caption className="sr-only">Cronbach’s alpha per face</caption>
+                    <thead className="text-xs uppercase tracking-wide text-slate">
+                      <tr>
+                        <th scope="col" className={th}>Face</th>
+                        <th scope="col" className={th}>Items</th>
+                        <th scope="col" className={th}>N</th>
+                        <th scope="col" className={th}>α</th>
+                        <th scope="col" className={th}>Reading</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {p.faces.map((f) => (
+                        <tr key={f.faceId} className="border-t border-line">
+                          <td className={`${td} text-ink`}>{f.name}</td>
+                          <td className={`${td} tabular-nums text-slate`}>{f.items}</td>
+                          <td className={`${td} tabular-nums text-slate`}>{f.n}</td>
+                          <td className={`${td} tabular-nums font-semibold text-ink`}>{fmtA(f.alpha)}</td>
+                          <td className={`${td} text-slate`}>{alphaBand(f.alpha)}</td>
+                        </tr>
+                      ))}
+                      <tr className="border-t-2 border-line-strong">
+                        <td className={`${td} font-semibold text-ink`}>All items</td>
+                        <td className={`${td} tabular-nums text-slate`}>{p.overall.items}</td>
+                        <td className={`${td} tabular-nums text-slate`}>{p.overall.n}</td>
+                        <td className={`${td} tabular-nums font-semibold text-ink`}>{fmtA(p.overall.alpha)}</td>
+                        <td className={`${td} text-slate`}>{alphaBand(p.overall.alpha)}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 const ACTION_LABEL: Record<string, string> = {
   "cohort.create": "Created cohort",
   "cohort.pause": "Paused cohort",
@@ -565,8 +647,9 @@ export default async function AdminConsolePage({
 
   if (!ctx.ok) {
     return (
-      <section className="section-pad">
-        <div className="container-site max-w-md">
+      <section className="pb-16 pt-[calc(5.5rem+env(safe-area-inset-top,0px))] md:pb-24 md:pt-28">
+        <div className="container-site">
+          <div className="mx-auto max-w-md">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-slate">Admin</p>
           <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
           {ctx.reason === "not_configured" ? (
@@ -577,6 +660,7 @@ export default async function AdminConsolePage({
               <SignInForm next="/admin" />
             </>
           )}
+          </div>
         </div>
       </section>
     );
@@ -633,6 +717,7 @@ export default async function AdminConsolePage({
         {tab === "invites" && <Invites db={ctx.db} />}
         {tab === "consents" && <Consents db={ctx.db} />}
         {tab === "certificates" && <Certificates db={ctx.db} />}
+        {tab === "assessment" && <AssessmentQuality db={ctx.db} />}
         {tab === "audit" && <Audit db={ctx.db} />}
         {tab === "enquiries" && <Enquiries db={ctx.db} />}
       </div>

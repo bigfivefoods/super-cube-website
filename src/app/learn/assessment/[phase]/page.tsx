@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { formatDateTimeZA, formatDateZA } from "@/lib/datetime";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -21,6 +22,7 @@ import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
 import { submitAttempt, syncFromServer, toLocalAttempt } from "@/lib/lms/cloud";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
 import { evaluatePostGate, type PostGate } from "@/lib/lms/gates";
+import { attentionItem, isStraightLining, itemsForFace, newSeed } from "@/lib/lms/integrity";
 
 export default function AssessmentRunnerPage() {
   const params = useParams();
@@ -37,6 +39,9 @@ export default function AssessmentRunnerPage() {
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [busy, setBusy] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [seed, setSeed] = useState<number | null>(null);
+  const [startedAt, setStartedAt] = useState<string | null>(null);
+  const [confirmSame, setConfirmSame] = useState(false);
 
   useEffect(() => {
     const s = loadLmsState();
@@ -54,7 +59,12 @@ export default function AssessmentRunnerPage() {
     if (s.assessmentDraft?.phase === phase) {
       setResponses(s.assessmentDraft.responses ?? {});
       setStep(s.assessmentDraft.step ?? 0);
+      setSeed(s.assessmentDraft.seed ?? newSeed());
+      setStartedAt(s.assessmentDraft.startedAt ?? new Date().toISOString());
       setSavedNote("Resumed your saved answers.");
+    } else {
+      setSeed(newSeed());
+      setStartedAt(new Date().toISOString());
     }
   }, [phase]);
 
@@ -66,19 +76,30 @@ export default function AssessmentRunnerPage() {
 
   const constructIds = constructs.map((c) => c.id);
   const currentConstruct = constructIds[step];
-  const stepItems = items.filter((i) => i.constructId === currentConstruct);
+  const attention = useMemo(() => attentionItem(programmeId), [programmeId]);
+  // Item order is randomised within each face (stable for this attempt via its seed)
+  const stepItems = useMemo(
+    () => (seed == null ? [] : itemsForFace(items, constructIds, currentConstruct, seed, attention)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [items, currentConstruct, seed, attention],
+  );
+  const totalItems = items.length + 1; // + the attention check
   const constructMeta = constructs.find((c) => c.id === currentConstruct);
   const answered = Object.keys(responses).filter(
     (k) => responses[k] >= 1 && responses[k] <= 5,
   ).length;
-  const pct = items.length ? Math.round((answered / items.length) * 100) : 0;
+  const pct = totalItems ? Math.round((answered / totalItems) * 100) : 0;
 
   function setValue(itemId: string, value: number) {
     setResponses((r) => ({ ...r, [itemId]: value }));
   }
 
   function canContinue() {
-    return stepItems.every((i) => responses[i.id] >= 1 && responses[i.id] <= 5);
+    return stepItems.length > 0 && stepItems.every((i) => responses[i.id] >= 1 && responses[i.id] <= 5);
+  }
+
+  function draftExtras() {
+    return { seed: seed ?? undefined, startedAt: startedAt ?? undefined };
   }
 
   function saveDraft() {
@@ -88,6 +109,7 @@ export default function AssessmentRunnerPage() {
       responses,
       step,
       updatedAt: new Date().toISOString(),
+      ...draftExtras(),
     });
     setSavedNote("Progress saved on this device. You can leave and return.");
     track("assessment_draft_save", { phase, step, answered });
@@ -131,14 +153,22 @@ export default function AssessmentRunnerPage() {
     }
   }
 
-  async function submit() {
+  async function submit(confirmed = false) {
     if (busy) return;
     setSubmitError(null);
     if (phase === "pre" && existingPre) return;
     if (phase === "post" && (existingPost || !gate?.ok || !paid)) return;
+    // Same answer to (almost) everything: fine if true, but offer a second look first
+    if (!confirmed && isStraightLining(items.map((i) => responses[i.id]))) {
+      setConfirmSame(true);
+      return;
+    }
+    setConfirmSame(false);
+    const durationMs = startedAt ? Date.now() - Date.parse(startedAt) : undefined;
+    const meta = { seed: seed ?? undefined, durationMs };
     setBusy(true);
     try {
-      const server = await submitAttempt(phase, programmeId, responses);
+      const server = await submitAttempt(phase, programmeId, responses, meta);
       if (server.kind === "ok") {
         const next = loadLmsState();
         const local = toLocalAttempt(server.data.attempt);
@@ -175,7 +205,7 @@ export default function AssessmentRunnerPage() {
         ...next.attempts.filter(
           (a) => phase === "mid" || !(a.phase === phase && a.programmeId === programmeId),
         ),
-        { phase, programmeId, responses, result, completedAt: new Date().toISOString() },
+        { phase, programmeId, responses, result, completedAt: new Date().toISOString(), seed: meta.seed, durationMs },
       ];
       saveLmsState(next);
       finish(next, result.overall);
@@ -194,11 +224,11 @@ export default function AssessmentRunnerPage() {
 
   if (phase === "pre" && existingPre) {
     return (
-      <LearnShell title="Your baseline is locked" subtitle={`${programme?.name ?? "Programme"} · recorded ${new Date(existingPre.completedAt).toLocaleDateString()}`}>
+      <LearnShell title="Your baseline is locked" subtitle={`${programme?.name ?? "Programme"} · recorded ${formatDateZA(existingPre.completedAt)}`}>
         <div className="learn-card" data-testid="baseline-locked">
           <p className="learn-body">
             Your baseline was recorded on{" "}
-            <strong>{new Date(existingPre.completedAt).toLocaleString()}</strong> (overall{" "}
+            <strong>{formatDateTimeZA(existingPre.completedAt)}</strong> (overall{" "}
             {Math.round(existingPre.result.overall)}). It stays fixed so your growth can be
             measured honestly against it. Retaking it is not possible.
           </p>
@@ -216,7 +246,7 @@ export default function AssessmentRunnerPage() {
       <LearnShell title="After-test recorded" subtitle={programme?.name ?? "Programme"}>
         <div className="learn-card" data-testid="post-locked">
           <p className="learn-body">
-            Your after-test was recorded on {new Date(existingPost.completedAt).toLocaleString()}.
+            Your after-test was recorded on {formatDateTimeZA(existingPost.completedAt)}.
             Each programme has one after-test, so your report stays comparable.
           </p>
           <Link href="/learn/report" className="learn-btn learn-btn-primary mt-3">View your report</Link>
@@ -241,7 +271,7 @@ export default function AssessmentRunnerPage() {
           </ul>
           {gate?.unlocksOn && gate.daysRemaining > 0 && (
             <p className="learn-meta mt-3">
-              Earliest date: {new Date(gate.unlocksOn).toLocaleDateString()}.
+              Earliest date: {formatDateZA(gate.unlocksOn)}.
               Sessions done: {gate.sessionsDone} of {gate.sessionsRequired} needed.
             </p>
           )}
@@ -278,7 +308,7 @@ export default function AssessmentRunnerPage() {
       <div className="mb-4 rounded-xl border border-line bg-elevated p-3 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[0.75rem] font-semibold text-ink">
-            Progress · {answered}/{items.length} items ({pct}%)
+            Progress · {answered}/{totalItems} statements ({pct}%)
           </p>
           <button
             type="button"
@@ -395,6 +425,7 @@ export default function AssessmentRunnerPage() {
                   responses,
                   step: step + 1,
                   updatedAt: new Date().toISOString(),
+                  ...draftExtras(),
                 });
                 setStep((s) => s + 1);
               }}
@@ -405,10 +436,8 @@ export default function AssessmentRunnerPage() {
           ) : (
             <button
               type="button"
-              disabled={
-                busy || !canContinue() || Object.keys(responses).length < items.length
-              }
-              onClick={submit}
+              disabled={busy || !canContinue() || answered < totalItems}
+              onClick={() => void submit()}
               className="learn-btn learn-btn-primary disabled:opacity-40"
             >
               {busy
@@ -421,6 +450,23 @@ export default function AssessmentRunnerPage() {
             </button>
           )}
         </div>
+        {confirmSame && (
+          <div className="mt-4 rounded-xl border border-line-strong bg-surface p-4" role="alertdialog" aria-labelledby="same-h" aria-describedby="same-d">
+            <p id="same-h" className="text-[0.875rem] font-semibold text-ink">You gave nearly every statement the same answer</p>
+            <p id="same-d" className="mt-1 text-[0.8125rem] text-slate">
+              That’s fine if it’s how you see yourself. If you were moving quickly, take another look: an honest
+              baseline makes your growth report meaningful.
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button type="button" className="learn-btn learn-btn-ghost" onClick={() => { setConfirmSame(false); setStep(0); }}>
+                Review my answers
+              </button>
+              <button type="button" className="learn-btn learn-btn-primary" onClick={() => void submit(true)}>
+                Submit as it is
+              </button>
+            </div>
+          </div>
+        )}
         {submitError && (
           <p className="mt-3 text-[0.8125rem] font-medium text-red-700" role="alert">
             {submitError}
