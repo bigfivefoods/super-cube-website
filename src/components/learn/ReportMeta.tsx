@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateZA } from "@/lib/datetime";
 import Link from "next/link";
 import {
   AGE_BANDS,
@@ -149,7 +150,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
                 </div>
               </div>
               <p className="text-[0.7rem] tabular-nums text-muted">
-                {row.at ? new Date(row.at).toLocaleDateString() : "Pending"}
+                {row.at ? formatDateZA(row.at) : "Pending"}
               </p>
             </li>
           ))}

@@ -87,6 +87,7 @@ export default function VerifyCertificatePage() {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
+                timeZone: "Africa/Johannesburg",
               })}
               {cert.org_code ? ` · Cohort ${cert.org_code}` : ""}
             </p>

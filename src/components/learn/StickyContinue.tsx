@@ -18,6 +18,7 @@ function isUrgent(a: NextBestAction | null): a is NextBestAction {
 }
 
 /**
+ * Not mounted since LMS Phase 1 stage 4: the mobile pathway pill in LearnShell is the one "Continue".
  * Minimal sticky next-page CTA on mobile.
  * Process-prefixed so Learning vs Journal is never ambiguous.
  * Hidden on focused flows and when nothing is urgent.

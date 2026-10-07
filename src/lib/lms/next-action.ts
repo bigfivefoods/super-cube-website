@@ -15,6 +15,7 @@ import { localDayKey } from "@/lib/lms/store";
 
 export type NextActionKind =
   | "profile"
+  | "programme"
   | "orient"
   | "baseline"
   | "first_pulse"
@@ -165,6 +166,8 @@ export function getJournalAction(state: LocalLmsState): NextBestAction | null {
   const profile = getProfile(state);
   // Journaling needs a minimal setup floor; otherwise defer to learning setup.
   if (!profileComplete(profile)) return null;
+  // Journal prompts start after orientation so a new learner sees one path, not two.
+  if (!state.orientation) return null;
 
   if (!state.firstRun?.firstPulse && !(state.facePulses?.length)) {
     return {
@@ -284,8 +287,10 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
   if (!learning) return journal!;
   if (!journal) return learning;
 
-  // Setup / high learning always wins over soft journal celebrate
+  // Setup and the gated pathway steps (profile → orientation → baseline) always win:
+  // journal prompts wait for orientation, and the baseline anchors every chart.
   if (learning.process === "setup") return learning;
+  if (learning.kind === "orient" || learning.kind === "baseline") return learning;
 
   if (URGENCY_RANK[learning.urgency] < URGENCY_RANK[journal.urgency]) {
     return learning;
@@ -302,4 +307,26 @@ export function getNextBestAction(state: LocalLmsState): NextBestAction {
     return journal;
   }
   return learning;
+}
+
+/**
+ * Dashboard "one next action": the pathway gate comes first. Without a programme the
+ * learner can't orient or measure, so the card points at step 1 instead of a habit.
+ */
+export function getDashboardAction(
+  state: LocalLmsState,
+  hasProgramme: boolean
+): NextBestAction {
+  const best = getNextBestAction(state);
+  if (best.kind === "profile" || hasProgramme) return best;
+  return {
+    kind: "programme",
+    title: "Choose your programme",
+    detail:
+      "Kids, Adolescents or Adults: the same six faces, in language matched to your season of life.",
+    href: "/learn/programmes",
+    cta: "Choose programme →",
+    urgency: "high",
+    process: "learning",
+  };
 }

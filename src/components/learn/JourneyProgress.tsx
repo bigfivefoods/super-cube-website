@@ -69,7 +69,7 @@ function StepDot({
 }
 
 /** Compact rail shown on every LMS page — where am I? */
-export function JourneyRail({ journey }: { journey: JourneySnapshot }) {
+export function JourneyRail({ journey, hideCta = false }: { journey: JourneySnapshot; hideCta?: boolean }) {
   const pathname = usePathname();
   const pathStep = journeyStepFromPath(pathname);
 
@@ -90,12 +90,14 @@ export function JourneyRail({ journey }: { journey: JourneySnapshot }) {
           <span className="text-[0.7rem] font-semibold tabular-nums text-muted">
             {journey.doneCount}/{journey.total} done
           </span>
-          <Link
-            href={journey.current.href}
-            className="learn-btn learn-btn-primary !min-h-8 !px-3 !py-1 !text-[0.75rem]"
-          >
-            {journey.current.cta} →
-          </Link>
+          {!hideCta && (
+            <Link
+              href={journey.current.href}
+              className="learn-btn learn-btn-primary !min-h-8 !px-3 !py-1 !text-[0.75rem]"
+            >
+              {journey.current.cta} →
+            </Link>
+          )}
         </div>
       </div>
 

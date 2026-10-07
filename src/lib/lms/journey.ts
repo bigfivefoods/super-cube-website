@@ -66,7 +66,8 @@ export interface JourneySnapshot {
 export function getJourney(state: LocalLmsState): JourneySnapshot {
   const access = hasLocalAccess(state);
   const programmeId = (state.subscription?.programmeId ||
-    state.user?.programmeId) as ProgrammeId | undefined;
+    state.user?.programmeId ||
+    state.profile?.programmeId) as ProgrammeId | undefined;
   const programme = programmeId ? getProgramme(programmeId) : undefined;
   const courses = programmeId ? getCoursesForProgramme(programmeId) : [];
   const completedLessons = Object.values(state.lessonProgress).filter(
@@ -345,4 +346,12 @@ export function journeyStepFromPath(pathname: string): JourneyStepId | null {
   if (pathname.startsWith("/learn/report")) return "report";
   if (pathname === "/learn") return null;
   return null;
+}
+
+/** The pathway always has six steps. */
+export const JOURNEY_TOTAL = 6;
+
+/** One wording for the pathway counter everywhere: "Step 3 of 6". */
+export function stepLabel(n: number): string {
+  return `Step ${n} of ${JOURNEY_TOTAL}`;
 }

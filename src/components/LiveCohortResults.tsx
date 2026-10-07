@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateZA } from "@/lib/datetime";
 import { useEffect, useState } from "react";
 import { constructs } from "@/lib/content";
 
@@ -64,7 +65,7 @@ export function LiveCohortResults() {
             {data.cohorts ? ` across ${data.cohorts} cohorts` : ""} · pre → post,
             0–100 scale
             {data.updatedAt
-              ? ` · updated ${new Date(data.updatedAt).toLocaleDateString("en-ZA")}`
+              ? ` · updated ${formatDateZA(data.updatedAt)}`
               : ""}
           </p>
           <ul className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-3">

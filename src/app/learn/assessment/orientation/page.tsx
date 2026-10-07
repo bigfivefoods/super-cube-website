@@ -94,7 +94,7 @@ export default function OrientationAssessmentPage() {
       completedAt: new Date().toISOString(),
     };
     saveLmsState(next);
-    router.push("/learn/assessment?from=orientation");
+    router.push("/learn/assessment/pre?from=orientation");
   }
 
   if (!ready) {
@@ -109,7 +109,7 @@ export default function OrientationAssessmentPage() {
 
   return (
     <LearnShell
-      title="Step 2 · Orient your mind"
+      title="Step 2 of 6 · Orient your mind"
       subtitle="Before the six-face baseline: map how you already think about leadership—philosophy, theory, and models. We meet you where you are."
     >
       <section className="learn-card mb-5 sm:mb-6">

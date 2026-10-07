@@ -43,10 +43,15 @@ export default function LessonPlayerPage() {
     state?.user?.programmeId ||
     "adults") as ProgrammeId;
 
-  const data = useMemo(
-    () => getLesson(courseId(programmeId, constructId), lessonId),
-    [programmeId, constructId, lessonId],
-  );
+  // The learner's programme first; otherwise the programme named in the lesson id
+  const data = useMemo(() => {
+    const own = getLesson(courseId(programmeId, constructId), lessonId);
+    if (own) return own;
+    const prefix = lessonId.split("-")[0] as ProgrammeId;
+    return (["kids", "adolescents", "adults"] as ProgrammeId[]).includes(prefix)
+      ? getLesson(courseId(prefix, constructId), lessonId)
+      : undefined;
+  }, [programmeId, constructId, lessonId]);
 
   const construct = constructs.find((c) => c.id === constructId);
 
@@ -110,8 +115,14 @@ export default function LessonPlayerPage() {
 
   if (!data || !construct) {
     return (
-      <LearnShell title="Lesson">
-        <p className="learn-body">Lesson not found.</p>
+      <LearnShell title="Session not found">
+        <p className="learn-body">This session isn’t part of your programme.</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Link href={construct ? `/learn/courses/${constructId}` : "/learn/courses"} className="learn-btn learn-btn-primary">
+            Back to module
+          </Link>
+          <Link href="/learn/courses" className="learn-btn learn-btn-ghost">All courses</Link>
+        </div>
       </LearnShell>
     );
   }

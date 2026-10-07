@@ -22,7 +22,7 @@ export default function AssessmentHubPage() {
   return (
     <LearnShell
       title="Assessment hub"
-      subtitle="Orient (Step 2) and baseline (Step 3) start your pathway. After you finish every course, take the post-assessment (Step 5) to measure growth."
+      subtitle="Orientation (step 2 of 6) and your baseline (step 3) start the pathway. After the practice period, the after-test (step 5) measures your growth."
     >
       {!programme && (
         <div className="learn-card mb-4 learn-body">
@@ -38,7 +38,7 @@ export default function AssessmentHubPage() {
 
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">
         <article className="learn-card">
-          <p className="learn-eyebrow">Phase 0 · Pre-pre</p>
+          <p className="learn-eyebrow">Step 2 of 6 · Orientation</p>
           <h2 className="learn-card-title mt-1.5">Orientation</h2>
           <p className="learn-body mt-2">
             Do you know or use leadership models? We assess whether you hold a{" "}
@@ -74,7 +74,7 @@ export default function AssessmentHubPage() {
         </article>
 
         <article className="learn-card">
-          <p className="learn-eyebrow">Phase 1</p>
+          <p className="learn-eyebrow">Step 3 of 6 · Baseline</p>
           <h2 className="learn-card-title mt-1.5">Pre-assessment</h2>
           <p className="learn-body mt-2">
             Baseline across all six Super-Cube® faces
@@ -101,7 +101,7 @@ export default function AssessmentHubPage() {
         </article>
 
         <article className="learn-card">
-          <p className="learn-eyebrow">Step 5 · After full programme</p>
+          <p className="learn-eyebrow">Step 5 of 6 · After the programme</p>
           <h2 className="learn-card-title mt-1.5">Post-assessment</h2>
           <p className="learn-body mt-2">
             Same six-face instrument as baseline. It opens after a minimum

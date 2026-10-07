@@ -32,7 +32,7 @@ export default function LearnProgrammesPage() {
 
   return (
     <LearnShell
-      title="Step 1 · Choose your programme"
+      title="Step 1 of 6 · Choose your programme"
       subtitle="One model for life. Pick the pathway that matches this season—Kids, Adolescents, or Adults. Same six faces; language and practice that fit you."
     >
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">
@@ -109,7 +109,7 @@ export default function LearnProgrammesPage() {
           <div>
             <p className="learn-eyebrow">Step 1 complete</p>
             <p className="mt-1 text-sm font-semibold text-ink">
-              Next: Orient your mind (Step 2)
+              Next: Step 2 of 6 · Orient your mind
             </p>
             <p className="learn-meta mt-0.5">
               Map philosophy · theory · model—then you’ll measure your baseline.
@@ -120,7 +120,7 @@ export default function LearnProgrammesPage() {
             variant="primary"
             className="!min-h-10 shrink-0 !text-[0.8125rem]"
           >
-            Continue to Step 2 →
+            Continue to step 2 →
           </Button>
         </div>
       )}

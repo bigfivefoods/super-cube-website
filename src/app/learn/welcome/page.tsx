@@ -88,12 +88,14 @@ export default function WelcomeProfilePage() {
       programmeId: band.programmeId,
     });
     const s = loadLmsState();
-    let dest = "/learn/start";
+    // Profile → orientation (step 2) → baseline (step 3). Journal prompts start after orientation.
+    let dest = s.orientation
+      ? s.attempts.some((a) => a.phase === "pre")
+        ? "/learn"
+        : "/learn/assessment/pre"
+      : "/learn/assessment/orientation?from=profile";
     if (cohortKind !== "solo" && !codeInput.trim()) {
       dest = "/learn/org";
-    } else if (!s.firstRun?.firstPulse && !s.facePulses?.length) {
-      // First-pulse onboarding: charts never start empty when possible
-      dest = "/learn/pulse?first=1";
     }
     if (MINOR_AGE_BANDS.includes(ageBand) && !hasValidGuardianConsent(getProfile(s), s.guardianConsent)) {
       router.push(`/learn/consent?next=${encodeURIComponent(dest)}`);
