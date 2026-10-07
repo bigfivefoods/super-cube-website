@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { TestimonialsSection } from "@/components/Testimonials";
@@ -191,11 +192,11 @@ export default function AboutPage() {
               <strong>Dr Craig Ross Muller</strong> as the core output of his
               Doctor of Business Administration thesis at the{" "}
               <strong>University of KwaZulu-Natal</strong>. Citation pack:{" "}
-              <a href="/media">/media</a>. Privacy: journals private by default;
+              <Link href="/media">/media</Link>. Privacy: journals private by default;
               coaches only see consented scores (
-              <a href="/privacy">privacy policy</a>). Theoretical foundations
+              <Link href="/privacy">privacy policy</Link>). Theoretical foundations
               span major leadership schools through Ubuntu, I–Thou, and AQAL—see{" "}
-              <a href="/the-model#theory">the full theory map</a>.
+              <Link href="/the-model#theory">the full theory map</Link>.
             </p>
             <p>
               The thesis—

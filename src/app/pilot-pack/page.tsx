@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Metadata } from "next";
 import { FacilitatorDownloadButton } from "@/components/FacilitatorDownload";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
@@ -62,12 +63,12 @@ export default function PilotPackPage() {
               <li>
                 · <strong className="text-ink">Pricing:</strong> from $
                 {COURSE_PRICE_USD} USD per learner; seat packs 10/20/50 on{" "}
-                <a
+                <Link
                   href="/pricing#pilot"
                   className="font-semibold text-ink underline-offset-2 hover:underline"
                 >
                   pricing
-                </a>
+                </Link>
               </li>
               <li>
                 · <strong className="text-ink">Pathway:</strong> orient →
