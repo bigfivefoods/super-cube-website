@@ -173,21 +173,21 @@ export function SampleReportCharts({
     <div className="mt-8 space-y-6">
       <div>
         <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">
-          Growth radar · pre → post
+          Growth radar · before → after
         </h3>
         <p className="mt-1 text-xs leading-relaxed text-slate">
-          Baseline in grey; post in construct colours. Choices at top,
-          Principles at bottom—matching the Super-Cube® face layout.
+          Before is the dashed outline with hollow markers; after is the filled shape in face colours. Choices
+          at top, Principles at bottom, matching the Super-Cube® face layout.
         </p>
 
-        <div className="mt-4 grid gap-6 md:grid-cols-[minmax(0,240px)_1fr] md:items-start">
+        <div className="mt-4 grid gap-6 md:grid-cols-[minmax(0,340px)_1fr] md:items-start">
           <div className="flex justify-center rounded-2xl border border-line bg-surface px-2 py-4 sm:px-3">
             <RadarChart
               scores={preScores}
               compareScores={postScores}
-              size={220}
-              preLabel="Pre"
-              postLabel="Post"
+              size={320}
+              preLabel="Before"
+              postLabel="After"
             />
           </div>
 

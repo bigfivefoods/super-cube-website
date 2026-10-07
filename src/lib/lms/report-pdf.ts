@@ -1,8 +1,7 @@
 import { jsPDF } from "jspdf";
 import { formatDateZA } from "@/lib/datetime";
 import autoTable from "jspdf-autotable";
-import { RADAR_ORDER } from "@/components/learn/RadarChart";
-import type { ConstructScore } from "@/lib/lms/scoring";
+import { drawPdfRadar, drawPdfRadarLegend } from "@/lib/lms/pdf-radar";
 import { depthLabel } from "@/lib/lms/orientation";
 import type { LocalLmsState, LocalAttempt } from "@/lib/lms/store";
 import {
@@ -26,126 +25,6 @@ function fmtDate(iso: string) {
     return formatDateZA(iso, iso);
   } catch {
     return iso;
-  }
-}
-
-function hexToRgb(hex: string): [number, number, number] {
-  const h = hex.replace("#", "");
-  if (h.length !== 6) return [100, 100, 100];
-  return [
-    parseInt(h.slice(0, 2), 16),
-    parseInt(h.slice(2, 4), 16),
-    parseInt(h.slice(4, 6), 16),
-  ];
-}
-
-/** Draw pre (grey) / post (construct colours) radar onto the PDF canvas. */
-function drawGrowthRadar(
-  doc: jsPDF,
-  cx: number,
-  cy: number,
-  radius: number,
-  preScores: ConstructScore[],
-  postScores?: ConstructScore[] | null
-) {
-  const n = RADAR_ORDER.length;
-  const orderedPre = RADAR_ORDER.map(
-    (id) =>
-      preScores.find((s) => s.constructId === id) ?? {
-        constructId: id,
-        name: id,
-        color: "#999999",
-        rawMean: 0,
-        score: 0,
-        itemCount: 0,
-      }
-  );
-  const orderedPost = postScores
-    ? RADAR_ORDER.map(
-        (id) =>
-          postScores.find((s) => s.constructId === id) ?? {
-            constructId: id,
-            name: id,
-            color: "#999999",
-            rawMean: 0,
-            score: 0,
-            itemCount: 0,
-          }
-      )
-    : null;
-
-  const pt = (i: number, value: number) => {
-    const angle = -Math.PI / 2 + (i * 2 * Math.PI) / n;
-    const rr = (Math.min(100, Math.max(0, value)) / 100) * radius;
-    return {
-      x: cx + rr * Math.cos(angle),
-      y: cy + rr * Math.sin(angle),
-    };
-  };
-
-  // Grid rings
-  doc.setLineWidth(0.2);
-  for (const g of [25, 50, 75, 100]) {
-    const pts = Array.from({ length: n }, (_, i) => pt(i, g));
-    doc.setDrawColor(220, 220, 220);
-    for (let i = 0; i < n; i++) {
-      const a = pts[i];
-      const b = pts[(i + 1) % n];
-      doc.line(a.x, a.y, b.x, b.y);
-    }
-  }
-
-  // Axes + labels
-  orderedPre.forEach((s, i) => {
-    const rim = pt(i, 100);
-    doc.setDrawColor(230, 230, 230);
-    doc.setLineWidth(0.25);
-    doc.line(cx, cy, rim.x, rim.y);
-    const lab = pt(i, 118);
-    doc.setFont("helvetica", "bold");
-    doc.setFontSize(7);
-    const rgb = hexToRgb(s.color);
-    doc.setTextColor(rgb[0], rgb[1], rgb[2]);
-    doc.text(s.name, lab.x, lab.y, { align: "center", baseline: "middle" });
-  });
-
-  // Pre polygon — grey
-  const prePts = orderedPre.map((s, i) => pt(i, s.score));
-  doc.setDrawColor(140, 140, 140);
-  doc.setLineWidth(0.7);
-  for (let i = 0; i < n; i++) {
-    const a = prePts[i];
-    const b = prePts[(i + 1) % n];
-    doc.line(a.x, a.y, b.x, b.y);
-  }
-  prePts.forEach((p) => {
-    doc.setFillColor(255, 255, 255);
-    doc.setDrawColor(140, 140, 140);
-    doc.circle(p.x, p.y, 1.1, "FD");
-  });
-
-  // Post polygon — construct colours
-  if (orderedPost) {
-    const postPts = orderedPost.map((s, i) => pt(i, s.score));
-    for (let i = 0; i < n; i++) {
-      const s = orderedPost[i];
-      const a = postPts[i];
-      const b = postPts[(i + 1) % n];
-      const rgb = hexToRgb(s.color);
-      doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
-      doc.setLineWidth(0.9);
-      doc.line(a.x, a.y, b.x, b.y);
-    }
-    orderedPost.forEach((s, i) => {
-      const p = postPts[i];
-      const rgb = hexToRgb(s.color);
-      doc.setFillColor(255, 255, 255);
-      doc.setDrawColor(rgb[0], rgb[1], rgb[2]);
-      doc.setLineWidth(0.6);
-      doc.circle(p.x, p.y, 1.4, "FD");
-      doc.setFillColor(rgb[0], rgb[1], rgb[2]);
-      doc.circle(p.x, p.y, 0.6, "F");
-    });
   }
 }
 
@@ -193,9 +72,8 @@ export function buildGrowthReportPdf({
     }
   }
 
-  function drawFooter() {
+  function drawFooter(n: number, total: number) {
     const pageH = doc.internal.pageSize.getHeight();
-    const n = doc.getNumberOfPages();
     doc.setFontSize(8);
     doc.setTextColor(...slate);
     doc.text(
@@ -203,7 +81,7 @@ export function buildGrowthReportPdf({
       margin,
       pageH - 10
     );
-    doc.text(`Page ${n}`, pageW - margin, pageH - 10, { align: "right" });
+    doc.text(`Page ${n} of ${total}`, pageW - margin, pageH - 10, { align: "right" });
   }
 
   // —— Header band ——
@@ -311,41 +189,26 @@ export function buildGrowthReportPdf({
   doc.setFont("helvetica", "bold");
   doc.setFontSize(11);
   doc.setTextColor(...ink);
-  doc.text(
-    post ? "Growth radar (pre grey · post coloured)" : "Baseline radar",
-    margin,
-    y
-  );
+  doc.text(post ? "Your growth across the six faces" : "Your six-face profile", margin, y);
   y += 4;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   doc.setTextColor(...slate);
   doc.text(
     post
-      ? "Grey = pre-assessment · Coloured = post-assessment · Choices top · Principles bottom"
-      : "Construct colours · Choices at top · Principles at bottom",
+      ? "Before = dashed outline, hollow markers. After = filled shape, solid markers. Numbers show before -> after."
+      : "Your baseline score on each face (0-100).",
     margin,
     y
   );
   y += 6;
-  const radarR = 28;
+  const radarR = 33;
   const radarCx = pageW / 2;
-  const radarCy = y + radarR + 4;
-  drawGrowthRadar(
-    doc,
-    radarCx,
-    radarCy,
-    radarR,
-    pre.result.constructScores,
-    post?.result.constructScores
-  );
-  y = radarCy + radarR + 10;
+  const radarCy = y + radarR + 8;
+  drawPdfRadar(doc, radarCx, radarCy, radarR, pre.result.constructScores, post?.result.constructScores, { labelSize: 8 });
+  y = radarCy + radarR + 17;
   if (post) {
-    doc.setFontSize(8);
-    doc.setTextColor(140, 140, 140);
-    doc.text("Pre (baseline)", pageW / 2 - 8, y, { align: "right" });
-    doc.setTextColor(...ink);
-    doc.text("  Post (after programme)", pageW / 2 - 6, y);
+    drawPdfRadarLegend(doc, pageW / 2 - 52, y);
     y += 8;
   }
 
@@ -503,7 +366,7 @@ export function buildGrowthReportPdf({
   const total = doc.getNumberOfPages();
   for (let i = 1; i <= total; i++) {
     doc.setPage(i);
-    drawFooter();
+    drawFooter(i, total);
   }
 
   return doc;
