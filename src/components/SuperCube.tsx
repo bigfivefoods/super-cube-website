@@ -160,7 +160,9 @@ export function SuperCube({
           dragging ? "is-dragging" : ""
         }`}
         role="img"
-        aria-label="Interactive Super-Cube®. Choices on top, Principles on the bottom, Mental, Emotional, Physical and Spiritual on the sides. Drag to rotate."
+        aria-label={`Interactive Super-Cube®. Choices on top, Principles on the bottom, Mental, Emotional, Physical and Spiritual on the sides.${
+          showSkills && !showScores ? " The skills on each face are listed below." : ""
+        } Drag to rotate.`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -221,6 +223,20 @@ export function SuperCube({
           })}
         </div>
       </div>
+
+      {/* The 3D faces are a picture (role="img"); give screen readers the faces and skills as text. */}
+      {showSkills && !showScores && (
+        <ul className="sr-only" aria-label="Super-Cube® faces and the skills each develops">
+          {faceLayout.map((face) => {
+            const c = byId[face.id];
+            return (
+              <li key={face.id}>
+                {c.name}: {c.elements.join(", ")}
+              </li>
+            );
+          })}
+        </ul>
+      )}
 
       <div className="flex w-full max-w-full flex-col items-center gap-2 px-0.5 sm:max-w-[20rem]">
         <p className="text-center text-[0.65rem] font-medium uppercase tracking-[0.12em] text-muted sm:text-[0.6875rem] sm:tracking-[0.14em]">
