@@ -1,3 +1,4 @@
+import { faceChecklist, faceSummary } from "@/lib/lms/face-copy";
 import { constructs, type ConstructId } from "@/lib/content";
 import {
   assessmentPrompt,
@@ -122,7 +123,10 @@ function overviewSessions(
   return {
     arc,
     sections: arcSections(arc, `\n\n### Skills in this module\n${skills.map((s) => `- **${s}**`).join("\n")}`),
-    outcome: `Understand the ${constructName} face and start one deliberate practice.`,
+    outcome:
+      programmeId === "kids"
+        ? `Meet the ${constructName} face and try one small thing.`
+        : `Understand the ${constructName} face and start one deliberate practice.`,
   };
 }
 
@@ -171,7 +175,7 @@ function practiceSessions(
   const copy = COURSE_COPY[constructId];
   const lab: PracticeLab = {
     challenge: copy.practiceLab.challenge[programmeId],
-    checklist: copy.practiceLab.checklist,
+    checklist: faceChecklist(constructId, programmeId),
     woop: WOOP_PROMPTS[programmeId],
   };
   const sections: SessionSection[] = [
@@ -194,7 +198,10 @@ function practiceSessions(
   return {
     lab,
     sections,
-    outcome: `Plan and run a real-world ${constructName.toLowerCase()} challenge with WOOP.`,
+    outcome:
+      programmeId === "kids"
+        ? `Make a plan and try a real ${constructName} challenge.`
+        : `Plan and run a real-world ${constructName.toLowerCase()} challenge with WOOP.`,
   };
 }
 
@@ -224,7 +231,10 @@ function quizSessions(
   return {
     faceCheck: qs,
     sections,
-    outcome: `Check what stuck from ${constructName} and lock one habit.`,
+    outcome:
+      programmeId === "kids"
+        ? `Check what you remember about ${constructName}.`
+        : `Check what stuck from ${constructName} and lock one habit.`,
   };
 }
 
@@ -237,7 +247,6 @@ export function buildCurriculum(): Course[] {
     constructs.forEach((construct) => {
       const id = courseId(programme.id, construct.id);
       const skills = skillsForProgramme(programme.id, construct.id);
-      const copy = COURSE_COPY[construct.id];
       const lessons: Lesson[] = [];
       let order = 0;
 
@@ -313,8 +322,8 @@ export function buildCurriculum(): Course[] {
         programmeId: programme.id,
         constructId: construct.id,
         title: `${construct.name} · ${programme.name}`,
-        summary: construct.summary,
-        promise: copy.promise,
+        summary: programme.id === "adults" ? construct.summary : faceSummary(construct.id, programme.id),
+        promise: faceSummary(construct.id, programme.id),
         coverPath: `/images/programs/${construct.id}-cover.jpg`,
         sortOrder: courseSort++,
         lessons,
