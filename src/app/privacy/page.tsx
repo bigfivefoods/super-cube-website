@@ -71,9 +71,10 @@ export default function PrivacyPage() {
               <li>
                 <strong className="text-ink">Newsletter (only if you tick the consent box):</strong>{" "}
                 your email address, where you signed up, and when you gave
-                consent—stored in our secured database (Supabase, EU region)
-                and used only to send Super-Cube® updates. Every email has a
-                one-click unsubscribe link, or ask us to remove you at any time.
+                and confirmed consent (we email you a link to confirm before
+                sending anything)—stored in our secured database (Supabase, EU
+                region) and used only to send Super-Cube® updates. Every email
+                has a one-click unsubscribe link, or ask us to remove you at any time.
               </li>
             </ul>
           </div>

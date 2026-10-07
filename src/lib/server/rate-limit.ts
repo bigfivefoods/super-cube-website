@@ -25,6 +25,8 @@ export const RATE_RULES = {
   "guardian-consent": { limit: 10, windowSec: 3600 },
   contact: { limit: 5, windowSec: 600 },
   newsletter: { limit: 10, windowSec: 600 },
+  "newsletter-email": { limit: 3, windowSec: 3600 },
+  "newsletter-confirm": { limit: 20, windowSec: 600 },
   "account-delete": { limit: 5, windowSec: 3600 },
   attempts: { limit: 30, windowSec: 600 },
   "attempts-claim": { limit: 10, windowSec: 600 },

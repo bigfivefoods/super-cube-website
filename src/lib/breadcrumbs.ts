@@ -56,6 +56,7 @@ export const routeLabels: Record<string, RouteLabel> = {
   "/terms": { label: "Terms", i18n: "footer.terms" },
   "/signup": { label: "Create account", i18n: "footer.createAccount" },
   "/newsletter/unsubscribe": { label: "Unsubscribe", i18n: "bc.unsubscribe" },
+  "/newsletter/confirm": { label: "Confirm subscription" },
 };
 
 /**

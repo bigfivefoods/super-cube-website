@@ -6,6 +6,7 @@ import { constructs } from "@/lib/content";
 import { COURSE_PRICE_ZAR } from "@/lib/programmes";
 import { getSeatPack, seatPackAmountCents } from "@/lib/seat-packs";
 import { emailSiteUrl, newsletterEmail, type RenderedEmail } from "@/lib/email/layout";
+import { confirmationEmail } from "@/lib/newsletter/emails";
 import { receiptEmail, seatPackEmail, weeklyEmail, welcomeEmail } from "@/lib/email/templates";
 
 export type SampleId =
@@ -15,7 +16,8 @@ export type SampleId =
   | "seat-pack"
   | "seat-pack-unclaimed"
   | "weekly"
-  | "newsletter";
+  | "newsletter"
+  | "newsletter-confirm";
 
 export const SAMPLE_IDS: SampleId[] = [
   "welcome-demo",
@@ -25,6 +27,7 @@ export const SAMPLE_IDS: SampleId[] = [
   "seat-pack-unclaimed",
   "weekly",
   "newsletter",
+  "newsletter-confirm",
 ];
 
 /** The four main templates sent as a test set. */
@@ -87,6 +90,11 @@ export function sampleEmail(
         summary: "You completed three sessions and kept your streak alive. Your weekly plan is ready.",
         focus: "Emotional, Physical",
         programmeId: pid,
+      });
+    case "newsletter-confirm":
+      return confirmationEmail({
+        ...common,
+        confirmUrl: `${site}/newsletter/confirm?t=00000000-0000-0000-0000-000000000000`,
       });
     case "newsletter":
       return newsletterEmail({

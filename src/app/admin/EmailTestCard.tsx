@@ -10,6 +10,7 @@ const PREVIEWS = [
   ["seat-pack", "Seat pack · cohort code"],
   ["weekly", "Weekly progress"],
   ["newsletter", "Newsletter layout"],
+  ["newsletter-confirm", "Newsletter · confirm subscription"],
 ] as const;
 
 /** Email templates: preview with sample data, or send the main set to yourself. */
