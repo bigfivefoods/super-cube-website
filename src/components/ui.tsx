@@ -106,14 +106,17 @@ export function PageHero({
   const mediaAlt = imageAlt ?? preset?.alt ?? "";
   const objectPos = preset?.position ?? "object-center";
   const isMedia = Boolean(mediaSrc);
-  const useFull = full ?? false;
+  // Every photo hero renders exactly like the landing-page hero (HomeLanding): full
+  // viewport height (100svh/100dvh), object-cover, the same overlays and copy placement.
+  // Text-only heroes (theme "none") keep the shorter band.
+  const useFull = full ?? isMedia;
   const lightTone = isMedia && preset?.tone === "light";
   const darkTone = isMedia && !lightTone;
 
   const actionsClass = lightTone
-    ? "mt-5 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3"
+    ? "mt-6 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3"
     : darkTone
-      ? "mt-5 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
+      ? "mt-6 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3 [&>a:first-of-type]:!bg-white [&>a:first-of-type]:!text-ink [&>a:first-of-type]:hover:!bg-white/90 [&>a:not(:first-of-type)]:!border-white/35 [&>a:not(:first-of-type)]:!bg-white/10 [&>a:not(:first-of-type)]:!text-white [&>a:not(:first-of-type)]:hover:!bg-white/15"
       : "mt-5 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3";
 
   const eyebrowCls = lightTone
@@ -134,7 +137,9 @@ export function PageHero({
 
   return (
     <section
-      className={`page-hero relative isolate flex w-full flex-col overflow-hidden border-b border-line ${
+      className={`page-hero relative isolate flex w-full flex-col overflow-hidden ${
+        isMedia ? "" : "border-b border-line"
+      } ${
         useFull ? "page-hero--full" : "page-hero--band"
       } ${
         isMedia
@@ -151,7 +156,6 @@ export function PageHero({
             alt={mediaAlt}
             fill
             priority
-            quality={60}
             className={`object-cover ${objectPos}`}
             sizes="100vw"
           />
@@ -169,11 +173,11 @@ export function PageHero({
           ) : (
             <>
               <div
-                className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/40 sm:via-black/55 sm:to-black/20 md:to-transparent"
+                className="absolute inset-0 bg-gradient-to-r from-black/88 via-black/65 to-black/35 sm:via-black/55 sm:to-transparent"
                 aria-hidden
               />
               <div
-                className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/35 sm:from-black/55 sm:to-black/25"
+                className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30"
                 aria-hidden
               />
             </>
@@ -205,7 +209,7 @@ export function PageHero({
             </div>
           </div>
         ) : (
-          <div className="page-hero__copy min-w-0 max-w-2xl md:max-w-[36rem] lg:max-w-[40rem]">
+          <div className="page-hero__copy min-w-0 max-w-2xl md:max-w-[38rem] lg:max-w-[42rem]">
             <p className={`eyebrow ${eyebrowCls}`}>{eyebrow}</p>
             <h1
               className={`page-hero__title heading-xl mt-3 sm:mt-4 ${titleCls}`}

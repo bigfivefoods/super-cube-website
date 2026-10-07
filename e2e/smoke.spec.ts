@@ -74,4 +74,25 @@ test.describe("Super-Cube smoke", () => {
     await expect(footer.getByRole("button", { name: /subscribe/i })).toBeVisible();
     await expect(footer.getByText(new RegExp(`© ${new Date().getFullYear()}`))).toBeVisible();
   });
+  test("photo heroes match the landing hero size", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    const heroHeight = async (path: string) => {
+      await page.goto(base + path);
+      return page.locator("main section").first().evaluate((el) => Math.round(el.getBoundingClientRect().height));
+    };
+    const home = await heroHeight("/");
+    for (const path of ["/about", "/the-model", "/organisations", "/research"]) {
+      expect(await heroHeight(path), path).toBe(home);
+    }
+  });
+
+  test("home cube shows the skills on each face", async ({ page }) => {
+    await page.goto(base + "/");
+    const cube = page.locator(".cube-scene").first();
+    await expect(cube.locator(".cube-face__skills")).toHaveCount(6);
+    await expect(cube.getByText("Decision-making intelligence")).toHaveCount(1);
+    await expect(page.getByRole("list", { name: /faces and the skills/i })).toContainText(
+      "Emotional: Emotional intelligence, Empathy, Social relationships, Motivation, Inspiration"
+    );
+  });
 });

@@ -174,7 +174,7 @@ export function HomeLanding() {
             </ul>
           </div>
           <div className="flex min-w-0 justify-center">
-            <SuperCube showSkills={false} />
+            <SuperCube size="md" showSkills />
           </div>
         </div>
       </section>
