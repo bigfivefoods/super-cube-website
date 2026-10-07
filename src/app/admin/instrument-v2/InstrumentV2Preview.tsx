@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import { LikertQuestion, SjtQuestion } from "@/components/learn/AssessmentItems";
 import { RadarChart } from "@/components/learn/RadarChart";
 import { constructs } from "@/lib/content";
+import { faceTagline } from "@/lib/lms/face-taglines";
 import { faceInkStyle } from "@/lib/contrast";
 import {
   buildInstrumentItems,
@@ -158,7 +159,7 @@ export function InstrumentV2Preview() {
               <h2 id="v2-face-h" className="text-[1rem] font-semibold tracking-tight text-ink">
                 {face.name}
               </h2>
-              <p className="learn-meta">{face.tagline}</p>
+              <p className="learn-meta">{faceTagline(face.id, form)}</p>
             </div>
           </div>
           <p className="learn-meta mt-3">
