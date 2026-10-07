@@ -54,3 +54,13 @@ test.describe("news admin is private", () => {
     expect((await request.get("/news/super-cube-lms-accelerating-leadership-development/share-image")).status()).toBe(404);
   });
 });
+
+test.describe("campaigns are private", () => {
+  test("the campaigns tab asks for a sign-in and email previews are hidden", async ({ page, request }) => {
+    await page.goto("/newsletter/admin?tab=campaigns");
+    await expect(page.getByLabel("Password")).toBeVisible();
+    await expect(page.getByText("Start from a post")).toHaveCount(0);
+    const preview = await request.get("/api/newsletter/admin/campaign-preview?post=super-cube-lms-accelerating-leadership-development");
+    expect(preview.status()).toBe(404);
+  });
+});

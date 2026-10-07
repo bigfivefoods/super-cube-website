@@ -14,6 +14,8 @@ export type EmailPayload = {
   html: string;
   text?: string;
   tags?: string[];
+  /** Extra headers (e.g. List-Unsubscribe for newsletters). */
+  headers?: Record<string, string>;
 };
 
 export async function sendEmail(
@@ -40,6 +42,7 @@ export async function sendEmail(
           html: payload.html,
           text: payload.text,
           tags: payload.tags?.map((name) => ({ name, value: "true" })),
+          ...(payload.headers ? { headers: payload.headers } : {}),
         }),
       });
       if (!res.ok) {
