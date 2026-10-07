@@ -6,6 +6,8 @@
  *  3. Console log (dev / missing keys)
  */
 
+import { welcomeEmail } from "@/lib/email/templates";
+
 export type EmailPayload = {
   to: string;
   subject: string;
@@ -86,29 +88,22 @@ export async function sendEmail(
   return { ok: true, provider: "console" };
 }
 
+/**
+ * Branded templates live in src/lib/email/ (layout.ts = shared shell and
+ * components, templates.ts = every email the site sends). Kept for callers
+ * that still import the old helper.
+ */
 export function welcomeEmailHtml(opts: {
   name: string;
-  programmeName: string;
+  programmeName?: string;
+  programmeId?: string;
   continueUrl: string;
   mode: "demo" | "purchase";
 }) {
-  const headline =
-    opts.mode === "purchase"
-      ? "You're in — your Super-Cube® pathway is unlocked."
-      : "Welcome — your free Super-Cube® demo is ready.";
-  return `<!DOCTYPE html><html><body style="font-family:Inter,system-ui,sans-serif;color:#0a0a0a;line-height:1.5">
-  <div style="max-width:560px;margin:0 auto;padding:32px 20px">
-    <p style="font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a8a8a">Super-Cube® Learn</p>
-    <h1 style="font-size:22px;font-weight:600;letter-spacing:-.03em">${headline}</h1>
-    <p>Hi ${opts.name || "there"},</p>
-    <p>You're on the <strong>${opts.programmeName}</strong> pathway. Leadership capacity grows through deliberate practice—not binge content.</p>
-    <p style="margin:28px 0"><a href="${opts.continueUrl}" style="display:inline-block;background:#0a0a0a;color:#fff;text-decoration:none;padding:12px 22px;border-radius:999px;font-weight:600;font-size:14px">Continue learning →</a></p>
-    <ol style="color:#5c5c5c;font-size:14px;padding-left:18px">
-      <li>Orient (pre-pre)</li>
-      <li>Baseline assessment</li>
-      <li>Six faces · eight-step sessions</li>
-      <li>Re-measure &amp; download your growth report</li>
-    </ol>
-    <p style="font-size:13px;color:#8a8a8a">Questions? Reply to this email or write hello@super-cube.me</p>
-  </div></body></html>`;
+  return welcomeEmail({
+    name: opts.name,
+    programmeId: opts.programmeId ?? "adults",
+    continueUrl: opts.continueUrl,
+    mode: opts.mode,
+  }).html;
 }

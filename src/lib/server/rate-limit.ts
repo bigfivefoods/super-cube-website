@@ -34,6 +34,12 @@ export const RATE_RULES = {
   "csp-report": { limit: 60, windowSec: 600 },
   "feedback360-create": { limit: 5, windowSec: 3600 },
   "feedback360-rater": { limit: 30, windowSec: 600 },
+  "email-ip": { limit: 20, windowSec: 600 },
+  "email-welcome": { limit: 3, windowSec: 86400 },
+  "email-weekly": { limit: 3, windowSec: 86400 },
+  "email-receipt": { limit: 1, windowSec: 86400 },
+  "email-admin-test": { limit: 3, windowSec: 3600 },
+  "email-launch-test": { limit: 1, windowSec: 86400 },
 } as const satisfies Record<string, RateRule>;
 
 export type RateBucket = keyof typeof RATE_RULES;
