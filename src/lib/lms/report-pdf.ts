@@ -9,12 +9,22 @@ import {
   recommendations,
 } from "@/lib/lms/scoring";
 import { getProgramme } from "@/lib/programmes";
+import { bandFor, BAND_LABELS, buildAssessmentNarrative, faceGrowthLine } from "@/lib/lms/narrative";
 
 export type ReportPdfInput = {
   state: LocalLmsState;
   pre: LocalAttempt;
   post?: LocalAttempt | null;
 };
+
+/** jsPDF core fonts are WinAnsi only: map curly quotes, arrows and ellipses */
+function pdfText(s: string) {
+  return s
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201C\u201D]/g, '"')
+    .replace(/\s*→\s*/g, " to ")
+    .replace(/[^\x00-\xFF\u2013\u2014\u2022\u2026]/g, "");
+}
 
 function stripMd(s: string) {
   return s.replace(/\*\*(.*?)\*\*/g, "$1");
@@ -253,7 +263,7 @@ export function buildGrowthReportPdf({
 
   const head = post
     ? [["Construct", "Pre", "Post", "Growth"]]
-    : [["Construct", "Pre score", "Level"]];
+    : [["Construct", "Pre score", "Profile band"]];
 
   const body = comparison.map((row) => {
     if (post) {
@@ -266,9 +276,7 @@ export function buildGrowthReportPdf({
           : `${row.delta > 0 ? "+" : ""}${row.delta}`,
       ];
     }
-    const level =
-      row.pre >= 75 ? "Strong" : row.pre >= 50 ? "Developing" : "Priority";
-    return [row.name, String(row.pre), level];
+    return [row.name, String(row.pre), BAND_LABELS[bandFor(row.pre)]];
   });
 
   if (post) {
@@ -325,6 +333,63 @@ export function buildGrowthReportPdf({
     lastAutoTable?: { finalY: number };
   };
   y = (tablePlugin.lastAutoTable?.finalY ?? y) + 10;
+
+  // —— Strengths first: what is working, then one next step per face ——
+  const narrative = buildAssessmentNarrative((post ?? pre).result, pre.programmeId);
+  // 8.5pt text at 1.3 line height = the 3.9mm line step used below
+  doc.setLineHeightFactor(1.3);
+  ensureSpace(30);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...ink);
+  doc.text("Strengths first: what is working and your next step", margin, y);
+  y += 5;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8.5);
+  doc.setTextColor(...slate);
+  const introLines = doc.splitTextToSize(pdfText(`${narrative.overallHeadline} ${narrative.overallBody}`), contentW);
+  doc.text(introLines, margin, y);
+  y += introLines.length * 3.9 + 3;
+  for (const f of narrative.faces) {
+    const preScore = pre.result.constructScores.find((s) => s.constructId === f.constructId)?.score;
+    const growthLine = post && preScore != null ? faceGrowthLine(f.name, preScore, f.score) : null;
+    const textW = contentW - 6;
+    doc.setFontSize(8.5);
+    const strengthLines = doc.splitTextToSize(pdfText(f.strength), textW);
+    const nextLines = doc.splitTextToSize(pdfText(f.nextStep), textW);
+    const growthLines = growthLine ? doc.splitTextToSize(pdfText(growthLine), textW) : [];
+    const blockH = 5 + (strengthLines.length + nextLines.length + growthLines.length) * 3.9 + 4;
+    ensureSpace(blockH);
+    const [r, g, b] = [1, 3, 5].map((i) => parseInt(f.color.slice(i, i + 2), 16));
+    doc.setFillColor(r, g, b);
+    doc.rect(margin, y - 3, 1.2, blockH - 3, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9.5);
+    doc.setTextColor(Math.round(r * 0.8), Math.round(g * 0.8), Math.round(b * 0.8));
+    doc.text(f.name, margin + 4, y);
+    const nameW = doc.getTextWidth(f.name);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(...slate);
+    doc.text(`${f.bandLabel} · ${Math.round(f.score)}`, margin + 4 + nameW + 3, y);
+    y += 4.5;
+    doc.setFontSize(8.5);
+    doc.setTextColor(...ink);
+    doc.text(strengthLines, margin + 4, y);
+    y += strengthLines.length * 3.9;
+    doc.setTextColor(...slate);
+    doc.text(nextLines, margin + 4, y);
+    y += nextLines.length * 3.9;
+    if (growthLines.length) {
+      doc.setFont("helvetica", "italic");
+      doc.text(growthLines, margin + 4, y);
+      doc.setFont("helvetica", "normal");
+      y += growthLines.length * 3.9;
+    }
+    y += 4;
+  }
+  doc.setLineHeightFactor(1.15);
+  y += 2;
 
   // —— Recommendations ——
   ensureSpace(24);
