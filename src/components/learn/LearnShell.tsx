@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useId, useState, type ReactNode } from "react";
 import { LearnCourseNav } from "@/components/learn/LearnCourseNav";
 import { useJourney } from "@/components/learn/JourneyProgress";
 import {
@@ -14,13 +14,24 @@ import {
   type LearnNavItem,
   type SecondaryGroup,
 } from "@/lib/lms/nav";
+import { stepLabel } from "@/lib/lms/journey";
+
+/** Focused flows: the lesson or questionnaire comes first on mobile (no pathway strip). */
+function isFocusPath(pathname: string): boolean {
+  return (
+    /^\/learn\/courses\/[^/]+\/[^/]+/.test(pathname) ||
+    /^\/learn\/assessment\/(pre|post|mid|orientation)(\/|$)/.test(pathname)
+  );
+}
 
 const SECTION_HEADER =
   "mb-1 mt-3 hidden px-1 text-[0.65rem] font-semibold uppercase tracking-wider text-muted first:mt-0 lg:block";
 
 /**
  * LMS shell — dual-process sidebar (Learning vs Journaling).
- * Desktop: sectioned vertical nav. Mobile chips: primary destinations only.
+ * Desktop: sectioned vertical nav. Mobile: the bottom tab bar is the only
+ * navigation; above the content sits one slim "Step N of 6" line (hidden in
+ * sessions and assessments so the lesson starts above the fold).
  */
 export function LearnShell({
   children,
@@ -40,6 +51,8 @@ export function LearnShell({
   const onCourses = pathname.startsWith("/learn/courses");
   const [learnOpen, setLearnOpen] = useState(onCourses);
   const [moreOpen, setMoreOpen] = useState(false);
+  const uid = useId();
+  const focus = isFocusPath(pathname);
 
   useEffect(() => {
     if (onCourses) setLearnOpen(true);
@@ -68,28 +81,59 @@ export function LearnShell({
       {hero}
 
       <div className="container-site grid min-w-0 gap-4 pb-8 pt-3 sm:gap-5 sm:pb-10 sm:pt-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:pt-5 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-10">
-        {/* ── Sidebar navigation ── */}
-        <aside className="min-w-0 lg:sticky lg:top-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:self-start lg:max-h-[calc(100svh-5.5rem)] lg:overflow-y-auto">
-          <div className="rounded-2xl border border-line bg-elevated p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5">
-            <p className="mb-2 hidden text-[0.7rem] font-semibold tracking-tight text-ink lg:block">
+        {/* ── Sidebar navigation (desktop) / slim pathway line (mobile) ── */}
+        <aside
+          className={`min-w-0 lg:sticky lg:top-[calc(4.5rem+env(safe-area-inset-top,0px))] lg:self-start lg:max-h-[calc(100svh-5.5rem)] lg:overflow-y-auto ${
+            focus ? "hidden lg:block" : ""
+          }`}
+        >
+          {/* Mobile: the bottom tab bar is the navigation; this is just "where am I" + next step */}
+          {journey && (
+            <div className="lg:hidden" data-testid="mobile-pathway">
+              <div className="flex items-center gap-3 rounded-2xl border border-line bg-elevated px-3 py-2.5">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-[0.75rem] font-semibold text-ink">
+                    {stepLabel(journey.current.n)}
+                    <span className="font-medium text-slate"> · {journey.current.short}</span>
+                  </p>
+                  <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-black/[0.08]" aria-hidden>
+                    <div className="h-full rounded-full bg-ink" style={{ width: `${Math.max(journey.pct, 4)}%` }} />
+                  </div>
+                </div>
+                {/* Today already has the one next-action card; don't compete with it */}
+                {pathname !== "/learn" && (
+                  <Link
+                    href={journey.current.href}
+                    className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-void px-3.5 text-[0.75rem] font-semibold text-void-fg"
+                  >
+                    Continue
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setMoreOpen((v) => !v)}
+                  className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-line text-ink"
+                  aria-expanded={moreOpen}
+                  aria-controls={`${uid}-more`}
+                  aria-label="More tools"
+                >
+                  <span aria-hidden className="text-base leading-none">⋯</span>
+                </button>
+              </div>
+              {moreOpen && (
+                <div id={`${uid}-more`} className="mt-2 rounded-2xl border border-line bg-elevated p-3">
+                  <MoreTools groups={secondaryByGroup} pathname={pathname} />
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="hidden rounded-2xl border border-line bg-elevated p-3.5 shadow-[0_1px_0_rgba(0,0,0,0.02)] lg:block">
+            <p className="mb-2 text-[0.7rem] font-semibold tracking-tight text-ink">
               Super-Cube Learn
             </p>
 
-            {/* Mobile: flat primary chips */}
-            <nav
-              className="-mx-0.5 flex gap-0.5 overflow-x-auto px-0.5 pb-0.5 [scrollbar-width:none] lg:hidden [&::-webkit-scrollbar]:hidden"
-              aria-label="Learn navigation"
-            >
-              {[today, learn, journal, progress, you].map((item) => (
-                <MobileChip key={item.id} item={item} pathname={pathname} />
-              ))}
-            </nav>
-
-            {/* Desktop: dual-process sections */}
-            <nav
-              className="hidden lg:flex lg:flex-col lg:gap-0.5"
-              aria-label="Learn navigation"
-            >
+            <nav className="flex flex-col gap-0.5" aria-label="Learn navigation">
               {/* TODAY */}
               <p className={SECTION_HEADER}>Today</p>
               <NavLink item={today} pathname={pathname} />
@@ -106,33 +150,30 @@ export function LearnShell({
 
               {journey && (
                 <div className="mt-2 rounded-xl border border-line bg-surface/80 p-2.5">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
-                      Pathway
-                    </p>
-                    <p className="text-[0.7rem] font-semibold tabular-nums text-ink">
-                      {journey.doneCount}/{journey.total}
-                    </p>
-                  </div>
-                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
+                  <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-slate">
+                    Your pathway
+                  </p>
+                  <p className="mt-1 text-[0.75rem] font-semibold text-ink">
+                    {stepLabel(journey.current.n)}
+                    <span className="font-medium text-slate"> · {journey.current.short}</span>
+                  </p>
+                  <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-black/[0.06]" aria-hidden>
                     <div
                       className="h-full rounded-full bg-ink transition-all"
                       style={{ width: `${Math.max(journey.pct, 4)}%` }}
                     />
                   </div>
-                  <p className="mt-1.5 truncate text-[0.75rem] font-medium text-ink">
-                    {journey.current.short}
-                    <span className="font-normal text-muted">
-                      {" "}
-                      · step {journey.current.n}
-                    </span>
+                  <p className="mt-1 text-[0.7rem] text-slate">
+                    {journey.doneCount} of {journey.total} steps done
                   </p>
-                  <Link
-                    href={journey.current.href}
-                    className="mt-1 inline-flex text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-                  >
-                    Continue pathway →
-                  </Link>
+                  {pathname !== "/learn" && (
+                    <Link
+                      href={journey.current.href}
+                      className="mt-1 inline-flex text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
+                    >
+                      Continue pathway →
+                    </Link>
+                  )}
                 </div>
               )}
 
@@ -140,19 +181,13 @@ export function LearnShell({
               <p className={SECTION_HEADER}>Journaling</p>
               <Link
                 href={journal.href}
-                className={navClass(
-                  pathname.startsWith("/learn/pulse")
-                )}
-                aria-current={
-                  pathname.startsWith("/learn/pulse") ? "page" : undefined
-                }
+                className={navClass(pathname.startsWith("/learn/pulse"))}
+                aria-current={pathname.startsWith("/learn/pulse") ? "page" : undefined}
               >
                 <span className="truncate">{journal.label}</span>
                 <span
                   className={`ml-auto text-[0.65rem] font-normal ${
-                    pathname.startsWith("/learn/pulse")
-                      ? "text-white/55"
-                      : "text-muted"
+                    pathname.startsWith("/learn/pulse") ? "text-white/55" : "text-muted"
                   }`}
                 >
                   {journal.hint}
@@ -181,130 +216,19 @@ export function LearnShell({
                 <button
                   type="button"
                   onClick={() => setMoreOpen((v) => !v)}
-                  className="flex w-full items-center justify-between rounded-lg px-1 py-1.5 text-left text-[0.75rem] font-semibold text-muted hover:text-ink"
+                  className="flex w-full items-center justify-between rounded-lg px-1 py-1.5 text-left text-[0.75rem] font-semibold text-slate hover:text-ink"
                   aria-expanded={moreOpen}
                 >
                   More tools
                   <span aria-hidden>{moreOpen ? "−" : "+"}</span>
                 </button>
                 {moreOpen && (
-                  <div className="mt-1 max-h-52 space-y-2 overflow-y-auto">
-                    {secondaryByGroup.map(({ group, label, links }) => (
-                      <div key={group}>
-                        <p className="px-2 text-[0.6rem] font-semibold uppercase tracking-wider text-muted">
-                          {label}
-                        </p>
-                        <ul className="mt-0.5 space-y-0.5">
-                          {links.map((link) => {
-                            const active =
-                              pathname === link.href ||
-                              pathname.startsWith(`${link.href}/`);
-                            return (
-                              <li key={link.href}>
-                                <Link
-                                  href={link.href}
-                                  className={`block rounded-lg px-2 py-1.5 text-[0.75rem] font-medium transition ${
-                                    active
-                                      ? "bg-black/[0.04] font-semibold text-ink"
-                                      : "text-muted hover:text-ink"
-                                  }`}
-                                >
-                                  {link.label}
-                                </Link>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    ))}
+                  <div className="mt-1 max-h-52 overflow-y-auto">
+                    <MoreTools groups={secondaryByGroup} pathname={pathname} />
                   </div>
                 )}
               </div>
             </nav>
-
-            {/* Mobile: course expand + pathway + more */}
-            {learnOpen && (
-              <div className="mt-2 rounded-xl border border-line bg-surface p-2.5 lg:hidden">
-                <LearnCourseNav expanded onToggle={() => setLearnOpen(false)} />
-              </div>
-            )}
-
-            {journey && (
-              <div className="mt-3 border-t border-line pt-3 lg:hidden">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
-                    Pathway
-                  </p>
-                  <p className="text-[0.7rem] font-semibold tabular-nums text-ink">
-                    {journey.doneCount}/{journey.total}
-                  </p>
-                </div>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
-                  <div
-                    className="h-full rounded-full bg-ink transition-all"
-                    style={{ width: `${Math.max(journey.pct, 4)}%` }}
-                  />
-                </div>
-                <p className="mt-2 truncate text-[0.75rem] font-medium text-ink">
-                  {journey.current.short}
-                  <span className="font-normal text-muted">
-                    {" "}
-                    · step {journey.current.n}
-                  </span>
-                </p>
-                <Link
-                  href={journey.current.href}
-                  className="mt-1.5 inline-flex text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-                >
-                  Continue pathway →
-                </Link>
-              </div>
-            )}
-
-            <div className="mt-3 border-t border-line pt-2 lg:hidden">
-              <button
-                type="button"
-                onClick={() => setMoreOpen((v) => !v)}
-                className="flex w-full items-center justify-between rounded-lg px-1 py-1.5 text-left text-[0.75rem] font-semibold text-muted hover:text-ink"
-                aria-expanded={moreOpen}
-              >
-                More tools
-                <span aria-hidden>{moreOpen ? "−" : "+"}</span>
-              </button>
-              {moreOpen && (
-                <div className="mt-1 max-h-40 space-y-2 overflow-y-auto">
-                  {secondaryByGroup.map(({ group, label, links }) => (
-                    <div key={group}>
-                      <p className="px-2 text-[0.6rem] font-semibold uppercase tracking-wider text-muted">
-                        {label}
-                      </p>
-                      <ul className="mt-0.5 space-y-0.5">
-                        {links.map((link) => {
-                          const active =
-                            pathname === link.href ||
-                            pathname.startsWith(`${link.href}/`);
-                          return (
-                            <li key={link.href}>
-                              <Link
-                                href={link.href}
-                                className={`block rounded-lg px-2 py-1.5 text-[0.75rem] font-medium transition ${
-                                  active
-                                    ? "bg-black/[0.04] font-semibold text-ink"
-                                    : "text-muted hover:text-ink"
-                                }`}
-                              >
-                                {link.label}
-                              </Link>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
           </div>
         </aside>
 
@@ -365,26 +289,39 @@ function NavLink({
   );
 }
 
-function MobileChip({
-  item,
+function MoreTools({
+  groups,
   pathname,
 }: {
-  item: LearnNavItem;
+  groups: { group: SecondaryGroup; label: string; links: typeof LEARN_SECONDARY_LINKS }[];
   pathname: string;
 }) {
-  const active = isLearnNavActive(pathname, item);
   return (
-    <Link
-      href={item.href}
-      className={`flex shrink-0 items-center gap-2 rounded-xl px-2.5 py-2 text-left text-[0.8125rem] font-medium tracking-tight transition ${
-        active
-          ? "bg-void text-void-fg"
-          : "text-slate hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
-      }`}
-      aria-current={active ? "page" : undefined}
-    >
-      <span className="truncate">{item.label}</span>
-    </Link>
+    <div className="space-y-2">
+      {groups.map(({ group, label, links }) => (
+        <div key={group}>
+          <p className="px-2 text-[0.6rem] font-semibold uppercase tracking-wider text-slate">{label}</p>
+          <ul className="mt-0.5 space-y-0.5">
+            {links.map((link) => {
+              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
+              return (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    aria-current={active ? "page" : undefined}
+                    className={`block rounded-lg px-2 py-2 text-[0.8125rem] font-medium transition lg:py-1.5 lg:text-[0.75rem] ${
+                      active ? "bg-black/[0.04] font-semibold text-ink" : "text-slate hover:text-ink"
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </div>
   );
 }
 

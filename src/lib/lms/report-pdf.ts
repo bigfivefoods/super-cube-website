@@ -1,4 +1,5 @@
 import { jsPDF } from "jspdf";
+import { formatDateZA } from "@/lib/datetime";
 import autoTable from "jspdf-autotable";
 import { RADAR_ORDER } from "@/components/learn/RadarChart";
 import type { ConstructScore } from "@/lib/lms/scoring";
@@ -22,11 +23,7 @@ function stripMd(s: string) {
 
 function fmtDate(iso: string) {
   try {
-    return new Date(iso).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
+    return formatDateZA(iso, iso);
   } catch {
     return iso;
   }

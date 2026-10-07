@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateZA } from "@/lib/datetime";
 import { useEffect, useMemo, useState } from "react";
 import { ConstructDeepDive } from "@/components/learn/ConstructDeepDive";
 import { DownloadReportButton } from "@/components/learn/DownloadReportButton";
@@ -70,7 +71,7 @@ export default function ReportPage() {
   if (!pre) {
     return (
       <LearnShell
-        title="Step 6 · See your growth report"
+        title="Step 6 of 6 · See your growth report"
         subtitle="Complete Steps 2–3 first (orient + baseline) to unlock your Super-Cube® profile."
       >
         <div className="flex flex-wrap gap-2">
@@ -160,7 +161,7 @@ export default function ReportPage() {
 
   return (
     <LearnShell
-      title="Step 6 · See your growth report"
+      title="Step 6 of 6 · See your growth report"
       subtitle={`${programme?.name ?? "Super-Cube®"} · Developmental profile (not a clinical diagnosis)${
         post
           ? "—pre to post growth after your programme."
@@ -210,7 +211,7 @@ export default function ReportPage() {
         {!post && (
           <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
             <div>
-              <p className="learn-eyebrow">Step 5 · After practice</p>
+              <p className="learn-eyebrow">Step 5 of 6 · After practice</p>
               <p className="mt-1 text-sm font-semibold text-ink">
                 The after-test measures change against your locked baseline
               </p>
@@ -236,7 +237,7 @@ export default function ReportPage() {
               {pre.result.overall}
             </p>
             <p className="learn-meta mt-0.5">
-              {new Date(pre.completedAt).toLocaleDateString()}
+              {formatDateZA(pre.completedAt)}
             </p>
           </div>
           <div className="learn-card !p-4">
@@ -246,7 +247,7 @@ export default function ReportPage() {
             </p>
             <p className="learn-meta mt-0.5">
               {post
-                ? new Date(post.completedAt).toLocaleDateString()
+                ? formatDateZA(post.completedAt)
                 : "Not taken yet"}
             </p>
           </div>

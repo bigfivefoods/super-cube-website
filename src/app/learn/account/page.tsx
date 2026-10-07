@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateZA } from "@/lib/datetime";
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -636,7 +637,7 @@ function AccountPageInner() {
                 </div>
               </div>
               <p className="text-[0.7rem] tabular-nums text-muted">
-                {row.at ? new Date(row.at).toLocaleDateString() : "Pending"}
+                {row.at ? formatDateZA(row.at) : "Pending"}
               </p>
             </li>
           ))}
@@ -655,7 +656,7 @@ function AccountPageInner() {
               <>
                 {" "}
                 ·{" "}
-                {new Date(state.subscription.activatedAt).toLocaleDateString()}
+                {formatDateZA(state.subscription.activatedAt)}
               </>
             )}
           </p>

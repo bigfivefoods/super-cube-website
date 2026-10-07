@@ -54,6 +54,7 @@ export function downloadCompletionCertificate(cert: CertificatePdfInput): string
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "Africa/Johannesburg",
   });
   const origin = (
     cert.siteOrigin ||

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { CourseVideo } from "@/components/learn/CourseVideo";
+import Image from "next/image";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { PaywallCard } from "@/components/learn/PaywallCard";
 import { constructs } from "@/lib/content";
@@ -22,7 +22,7 @@ export default function CoursesPage() {
 
   return (
     <LearnShell
-      title="Step 4 · Develop the six faces"
+      title="Step 4 of 6 · Develop the six faces"
       subtitle={`${programme?.name ?? "Programme"} · Work through each construct with Read · Engage · Apply. Small sessions that compound into real capacity.`}
     >
       <PaywallCard />
@@ -43,20 +43,16 @@ export default function CoursesPage() {
                 boxShadow: `inset 3px 0 0 ${color}`,
               }}
             >
-              {/* Video thumb + play — not nested inside the text Link */}
-              <div
-                className="relative h-[4.5rem] w-14 shrink-0 sm:h-20 sm:w-16"
+              {/* Cover only: the 15s intro plays on the module page, not in a tiny card */}
+              <Link
+                href={`/learn/courses/${course.constructId}`}
+                tabIndex={-1}
+                aria-hidden
+                className="relative h-[4.5rem] w-14 shrink-0 overflow-hidden rounded-xl sm:h-20 sm:w-16"
                 style={{ background: soft }}
               >
-                <CourseVideo
-                  programmeId={programmeId}
-                  constructId={course.constructId}
-                  poster={course.coverPath}
-                  title={construct?.name ?? course.title}
-                  color={color}
-                  variant="thumb"
-                />
-              </div>
+                <Image src={course.coverPath} alt="" fill sizes="64px" className="object-cover" />
+              </Link>
 
               <Link
                 href={`/learn/courses/${course.constructId}`}
@@ -95,7 +91,7 @@ export default function CoursesPage() {
       <div className="mt-6 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <p className="learn-eyebrow">After the full programme</p>
         <p className="mt-1 text-sm font-semibold text-ink">
-          Step 5 · Re-measure, then Step 6 · Report
+          Steps 5 and 6 of 6 · Re-measure, then see your report
         </p>
         <p className="learn-meta mt-0.5">
           Finish every construct session, take the post-assessment (same six

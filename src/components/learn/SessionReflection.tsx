@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateTimeZA } from "@/lib/datetime";
 import { useEffect, useState } from "react";
 import type { ConstructId } from "@/lib/content";
 import { track } from "@/lib/analytics";
@@ -83,7 +84,7 @@ export function SessionReflection({
         <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
           <p className="learn-meta">
             {savedAt && !dirty
-              ? `Saved ${new Date(savedAt).toLocaleString()}`
+              ? `Saved ${formatDateTimeZA(savedAt)}`
               : dirty
                 ? "Unsaved changes"
                 : "Private to this device until you share or sync"}

@@ -42,6 +42,7 @@ export default function AssessmentRunnerPage() {
   const [seed, setSeed] = useState<number | null>(null);
   const [startedAt, setStartedAt] = useState<string | null>(null);
   const [confirmSame, setConfirmSame] = useState(false);
+  const [fromOrientation, setFromOrientation] = useState(false);
 
   useEffect(() => {
     const s = loadLmsState();
@@ -56,6 +57,7 @@ export default function AssessmentRunnerPage() {
         setSignedIn(false);
       }
     });
+    setFromOrientation(new URLSearchParams(window.location.search).get("from") === "orientation");
     if (s.assessmentDraft?.phase === phase) {
       setResponses(s.assessmentDraft.responses ?? {});
       setStep(s.assessmentDraft.step ?? 0);
@@ -291,19 +293,31 @@ export default function AssessmentRunnerPage() {
     <LearnShell
       title={
         phase === "pre"
-          ? "Step 3 · Measure your baseline"
+          ? "Step 3 of 6 · Measure your baseline"
           : phase === "mid"
             ? "Mid-pathway check-in"
-            : "Step 5 · Re-measure after the programme"
+            : "Step 5 of 6 · Re-measure after the programme"
       }
       subtitle={
         phase === "pre"
-          ? `${programme?.name ?? "Programme"} · ${items.length} items across six constructs (Likert 1–5). Developmental self-report—not clinical. Save anytime.`
+          ? `${programme?.name ?? "Programme"} · ${totalItems} statements across the six faces (rate each 1–5). Developmental self-report—not clinical. Save anytime.`
           : phase === "mid"
             ? `${programme?.name ?? "Programme"} · Short re-measure to refresh your weekly plan. Same faces, honest scores.`
-            : `${programme?.name ?? "Programme"} · Same ${items.length} items as baseline. Opens after practice time and completed sessions.`
+            : `${programme?.name ?? "Programme"} · Same statements as your baseline. Opens after practice time and completed sessions.`
       }
     >
+      {fromOrientation && phase === "pre" && state?.orientation && (
+        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2.5 sm:px-4" role="status">
+          <p className="text-[0.8125rem] font-semibold text-emerald-900">
+            Step 2 done · {state.orientation.result.label}
+          </p>
+          <p className="mt-0.5 text-[0.8125rem] text-emerald-900/85">
+            Now your baseline: one honest snapshot across the six faces. Your answers save as you go, so you can
+            stop and come back.
+          </p>
+        </div>
+      )}
+
       {/* Progress + credibility */}
       <div className="mb-4 rounded-xl border border-line bg-elevated p-3 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">

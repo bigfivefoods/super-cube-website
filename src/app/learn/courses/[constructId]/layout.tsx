@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { constructs } from "@/lib/content";
 import { pageMeta } from "@/lib/seo";
 
@@ -19,6 +20,14 @@ export async function generateMetadata({
   });
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ constructId: string }>;
+}) {
+  const { constructId } = await params;
+  if (!constructs.some((x) => x.id === constructId)) notFound();
   return children;
 }

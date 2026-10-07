@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
@@ -29,6 +30,21 @@ export async function generateMetadata({
   });
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+/** The lesson exists in some programme's course for this face (ids are programme-prefixed). */
+function lessonExists(constructId: string, lessonId: string): boolean {
+  if (!constructs.some((x) => x.id === constructId)) return false;
+  return PROGRAMMES.some((p) => Boolean(getLesson(courseId(p, constructId as ConstructId), lessonId)));
+}
+
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ constructId: string; lessonId: string }>;
+}) {
+  const { constructId, lessonId } = await params;
+  // Bad or old session links get a real 404 (with a way back), not a dead-end page
+  if (!lessonExists(constructId, lessonId)) notFound();
   return children;
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { formatDateTimeZA } from "@/lib/datetime";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import {
@@ -107,7 +108,7 @@ export default function LearnAnalyticsPage() {
               <span className="font-semibold text-ink">{row.event}</span>
               <span className="text-muted"> · {row.path}</span>
               <span className="mt-0.5 block text-[0.65rem] text-muted">
-                {new Date(row.ts).toLocaleString()}
+                {formatDateTimeZA(row.ts)}
               </span>
             </li>
           ))}

@@ -228,7 +228,7 @@ export function DailyCheckInPanel({
                   </button>
                   <p className="text-sm font-semibold">
                     {new Date(calCursor.y, calCursor.m).toLocaleString(
-                      undefined,
+                      "en-ZA",
                       { month: "long", year: "numeric" },
                     )}
                   </p>
