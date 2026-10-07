@@ -6,7 +6,7 @@ import { signInAction } from "./actions";
 const inputCls =
   "mt-1 block min-h-11 w-full rounded-xl border border-line-strong bg-elevated px-3 text-sm text-ink";
 
-export function SignInForm({ next }: { next?: "/admin" | "/newsletter/admin" } = {}) {
+export function SignInForm({ next }: { next?: "/admin" | "/admin/instrument-v2" | "/newsletter/admin" } = {}) {
   const [state, action, pending] = useActionState(signInAction, undefined);
   return (
     <form action={action} className="mt-6 space-y-4">

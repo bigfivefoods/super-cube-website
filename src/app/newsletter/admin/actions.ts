@@ -13,6 +13,13 @@ import {
   verifyAdminPassword,
 } from "@/lib/newsletter/admin-auth";
 
+/** Where to go after admin sign-in/out: a fixed allowlist, never a free URL. */
+const ADMIN_NEXT = ["/admin", "/admin/instrument-v2", "/newsletter/admin"] as const;
+function safeAdminNext(v: FormDataEntryValue | null | undefined): (typeof ADMIN_NEXT)[number] {
+  const s = String(v ?? "");
+  return (ADMIN_NEXT as readonly string[]).includes(s) ? (s as (typeof ADMIN_NEXT)[number]) : "/newsletter/admin";
+}
+
 export async function signInAction(
   _prev: { error?: string } | undefined,
   form: FormData
@@ -30,7 +37,7 @@ export async function signInAction(
   if (!res.ok) return { error: res.error };
   const value = makeSessionValue(res.email);
   if (!value) return { error: "Sign-in is not configured on this deployment." };
-  const next = String(form.get("next") ?? "") === "/admin" ? "/admin" : "/newsletter/admin";
+  const next = safeAdminNext(form.get("next"));
   const jar = await cookies();
   jar.set(ADMIN_COOKIE, value, {
     httpOnly: true,
@@ -43,7 +50,7 @@ export async function signInAction(
 }
 
 export async function signOutAction(form?: FormData) {
-  const next = String(form?.get("next") ?? "") === "/admin" ? "/admin" : "/newsletter/admin";
+  const next = safeAdminNext(form?.get("next"));
   const jar = await cookies();
   jar.delete(ADMIN_COOKIE);
   redirect(next);

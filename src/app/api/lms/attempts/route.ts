@@ -4,6 +4,7 @@ import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/se
 import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { loadLearning } from "@/lib/lms/server/learning";
+import { isInstrumentV2EnabledServer, versionOf, type InstrumentVersion } from "@/lib/lms/instruments";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { limitRequest } from "@/lib/server/rate-limit";
 
@@ -34,14 +35,27 @@ export async function POST(request: Request) {
   if (!programme) return NextResponse.json({ error: "Unknown programme" }, { status: 400 });
   const programmeId = programme.id as ProgrammeId;
 
-  // Validate every item (integer 1..5, no extras) and work out data-quality flags
-  const parsed = parseAttempt(programmeId, body.responses, body.meta ?? {});
+  const learning = await loadLearning(ctx.admin, ctx.user.id, programmeId);
+  const pre = learning.attempts.find((a) => a.phase === "pre");
+
+  // Instrument version: a new baseline uses v1 (research form) unless v2 is
+  // switched on AND requested. Re-measures always use the baseline's version,
+  // so pre and post stay comparable.
+  let version: InstrumentVersion = "v1";
+  if (pre) {
+    version = versionOf(pre.instrument_id);
+  } else if (body.meta?.instrument === "v2") {
+    if (!isInstrumentV2EnabledServer()) {
+      return NextResponse.json({ error: "instrument_v2_disabled" }, { status: 400 });
+    }
+    version = "v2";
+  }
+
+  // Validate every item (in range, none missing) and work out data-quality flags
+  const parsed = parseAttempt(programmeId, body.responses, body.meta ?? {}, version);
   if (!parsed.ok) {
     return NextResponse.json({ error: parsed.error, itemId: parsed.itemId }, { status: 400 });
   }
-
-  const learning = await loadLearning(ctx.admin, ctx.user.id, programmeId);
-  const pre = learning.attempts.find((a) => a.phase === "pre");
 
   if (phase === "pre" && pre) {
     return NextResponse.json(

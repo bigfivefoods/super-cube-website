@@ -6,7 +6,16 @@ import { formatDateTimeZA, formatDateZA } from "@/lib/datetime";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
-import { buildAssessmentItems, LIKERT_LABELS } from "@/lib/lms/curriculum";
+import { LikertQuestion, SjtQuestion } from "@/components/learn/AssessmentItems";
+import {
+  buildInstrumentItems,
+  honestyItem,
+  isInstrumentV2EnabledClient,
+  scaleLabelsFor,
+  versionOfResponses,
+  type InstrumentVersion,
+} from "@/lib/lms/instruments";
+import { SJT_INSTRUCTIONS } from "@/lib/lms/instruments/v2-bank";
 import { scoreAttempt } from "@/lib/lms/scoring";
 import {
   clearAssessmentDraft,
@@ -75,18 +84,29 @@ export default function AssessmentRunnerPage() {
     state?.user?.programmeId ||
     "adults") as ProgrammeId;
   const programme = getProgramme(programmeId);
-  const items = useMemo(() => buildAssessmentItems(programmeId), [programmeId]);
+  // Instrument version: the baseline's version for re-measures; otherwise v1
+  // (research form) unless v2 is switched on for this deployment.
+  const preForVersion = state?.attempts.find((a) => a.phase === "pre" && a.programmeId === programmeId);
+  const draftVersion =
+    state?.assessmentDraft?.phase === phase ? versionOfResponses(state.assessmentDraft.responses) : null;
+  const version: InstrumentVersion = preForVersion
+    ? versionOfResponses(preForVersion.responses)
+    : draftVersion === "v2" || (phase === "pre" && isInstrumentV2EnabledClient())
+      ? "v2"
+      : "v1";
+  const items = useMemo(() => buildInstrumentItems(programmeId, version), [programmeId, version]);
+  const honesty = version === "v2" ? honestyItem(programmeId) : null;
 
   const constructIds = constructs.map((c) => c.id);
   const currentConstruct = constructIds[step];
-  const attention = useMemo(() => attentionItem(programmeId), [programmeId]);
+  const attention = useMemo(() => attentionItem(programmeId, version), [programmeId, version]);
   // Item order is randomised within each face (stable for this attempt via its seed)
   const stepItems = useMemo(
     () => (seed == null ? [] : itemsForFace(items, constructIds, currentConstruct, seed, attention)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [items, currentConstruct, seed, attention],
   );
-  const totalItems = items.length + 1; // + the attention check
+  const totalItems = items.length + 1 + (honesty ? 1 : 0); // + the attention (and v2 honesty) check
   const constructMeta = constructs.find((c) => c.id === currentConstruct);
   const answered = Object.keys(responses).filter(
     (k) => responses[k] >= 1 && responses[k] <= 5,
@@ -162,13 +182,18 @@ export default function AssessmentRunnerPage() {
     if (phase === "pre" && existingPre) return;
     if (phase === "post" && (existingPost || !gate?.ok || !paid)) return;
     // Same answer to (almost) everything: fine if true, but offer a second look first
-    if (!confirmed && isStraightLining(items.map((i) => responses[i.id]))) {
+    if (!confirmed && isStraightLining(items.filter((i) => i.itemType !== "sjt").map((i) => responses[i.id]))) {
       setConfirmSame(true);
       return;
     }
     setConfirmSame(false);
     const durationMs = startedAt ? Date.now() - Date.parse(startedAt) : undefined;
-    const meta = { seed: seed ?? undefined, durationMs };
+    const meta = {
+      seed: seed ?? undefined,
+      durationMs,
+      instrument: version,
+      ...(honesty ? { honesty: responses[honesty.id] } : {}),
+    };
     setBusy(true);
     try {
       const server = await submitAttempt(phase, programmeId, responses, meta);
@@ -386,64 +411,38 @@ export default function AssessmentRunnerPage() {
         </div>
 
         <div className="space-y-6">
-          {stepItems.map((item) => (
-            <fieldset
-              key={item.id}
-              className="border-b border-line pb-5 last:border-0 last:pb-0"
-              aria-describedby={`${item.id}-scale`}
-              onKeyDown={(e) => {
-                // Keys 1–5 answer the statement that has focus.
-                if (e.altKey || e.ctrlKey || e.metaKey) return;
-                const n = Number(e.key);
-                if (!Number.isInteger(n) || n < 1 || n > 5) return;
-                e.preventDefault();
-                setValue(item.id, n);
-                const target = e.currentTarget.querySelector<HTMLButtonElement>(
-                  `button[data-value="${n}"]`,
-                );
-                target?.focus();
-              }}
-            >
-              <legend className="text-[0.8125rem] font-medium leading-relaxed text-ink">
-                {item.prompt}
-              </legend>
-              <div className="mt-3 grid grid-cols-5 gap-1.5">
-                {[1, 2, 3, 4, 5].map((v) => {
-                  const selected = responses[item.id] === v;
-                  return (
-                    <button
-                      key={v}
-                      type="button"
-                      onClick={() => setValue(item.id, v)}
-                      className={`rounded-lg border px-1 py-2.5 text-center text-[0.75rem] font-semibold transition sm:text-[0.8125rem] ${
-                        selected
-                          ? "border-ink bg-void text-void-fg"
-                          : "border-line-strong bg-surface text-slate hover:border-ink/40"
-                      }`}
-                      title={LIKERT_LABELS[v - 1]}
-                      aria-label={`${v}, ${LIKERT_LABELS[v - 1]}`}
-                      aria-pressed={selected}
-                      data-value={v}
-                    >
-                      {v}
-                    </button>
-                  );
-                })}
-              </div>
-              <div
-                id={`${item.id}-scale`}
-                className="learn-meta mt-1.5 flex justify-between"
-              >
-                <span>
-                  Strongly disagree<span className="sr-only"> is 1, </span>
-                </span>
-                <span>
-                  <span className="sr-only">and </span>Strongly agree
-                  <span className="sr-only"> is 5. Keys 1 to 5 answer.</span>
-                </span>
-              </div>
-            </fieldset>
-          ))}
+          {stepItems.map((item) =>
+            item.itemType === "sjt" && item.options ? (
+              <SjtQuestion
+                key={item.id}
+                id={item.id}
+                scenario={item.prompt}
+                options={item.options}
+                value={responses[item.id]}
+                onChange={(v) => setValue(item.id, v)}
+                instruction={SJT_INSTRUCTIONS[programmeId]}
+                color={constructMeta?.color}
+              />
+            ) : (
+              <LikertQuestion
+                key={item.id}
+                id={item.id}
+                prompt={item.prompt}
+                value={responses[item.id]}
+                onChange={(v) => setValue(item.id, v)}
+                labels={scaleLabelsFor(item)}
+              />
+            ),
+          )}
+          {honesty && step === constructs.length - 1 && (
+            <LikertQuestion
+              id={honesty.id}
+              prompt={honesty.prompt}
+              value={responses[honesty.id]}
+              onChange={(v) => setValue(honesty.id, v)}
+              labels={honesty.labels}
+            />
+          )}
         </div>
 
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-between">

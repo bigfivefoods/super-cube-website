@@ -44,13 +44,37 @@ export interface Course {
   lessons: Lesson[];
 }
 
+export interface AssessmentOption {
+  /** Stored response value (1-based option number) */
+  value: number;
+  text: string;
+  /** Provisional expert effectiveness key, 1 (least) to 4 (most effective) */
+  key: number;
+  /** Key on the 0–100 scale used for face scores */
+  score: number;
+  /** Feedback shown after the attempt (never during it) */
+  why?: string;
+}
+
 export interface AssessmentItem {
   id: string;
   instrumentId: string;
   constructId: ConstructId;
+  /** Likert statement, or the SJT scenario */
   prompt: string;
-  itemType: "likert_5";
+  /** v1 items are all likert_5; v2 adds situational judgement items */
+  itemType: "likert_5" | "sjt";
   sortOrder: number;
+  /** Reverse-keyed Likert item: scored as 6 − answer */
+  reverse?: boolean;
+  /** Skill (element) the item samples */
+  skill?: string;
+  /** Likert labels 1..5 when they differ from the v1 agreement scale */
+  scaleLabels?: readonly string[];
+  /** SJT options */
+  options?: AssessmentOption[];
+  /** Third-person wording for the observer (360) form; {name} is replaced */
+  observerPrompt?: string;
 }
 
 function sectionsToMd(sections: SessionSection[]): string {
