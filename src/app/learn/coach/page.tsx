@@ -7,6 +7,8 @@ import { LearnShell } from "@/components/learn/LearnShell";
 import { constructs } from "@/lib/content";
 import { track } from "@/lib/analytics";
 import { ShareLinksPanel } from "@/components/learn/ShareLinksPanel";
+import { CohortImpact } from "@/components/learn/CohortImpact";
+import type { CohortLearner } from "@/lib/lms/cohort-stats";
 import { isMinorProfile } from "@/lib/lms/consent";
 import type { ProgrammeId } from "@/lib/programmes";
 import {
@@ -62,6 +64,7 @@ function CoachToolsInner() {
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [roster, setRoster] = useState<RosterRow[]>([]);
+  const [loadedAt, setLoadedAt] = useState(0);
   const [orgName, setOrgName] = useState<string | null>(null);
   const [rosterMsg, setRosterMsg] = useState<string | null>(null);
   const [orgCode, setOrgCodeState] = useState("");
@@ -105,6 +108,7 @@ function CoachToolsInner() {
         }
         setOrgName(j.org?.name || null);
         setRoster(j.roster || []);
+        setLoadedAt(nowMs());
         setRosterMsg(j.message || null);
       })
       .catch(() => setRosterMsg("Could not load roster"));
@@ -293,6 +297,15 @@ function CoachToolsInner() {
             </p>
           )}
         </section>
+
+        {email && roster.length > 0 && loadedAt > 0 && (
+          <CohortImpact
+            roster={roster as unknown as CohortLearner[]}
+            cohortName={orgName || orgCode}
+            cohortCode={orgCode}
+            now={loadedAt}
+          />
+        )}
 
         <section className="learn-card lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
