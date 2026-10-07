@@ -39,7 +39,6 @@ export const RATE_RULES = {
   "email-weekly": { limit: 3, windowSec: 86400 },
   "email-receipt": { limit: 1, windowSec: 86400 },
   "email-admin-test": { limit: 3, windowSec: 3600 },
-  "email-launch-test": { limit: 1, windowSec: 86400 },
 } as const satisfies Record<string, RateRule>;
 
 export type RateBucket = keyof typeof RATE_RULES;
