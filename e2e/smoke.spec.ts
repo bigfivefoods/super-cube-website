@@ -47,6 +47,18 @@ test.describe("Super-Cube smoke", () => {
     await expect(page.getByText(/Week 1/i).first()).toBeVisible();
   });
 
+  test("pricing: each programme card has its own colour band", async ({ page }) => {
+    await page.goto(base + "/pricing");
+    const bgs: string[] = [];
+    for (const id of ["kids", "adolescents", "adults"]) {
+      const band = page.getByTestId(`programme-band-${id}`);
+      await expect(band).toBeVisible();
+      await expect(band.getByRole("heading", { level: 2 })).toBeVisible();
+      bgs.push(await band.evaluate((el) => getComputedStyle(el).backgroundImage));
+    }
+    expect(new Set(bgs).size).toBe(3);
+  });
+
   test("pricing pilot anchor", async ({ page }) => {
     await page.goto(base + "/pricing");
     await expect(page.getByText(/\$6/i).first()).toBeVisible();
