@@ -202,7 +202,7 @@ const af: Dict = {
     "Ja. Gebruik die loods-pakket vir pryse, 8-week kalender, toestemmingsnotas en afrigter-gereedskap. Skep ’n kohortkode, nooi leerders, en voer rooster-vordering uit wanneer SQL-organisasies aangeskakel is.",
   "faq.q7": "Is Super-Cube® navorsingsgebaseer?",
   "faq.a7":
-    "Ja. Die model steun op doktorale navorsing (UKZN, 2021) in Afrika-besigheidsnetwerke en sintetiseer groot leierskappe-skole met Ubuntu, I–Thou en integrale rame.",
+    "Ja. Die model steun op doktorale navorsing (UKZN, 2020) in Afrika-besigheidsnetwerke en sintetiseer groot leierskappe-skole met Ubuntu, I–Thou en integrale rame.",
   "faq.q8": "Hoe werk sertifikate?",
   "faq.a8":
     "Ná post-assessering kan jy ’n sertifikaat met ’n openbare verifieer-ID verdien. Enigiemand kan egtheid op die verifieer-bladsy nagaan sonder om private joernale te sien.",

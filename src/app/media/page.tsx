@@ -130,7 +130,7 @@ export default function MediaKitPage() {
                 leadership model (six constructs: Choices, Principles, Mental,
                 Emotional, Physical, Spiritual) with the person at the centre.
                 Validated via mixed methods in an African FMCG business-network
-                (UKZN DBA, 2021) and published in SAJEMS and the Journal of
+                (UKZN DBA thesis, 2020) and published in SAJEMS and the Journal of
                 Contemporary Management (2022). Super-Cube® Learn delivers
                 orient → baseline → deliberate practice → re-measure →
                 certificate for kids, adolescents, and adults.
@@ -142,10 +142,10 @@ export default function MediaKitPage() {
               </h3>
               <div className="mt-2 space-y-3">
                 <p className="rounded-xl border border-line bg-elevated p-4 font-mono text-xs leading-relaxed text-slate">
-                  Muller, C. R. (2021). A Leadership Skills Development Model
-                  for the Kwaden Group: A Case Study of an African FMCG
-                  Business-Network. Doctor of Business Administration thesis,
-                  University of KwaZulu-Natal. Super-Cube® Leadership Model.
+                  Muller, C. R. (2020). Doctor of Business Administration
+                  thesis: a leadership skills development model (Super-Cube®),
+                  a case study of an African FMCG business network. University
+                  of KwaZulu-Natal. Super-Cube® Leadership Model.
                 </p>
                 <p className="rounded-xl border border-line bg-elevated p-4 font-mono text-xs leading-relaxed text-slate">
                   Muller, C. R., &amp; Pelser, T. G. (2022). A proposed
@@ -155,10 +155,10 @@ export default function MediaKitPage() {
                   https://doi.org/10.4102/sajems.v25i1.4303
                 </p>
                 <p className="rounded-xl border border-line bg-elevated p-4 font-mono text-xs leading-relaxed text-slate">
-                  Muller, C. R., &amp; Pelser, T. G. (2022). A leadership skills
-                  development model for the Kwaden Group: A case study of an
-                  African fast-moving consumer goods business network. Journal
-                  of Contemporary Management, 19.{" "}
+                  Muller, C. R., &amp; Pelser, T. G. (2022). Journal article:
+                  the leadership skills development model, tested in an African
+                  fast-moving consumer goods business network. Journal of
+                  Contemporary Management, 19.{" "}
                   https://doi.org/10.35683/jcm21092.154
                 </p>
               </div>

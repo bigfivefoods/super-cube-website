@@ -216,7 +216,7 @@ const en = {
     "Yes. Use the pilot pack for pricing, 8-week calendar, consent notes, and coach tools. Create a cohort code, invite learners, and export roster progress when SQL orgs are enabled.",
   "faq.q7": "Is Super-Cube® research-based?",
   "faq.a7":
-    "Yes. The model draws on doctoral research (UKZN, 2021) in African business networks and synthesises major leadership schools with Ubuntu, I–Thou, and integral frames.",
+    "Yes. The model draws on doctoral research (UKZN, 2020) in African business networks and synthesises major leadership schools with Ubuntu, I–Thou, and integral frames.",
   "faq.q8": "How do certificates work?",
   "faq.a8":
     "After post assessment, you can earn a certificate with a public verify ID. Anyone can check authenticity on the verify page without seeing private journals.",

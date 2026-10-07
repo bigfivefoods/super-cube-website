@@ -177,7 +177,7 @@ const sw: Dict = {
     "Ndiyo. Kifurushi cha majaribio kina bei, kalenda ya wiki 8, maelezo ya idhini na zana za kocha. Unda msimbo wa kundi, waalike wanafunzi na uhamishe maendeleo ya kundi mashirika yanapowashwa.",
   "faq.q7": "Je, Super-Cube® inategemea utafiti?",
   "faq.a7":
-    "Ndiyo. Modeli inatokana na utafiti wa shahada ya uzamivu (UKZN, 2021) katika mitandao ya biashara barani Afrika na inaunganisha shule kuu za uongozi na Ubuntu, uhusiano wa Mimi–Wewe na mifumo shirikishi.",
+    "Ndiyo. Modeli inatokana na utafiti wa shahada ya uzamivu (UKZN, 2020) katika mitandao ya biashara barani Afrika na inaunganisha shule kuu za uongozi na Ubuntu, uhusiano wa Mimi–Wewe na mifumo shirikishi.",
   "faq.q8": "Vyeti vinafanyaje kazi?",
   "faq.a8":
     "Baada ya tathmini ya mwisho, unaweza kupata cheti chenye kitambulisho cha uthibitisho cha umma. Mtu yeyote anaweza kuthibitisha uhalali wake kwenye ukurasa wa uthibitisho bila kuona shajara zako za faragha.",

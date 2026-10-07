@@ -178,7 +178,7 @@ const fr: Dict = {
     "Oui. Le kit pilote réunit les tarifs, un calendrier sur 8 semaines, les notes de consentement et les outils du coach. Créez un code de cohorte, invitez les apprenants et exportez la progression du groupe lorsque les organisations sont activées.",
   "faq.q7": "Super-Cube® repose-t-il sur la recherche ?",
   "faq.a7":
-    "Oui. Le modèle s’appuie sur une recherche doctorale (UKZN, 2021) menée dans des réseaux d’entreprises africains et fait la synthèse des grandes écoles du leadership avec l’Ubuntu, la relation Je–Tu et les cadres intégraux.",
+    "Oui. Le modèle s’appuie sur une recherche doctorale (UKZN, 2020) menée dans des réseaux d’entreprises africains et fait la synthèse des grandes écoles du leadership avec l’Ubuntu, la relation Je–Tu et les cadres intégraux.",
   "faq.q8": "Comment fonctionnent les certificats ?",
   "faq.a8":
     "Après l’évaluation finale, vous pouvez obtenir un certificat doté d’un identifiant de vérification public. Chacun peut en vérifier l’authenticité sur la page de vérification, sans jamais voir vos journaux privés.",

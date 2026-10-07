@@ -531,7 +531,7 @@ export const researchHighlights = [
   },
   {
     title: "132 survey respondents",
-    body: "Online survey of Kwaden Group employees tested structural validity and reliability across the six constructs.",
+    body: "Online survey of employees in an African FMCG business network tested structural validity and reliability across the six constructs.",
   },
   {
     title: "Acceptable model fit",
@@ -576,13 +576,13 @@ export const publications: Publication[] = [
     badge: "JCM",
     journal: "Journal of Contemporary Management",
     title:
-      "A leadership skills development model for the Kwaden Group: A case study of an African fast-moving consumer goods business network",
+      "The leadership skills development model, tested in an African fast-moving consumer goods business network",
     authors: "Muller, C. R. & Pelser, T. G.",
     year: 2022,
     doi: "https://doi.org/10.35683/jcm21092.154",
-    pdf: "/research/jcm-2022-kwaden-leadership-skills-model.pdf",
+    pdf: "/research/jcm-2022-leadership-skills-model.pdf",
     abstract:
-      "Case-study account of applying and validating the leadership skills development model within the Kwaden Group African FMCG network.",
+      "Case-study account of applying and validating the leadership skills development model within an African FMCG business network.",
   },
 ];
 
