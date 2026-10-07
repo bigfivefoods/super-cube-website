@@ -57,4 +57,21 @@ test.describe("Super-Cube smoke", () => {
     await page.goto(base + "/the-model");
     await expect(page.getByText(/multidimensional framework/i).first()).toBeVisible();
   });
+  test("shared footer: Big Five Group design, real links, newsletter form", async ({ page }) => {
+    await page.goto(base + "/");
+    const footer = page.locator("footer.site-footer");
+    await expect(footer).toHaveCount(1);
+    await expect(footer.getByRole("link", { name: /part of big five learn/i })).toHaveAttribute(
+      "href",
+      "https://bigfivegroup.africa"
+    );
+    await expect(footer.getByRole("link", { name: /supplieradvisor/i })).toHaveAttribute(
+      "href",
+      "https://www.supplieradvisor.com"
+    );
+    await expect(footer.getByRole("link", { name: "Privacy", exact: true }).last()).toBeVisible();
+    await expect(footer.getByRole("textbox", { name: /email address/i })).toBeVisible();
+    await expect(footer.getByRole("button", { name: /subscribe/i })).toBeVisible();
+    await expect(footer.getByText(new RegExp(`© ${new Date().getFullYear()}`))).toBeVisible();
+  });
 });

@@ -79,6 +79,86 @@ export function NewsletterSignup({
     );
   }
 
+  if (footer) {
+    // Compact footer form: same layout as the bigfivegroup.africa footer newsletter
+    // (mail-icon input, full-width Subscribe button, one-line consent, Unsubscribe link).
+    return (
+      <form onSubmit={onSubmit} className={`relative space-y-3 ${wrap}`} noValidate>
+        <div className="flex flex-col gap-2">
+          <label htmlFor={`${id}-email`} className="sr-only">
+            Email address
+          </label>
+          <div className="relative">
+            <svg
+              viewBox="0 0 24 24"
+              aria-hidden
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#737373] dark:text-muted"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2" />
+              <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+            </svg>
+            <input
+              id={`${id}-email`}
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="you@organisation.com"
+              className="w-full rounded-full border border-black/10 bg-white py-3 pl-10 pr-4 text-sm text-black placeholder:text-[#737373] focus:outline-none focus:ring-2 focus:ring-black/25 dark:border-line-strong dark:bg-surface dark:text-ink dark:placeholder:text-muted dark:focus:ring-white/25"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={state === "sending"}
+            className="sc-btn-primary inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold disabled:opacity-60"
+          >
+            {state === "sending" ? "Subscribing…" : "Subscribe"}
+            <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+        {/* Honeypot */}
+        <div aria-hidden="true" className="hidden">
+          <label>
+            Website
+            <input name="website" tabIndex={-1} autoComplete="off" />
+          </label>
+        </div>
+        <div className="flex items-start gap-2.5">
+          <input
+            id={`${id}-consent`}
+            name="consent"
+            type="checkbox"
+            required
+            className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--ink)]"
+          />
+          <label htmlFor={`${id}-consent`} className="text-xs leading-snug text-[#525252] dark:text-slate">
+            I agree that Super-Cube® may email me. I can unsubscribe at any time.{" "}
+            <Link href="/privacy" className="inline-flex min-h-6 items-center text-black underline underline-offset-2 dark:text-ink">
+              Privacy
+            </Link>
+          </label>
+        </div>
+        {error && (
+          <p className="text-sm font-medium text-red-700 dark:text-red-400" role="alert">
+            {error}
+          </p>
+        )}
+        <p className="text-xs leading-relaxed text-[#737373] dark:text-muted">
+          <Link href="/newsletter/unsubscribe" className="inline-flex min-h-6 items-center text-[#404040] underline underline-offset-2 dark:text-slate">
+            Unsubscribe
+          </Link>
+        </p>
+      </form>
+    );
+  }
+
   return (
     <form onSubmit={onSubmit} className={wrap} noValidate>
       <h2
