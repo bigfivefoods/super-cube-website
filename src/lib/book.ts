@@ -11,8 +11,8 @@ export const BOOK = {
   href: "/super-cube-leadership-book.pdf",
   /** Saved file name (the `download` attribute). */
   fileName: "super-cube-leadership-book.pdf",
-  pages: 61,
-  size: "1.0 MB",
+  pages: 67,
+  size: "1.9 MB",
   page: "/book",
   cover: { src: "/images/book/super-cube-leadership-book-cover.jpg", width: 1000, height: 1500 },
   share: { url: "/images/og/super-cube-leadership-book.jpg", width: 1200, height: 630 },
@@ -31,8 +31,9 @@ export const BOOK_CHAPTERS: readonly { n?: number; title: string; note: string }
   { n: 8, title: "Physical", note: "The sustainable vessel for long-haul leadership" },
   { n: 9, title: "Spiritual", note: "The purpose that transcends and sustains" },
   { n: 10, title: "From Self to Society", note: "Scaling the Super-Cube® across levels" },
-  { n: 11, title: "The Big Five Way", note: "Real-world application across Africa" },
-  { n: 12, title: "Your Super-Cube® Action Plan", note: "Start today, lead tomorrow" },
+  { n: 11, title: "Leaders for the Global Goals", note: "Why the world's to-do list needs leaders, and why we must build them" },
+  { n: 12, title: "The Big Five Way", note: "Real-world application across Africa" },
+  { n: 13, title: "Your Super-Cube® Action Plan", note: "Start today, lead tomorrow" },
   { title: "Epilogue: A Super-Cube® World Awaits", note: "Leadership for the generations to come" },
   { title: "Resources and Next Steps", note: "Further reading, research and where to go next" },
 ];

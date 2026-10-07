@@ -29,7 +29,8 @@ test("/book: title, download links, chapters, breadcrumbs, share card and Book J
   await expect(download).toHaveAttribute("href", PDF);
   await expect(download).toHaveAttribute("download", "");
   await expect(download).toHaveAccessibleName(/^Download the free book \(PDF, \d+ pages, [\d.]+ MB\)$/);
-  await expect(page.getByTestId("book-chapters").locator("li")).toHaveCount(15);
+  await expect(page.getByTestId("book-chapters").locator("li")).toHaveCount(16);
+  await expect(page.getByTestId("book-chapters")).toContainText("Leaders for the Global Goals");
   await expect(page.getByTestId("book-chapters")).toContainText("Your Super-Cube® Action Plan");
   const crumbs = page.getByRole("navigation", { name: /breadcrumb/i });
   await expect(crumbs.locator('[aria-current="page"]')).toContainText("Free book");

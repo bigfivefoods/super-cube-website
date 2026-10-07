@@ -11,7 +11,7 @@ import { absoluteUrl, pageMeta } from "@/lib/seo";
 
 const TITLE = "Free book: The Super-Cube® Leadership Model";
 const DESCRIPTION =
-  "Download Dr Craig R. Muller's book free: the six faces of leadership, 36 practices, six self-assessment workbook pages and a 30-day action plan. PDF, English.";
+  "Download Dr Craig R. Muller's book free: the six faces of leadership, 36 practices, six self-assessment workbook pages, a 30-day action plan and a chapter on the UN Sustainable Development Goals. PDF, English.";
 const DOWNLOAD_LABEL = `Download the free book (PDF, ${BOOK.pages} pages, ${BOOK.size})`;
 
 const base = pageMeta({ path: BOOK.page, title: TITLE, description: DESCRIPTION, image: BOOK.share.url });
@@ -29,7 +29,7 @@ const INSIDE = [
   { title: "Six self-assessment workbook pages", body: "Ten statements per face, a score out of 100 and clear bands, so you know where to start." },
   { title: "A 30-day action plan", body: "A plan with tick boxes and a Day 1 / Day 30 scorecard, so you can see your own progress." },
   { title: "One thing you can do today", body: "Every chapter ends with a single, small action, because leadership grows through what you do." },
-  { title: "From self to society", body: "How one leader's growth ripples out to a team, a network, a sector and a continent." },
+  { title: "From self to society, and the Global Goals", body: "How one leader's growth ripples out to a team, a network, a sector and a continent, and why the UN's 17 Sustainable Development Goals need leaders." },
 ];
 
 function DownloadIcon() {
