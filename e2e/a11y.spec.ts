@@ -178,6 +178,32 @@ test.describe("keyboard and screen reader", () => {
     expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
   });
 
+  test("pricing checkout dialog: accessible, Esc closes, focus returns, no layout shift", async ({ page }) => {
+    await page.goto("/pricing");
+    await page.waitForLoadState("networkidle");
+    await page.evaluate(() => {
+      (window as unknown as { __cls: number }).__cls = 0;
+      new PerformanceObserver((l) => {
+        for (const e of l.getEntries() as unknown as { value: number; hadRecentInput: boolean }[])
+          if (!e.hadRecentInput) (window as unknown as { __cls: number }).__cls += e.value;
+      }).observe({ type: "layout-shift", buffered: true });
+    });
+    const buy = page.getByTestId("programme-card-kids").getByRole("button", { name: /Buy with Paystack/ });
+    await buy.click();
+    const dialog = page.getByRole("dialog", { name: /Kids/ });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.locator(":focus")).toHaveCount(1);
+    const results = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
+      .include('[data-testid="checkout-dialog"]')
+      .analyze();
+    expect(results.violations.map((v) => v.id)).toEqual([]);
+    await page.keyboard.press("Escape");
+    await expect(dialog).toBeHidden();
+    await expect(buy).toBeFocused();
+    expect(await page.evaluate(() => (window as unknown as { __cls: number }).__cls)).toBe(0);
+  });
+
   test("the cube respects reduced motion and has a text alternative", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");

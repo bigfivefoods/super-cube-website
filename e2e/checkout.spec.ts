@@ -34,21 +34,25 @@ test.describe("checkout up to the Paystack redirect (never pays)", () => {
     const captured: Request[] = [];
     await stubPaystack(page, captured);
     await page.goto("/pricing");
-    await page.getByRole("button", { name: /Buy with Paystack · R99/ }).first().click();
-    await expect(page.getByText(/R99 one-time/)).toBeVisible();
+    // No checkout is open until a card's Buy button is pressed
+    await expect(page.getByRole("dialog")).toHaveCount(0);
+    await page.getByTestId("programme-card-adolescents").getByRole("button", { name: /Buy with Paystack · R99/ }).click();
+    const dialog = page.getByRole("dialog", { name: /Adolescents/ });
+    await expect(dialog).toBeVisible();
+    await expect(dialog.getByText(/R99 one-time/)).toBeVisible();
     // A bad email never reaches the server
-    await page.getByPlaceholder("you@school.co.za").first().fill("not-an-email");
-    await page.getByRole("button", { name: /^Pay R/ }).first().click();
-    await expect(page.getByText("Enter a valid email for your payment receipt.")).toBeVisible();
+    await dialog.getByPlaceholder("you@school.co.za").fill("not-an-email");
+    await dialog.getByRole("button", { name: /^Pay R/ }).click();
+    await expect(dialog.getByText("Enter a valid email for your payment receipt.")).toBeVisible();
     expect(captured).toHaveLength(0);
 
-    await page.getByPlaceholder("you@school.co.za").first().fill("buyer@example.org");
-    await page.getByRole("button", { name: /^Pay R/ }).first().click();
+    await dialog.getByPlaceholder("you@school.co.za").fill("buyer@example.org");
+    await dialog.getByRole("button", { name: /^Pay R/ }).click();
     await page.waitForURL(STUB);
     expect(captured).toHaveLength(1);
     const body = captured[0].postDataJSON() as Record<string, unknown>;
     expect(body.email).toBe("buyer@example.org");
-    expect(typeof body.programmeId).toBe("string");
+    expect(body.programmeId).toBe("adolescents");
     // The price is decided on the server, never sent by the browser
     expect(body).not.toHaveProperty("amount");
   });
