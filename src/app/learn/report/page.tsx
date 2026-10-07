@@ -10,7 +10,7 @@ import { LongitudinalPanel } from "@/components/learn/LongitudinalPanel";
 import { RadarChart } from "@/components/learn/RadarChart";
 import { ReportMeta } from "@/components/learn/ReportMeta";
 import { Button } from "@/components/ui";
-import { downloadCompletionCertificate } from "@/lib/lms/certificate-pdf";
+import { CertificatePanel } from "@/components/learn/CertificatePanel";
 import {
   changeBand,
   compareAttempts,
@@ -18,23 +18,19 @@ import {
   reliableChangeThreshold,
   type ChangeBand,
 } from "@/lib/lms/scoring";
-import { issueCertificate, syncFromServer } from "@/lib/lms/cloud";
+import { syncFromServer } from "@/lib/lms/cloud";
 import { depthLabel } from "@/lib/lms/orientation";
 import { ShareLinksPanel } from "@/components/learn/ShareLinksPanel";
 import { isMinorProfile } from "@/lib/lms/consent";
 import type { ProgrammeId } from "@/lib/programmes";
 import {
   loadLmsState,
-  setCertificateMeta,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
-import { track } from "@/lib/analytics";
 
 export default function ReportPage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
-  const [certBusy, setCertBusy] = useState(false);
-  const [certNote, setCertNote] = useState<string | null>(null);
   useEffect(() => {
     const s = loadLmsState();
     setState(s);
@@ -110,54 +106,7 @@ export default function ReportPage() {
       ? Math.round((post.result.overall - pre.result.overall) * 10) / 10
       : null;
 
-  // Capture after null guards so nested handlers satisfy LocalLmsState (not null)
-  const liveState = state;
-
   const overallBand = changeBand(growth, "overall");
-
-  async function downloadCertificate() {
-    if (!post || !programmeId || certBusy) return;
-    setCertBusy(true);
-    setCertNote(null);
-    try {
-      const r = await issueCertificate(
-        programmeId,
-        liveState.profile?.displayName || liveState.user?.fullName || undefined,
-        liveState.orgCode,
-      );
-      if (r.kind === "ok") {
-        const c = r.data.certificate;
-        setState(setCertificateMeta(c.id, c.issued_at));
-        downloadCompletionCertificate({
-          id: c.id,
-          learnerName: c.learner_name,
-          programmeId: c.programme_id,
-          preOverall: Number(c.pre_overall),
-          postOverall: Number(c.post_overall),
-          growth: Number(c.growth),
-          issuedAt: c.issued_at,
-        });
-        track("certificate_download", { certificateId: c.id });
-        return;
-      }
-      if (r.kind === "signed_out" || r.kind === "unavailable") {
-        setCertNote(
-          "Sign in to get a verifiable certificate. Certificates are issued by the server from your recorded baseline and after-test.",
-        );
-        return;
-      }
-      const code = String(r.body.error || "");
-      setCertNote(
-        code === "payment_required"
-          ? "Certificates are part of the full pathway (one-off payment or a cohort seat)."
-          : code === "not_eligible"
-            ? "The server has no recorded baseline and after-test for you yet. Take both while signed in."
-            : `Could not issue the certificate (${code || r.status}).`,
-      );
-    } finally {
-      setCertBusy(false);
-    }
-  }
 
   return (
     <LearnShell
@@ -270,32 +219,14 @@ export default function ReportPage() {
           </div>
         </section>
 
-        {post && (
-          <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
-            <div>
-              <p className="learn-eyebrow">Pathway complete</p>
-              <p className="mt-1 text-sm font-semibold text-ink">
-                Certificate of completion
-              </p>
-              <p className="learn-meta mt-0.5">
-                Issued by the server from your recorded baseline and after-test,
-                with an ID anyone can verify.
-              </p>
-              {certNote && (
-                <p className="mt-1.5 text-[0.8125rem] font-medium text-amber-900" role="status">
-                  {certNote}
-                </p>
-              )}
-            </div>
-            <button
-              type="button"
-              className="learn-btn learn-btn-primary mt-3 sm:mt-0"
-              disabled={certBusy}
-              onClick={() => void downloadCertificate()}
-            >
-              Download certificate (PDF)
-            </button>
-          </div>
+        {post && programmeId && (
+          <CertificatePanel
+            state={state}
+            pre={pre}
+            post={post}
+            programmeId={programmeId}
+            onStateChange={setState}
+          />
         )}
 
         {orientation && (
