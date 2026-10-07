@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { awardBadges } from "@/lib/lms/server/engagement";
 import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/server/attempts";
 import { requireUser } from "@/lib/lms/server/context";
 import { loadLearning } from "@/lib/lms/server/learning";
@@ -79,5 +80,7 @@ export async function POST(request: Request) {
     }
     return NextResponse.json({ error: saved.error }, { status: 500 });
   }
+  // A claimed baseline earns its badge; it doesn't tick today's streak (it may be from another day)
+  await awardBadges(ctx.admin, ctx.user.id).catch(() => []);
   return NextResponse.json({ ok: true, claimed: true, attempt: saved.attempt });
 }

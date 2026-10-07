@@ -145,11 +145,45 @@ export function submitAttempt(
   });
 }
 
-export function recordCompletion(programmeId: ProgrammeId, constructId: string, lessonId: string) {
-  return call<{ ok: true }>("/api/lms/progress", {
+export type ServerStreak = { current: number; best: number; freezes: number; lastDay: string | null };
+export type ServerActivity = { streak: ServerStreak & { freezesUsed?: number; freezeEarned?: boolean }; newBadges: { badgeId: string; name: string }[] };
+
+/** Keep the device's streak in step with the server's (the server wins when signed in). */
+export function mirrorServerStreak(s: ServerStreak | null | undefined) {
+  if (!s) return;
+  const state = loadLmsState();
+  state.practiceStreak = { current: s.current, best: Math.max(s.best, state.practiceStreak?.best ?? 0), lastDate: s.lastDay };
+  state.streakFreezes = s.freezes;
+  saveLmsState(state);
+}
+
+export async function recordCompletion(programmeId: ProgrammeId, constructId: string, lessonId: string) {
+  const r = await call<{ ok: true; engagement?: ServerActivity | null }>("/api/lms/progress", {
     method: "POST",
     body: JSON.stringify({ programmeId, constructId, lessonId }),
   });
+  if (r.kind === "ok") mirrorServerStreak(r.data.engagement?.streak);
+  return r;
+}
+
+/** A daily check-in or micro-practice; silently skipped when signed out. */
+export async function recordHabit(kind: "pulse" | "practice_complete", ref?: string, programmeId?: string) {
+  const r = await call<{ ok: true } & ServerActivity>("/api/lms/events", {
+    method: "POST",
+    body: JSON.stringify({ kind, ref, programmeId }),
+  });
+  if (r.kind === "ok") mirrorServerStreak(r.data.streak);
+  return r;
+}
+
+export type EngagementView = {
+  streak: ServerStreak;
+  badges: { id: string; badgeId: string; name: string; criteria: string; awardedAt: string }[];
+  push: { configured: boolean; subscribed: boolean; minorNeedsConsent: boolean };
+};
+
+export function fetchEngagement() {
+  return call<EngagementView>("/api/lms/engagement");
 }
 
 export type IssuedCertificate = {

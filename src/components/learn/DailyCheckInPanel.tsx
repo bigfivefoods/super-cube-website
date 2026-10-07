@@ -16,6 +16,7 @@ import {
 import { getFacePulses, saveFacePulse } from "@/lib/lms/face-tracking";
 import { localDayKey, loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { pushCoachProgressIfConsented } from "@/lib/lms/push-coach-progress";
+import { recordHabit } from "@/lib/lms/cloud";
 import {
   LearnCard,
   LearnCardBody,
@@ -131,6 +132,8 @@ export function DailyCheckInPanel({
       source: "daily",
     });
     onSaved?.(next);
+    // Today's check-in ticks the server streak (back-filled days don't)
+    if (selectedDay === localDayKey()) void recordHabit("pulse");
     setStep("done");
     track("face_pulse_save", {
       source: "daily",
