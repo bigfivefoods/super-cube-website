@@ -40,8 +40,8 @@ export default function MediaKitPage() {
             <SectionHeading title="Brand assets" />
             <div className="mt-6 grid grid-cols-2 gap-3">
               {[
-                { src: "/brand/logo.svg", alt: "Super-Cube wordmark" },
-                { src: "/brand/logo-mark.svg", alt: "Super-Cube mark" },
+                { src: "/brand/logo.svg", alt: "Super-Cube® wordmark" },
+                { src: "/brand/logo-mark.svg", alt: "Super-Cube® mark" },
                 { src: "/icons/icon-512.png", alt: "App icon" },
                 { src: "/cube.png", alt: "Cube visual" },
               ].map((a) => (
@@ -80,7 +80,7 @@ export default function MediaKitPage() {
                 download
                 className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
               >
-                Download Super-Cube overview (.pptx)
+                Download Super-Cube® overview (.pptx)
               </a>
             </div>
             <div className="sc-card p-5">

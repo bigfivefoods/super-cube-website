@@ -25,7 +25,7 @@ import { CopyField, CreateCohortForm, GrantSeatsForm, InviteForm, RevokeCertific
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Super-Cube admin" },
+  title: { absolute: "Super-Cube® admin" },
   robots: { index: false, follow: false, nocache: true, googleBot: { index: false, follow: false } },
 };
 
@@ -651,7 +651,7 @@ export default async function AdminConsolePage({
         <div className="container-site">
           <div className="mx-auto max-w-md">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-slate">Admin</p>
-          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube admin</h1>
+          <h1 className="mt-1 text-2xl font-semibold tracking-tight text-ink">Super-Cube® admin</h1>
           {ctx.reason === "not_configured" ? (
             <p className="mt-2 text-sm text-slate" role="alert">The admin store isn’t configured on this deployment.</p>
           ) : (

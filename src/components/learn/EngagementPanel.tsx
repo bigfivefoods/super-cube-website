@@ -13,7 +13,7 @@ import { getProgramme } from "@/lib/programmes";
 const PUSH_MESSAGES: Record<PushOutcome, string> = {
   on: "Push reminders are on for this device.",
   denied: "Notifications are blocked for this site. Allow them in your browser settings to turn reminders on.",
-  unsupported: "This browser can't receive push reminders. On iPhone, add Super-Cube to your Home Screen first.",
+  unsupported: "This browser can't receive push reminders. On iPhone, add Super-Cube® to your Home Screen first.",
   not_configured: "Push reminders aren't switched on yet.",
   consent_required: "Push reminders for under-18s need a parent or guardian's consent first.",
   signed_out: "Sign in to turn on push reminders.",
@@ -161,7 +161,7 @@ export function EngagementPanel() {
       )}
       {pre && !post ? (
         <div className="mt-3">
-          <AddToCalendar preCompletedAt={pre.completedAt} programmeName={programme?.name ?? "Super-Cube"} />
+          <AddToCalendar preCompletedAt={pre.completedAt} programmeName={programme?.name ?? "Super-Cube®"} />
         </div>
       ) : !pre ? (
         <p className="mt-2 text-[0.8125rem] text-slate">

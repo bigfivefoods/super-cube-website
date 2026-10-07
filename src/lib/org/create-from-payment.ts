@@ -83,7 +83,7 @@ export async function createOrgFromSeatPayment(opts: {
     return { ok: false, reason: "user_not_found_sign_up_first" };
   }
 
-  const name = opts.orgName.trim().slice(0, 120) || "Super-Cube cohort";
+  const name = opts.orgName.trim().slice(0, 120) || "Super-Cube® cohort";
   const code = slugCode(name);
   const kind = opts.kind || "school";
   const notes = [

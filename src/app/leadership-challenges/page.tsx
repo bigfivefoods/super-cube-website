@@ -24,7 +24,7 @@ export const metadata: Metadata = pageMeta({
     "leadership challenges SDGs",
     "SOFI food security leadership",
     "UN SDG leadership development",
-    "Super-Cube SDGs",
+    "Super-Cube® SDGs",
   ],
 });
 

@@ -134,7 +134,7 @@ export function LearnShell({
 
           <div className="hidden rounded-2xl border border-line bg-elevated p-3.5 shadow-[0_1px_0_rgba(0,0,0,0.02)] lg:block">
             <p className="mb-2 text-[0.7rem] font-semibold tracking-tight text-ink">
-              Super-Cube Learn
+              Super-Cube® Learn
             </p>
 
             <nav className="flex flex-col gap-0.5" aria-label="Learn navigation">

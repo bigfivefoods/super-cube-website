@@ -221,7 +221,7 @@ export function roiCsv(input: {
   funnel: ReturnType<typeof funnel>;
 }): string {
   const rows: (string | number)[][] = [
-    ["Super-Cube cohort impact", input.cohortName],
+    ["Super-Cube® cohort impact", input.cohortName],
     ["Generated", input.generatedAt],
     [],
     ["Face", "n (paired)", "Before mean", "Before 95% CI low", "Before 95% CI high", "After mean", "After 95% CI low", "After 95% CI high", "Change", "Change 95% CI low", "Change 95% CI high", "Cohen's d (d_av)", "Effect"],

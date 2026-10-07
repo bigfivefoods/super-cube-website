@@ -80,7 +80,7 @@ const en = {
   "nav.organisations": "Organisations",
   "nav.schools": "Schools",
   "nav.speaking": "Speaking",
-  "nav.moreLinks": "More from Super-Cube",
+  "nav.moreLinks": "More from Super-Cube®",
 
   // The Model mega-menu
   "nav.theModel": "The Model",
@@ -373,7 +373,7 @@ const zu: Record<I18nKey, string> = {
   "nav.organisations": "Izinhlangano",
   "nav.schools": "Izikole",
   "nav.speaking": "Izinkulumo",
-  "nav.moreLinks": "Okunye kwe-Super-Cube",
+  "nav.moreLinks": "Okunye kwe-Super-Cube®",
 
   "nav.theModel": "Imodeli",
   "model.menuTitle": "Imodeli ye-Super-Cube®",
@@ -655,7 +655,7 @@ const af: Record<I18nKey, string> = {
   "nav.organisations": "Organisasies",
   "nav.schools": "Skole",
   "nav.speaking": "Toesprake",
-  "nav.moreLinks": "Meer van Super-Cube",
+  "nav.moreLinks": "Meer van Super-Cube®",
 
   "nav.theModel": "Die Model",
   "model.menuTitle": "Die Super-Cube®-model",

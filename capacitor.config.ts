@@ -15,7 +15,7 @@ const serverUrl =
 
 const config: CapacitorConfig = {
   appId: "me.supercube.learn",
-  appName: "Super-Cube Learn",
+  appName: "Super-Cube® Learn",
   // Minimal local assets; primary UI loads from server.url
   webDir: "native-shell",
   server: {

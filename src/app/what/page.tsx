@@ -33,7 +33,7 @@ const offerPathway = [
   {
     step: "01",
     title: "Orient",
-    body: "Philosophy → theory → model so you know why Super-Cube exists before you score yourself.",
+    body: "Philosophy → theory → model so you know why Super-Cube® exists before you score yourself.",
   },
   {
     step: "02",

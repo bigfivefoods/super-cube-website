@@ -36,7 +36,7 @@ export function pageMeta(opts: {
   const url = absoluteUrl(opts.path);
   const image = opts.image || SHARE_IMAGE.url;
   const keywords = [
-    "Super-Cube leadership",
+    "Super-Cube® leadership",
     "leadership development South Africa",
     "human-centric leadership",
     "leadership skills programme",

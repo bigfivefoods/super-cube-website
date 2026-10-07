@@ -45,7 +45,7 @@ export function buildRoiPackPdf(input: RoiPackInput): jsPDF {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(18);
   doc.setTextColor(...ink);
-  doc.text("Super-Cube cohort impact", margin, y);
+  doc.text("Super-Cube® cohort impact", margin, y);
   y += 7;
   doc.setFont("helvetica", "normal");
   doc.setFontSize(10);
@@ -107,7 +107,7 @@ export function buildRoiPackPdf(input: RoiPackInput): jsPDF {
   doc.setFontSize(8.5);
   doc.setTextColor(...slate);
   const method = [
-    "Scores are self-report on a 0–100 scale across the six Super-Cube faces. Only learners who consented to share progress with their coach are included, and journals are never used.",
+    "Scores are self-report on a 0–100 scale across the six Super-Cube® faces. Only learners who consented to share progress with their coach are included, and journals are never used.",
     "Before/after is paired: a learner counts only with both a baseline and a re-measure (at least 21 days apart, after the required sessions). 95% confidence intervals use Student's t.",
     `Cohen's d is d_av: the mean change divided by the average of the before and after standard deviations (0.2 small, 0.5 medium, 0.8 large). Groups smaller than ${MIN_GROUP} are suppressed to protect privacy.`,
     "There is no control group, so changes show association, not proof of cause. The instrument's reliability for this version is still being established; treat small changes with care.",

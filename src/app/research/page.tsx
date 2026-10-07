@@ -21,7 +21,7 @@ export const metadata: Metadata = pageMeta({
     "leadership research South Africa",
     "confirmatory factor analysis leadership",
     "UKZN DBA leadership model",
-    "SAJEMS Super-Cube",
+    "SAJEMS Super-Cube®",
     "Journal of Contemporary Management leadership",
   ],
 });

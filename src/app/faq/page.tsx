@@ -11,7 +11,7 @@ export const metadata: Metadata = pageMeta({
     "Frequently asked questions about Super-Cube®: free baseline, privacy, languages (English, isiZulu, Afrikaans), school pilots, research, and certificates.",
   path: "/faq",
   keywords: [
-    "Super-Cube FAQ",
+    "Super-Cube® FAQ",
     "leadership programme questions",
     "isiZulu leadership training",
     "school leadership pilot FAQ",

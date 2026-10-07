@@ -17,7 +17,7 @@ export const metadata: Metadata = pageMeta({
   path: "/the-model",
   image: "/images/hero/hero-model.jpg",
   keywords: [
-    "Super-Cube Leadership Model",
+    "Super-Cube® Leadership Model",
     "multidimensional leadership framework",
     "Ubuntu leadership",
     "I-Thou leadership",
