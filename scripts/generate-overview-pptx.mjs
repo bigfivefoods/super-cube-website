@@ -192,6 +192,7 @@ function addHeader(slide, pptx, opts = {}) {
 
   slide.addImage({
     path: hairlinePath,
+    altText: "Decorative rainbow line",
     x: 0,
     y: 0,
     w: W,
@@ -202,6 +203,7 @@ function addHeader(slide, pptx, opts = {}) {
     // logo.png aspect ~4.7:1
     slide.addImage({
       path: transparentLogoPath,
+      altText: "Super-Cube® logo",
       x: M,
       y: 0.22,
       w: 1.65,
@@ -317,6 +319,7 @@ async function main() {
 
     s.addImage({
       path: hairlinePath,
+      altText: "Decorative rainbow line",
       x: 0,
       y: 0,
       w: W,
@@ -326,6 +329,7 @@ async function main() {
     if (hasLogo) {
       s.addImage({
         path: transparentLogoPath,
+        altText: "Super-Cube® logo",
         x: M,
         y: 1.35,
         w: 2.2,
@@ -1643,6 +1647,7 @@ async function main() {
 
     s.addImage({
       path: hairlinePath,
+      altText: "Decorative rainbow line",
       x: 0,
       y: 0,
       w: W,
@@ -1652,6 +1657,7 @@ async function main() {
     if (hasLogo) {
       s.addImage({
         path: transparentLogoPath,
+        altText: "Super-Cube® logo",
         x: M,
         y: 1.2,
         w: 2.0,
