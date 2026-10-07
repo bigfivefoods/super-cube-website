@@ -9,6 +9,7 @@ import { constructs, type ConstructId } from "@/lib/content";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { getCourse } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
+import { faceInkStyle } from "@/lib/contrast";
 
 const TYPE_LABEL: Record<string, string> = {
   content: "Session",
@@ -73,7 +74,7 @@ export default function CourseDetailPage() {
         </div>
 
         <div className="border-t border-line px-4 pb-4 pt-3.5 sm:px-5 sm:pb-5 sm:pt-4">
-          <p className="learn-eyebrow" style={{ color: construct.color }}>
+          <p className="learn-eyebrow face-ink" style={faceInkStyle(construct.color)}>
             Super-Cube® · {construct.shortName}
           </p>
           <p className="mt-1 text-[0.875rem] font-medium text-ink sm:text-[0.9375rem]">
@@ -140,8 +141,8 @@ export default function CourseDetailPage() {
               >
                 <div className="min-w-0">
                   <p
-                    className="learn-eyebrow"
-                    style={{ color: construct.color }}
+                    className="learn-eyebrow face-ink"
+                    style={faceInkStyle(construct.color)}
                   >
                     {String(i + 1).padStart(2, "0")} ·{" "}
                     {TYPE_LABEL[lesson.lessonType] ?? lesson.lessonType}

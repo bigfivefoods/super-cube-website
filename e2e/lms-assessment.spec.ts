@@ -33,7 +33,7 @@ async function answerEverything(page: Page, value: number) {
     await expect(sets.first()).toBeVisible();
     const n = await sets.count();
     for (let i = 0; i < n; i++) {
-      await sets.nth(i).getByRole("button", { name: String(value), exact: true }).click();
+      await sets.nth(i).locator(`button[data-value="${value}"]`).click();
     }
     if (face < 5) await page.getByRole("button", { name: "Next construct" }).click();
   }

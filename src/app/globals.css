@@ -561,7 +561,19 @@ body.capacitor-app .site-chrome {
 .learn-meta {
   font-size: 0.7rem;
   line-height: 1.4;
+  /* A shade darker than --muted so meta text stays AA on the pale face tints. */
+  color: #595959;
+}
+html.dark .learn-meta {
   color: var(--muted);
+}
+
+/* Face-coloured small text: AA-safe shades from faceInkStyle() (src/lib/contrast.ts). */
+.face-ink {
+  color: var(--face-ink, currentColor);
+}
+html.dark .face-ink {
+  color: var(--face-ink-dark, var(--face-ink, currentColor));
 }
 
 .learn-label {

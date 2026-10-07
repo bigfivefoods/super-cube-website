@@ -3,6 +3,8 @@
  * You at the centre → family → friends → colleagues → society.
  */
 
+import { faceInkStyle } from "@/lib/contrast";
+
 const RINGS = [
   {
     id: "you",
@@ -331,8 +333,8 @@ export function LeadershipCircles({
                         {ring.label}
                       </h3>
                       <p
-                        className="text-[0.55rem] font-semibold uppercase tracking-wider"
-                        style={{ color: ring.accent }}
+                        className="face-ink text-[0.55rem] font-semibold uppercase tracking-wider"
+                        style={faceInkStyle(ring.accent)}
                       >
                         {ring.short}
                       </p>

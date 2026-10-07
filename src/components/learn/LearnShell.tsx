@@ -78,6 +78,10 @@ export function LearnShell({
 
   return (
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-surface">
+      {/* Second skip link: past the Learn sidebar straight to this page's content. */}
+      <a href="#learn-content" className="skip-link">
+        Skip to page content
+      </a>
       {hero}
 
       <div className="container-site grid min-w-0 gap-4 pb-8 pt-3 sm:gap-5 sm:pb-10 sm:pt-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-8 lg:pt-5 xl:grid-cols-[240px_minmax(0,1fr)] xl:gap-10">
@@ -233,7 +237,7 @@ export function LearnShell({
         </aside>
 
         {/* ── Main content ── */}
-        <div className="min-w-0">
+        <div id="learn-content" tabIndex={-1} className="min-w-0 outline-none">
           {(title || subtitle) && (
             <header className="mb-4 sm:mb-5">
               {title && (

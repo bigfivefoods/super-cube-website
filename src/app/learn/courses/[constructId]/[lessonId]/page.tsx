@@ -131,7 +131,7 @@ export default function LessonPlayerPage() {
     return (
       <LearnShell title={data.lesson.title} subtitle="Part of the full pathway">
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-5" data-testid="lesson-paywall">
-          <p className="learn-eyebrow text-amber-900/70">Full pathway</p>
+          <p className="learn-eyebrow text-amber-900">Full pathway</p>
           <p className="mt-1 text-[0.9375rem] font-semibold text-ink">
             This session is part of the paid pathway.
           </p>

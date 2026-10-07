@@ -11,6 +11,7 @@ import {
   loadLmsState,
   saveLmsState,
 } from "@/lib/lms/store";
+import { textOn } from "@/lib/contrast";
 
 const rainbow = constructs.map((c) => c.color).join(", ");
 
@@ -223,11 +224,11 @@ function LoginShell({ children }: { children: React.ReactNode }) {
               />
               <span className="text-[0.95rem] font-semibold tracking-tight">
                 Super-Cube
-                <span className="text-white/45">®</span>
+                <span className="text-white/65">®</span>
               </span>
             </Link>
 
-            <p className="mt-8 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/45">
+            <p className="mt-8 text-[0.65rem] font-semibold uppercase tracking-[0.16em] text-white/65">
               Welcome back
             </p>
             <h1 className="mt-2 text-[1.75rem] font-semibold leading-[1.15] tracking-tight sm:text-[2rem]">
@@ -276,14 +277,14 @@ function LoginShell({ children }: { children: React.ReactNode }) {
               {constructs.map((c) => (
                 <span
                   key={c.id}
-                  className="rounded-full px-2 py-0.5 text-[0.6rem] font-semibold text-white/90"
-                  style={{ background: `${c.color}` }}
+                  className="rounded-full px-2 py-0.5 text-[0.6rem] font-semibold"
+                  style={{ background: `${c.color}`, color: textOn(c.color) }}
                 >
                   {c.shortName}
                 </span>
               ))}
             </div>
-            <p className="mt-3 text-[0.7rem] text-white/40">
+            <p className="mt-3 text-[0.7rem] text-white/65">
               Human-centric leadership · Super-Cube® Learn
             </p>
           </div>

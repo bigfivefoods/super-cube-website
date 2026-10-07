@@ -10,6 +10,7 @@ import {
   type LearnNavId,
   type LearnProcess,
 } from "@/lib/lms/nav";
+import { faceInkStyle } from "@/lib/contrast";
 
 const icons: Record<LearnNavId, (p: { active: boolean }) => ReactNode> = {
   today: HomeIcon,
@@ -51,13 +52,10 @@ export function LearnBottomNav() {
                 className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
                   active
                     ? "bg-void text-void-fg"
-                    : "text-muted hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
+                    : `${tint ? "face-ink" : "text-muted"} hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink`
                 }`}
-                style={
-                  !active && tint
-                    ? { color: tint, opacity: 0.85 }
-                    : undefined
-                }
+                // AA-safe shade of the process tint (the raw teal is 2.9:1 on white).
+                style={!active && tint ? faceInkStyle(tint, "#f0f0f0") : undefined}
                 aria-current={active ? "page" : undefined}
               >
                 <Icon active={active} />

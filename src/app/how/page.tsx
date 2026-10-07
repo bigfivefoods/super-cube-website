@@ -6,6 +6,7 @@ import { ImpactResults } from "@/components/ImpactResults";
 import { TestimonialsSection } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
 import { constructs } from "@/lib/content";
+import { faceInkStyle } from "@/lib/contrast";
 
 export const metadata: Metadata = pageMeta({
   path: "/how",
@@ -197,8 +198,8 @@ export default function HowPage() {
                 style={{ boxShadow: `inset 3px 0 0 ${c.color}` }}
               >
                 <p
-                  className="text-[0.65rem] font-bold uppercase tracking-wider"
-                  style={{ color: c.color }}
+                  className="text-[0.65rem] font-bold uppercase tracking-wider face-ink"
+                  style={faceInkStyle(c.color)}
                 >
                   {c.name}
                 </p>
