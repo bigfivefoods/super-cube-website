@@ -5,6 +5,7 @@ import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { NewsCard } from "@/components/news/NewsCard";
 import { NewsImage } from "@/components/news/NewsImage";
 import { PageHero } from "@/components/ui";
+import { NEWS_HERO } from "@/lib/news/hero";
 import { NEWS_FEED_PATH, formatNewsDate } from "@/lib/news/seo";
 import { listPublishedNews } from "@/lib/news/store";
 import { pageMeta } from "@/lib/seo";
@@ -28,12 +29,12 @@ export const metadata: Metadata = {
   },
 };
 
-const HERO_FALLBACK = "/news/super-cube-lms-cover-wide.jpg";
 
 export default async function NewsPage() {
   const posts = await listPublishedNews();
   const [featured, ...rest] = posts;
-  const heroImage = featured?.coverWide && featured.coverWide.startsWith("/") ? featured.coverWide : HERO_FALLBACK;
+  // Calm hero background; the featured post's cover appears in the Latest card below.
+  const heroImage = NEWS_HERO.wide;
 
   return (
     <>

@@ -19,6 +19,13 @@ export type NewsPost = {
   coverImage: string;
   /** Optional landscape version for the full-width post hero (falls back to coverImage). */
   coverWide?: string;
+  /**
+   * Optional hero background for the post page (square, phones; falls back to the calm News hero).
+   * Must be quiet artwork that never competes with the headline: no charts, text or busy screenshots.
+   */
+  heroImage?: string;
+  /** Optional landscape hero background (from 640px). */
+  heroWide?: string;
   /** Alt text for the cover ("" when decorative). */
   coverAlt: string;
   /** 1200×630 share card (Open Graph / X). Falls back to the generated share image. */

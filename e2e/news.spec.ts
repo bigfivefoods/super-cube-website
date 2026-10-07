@@ -123,6 +123,11 @@ for (const cs of CASE_STUDIES) {
     await page.goto(cs.path);
     const hero = await page.locator("header.page-hero").first().boundingBox();
     expect(Math.abs(home!.height - hero!.height)).toBeLessThanOrEqual(1);
+    // Calm hero background behind the headline; the chart cover is kept for the body and share card.
+    const heroImg = page.locator("header.page-hero picture img").first();
+    await expect(heroImg).toHaveAttribute("src", /news%2Fhero%2Fnews-hero/);
+    await expect(heroImg).toHaveAttribute("alt", "");
+    await expect(page.locator("header.page-hero picture source").first()).toHaveAttribute("srcset", /news%2Fhero%2Fnews-hero-wide/);
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", cs.og);
     const chart = page.locator(".news-body figure img").first();
     await expect(chart).toHaveAttribute("src", new RegExp(encodeURIComponent(cs.chart).replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
@@ -146,3 +151,42 @@ test("RSS feed includes both case studies", async ({ request }) => {
   const xml = await (await request.get("/news/feed.xml")).text();
   for (const cs of CASE_STUDIES) expect(xml).toContain(`https://www.super-cube.me${cs.path}</link>`);
 });
+
+test("News index and post heroes use the calm background on phones", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/news/super-cube-lms-accelerating-leadership-development");
+  await expect(page.locator("header.page-hero picture img").first()).toHaveAttribute("src", /news%2Fhero%2Fnews-hero/);
+  await page.goto("/news");
+  await expect(page.locator(".page-hero img").first()).toHaveAttribute("src", /news%2Fhero%2Fnews-hero-wide/);
+});
+
+/* +32.2% is overall growth across all six faces from the 12-week interventions (company profile). */
+test("home results card credits +32.2% to the 12-week interventions and links the case study", async ({ page }) => {
+  await page.goto("/");
+  const overall = page.getByTestId("home-results-overall");
+  await expect(overall).toContainText("+32.2%");
+  await expect(overall).toContainText("Overall growth across all six faces");
+  await expect(page.getByTestId("home-results-emotional")).toContainText("+39.5%");
+  const card = overall.locator("xpath=ancestor::div[contains(@class,'sc-card')][1]");
+  await expect(card).toContainText("12-week Super-Cube® leadership interventions");
+  await expect(card).toContainText("Source: Super-Cube® company profile, Sept 2023");
+  await expect(card).not.toContainText("UKZN");
+  await expect(page.getByTestId("home-case-study-link")).toHaveAttribute("href", "/news/twelve-weeks-six-faces-fmcg-leadership");
+  await page.goto("/fr");
+  await expect(page.getByTestId("home-results-overall")).toContainText("Croissance globale sur les six faces");
+  await expect(page.getByTestId("home-case-study-link")).toContainText("Lire l’étude de cas FMCG");
+});
+
+for (const path of ["/impact", "/research"]) {
+  test(`${path} credits +32.2% to the 12-week interventions`, async ({ page }) => {
+    await page.goto(path);
+    const source = page.getByTestId("impact-results-source");
+    await expect(source).toContainText("+32.2% overall growth across all six faces");
+    await expect(source).toContainText("Super-Cube® company profile, Sept 2023");
+    await expect(page.getByText("Research results · UKZN doctoral study")).toHaveCount(0);
+    await expect(page.getByRole("link", { name: /Read the FMCG case study/ }).first()).toHaveAttribute(
+      "href",
+      "/news/twelve-weeks-six-faces-fmcg-leadership",
+    );
+  });
+}

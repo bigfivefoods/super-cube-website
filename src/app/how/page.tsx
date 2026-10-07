@@ -229,7 +229,7 @@ export default function HowPage() {
       <ImpactResults
         eyebrow="Does it work?"
         title="Intervention gains you can measure."
-        description="Average pre- to post-assessment improvement after Super-Cube® development interventions—by construct and overall."
+        description="Average pre- to post-course gains from 12-week Super-Cube® leadership interventions at FMCG organisations, by face and overall."
       />
 
       <TestimonialsSection
