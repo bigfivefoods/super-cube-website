@@ -32,8 +32,8 @@ export default function PilotPackPage() {
         <Button href="/pricing#pilot" variant="primary">
           Buy seat pack
         </Button>
-        <Button href="/downloads/super-cube-overview.pptx" variant="ghost">
-          Download overview deck
+        <Button href="/super-cube-company-profile.pdf" variant="ghost">
+          Download company profile (PDF)
         </Button>
         <Button href="/learn/coach" variant="ghost">
           Coach tools
@@ -49,15 +49,15 @@ export default function PilotPackPage() {
             />
             <ul className="mt-6 space-y-3 text-sm leading-relaxed text-slate">
               <li>
-                · <strong className="text-ink">Overview deck:</strong>{" "}
+                · <strong className="text-ink">Company profile:</strong>{" "}
                 <a
-                  href="/downloads/super-cube-overview.pptx"
+                  href="/super-cube-company-profile.pdf"
                   download
                   className="font-semibold text-ink underline-offset-2 hover:underline"
                 >
-                  Super-Cube® overview (.pptx)
+                  Super-Cube® company profile (PDF)
                 </a>{" "}
-                — 12 slides for leave-behinds and parent/board meetings
+                — 15 A4 pages for leave-behinds and parent/board meetings
               </li>
               <li>
                 · <strong className="text-ink">Pricing:</strong> from $
