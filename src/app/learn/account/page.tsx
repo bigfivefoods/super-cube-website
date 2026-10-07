@@ -74,6 +74,18 @@ function AccountPageInner() {
     });
   }, []);
 
+  // The page renders on the client, so the browser's own #habits jump happens
+  // before the section exists. Jump once it has rendered (scroll-padding in
+  // globals.css keeps it clear of the fixed header).
+  const hashJumped = useRef(false);
+  useEffect(() => {
+    if (!state || hashJumped.current) return;
+    const id = window.location.hash.slice(1);
+    if (!/^[a-z][a-z0-9-]{0,40}$/i.test(id)) return;
+    hashJumped.current = true;
+    requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ block: "start" }));
+  }, [state]);
+
   useEffect(() => {
     if (paidHandled.current) return;
     const paid = searchParams.get("paid");

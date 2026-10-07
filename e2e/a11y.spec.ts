@@ -150,6 +150,34 @@ test.describe("keyboard and screen reader", () => {
     await expect(first.getByRole("button", { name: /^4\b/ })).toHaveAttribute("aria-pressed", "true");
   });
 
+  test("anchor jumps land below the fixed header on a phone", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await seed(page);
+    await page.goto("/learn/account#habits");
+    const habits = page.locator("#habits");
+    await expect(habits).toBeVisible();
+    await expect
+      .poll(async () =>
+        habits.evaluate((el) => {
+          const header = document.querySelector("header");
+          const top = el.getBoundingClientRect().top;
+          return Math.round(top - (header?.getBoundingClientRect().bottom ?? 0));
+        }),
+      )
+      // Scrolled to (smooth scroll may take a moment) and just under the header, not behind it.
+      .toBeGreaterThanOrEqual(0);
+    await expect
+      .poll(async () =>
+        habits.evaluate((el) => {
+          const header = document.querySelector("header");
+          return Math.round(el.getBoundingClientRect().top - (header?.getBoundingClientRect().bottom ?? 0));
+        }),
+        { timeout: 8000 },
+      )
+      .toBeLessThanOrEqual(48);
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(200);
+  });
+
   test("the cube respects reduced motion and has a text alternative", async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");

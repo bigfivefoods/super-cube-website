@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/lms/server/context";
 import { eventsInLastDay, MAX_EVENTS_PER_DAY, recordActivity } from "@/lib/lms/server/engagement";
 import { getProgramme } from "@/lib/programmes";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 /**
  * Habit ticks from the browser: a daily check-in (pulse) or a micro-practice.
@@ -13,6 +14,8 @@ const REF_RE = /^[a-z0-9][a-z0-9-]{0,63}$/i;
 export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
+  const limited = await limitRequest(request, "events", [`user:${ctx.user.id}`]);
+  if (limited) return limited;
   const body = (await request.json().catch(() => ({}))) as { kind?: string; ref?: string; programmeId?: string };
   const kind = String(body.kind || "");
   if (!KINDS.has(kind)) return NextResponse.json({ error: "Unsupported activity" }, { status: 400 });

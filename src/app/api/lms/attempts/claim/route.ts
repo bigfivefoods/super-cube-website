@@ -4,6 +4,7 @@ import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/se
 import { requireUser } from "@/lib/lms/server/context";
 import { loadLearning } from "@/lib/lms/server/learning";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 const DAY = 86_400_000;
 /** Oldest signed-out baseline we accept, so a stale device can't backdate the 21-day gate far. */
@@ -19,6 +20,8 @@ const MAX_AGE_DAYS = 180;
 export async function POST(request: Request) {
   const ctx = await requireUser();
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
+  const limited = await limitRequest(request, "attempts-claim", [`user:${ctx.user.id}`]);
+  if (limited) return limited;
 
   let body: { programmeId?: string; responses?: Record<string, unknown>; completedAt?: string; meta?: AttemptMetaInput };
   try {

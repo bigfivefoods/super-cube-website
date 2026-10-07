@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createHash } from "node:crypto";
 import { isNonProductionDeploy } from "@/lib/deploy-env";
 import { CONSENT_TEXT, NEWSLETTER_TABLE, newsletterDb } from "@/lib/newsletter/db";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 type Body = {
   email?: string;
@@ -27,6 +28,8 @@ type Body = {
  * Preview / development deployments never forward to Brevo/webhook.
  */
 export async function POST(req: Request) {
+  const limited = await limitRequest(req, "newsletter");
+  if (limited) return limited;
   let body: Body;
   try {
     body = (await req.json()) as Body;

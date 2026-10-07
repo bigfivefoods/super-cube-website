@@ -18,6 +18,7 @@ import {
   seatPackAmountCents,
   seatPackListPrice,
 } from "@/lib/seat-packs";
+import { limitRequest } from "@/lib/server/rate-limit";
 
 function isValidEmail(email: string) {
   return (
@@ -26,6 +27,8 @@ function isValidEmail(email: string) {
 }
 
 export async function POST(request: Request) {
+  const limited = await limitRequest(request, "checkout");
+  if (limited) return limited;
   try {
     const body = await request.json();
     const productType =
