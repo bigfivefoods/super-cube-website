@@ -18,10 +18,10 @@ export default function MediaKitPage() {
         theme="about"
         eyebrow="Press & partners"
         title="Media kit"
-        description="Logos, model description, research abstract, peer-reviewed journal PDFs, overview slides, and how to credit Super-Cube®. For interviews and features: hello@super-cube.me."
+        description="Logos, model description, research abstract, peer-reviewed journal PDFs, a company profile (PDF), and how to credit Super-Cube®. For interviews and features: hello@super-cube.me."
       >
-        <Button href="/downloads/super-cube-overview.pptx" variant="primary">
-          Download overview deck (.pptx)
+        <Button href="/super-cube-company-profile.pdf" variant="primary">
+          Download company profile (PDF)
         </Button>
         <Button
           href={`mailto:${site.email}?subject=Media%20enquiry`}
@@ -69,18 +69,18 @@ export default function MediaKitPage() {
           </div>
           <div className="space-y-6">
             <div className="sc-card p-5">
-              <SectionHeading title="Overview presentation" />
+              <SectionHeading title="Company profile" />
               <p className="mt-3 text-sm leading-relaxed text-slate">
-                A 12-slide Super-Cube® overview for schools, companies, and
-                partners—model, research, Learn pathway, seat packs, and
-                pricing. Widescreen PowerPoint (.pptx).
+                A 15-page Super-Cube® company profile for schools, companies,
+                and partners—the six-face model, the research, programmes,
+                Super-Cube® Learn, pilots, seat packs, and pricing. A4 PDF.
               </p>
               <a
-                href="/downloads/super-cube-overview.pptx"
+                href="/super-cube-company-profile.pdf"
                 download
                 className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
               >
-                Download Super-Cube® overview (.pptx)
+                Download company profile (PDF)
               </a>
             </div>
             <div className="sc-card p-5">
