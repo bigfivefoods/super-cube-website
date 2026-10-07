@@ -52,6 +52,7 @@ const fr: Dict = {
   "nav.impact": "Impact",
   "nav.practices": "Pratiques",
   "nav.insights": "Analyses",
+  "nav.news": "Actualités",
   "nav.pilotPack": "Kit pilote",
   "nav.facilitator": "Kit d’animation",
   "nav.team": "Cube d’équipe",

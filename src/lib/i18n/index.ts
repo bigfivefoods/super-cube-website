@@ -38,6 +38,7 @@ export const moreLinkI18n: Record<string, I18nKey> = {
   "/impact": "nav.impact",
   "/practices": "nav.practices",
   "/insights": "nav.insights",
+  "/news": "nav.news",
   "/pilot-pack": "nav.pilotPack",
   "/facilitator": "nav.facilitator",
   "/team": "nav.team",

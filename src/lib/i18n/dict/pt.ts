@@ -52,6 +52,7 @@ const pt: Dict = {
   "nav.impact": "Impacto",
   "nav.practices": "Práticas",
   "nav.insights": "Artigos",
+  "nav.news": "Notícias",
   "nav.pilotPack": "Pacote piloto",
   "nav.facilitator": "Kit do facilitador",
   "nav.team": "Cubo de equipa",

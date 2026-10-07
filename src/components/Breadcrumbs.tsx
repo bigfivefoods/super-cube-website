@@ -10,11 +10,12 @@ import { breadcrumbJsonLd, breadcrumbTone, breadcrumbTrail } from "@/lib/breadcr
  * Overlaid just below the fixed header, inside the hero's top padding, so it
  * never changes a hero's height. Rendered on the server too (usePathname works
  * during SSR), so the row and its BreadcrumbList JSON-LD are in the first HTML.
+ * Pages whose title the route map can't know (News posts) render their own copy with `leafLabel`.
  */
-export function Breadcrumbs() {
+export function Breadcrumbs({ leafLabel }: { leafLabel?: string } = {}) {
   // The English path behind /fr/… etc.; labels and links follow the page's language.
   const { t, L, basePath: pathname } = useLocale();
-  const english = breadcrumbTrail(pathname);
+  const english = breadcrumbTrail(pathname, leafLabel);
   if (!english) return null;
   const trail = english.map((c) => ({ ...c, href: L(c.href), label: c.i18n ? t(c.i18n) : c.label }));
 

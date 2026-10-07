@@ -42,6 +42,7 @@ const af: Dict = {
   "nav.impact": "Impak",
   "nav.practices": "Praktyke",
   "nav.insights": "Insigte",
+  "nav.news": "Nuus",
   "nav.pilotPack": "Loodspakket",
   "nav.facilitator": "Fasiliteerder-kit",
   "nav.team": "Spankubus",

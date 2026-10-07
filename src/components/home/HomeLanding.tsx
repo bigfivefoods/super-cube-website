@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { LatestNews } from "@/components/news/LatestNews";
 import { SuperCube } from "@/components/SuperCube";
 import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, SectionHeading } from "@/components/ui";
@@ -325,6 +326,8 @@ export function HomeLanding() {
           </div>
         </div>
       </section>
+
+      <LatestNews />
 
       <TestimonialsStrip />
 

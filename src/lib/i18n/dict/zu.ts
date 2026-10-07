@@ -44,6 +44,7 @@ const zu: Dict = {
   "nav.impact": "Umthelela",
   "nav.practices": "Imikhuba",
   "nav.insights": "Ukuqonda",
+  "nav.news": "Izindaba",
   "nav.pilotPack": "Iphakethe le-pilot",
   "nav.facilitator": "Ikhithi yomqeqeshi",
   "nav.team": "Ikhyubhu yethimba",

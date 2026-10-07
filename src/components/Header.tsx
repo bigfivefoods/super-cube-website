@@ -9,7 +9,7 @@ import { MobileModelSection, ModelMegaMenu } from "@/components/ModelMenu";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useTheme } from "@/components/ThemeProvider";
 import { audienceNav, menuMoreNav, modelMenuFoldedHrefs } from "@/lib/content";
-import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
+import { isDarkHeroPath, lightHeroPaths } from "@/lib/hero-media";
 import { isEnglishOnlyHref, mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
 
 function linkActive(pathname: string, href: string) {
@@ -62,7 +62,7 @@ export function Header() {
   const toggleRef = useRef<HTMLButtonElement>(null);
 
   const isLightHero = matchesPath(pathname, lightHeroPaths);
-  const isDarkHero = matchesPath(pathname, darkHeroPaths);
+  const isDarkHero = isDarkHeroPath(pathname);
   // An open menu (mobile sheet or The Model panel) always gets a solid header.
   const overHero = (isDarkHero || isLightHero) && !scrolled && !open && !modelOpen;
   const overDark = overHero && isDarkHero;
@@ -164,6 +164,15 @@ export function Header() {
               {label(item.href, item.label, item.i18n)}
             </Link>
           ))}
+          {/* News joins the bar from 1280px; below that the bar keeps six items on one line (menu + footer link it). */}
+          <Link
+            href="/news"
+            hrefLang={enLang("/news")}
+            className={`${linkCls(linkActive(pathname, "/news"))} max-xl:hidden`}
+            aria-current={linkActive(pathname, "/news") ? "page" : undefined}
+          >
+            {t("nav.news")}
+          </Link>
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
