@@ -111,3 +111,34 @@ test.describe("rate limits", () => {
     expect(statuses.at(-1)).toBe(429);
   });
 });
+
+test.describe("self-service email routes", () => {
+  // Safe against production: signed-out requests never send anything.
+  for (const path of ["/api/email/welcome", "/api/email/weekly"]) {
+    test(`${path} refuses signed-out callers and ignores any body address`, async ({ request }) => {
+      const res = await request.post(path, {
+        data: { email: "someone-else@example.com", name: "<b>x</b>", programmeId: "adults", mode: "purchase", force: true },
+      });
+      expect(res.status()).toBe(401);
+      const body = await res.text();
+      expect(JSON.parse(body)).toEqual({ error: "Sign in required" });
+      expect(body).not.toMatch(/resend|webhook|provider|someone-else/i);
+    });
+  }
+
+  test("welcome email is rate limited per IP", async ({ request }) => {
+    test.skip(!local, "local server only");
+    const ip = `203.0.113.${Math.floor(Math.random() * 250) + 1}`;
+    const statuses: number[] = [];
+    for (let i = 0; i < 22; i++) {
+      const res = await request.post("/api/email/welcome", {
+        headers: { "x-forwarded-for": ip },
+        data: { programmeId: "adults" },
+      });
+      statuses.push(res.status());
+      if (res.status() === 429) break;
+    }
+    expect(statuses.slice(0, 20).every((s) => s === 401)).toBe(true);
+    expect(statuses.at(-1)).toBe(429);
+  });
+});
