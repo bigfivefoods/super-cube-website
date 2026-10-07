@@ -53,17 +53,23 @@ export function BrandLogo({
 export function BrandWordmark({
   className = "",
   height = 32,
+  href = "/",
+  label = "Super-Cube® home",
 }: {
   className?: string;
   height?: number;
+  /** Home link in the page's language (/, /fr, …). */
+  href?: string;
+  /** Accessible name in the page's language. */
+  label?: string;
 }) {
   const width = Math.round(height * 3.2);
 
   return (
     <Link
-      href="/"
+      href={href}
       className={`inline-flex items-center ${className}`}
-      aria-label="Super-Cube® home"
+      aria-label={label}
     >
       <Image
         src="/brand/logo.png"

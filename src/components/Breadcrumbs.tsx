@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useLocale } from "@/components/LocaleProvider";
 import { breadcrumbJsonLd, breadcrumbTone, breadcrumbTrail } from "@/lib/breadcrumbs";
 
@@ -13,10 +12,11 @@ import { breadcrumbJsonLd, breadcrumbTone, breadcrumbTrail } from "@/lib/breadcr
  * during SSR), so the row and its BreadcrumbList JSON-LD are in the first HTML.
  */
 export function Breadcrumbs() {
-  const pathname = usePathname();
-  const { t } = useLocale();
-  const trail = breadcrumbTrail(pathname);
-  if (!trail) return null;
+  // The English path behind /fr/… etc.; labels and links follow the page's language.
+  const { t, L, basePath: pathname } = useLocale();
+  const english = breadcrumbTrail(pathname);
+  if (!english) return null;
+  const trail = english.map((c) => ({ ...c, href: L(c.href), label: c.i18n ? t(c.i18n) : c.label }));
 
   const tone = breadcrumbTone(pathname);
   const linkCls =
@@ -32,7 +32,7 @@ export function Breadcrumbs() {
         <ol className="site-breadcrumbs__list">
           {trail.map((crumb, i) => {
             const last = i === trail.length - 1;
-            const label = crumb.i18n ? t(crumb.i18n) : crumb.label;
+            const label = crumb.label;
             return (
               <li key={crumb.href} className={last ? "min-w-0" : "shrink-0"}>
                 {i > 0 && (

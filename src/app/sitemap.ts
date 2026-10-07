@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { insightPosts } from "@/lib/insights";
 import { site } from "@/lib/content";
+import { PREFIXED_LOCALES, hreflangAlternates, isTranslatedPath, localizedPath } from "@/lib/i18n/config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url.replace(/\/$/, "");
@@ -49,6 +50,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
           ? 0.9
           : 0.7,
   }));
+
+  // Translated pages: hreflang alternates on the English entry, plus one entry per language.
+  for (const entry of [...entries]) {
+    const path = entry.url.slice(base.length) || "/";
+    if (!isTranslatedPath(path)) continue;
+    const languages = Object.fromEntries(
+      Object.entries(hreflangAlternates(path)).map(([lang, p]) => [lang, `${base}${p === "/" ? "/" : p}`]),
+    );
+    entry.alternates = { languages };
+    for (const locale of PREFIXED_LOCALES) {
+      entries.push({ ...entry, url: `${base}${localizedPath(locale, path)}`, priority: 0.6 });
+    }
+  }
 
   for (const post of insightPosts) {
     entries.push({
