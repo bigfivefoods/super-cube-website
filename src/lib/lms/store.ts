@@ -390,7 +390,7 @@ export function recordSessionWin(
   constructId: ConstructId,
   text: string
 ): LocalLmsState {
-  let state = loadLmsState();
+  const state = loadLmsState();
   const wins = [...(state.sessionWins ?? [])];
   wins.unshift({
     lessonId,

@@ -12,6 +12,10 @@ export default defineConfig({
   use: {
     baseURL,
     trace: "on-first-retry",
+    // Optional system browser (e.g. PW_EXECUTABLE_PATH=/usr/bin/google-chrome)
+    launchOptions: process.env.PW_EXECUTABLE_PATH
+      ? { executablePath: process.env.PW_EXECUTABLE_PATH, args: ["--no-sandbox"] }
+      : undefined,
   },
   projects: [
     {

@@ -24,6 +24,8 @@ const DEFAULT_SUPABASE_URL = "https://scsgmmyjrulwoymegsid.supabase.co";
 export function supabaseUrl(): string {
   const raw = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || process.env.SUPABASE_URL?.trim() || "";
   if (/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/i.test(raw)) return raw.replace(/\/$/, "");
+  // Local development / CI stack only (never on Vercel)
+  if (!process.env.VERCEL && /^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?\/?$/i.test(raw)) return raw.replace(/\/$/, "");
   if (!warnedUrl) {
     warnedUrl = true;
     console.warn(

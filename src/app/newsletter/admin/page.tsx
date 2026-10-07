@@ -92,6 +92,9 @@ export default async function AdminPage({
           <Link href="/newsletter/admin?tab=subscribers" className={tabCls(tab === "subscribers")} aria-current={tab === "subscribers" ? "page" : undefined}>
             Newsletter subscribers
           </Link>
+          <Link href="/admin" className={tabCls(false)}>
+            Learning admin →
+          </Link>
         </nav>
 
         {tab === "enquiries" ? (

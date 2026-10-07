@@ -23,8 +23,11 @@ export default function LearnOrgPage() {
   useEffect(() => {
     const s = loadLmsState();
     setState(s);
-    setCode(s.orgCode ?? "");
-    const inv = new URLSearchParams(window.location.search).get("invite");
+    const params = new URLSearchParams(window.location.search);
+    // Cohort links from the admin console: /learn/org?code=ABC123 prefills the code
+    const linkCode = (params.get("code") || "").toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 24);
+    setCode(linkCode || s.orgCode || "");
+    const inv = params.get("invite");
     if (inv) setInvite(inv.slice(0, 200));
     const supabase = createClient();
     if (!supabase) return;
