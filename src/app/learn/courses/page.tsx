@@ -6,6 +6,7 @@ import Image from "next/image";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { PaywallCard } from "@/components/learn/PaywallCard";
 import { constructs } from "@/lib/content";
+import { faceTagline } from "@/lib/lms/face-taglines";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
@@ -69,10 +70,10 @@ export default function CoursesPage() {
                   </h2>
                 </div>
                 <p
-                  className="face-ink mt-0.5 truncate text-[0.7rem] font-medium"
+                  className="face-ink mt-0.5 line-clamp-2 text-[0.7rem] font-medium"
                   style={faceInkStyle(color)}
                 >
-                  {construct?.tagline}
+                  {construct ? faceTagline(construct.id, programmeId) : null}
                 </p>
                 <p className="mt-1.5 line-clamp-2 text-[0.75rem] leading-snug text-slate">
                   {course.promise}
