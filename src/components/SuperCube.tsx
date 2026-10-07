@@ -8,7 +8,6 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
-import { foregroundFor } from "@/lib/color";
 import { constructs, type ConstructId } from "@/lib/content";
 
 /**
@@ -194,9 +193,12 @@ export function SuperCube({
                 style={
                   {
                     "--face-bg": c.color,
-                    "--face-fg": foregroundFor(c.color),
+                    // All face text is white (Craig, Oct 2026); a soft dark shadow
+                    // (globals.css) keeps it readable on the lighter faces.
+                    "--face-fg": "#ffffff",
                     background: c.color,
-                    color: foregroundFor(c.color),
+                    color: "#ffffff",
+                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.45)",
                     opacity: intensity,
                     boxShadow:
                       hasScore && score >= 70
