@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { recordActivitySafe } from "@/lib/lms/server/engagement";
 import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/server/attempts";
 import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
@@ -75,5 +76,6 @@ export async function POST(request: Request) {
       { status: locked ? 409 : 500 },
     );
   }
-  return NextResponse.json({ ok: true, attempt: saved.attempt });
+  const engagement = await recordActivitySafe(ctx.admin, ctx.user.id, { kind: "assessment", ref: phase, programmeId });
+  return NextResponse.json({ ok: true, attempt: saved.attempt, engagement });
 }

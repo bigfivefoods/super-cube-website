@@ -1,6 +1,7 @@
 "use client";
 
 import { formatDateZA } from "@/lib/datetime";
+import { EngagementPanel } from "@/components/learn/EngagementPanel";
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -718,6 +719,10 @@ function AccountPageInner() {
             {syncing ? "Syncing…" : "Sync now"}
           </button>
         </section>
+
+        <div className="lg:col-span-2" id="habits">
+          <EngagementPanel />
+        </div>
 
         <section className="learn-card lg:col-span-2">
           <h2 className="learn-card-title">Backup & device tools</h2>

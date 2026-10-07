@@ -10,9 +10,10 @@ import { track } from "@/lib/analytics";
 import { formatDateZA, SA_TIME_ZONE } from "@/lib/datetime";
 import { getTodayPulse } from "@/lib/lms/face-tracking";
 import { stepLabel } from "@/lib/lms/journey";
+import { liveStreak } from "@/lib/lms/badges";
 import { getDashboardAction, processLabel } from "@/lib/lms/next-action";
 import { LEARN_PROCESS_ACCENT } from "@/lib/lms/nav";
-import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
+import { loadLmsState, localDayKey, type LocalLmsState } from "@/lib/lms/store";
 
 function greeting(now = new Date()): string {
   const hour = Number(
@@ -46,7 +47,16 @@ export default function LearnDashboardPage() {
 
   const action = getDashboardAction(state, Boolean(journey.programmeId));
   const pulseToday = Boolean(getTodayPulse(state));
-  const streak = state.practiceStreak?.current ?? 0;
+  const freezes = state.streakFreezes ?? 0;
+  const streak = liveStreak(
+    {
+      current: state.practiceStreak?.current ?? 0,
+      best: state.practiceStreak?.best ?? 0,
+      freezes,
+      lastDay: state.practiceStreak?.lastDate ?? null,
+    },
+    localDayKey(),
+  );
   const best = state.practiceStreak?.best ?? 0;
   const firstName = (state.profile?.displayName || state.user?.fullName || "").trim().split(/\s+/)[0];
   const complete = journey.doneCount === journey.total;
@@ -108,7 +118,13 @@ export default function LearnDashboardPage() {
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink sm:text-xl">
             {streak} {streak === 1 ? "day" : "days"}
           </dd>
-          {best > streak && <p className="mt-0.5 text-[0.7rem] text-slate">Best {best}</p>}
+          {(best > streak || freezes > 0) && (
+            <p className="mt-0.5 text-[0.7rem] text-slate">
+              {best > streak ? `Best ${best}` : ""}
+              {best > streak && freezes > 0 ? " · " : ""}
+              {freezes > 0 ? `${freezes} freeze${freezes === 1 ? "" : "s"}` : ""}
+            </p>
+          )}
         </div>
         <div className="rounded-2xl border border-line bg-elevated p-3 sm:p-4">
           <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Sessions</dt>

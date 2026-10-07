@@ -12,6 +12,7 @@ import {
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { track } from "@/lib/analytics";
+import { recordHabit } from "@/lib/lms/cloud";
 
 export default function MicroPracticePage() {
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -34,6 +35,7 @@ export default function MicroPracticePage() {
 
   function complete() {
     logMicroPractice(daily.id);
+    void recordHabit("practice_complete", daily.id).then(() => setState(loadLmsState()));
     setState(loadLmsState());
     setDone(true);
     track("micro_practice_complete", {

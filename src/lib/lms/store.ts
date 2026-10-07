@@ -101,6 +101,8 @@ export interface LocalLmsState {
   /** Reflections keyed by lessonId */
   reflections?: Record<string, SessionReflection>;
   practiceStreak?: PracticeStreak;
+  /** Streak freezes held on the server (signed in); each covers one missed day */
+  streakFreezes?: number;
   /** Prefer browser notifications for daily practice (opt-in) */
   notifyPractice?: boolean;
   /** ISO date when completion certificate was first earned */

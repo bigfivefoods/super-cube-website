@@ -42,3 +42,18 @@ export function daysBetween(a: string | Date, b: string | Date = new Date()): nu
   if (!x || !y) return 0;
   return Math.floor((y.getTime() - x.getTime()) / 86_400_000);
 }
+
+/** Calendar day "YYYY-MM-DD" in a time zone (default SAST); falls back to SAST for unknown zones. */
+export function dayKeyIn(timeZone: string = SA_TIME_ZONE, d: Date = new Date()): string {
+  let tz = timeZone;
+  try {
+    new Intl.DateTimeFormat("en-CA", { timeZone: tz });
+  } catch {
+    tz = SA_TIME_ZONE;
+  }
+  const out: Record<string, string> = {};
+  for (const p of new Intl.DateTimeFormat("en-CA", { timeZone: tz, year: "numeric", month: "2-digit", day: "2-digit" }).formatToParts(d)) {
+    out[p.type] = p.value;
+  }
+  return `${out.year}-${out.month}-${out.day}`;
+}
