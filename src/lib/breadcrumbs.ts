@@ -62,7 +62,7 @@ export const routeLabels: Record<string, RouteLabel> = {
  * bottom tabs), sign-in is a full-bleed card with its own "Back to site" link,
  * and admin / private share links are not part of the public site.
  */
-const excludedPrefixes = ["/learn", "/login", "/share", "/newsletter/admin", "/auth", "/api"];
+const excludedPrefixes = ["/learn", "/login", "/share", "/newsletter/admin", "/admin", "/auth", "/api"];
 
 const HOME: Crumb = { href: "/", label: "Home", i18n: "bc.home" };
 

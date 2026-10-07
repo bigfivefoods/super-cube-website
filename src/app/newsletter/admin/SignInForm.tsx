@@ -6,10 +6,11 @@ import { signInAction } from "./actions";
 const inputCls =
   "mt-1 block min-h-11 w-full rounded-xl border border-line-strong bg-elevated px-3 text-sm text-ink";
 
-export function SignInForm() {
+export function SignInForm({ next }: { next?: "/admin" | "/newsletter/admin" } = {}) {
   const [state, action, pending] = useActionState(signInAction, undefined);
   return (
     <form action={action} className="mt-6 space-y-4">
+      {next && <input type="hidden" name="next" value={next} />}
       <div>
         <label htmlFor="nl-admin-email" className="text-sm font-medium text-ink">Email</label>
         <input id="nl-admin-email" name="email" type="email" autoComplete="username" required className={inputCls} />
@@ -19,7 +20,7 @@ export function SignInForm() {
         <input id="nl-admin-password" name="password" type="password" autoComplete="current-password" required className={inputCls} />
       </div>
       {state?.error && (
-        <p className="text-sm text-ink" role="alert">{state.error}</p>
+        <p className="text-sm font-medium text-red-700 dark:text-red-300" role="alert">{state.error}</p>
       )}
       <button
         type="submit"

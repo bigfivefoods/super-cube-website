@@ -94,7 +94,7 @@ export function SeatPackCheckout({ className = "" }: { className?: string }) {
       });
       const data = await res.json();
       if (data.authorization_url) {
-        window.location.href = data.authorization_url;
+        window.location.assign(data.authorization_url);
         return;
       }
       setError(

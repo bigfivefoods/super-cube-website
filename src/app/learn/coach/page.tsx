@@ -19,6 +19,9 @@ import {
 } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
 
+/** Current time (kept out of render so the React Compiler purity rule is satisfied). */
+const nowMs = () => Date.now();
+
 type RosterRow = {
   userId: string;
   role: string;
@@ -213,7 +216,7 @@ function CoachToolsInner() {
     const recentlyPulsed = roster.filter((r) => {
       const at = r.progress?.last_pulse_at;
       if (!at) return false;
-      const days = (Date.now() - Date.parse(at)) / (1000 * 60 * 60 * 24);
+      const days = (nowMs() - Date.parse(at)) / (1000 * 60 * 60 * 24);
       return days <= 7;
     }).length;
     return {

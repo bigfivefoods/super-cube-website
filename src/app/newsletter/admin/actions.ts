@@ -23,6 +23,7 @@ export async function signInAction(
   if (!res.ok) return { error: res.error };
   const value = makeSessionValue(res.email);
   if (!value) return { error: "Sign-in is not configured on this deployment." };
+  const next = String(form.get("next") ?? "") === "/admin" ? "/admin" : "/newsletter/admin";
   const jar = await cookies();
   jar.set(ADMIN_COOKIE, value, {
     httpOnly: true,
@@ -31,13 +32,14 @@ export async function signInAction(
     path: "/",
     maxAge: sessionMaxAge,
   });
-  redirect("/newsletter/admin");
+  redirect(next);
 }
 
-export async function signOutAction() {
+export async function signOutAction(form?: FormData) {
+  const next = String(form?.get("next") ?? "") === "/admin" ? "/admin" : "/newsletter/admin";
   const jar = await cookies();
   jar.delete(ADMIN_COOKIE);
-  redirect("/newsletter/admin");
+  redirect(next);
 }
 
 /** Toggle an enquiry between handled and open (admin only). */
