@@ -1,0 +1,178 @@
+/**
+ * FRANÇAIS: site chrome and FAQ. Brand names are never translated and keep their marks
+ * (Super-Cube®, Big Five Group™, Big Five Learn, SupplierAdvisor®). Mission words follow
+ * bigfivegroup.africa (Nourrir · Éduquer · Autonomiser). Missing keys fall back to English.
+ * Typography: a narrow no-break space (U+202F) before ? ! : ; as in French print.
+ */
+import type { Dict } from "./en";
+
+const fr: Dict = {
+  "lang.label": "Langue",
+  "lang.choose": "Choisir une langue",
+  "lang.englishOnly": "Cette page est disponible uniquement en anglais.",
+  "lang.suggestion": "Ce site est aussi disponible en français.",
+  "lang.suggestionCta": "Voir en français",
+  "lang.untranslated": "Cette section n’est pas encore traduite.",
+  "common.dismiss": "Fermer",
+  "a11y.skip": "Aller au contenu principal",
+
+  "theme.light": "Clair",
+  "theme.dark": "Sombre",
+  "theme.system": "Système",
+  "theme.toggle": "Thème",
+
+  "nav.model": "Le modèle",
+  "nav.sixFaces": "Les six faces",
+  "nav.programmes": "Programmes",
+  "nav.learn": "Apprendre",
+  "nav.pricing": "Tarifs",
+  "nav.contact": "Contact",
+  "nav.startFreeBaseline": "Bilan initial gratuit",
+  "nav.signIn": "Se connecter",
+  "nav.main": "Principal",
+  "nav.menu": "Menu",
+  "nav.close": "Fermer le menu",
+  "nav.open": "Ouvrir le menu",
+  "nav.faq": "FAQ",
+  "nav.homeLabel": "Accueil Super-Cube®",
+
+  "nav.group.explore": "Explorer",
+  "nav.group.understand": "Comprendre",
+  "nav.group.practice": "Pratiquer",
+  "nav.group.orgs": "Organisations",
+  "nav.group.story": "Comprendre",
+  "nav.group.proof": "Pratiquer",
+  "nav.group.connect": "Échanger",
+  "nav.why": "Pourquoi le leadership",
+  "nav.leadershipChallenges": "Défis du leadership",
+  "nav.how": "Comment ça marche",
+  "nav.research": "Recherche",
+  "nav.about": "À propos",
+  "nav.sampleReport": "Exemple de rapport",
+  "nav.impact": "Impact",
+  "nav.practices": "Pratiques",
+  "nav.insights": "Analyses",
+  "nav.pilotPack": "Kit pilote",
+  "nav.facilitator": "Kit d’animation",
+  "nav.team": "Cube d’équipe",
+  "nav.certify": "Certification",
+  "nav.community": "Communauté",
+  "nav.media": "Kit média",
+  "nav.individuals": "Particuliers",
+  "nav.organisations": "Organisations",
+  "nav.schools": "Écoles",
+  "nav.speaking": "Conférences",
+  "nav.moreLinks": "Plus sur Super-Cube®",
+
+  "nav.theModel": "Le modèle",
+  "model.menuTitle": "Le modèle Super-Cube®",
+  "model.menuBlurb": "Six faces à développer, avec vous au centre.",
+  "model.cubeAlt":
+    "Le Super-Cube® : les Choix en haut, les Principes en bas, et les faces Mentale, Émotionnelle, Physique et Spirituelle sur les côtés",
+  "model.overview": "Présentation du modèle",
+  "model.sixFaces": "Les six faces en détail",
+  "model.research": "Recherche et preuves",
+  "model.assessment": "Bilan initial gratuit",
+  "model.facesHeading": "Les six faces",
+  "model.top": "Haut",
+  "model.bottom": "Bas",
+  "model.side": "Côté",
+
+  "bc.label": "Fil d’Ariane",
+  "bc.home": "Accueil",
+  "bc.verify": "Vérification de certificat",
+  "bc.unsubscribe": "Désinscription",
+
+  "footer.product": "Produit",
+  "footer.understand": "Comprendre",
+  "footer.practice": "Pratiquer",
+  "footer.proof": "Pratiquer",
+  "footer.orgs": "Organisations",
+  "footer.company": "Entreprise",
+  "footer.sixFaces": "Les six faces",
+  "footer.tagline": "Un leadership centré sur l’humain, développé du cœur vers l’extérieur.",
+  "footer.credit": "Craig Ross Muller · UKZN · 2021",
+  "footer.contactUs": "Nous contacter",
+  "footer.formName": "Nom",
+  "footer.formEmail": "E-mail",
+  "footer.formMessage": "Message",
+  "footer.formOrg": "Organisation (facultatif)",
+  "footer.formSend": "Envoyer le message",
+  "footer.formSending": "Envoi…",
+  "footer.formThanks": "Merci",
+  "footer.formReceived": "Nous avons bien reçu votre message.",
+  "footer.formAnother": "Envoyer un autre message",
+  "footer.formPrivacy":
+    "En envoyant ce formulaire, vous acceptez que nous vous contactions au sujet des programmes Super-Cube®.",
+  "footer.privacy": "Confidentialité",
+  "footer.terms": "Conditions",
+  "footer.journals": "Journaux privés · partage avec le coach sur consentement",
+  "footer.copyright": "Modèle de leadership Super-Cube®",
+  "footer.newsletter": "Newsletter",
+  "footer.newsletterBlurb": "Une idée de leadership concrète par mois.",
+  "footer.workWithUs": "Travailler avec nous",
+  "footer.programmes": "Programmes",
+  "footer.resources": "Ressources",
+  "footer.groupLearn": "Apprendre",
+  "footer.groupRead": "Recherche et médias",
+  "footer.createAccount": "Créer un compte",
+  "footer.social": "Réseaux sociaux",
+  "footer.socialLinkedIn": "Dr Craig Muller sur LinkedIn",
+  "footer.socialResearchGate": "Dr Craig Muller sur ResearchGate",
+  "footer.legal": "Mentions légales",
+  "footer.rights": "Tous droits réservés.",
+  "footer.partOf": "Membre de Big Five Learn, la division Éduquer du Big Five Group",
+
+  "cta.tryFree": "Bilan initial gratuit",
+  "cta.bookPilot": "Réserver un pilote",
+  "cta.exploreModel": "Découvrir le modèle",
+
+  "face.choices": "Choix",
+  "face.principles": "Principes",
+  "face.mental": "Mental",
+  "face.emotional": "Émotionnel",
+  "face.physical": "Physique",
+  "face.spiritual": "Spirituel",
+  "face.jump": "Faces",
+
+  "faq.eyebrow": "Aide",
+  "faq.title": "Questions fréquentes",
+  "faq.lede":
+    "Des réponses claires pour les apprenants, les écoles et les entreprises. Une autre question ? Contactez-nous.",
+  "faq.ctaContact": "Contact",
+  "faq.ctaStart": "Bilan initial gratuit",
+  "faq.q1": "Qu’est-ce que Super-Cube® ?",
+  "faq.a1":
+    "Un modèle de leadership centré sur l’humain, avec six faces à développer (Choix, Principes, Mental, Émotionnel, Physique, Spirituel). Vous mesurez un point de départ, vous pratiquez de façon délibérée, vous mesurez à nouveau, puis vous pouvez télécharger un rapport de progression et un certificat.",
+  "faq.q2": "Le bilan initial est-il vraiment gratuit ?",
+  "faq.a2":
+    "Oui. L’orientation et le bilan initial des six faces sont gratuits. Les programmes payants donnent accès aux cours complets, au bilan de mi-parcours et au parcours de progression final, selon votre formule.",
+  "faq.q3": "Combien de temps dure le bilan initial ?",
+  "faq.a3":
+    "Environ 10 minutes pour le démarrage guidé et le bilan initial gratuits. La durée du parcours complet dépend du programme (par exemple des cohortes scolaires ou d’entreprise sur plusieurs semaines).",
+  "faq.q4": "Mes journaux restent-ils privés ?",
+  "faq.a4":
+    "Oui. Vos réflexions et vos notes de journal restent par défaut sur votre appareil. Si vous rejoignez une cohorte et donnez votre accord, le coach voit uniquement les scores et l’avancement, jamais le texte de votre journal.",
+  "faq.q5": "Quelles langues sont disponibles ?",
+  "faq.a5":
+    "Les menus, le pied de page et les pages clés sont disponibles en anglais (par défaut), français, arabe (العربية), portugais, kiswahili, isiZulu et afrikaans : utilisez le bouton de langue dans l’en-tête. Les sessions de cours et l’évaluation de recherche restent en anglais, afin que chaque apprenant réponde aux mêmes items validés et que les résultats restent comparables.",
+  "faq.q6": "Les écoles et les entreprises peuvent-elles mener un pilote ?",
+  "faq.a6":
+    "Oui. Le kit pilote réunit les tarifs, un calendrier sur 8 semaines, les notes de consentement et les outils du coach. Créez un code de cohorte, invitez les apprenants et exportez la progression du groupe lorsque les organisations sont activées.",
+  "faq.q7": "Super-Cube® repose-t-il sur la recherche ?",
+  "faq.a7":
+    "Oui. Le modèle s’appuie sur une recherche doctorale (UKZN, 2021) menée dans des réseaux d’entreprises africains et fait la synthèse des grandes écoles du leadership avec l’Ubuntu, la relation Je–Tu et les cadres intégraux.",
+  "faq.q8": "Comment fonctionnent les certificats ?",
+  "faq.a8":
+    "Après l’évaluation finale, vous pouvez obtenir un certificat doté d’un identifiant de vérification public. Chacun peut en vérifier l’authenticité sur la page de vérification, sans jamais voir vos journaux privés.",
+
+  // The Model menu: skills per face
+  "skills.choices": "Intelligence décisionnelle · Valeurs morales · Discernement · Prise de risque",
+  "skills.principles": "Fondements éthiques · Conscience du contexte · Jugement situationnel · Gouvernance",
+  "skills.mental": "Intelligence cognitive · Pensée stratégique · Résolution de problèmes · Vision · Mise en pratique des connaissances",
+  "skills.emotional": "Intelligence émotionnelle · Empathie · Relations sociales · Motivation · Inspiration",
+  "skills.physical": "Santé physique · Gestion de l’énergie · Condition physique · Nutrition · Résilience corporelle",
+  "skills.spiritual": "Raison d’être · Sens · Foi · Transcendance · Intelligence spirituelle",
+};
+
+export default fr;

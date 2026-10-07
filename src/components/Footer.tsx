@@ -6,7 +6,7 @@ import { useSyncExternalStore, type ReactNode } from "react";
 import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { useLocale } from "@/components/LocaleProvider";
 import { constructs, site } from "@/lib/content";
-import { faceI18n, mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
+import { faceI18n, isEnglishOnlyHref, mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
 
 /*
  * Footer: same design, layout and classes as the Big Five Group footer
@@ -130,15 +130,15 @@ const legalLinks = [
 const socialLinks = [
   {
     href: "https://za.linkedin.com/in/craigmuller",
-    label: "Dr Craig Muller on LinkedIn",
+    key: "footer.socialLinkedIn",
     icon: LinkedInIcon,
   },
   {
     href: site.researchGateUrl,
-    label: "Dr Craig Muller on ResearchGate",
+    key: "footer.socialResearchGate",
     icon: ResearchGateIcon,
   },
-] as const;
+] as const satisfies readonly { href: string; key: I18nKey; icon: () => ReactNode }[];
 
 function LinkedInIcon() {
   return (
@@ -210,6 +210,8 @@ function FooterNav({ title, children }: { title: ReactNode; children: ReactNode 
 
 type TFn = (key: I18nKey) => string;
 type LabelFn = (l: FooterLink) => string;
+/** Internal href in the page's language, plus hrefLang="en" when that page stays English. */
+type HrefFn = (href: string) => { href: string; hrefLang?: string };
 
 function linkLabel(l: FooterLink, t: TFn) {
   if (l.key) return t(l.key);
@@ -217,11 +219,11 @@ function linkLabel(l: FooterLink, t: TFn) {
   return fromMap ? t(fromMap) : l.label;
 }
 
-function SimpleNav({ links, label }: { links: FooterLink[]; label: LabelFn }) {
+function SimpleNav({ links, label, to }: { links: FooterLink[]; label: LabelFn; to: HrefFn }) {
   return (
     <div className="flex flex-col gap-1.5">
       {links.map((l) => (
-        <Link prefetch={false} key={l.href} href={l.href} className={linkClass}>
+        <Link prefetch={false} key={l.href} {...to(l.href)} className={linkClass}>
           {label(l)}
         </Link>
       ))}
@@ -234,11 +236,13 @@ function GroupedNav({
   ariaLabel,
   label,
   t,
+  to,
 }: {
   groups: FooterGroup[];
   ariaLabel: string;
   label: LabelFn;
   t: TFn;
+  to: HrefFn;
 }) {
   return (
     <nav className="space-y-4 sm:space-y-5" aria-label={ariaLabel}>
@@ -250,10 +254,13 @@ function GroupedNav({
               <li key={l.href}>
                 {l.external ? (
                   <a href={l.href} className={linkClass}>
-                    <span className="whitespace-nowrap">{l.label}</span>
+                    {/* Brand names read left to right (with their mark after) in every language */}
+                    <span className="whitespace-nowrap" dir="ltr">
+                      {l.label}
+                    </span>
                   </a>
                 ) : (
-                  <Link href={l.href} prefetch={false} className={linkClass}>
+                  <Link {...to(l.href)} prefetch={false} className={linkClass}>
                     <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
                       {l.dot && (
                         <span
@@ -276,9 +283,10 @@ function GroupedNav({
 }
 
 export function Footer() {
-  const { t } = useLocale();
+  const { t, L, locale } = useLocale();
 
   const label: LabelFn = (l) => linkLabel(l, t);
+  const to: HrefFn = (href) => ({ href: L(href), hrefLang: isEnglishOnlyHref(locale, href) ? "en" : undefined });
 
   return (
     <footer className="site-footer bg-[#f3f4f6] text-black dark:bg-surface dark:text-ink">
@@ -287,10 +295,10 @@ export function Footer() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
             <div className="lg:col-span-4 min-w-0">
               <Link
-                href="/"
+                href={L("/")}
                 prefetch={false}
                 className="inline-flex items-center gap-2.5 group"
-                aria-label="Super-Cube® home"
+                aria-label={t("nav.homeLabel")}
               >
                 <Image
                   src="/brand/logo.png"
@@ -312,11 +320,11 @@ export function Footer() {
               <nav className="mt-4 -ms-2.5 flex items-center gap-1" aria-label={t("footer.social")}>
                 {socialLinks.map((item) => (
                   <a
-                    key={item.label}
+                    key={item.key}
                     href={item.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label={item.label}
+                    aria-label={t(item.key)}
                     className="inline-flex h-11 w-11 items-center justify-center rounded-full text-black dark:text-ink transition-opacity hover:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black dark:focus-visible:outline-white"
                   >
                     <item.icon />
@@ -328,7 +336,7 @@ export function Footer() {
                   <MailIcon />
                   <span className="break-all">{site.email}</span>
                 </a>
-                <Link href="/contact" prefetch={false} className="flex items-center gap-2 hover:text-black dark:hover:text-ink">
+                <Link {...to("/contact")} prefetch={false} className="flex items-center gap-2 hover:text-black dark:hover:text-ink">
                   <MessageIcon />
                   {t("footer.contactUs")}
                 </Link>
@@ -339,7 +347,7 @@ export function Footer() {
                   {t("footer.newsletterBlurb")}
                 </p>
                 {/* The newsletter form is English-only, as on bigfivegroup.africa */}
-                <div lang="en">
+                <div lang="en" dir="ltr">
                   <NewsletterSignup source="footer" variant="footer" />
                 </div>
               </div>
@@ -349,17 +357,17 @@ export function Footer() {
               {/* One "Explore" landmark for both lists (headings are visual) */}
               <nav className="min-w-0 space-y-8" aria-label={t("nav.group.explore")}>
                 <FooterNav title={t("footer.understand")}>
-                  <SimpleNav links={understandLinks} label={label} />
+                  <SimpleNav links={understandLinks} label={label} to={to} />
                 </FooterNav>
                 <FooterNav title={t("footer.workWithUs")}>
-                  <SimpleNav links={workLinks} label={label} />
+                  <SimpleNav links={workLinks} label={label} to={to} />
                 </FooterNav>
               </nav>
               <FooterNav title={t("footer.programmes")}>
-                <GroupedNav groups={programmeGroups} ariaLabel={t("footer.programmes")} label={label} t={t} />
+                <GroupedNav groups={programmeGroups} ariaLabel={t("footer.programmes")} label={label} t={t} to={to} />
               </FooterNav>
               <FooterNav title={t("footer.resources")}>
-                <GroupedNav groups={resourceGroups} ariaLabel={t("footer.resources")} label={label} t={t} />
+                <GroupedNav groups={resourceGroups} ariaLabel={t("footer.resources")} label={label} t={t} to={to} />
               </FooterNav>
             </div>
           </div>
@@ -381,7 +389,7 @@ export function Footer() {
             </div>
             <nav className="flex flex-wrap items-center gap-x-5 gap-y-2" aria-label={t("footer.legal")}>
               {legalLinks.map((l) => (
-                <Link key={l.href} href={l.href} prefetch={false} className="underline underline-offset-2 hover:text-black dark:hover:text-ink">
+                <Link key={l.href} {...to(l.href)} prefetch={false} className="underline underline-offset-2 hover:text-black dark:hover:text-ink">
                   {t(l.key)}
                 </Link>
               ))}

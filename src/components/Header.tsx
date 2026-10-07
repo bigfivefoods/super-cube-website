@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -11,7 +10,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { useTheme } from "@/components/ThemeProvider";
 import { audienceNav, menuMoreNav, modelMenuFoldedHrefs } from "@/lib/content";
 import { darkHeroPaths, lightHeroPaths } from "@/lib/hero-media";
-import { mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
+import { isEnglishOnlyHref, mainNavI18n, moreLinkI18n, type I18nKey } from "@/lib/i18n";
 
 function linkActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
@@ -50,8 +49,10 @@ function Chevron() {
  * Transparent over dark photo heroes, frosted glass once scrolled.
  */
 export function Header() {
-  const pathname = usePathname();
-  const { t } = useLocale();
+  // basePath: the English path behind /fr/… etc., so heroes and active links match in every language.
+  const { t, L, locale, basePath: pathname } = useLocale();
+  /** hrefLang="en" on links to pages that stay English while reading another language. */
+  const enLang = (href: string) => (isEnglishOnlyHref(locale, href) ? "en" : undefined);
   const { resolvedDark } = useTheme();
   const [open, setOpen] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
@@ -139,6 +140,8 @@ export function Header() {
     >
       <div className="container-site flex h-14 items-center justify-between gap-3 lg:h-16">
         <BrandWordmark
+          href={L("/")}
+          label={t("nav.homeLabel")}
           height={26}
           className={`min-w-0 max-w-[min(100%,10rem)] shrink sm:max-w-none ${onDark ? "brightness-0 invert" : ""}`}
         />
@@ -153,7 +156,8 @@ export function Header() {
           {desktopNav.map((item) => (
             <Link
               key={item.href}
-              href={item.href}
+              href={L(item.href)}
+              hrefLang={enLang(item.href)}
               className={linkCls(linkActive(pathname, item.href))}
               aria-current={linkActive(pathname, item.href) ? "page" : undefined}
             >
@@ -163,9 +167,10 @@ export function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
-          <LanguageSwitcher overDark={onDark} variant="compact" />
+          <LanguageSwitcher overDark={onDark} />
           <Link
             href="/login"
+            hrefLang={enLang("/login")}
             className={`hidden min-h-9 items-center whitespace-nowrap text-[0.8125rem] font-medium tracking-tight xl:inline-flex ${
               onDark ? "text-white/70 hover:text-white" : "text-slate hover:text-ink"
             }`}
@@ -174,6 +179,7 @@ export function Header() {
           </Link>
           <Link
             href="/learn/start"
+            hrefLang={enLang("/learn/start")}
             className={`inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight transition ${
               onDark ? "bg-white text-black hover:bg-white/90" : "sc-btn-primary"
             }`}
@@ -182,8 +188,8 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-1.5 lg:hidden">
-          <LanguageSwitcher overDark={onDark} variant="compact" />
+        <div className="flex items-center gap-0.5 lg:hidden">
+          <LanguageSwitcher overDark={onDark} />
           <button
             ref={toggleRef}
             type="button"
@@ -231,7 +237,8 @@ export function Header() {
               return (
                 <li key={item.href}>
                   <Link
-                    href={item.href}
+                    href={L(item.href)}
+                    hrefLang={enLang(item.href)}
                     aria-current={active ? "page" : undefined}
                     className="flex min-h-14 items-center justify-between text-[1.375rem] font-semibold tracking-[-0.02em] text-ink"
                   >
@@ -248,7 +255,8 @@ export function Header() {
             {mobileMoreNav.map((item) => (
               <li key={item.href}>
                 <Link
-                  href={item.href}
+                  href={L(item.href)}
+                  hrefLang={enLang(item.href)}
                   className="flex min-h-11 items-center text-[0.9375rem] font-medium tracking-tight text-slate hover:text-ink"
                 >
                   {label(item.href, item.label)}
@@ -258,6 +266,7 @@ export function Header() {
             <li>
               <Link
                 href="/login"
+                hrefLang={enLang("/login")}
                 className="flex min-h-11 items-center text-[0.9375rem] font-medium tracking-tight text-slate hover:text-ink"
               >
                 {t("nav.signIn")}
@@ -265,14 +274,17 @@ export function Header() {
             </li>
           </ul>
 
-          <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
-            <LanguageSwitcher variant="footer" />
+          <div className="mt-8 border-t border-line pt-5">
+            <LanguageSwitcher variant="list" onChoose={() => setOpen(false)} />
+          </div>
+          <div className="mt-5 flex justify-end">
             <ThemeToggle />
           </div>
 
           <div className="mt-auto pt-8">
             <Link
               href="/learn/start"
+              hrefLang={enLang("/learn/start")}
               className="sc-btn-primary flex min-h-12 items-center justify-center rounded-full px-5 text-base font-semibold tracking-tight"
             >
               {t("nav.startFreeBaseline")}

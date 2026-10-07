@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Noto_Sans_Arabic } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
@@ -7,10 +7,13 @@ import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
+import { LocaleHtml } from "@/components/LocaleHtml";
+import { LocaleNotice } from "@/components/LocaleNotice";
 import { LocaleProvider } from "@/components/LocaleProvider";
 import { MobileStickyCta } from "@/components/MobileStickyCta";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
+import { SkipLink } from "@/components/SkipLink";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { site } from "@/lib/content";
 import { SHARE_IMAGE } from "@/lib/seo";
@@ -22,6 +25,18 @@ const inter = Inter({
   display: "swap",
   variable: "--font-inter",
   weight: ["400", "500", "600", "700", "800", "900"],
+});
+
+/**
+ * Arabic pages (/ar): Noto Sans Arabic, Arabic subset only, not preloaded, so English and the other
+ * languages never download it. Used only under html[lang="ar"] (globals.css), as on bigfivegroup.africa.
+ */
+const notoArabic = Noto_Sans_Arabic({
+  subsets: ["arabic"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  preload: false,
+  variable: "--font-arabic",
 });
 
 /** FOUC: apply html.dark before paint from sc-theme + prefers-color-scheme */
@@ -102,20 +117,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      className={`h-full scroll-smooth antialiased ${inter.variable}`}
-      suppressHydrationWarning
-    >
+    // lang/dir follow the URL (/fr/… → fr, /ar/… → ar + rtl); see components/LocaleHtml.
+    <LocaleHtml className={`h-full scroll-smooth antialiased ${inter.variable} ${notoArabic.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
       <body
         className={`${inter.className} flex min-h-full flex-col bg-bg text-ink`}
       >
-        <a href="#main-content" className="skip-link">
-          Skip to main content
-        </a>
+        <SkipLink />
         <ThemeProvider>
           <LocaleProvider>
             <PwaRegister />
@@ -135,10 +145,11 @@ export default function RootLayout({
             <div className="site-chrome contents">
               <Footer />
               <MobileStickyCta />
+              <LocaleNotice />
             </div>
           </LocaleProvider>
         </ThemeProvider>
       </body>
-    </html>
+    </LocaleHtml>
   );
 }

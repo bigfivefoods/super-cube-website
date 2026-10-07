@@ -108,7 +108,7 @@ export function breadcrumbTrail(pathname: string): Crumb[] | null {
   return [HOME, ...trail];
 }
 
-/** schema.org BreadcrumbList (English labels, absolute canonical URLs). */
+/** schema.org BreadcrumbList (labels in the page's language, absolute canonical URLs). */
 export function breadcrumbJsonLd(trail: Crumb[]) {
   return {
     "@context": "https://schema.org",

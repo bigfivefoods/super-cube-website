@@ -1,4 +1,4 @@
-import { getLocaleFromStorage, t } from "@/lib/i18n";
+import { tEn } from "@/lib/i18n";
 import { getTodayPulse } from "@/lib/lms/face-tracking";
 import { loadLmsState } from "@/lib/lms/store";
 
@@ -47,12 +47,10 @@ export function maybeFirePracticeReminder(): void {
     return;
   }
 
-  const locale = getLocaleFromStorage();
+  // Learn is English-only (like its sessions and the assessment), so the reminder is too.
   const done = practicedToday(state);
-  const title = t("learn.reminderTitle", locale);
-  const body = done
-    ? t("learn.reminderBodyDone", locale)
-    : t("learn.reminderBody", locale);
+  const title = tEn("learn.reminderTitle");
+  const body = done ? tEn("learn.reminderBodyDone") : tEn("learn.reminderBody");
 
   try {
     new Notification(title, {

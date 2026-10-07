@@ -51,10 +51,16 @@ export function MiniCube({ className = "", label }: { className?: string; label?
 
 function Arrow({ className = "" }: { className?: string }) {
   return (
-    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden className={`rtl:-scale-x-100 ${className}`}>
       <path d="M3 8h9.5M8.5 4l4 4-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
+}
+
+/** Every page in The Model menu is English-only: mark the links when reading another language. */
+function useEnLang() {
+  const { locale } = useLocale();
+  return locale === "en" ? undefined : "en";
 }
 
 function useFaceLabels() {
@@ -64,19 +70,21 @@ function useFaceLabels() {
     color: c.color,
     name: t(faceI18n[c.id] || "face.choices"),
     position: t(positionKey[facePosition[c.id]]),
-    skills: c.elements.join(" · "),
+    skills: t(`skills.${c.id}` as I18nKey),
   }));
 }
 
 /** Six faces: colour, cube position and the one-line skill list. */
 function FaceList({ onNavigate, compact = false }: { onNavigate?: () => void; compact?: boolean }) {
   const faces = useFaceLabels();
+  const hrefLang = useEnLang();
   return (
     <ul className={compact ? "grid gap-1" : "grid gap-0.5"}>
       {faces.map((f) => (
         <li key={f.id}>
           <Link
             href={`/constructs#${f.id}`}
+            hrefLang={hrefLang}
             onClick={onNavigate}
             className={`model-face group grid grid-cols-[2rem_minmax(0,1fr)] items-center gap-3.5 rounded-xl transition-colors hover:bg-surface ${
               compact ? "-mx-2 px-2 py-2" : "px-3 py-2"
@@ -126,6 +134,7 @@ export function ModelMegaMenu({
   active: boolean;
 }) {
   const { t } = useLocale();
+  const hrefLang = useEnLang();
   const wrapRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -266,6 +275,7 @@ export function ModelMegaMenu({
                 <li key={l.href}>
                   <Link
                     href={l.href}
+                    hrefLang={hrefLang}
                     onClick={close}
                     className="group flex min-h-11 items-center justify-between text-[0.875rem] font-medium tracking-tight text-ink"
                   >
@@ -277,6 +287,7 @@ export function ModelMegaMenu({
             </ul>
             <Link
               href={assessment.href}
+              hrefLang={hrefLang}
               onClick={close}
               className="sc-btn-primary mt-auto inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight"
             >
@@ -290,6 +301,7 @@ export function ModelMegaMenu({
               <p className="eyebrow">{t("model.facesHeading")}</p>
               <Link
                 href={sixFaces.href}
+                hrefLang={hrefLang}
                 onClick={close}
                 className="group inline-flex items-center gap-1.5 text-[0.8125rem] font-semibold tracking-tight text-ink hover:underline hover:underline-offset-4"
               >
@@ -318,6 +330,7 @@ export function MobileModelSection({
   onNavigate: () => void;
 }) {
   const { t } = useLocale();
+  const hrefLang = useEnLang();
   // Research and the free baseline already have their own rows in the mobile
   // menu (main list and bottom CTA), so the section keeps to the model itself.
   const [overview, sixFaces] = modelMenuLinks;
@@ -328,7 +341,7 @@ export function MobileModelSection({
         aria-expanded={expanded}
         aria-controls="mobile-model"
         onClick={onToggle}
-        className="flex min-h-14 w-full items-center justify-between text-left text-[1.375rem] font-semibold tracking-[-0.02em] text-ink"
+        className="flex min-h-14 w-full items-center justify-between text-start text-[1.375rem] font-semibold tracking-[-0.02em] text-ink"
       >
         <span className="flex items-center gap-3">
           <MiniCube className="h-7 w-7 shrink-0" />
@@ -356,6 +369,7 @@ export function MobileModelSection({
             <Link
               key={l.href}
               href={l.href}
+              hrefLang={hrefLang}
               onClick={onNavigate}
               className="flex min-h-11 items-center justify-center rounded-full border border-line-strong px-3 text-center text-[0.8125rem] font-semibold leading-tight tracking-tight text-ink"
             >

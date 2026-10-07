@@ -56,11 +56,14 @@ export function Button({
   children,
   variant = "primary",
   className = "",
+  hrefLang,
 }: {
   href: string;
   children: ReactNode;
   variant?: "primary" | "secondary" | "ghost" | "light";
   className?: string;
+  /** "en" when the link leaves a translated page for an English-only one. */
+  hrefLang?: string;
 }) {
   const base =
     "sc-btn inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight sm:w-auto sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink touch-manipulation";
@@ -74,7 +77,7 @@ export function Button({
   };
 
   return (
-    <Link href={href} className={`${base} ${variants[variant]} ${className}`}>
+    <Link href={href} hrefLang={hrefLang} className={`${base} ${variants[variant]} ${className}`}>
       {children}
     </Link>
   );
