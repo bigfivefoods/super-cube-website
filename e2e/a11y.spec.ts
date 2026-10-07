@@ -67,6 +67,10 @@ const PAGES = [
   "/share/report/not-a-real-token",
   "/news",
   "/news/super-cube-lms-accelerating-leadership-development",
+  "/news/twelve-weeks-six-faces-fmcg-leadership",
+  "/news/grade-12-boarders-leadership-field-snapshot",
+  "/schools",
+  "/organisations",
 ];
 
 for (const [tag, viewport] of [

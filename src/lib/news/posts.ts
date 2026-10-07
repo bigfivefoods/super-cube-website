@@ -68,7 +68,193 @@ Developing a whole class, team or company? Seat packs of **10, 20 or 50 learner 
 
 [See pricing](/pricing) · [Start your free baseline](/learn/start) · [Plan a pilot](/pilot-pack)`;
 
+/*
+ * Case study 1 (FMCG). Every figure is from the Super-Cube® company profile (September 2023,
+ * pp. 14–28): aggregated pre/post assessment results, 12-week interventions at Imana Foods and
+ * Kerry Foods (NQF 3–5). Craig approved naming both companies and the quoted learners (7 Oct 2026).
+ */
+const FMCG_CASE_STUDY_BODY = `## The challenge
+
+In fast-moving consumer goods, leadership happens on every shift as well as in the boardroom. Supervisors, team leaders and managers make constant calls about people, quality, safety and cost, often under pressure. Most leadership training still covers a narrow set of management skills, and very little of it measures whether anything actually changed.
+
+Super-Cube® takes a different view. Leadership is a whole-person capability, and it can be developed and measured. The question was whether a short, structured, accredited programme could move all six faces of a leader at once, and show it in the numbers.
+
+## The intervention
+
+Over 12 weeks, learners worked through six Super-Cube® modules, one for each face of the model, each with its own workbook. Every module set out the skills to be developed and specific, assessable outcomes. Each was SETA-accredited at NQF levels 3 to 5. Learners were assessed on three skills per face before the course and again after it.
+
+- **Choices** (decision-making intelligence): Problem solving, decision making, change management, risk assessment (NQF L3 · 6 credits)
+- **Principles** (decision-making foundations): Ethics, values and morals, organisational culture, codes of conduct, ethical governance (NQF L5 · 5 credits)
+- **Mental** intelligence: Cognitive and self-awareness skills, study and learning skills, creativity (NQF L5 · 5 credits)
+- **Emotional** intelligence: Social, negotiation, motivation and communication skills (NQF L5 · 4 credits)
+- **Physical** intelligence: Wellness, stress management, discipline and alignment (NQF L4 · 8 credits)
+- **Spiritual** intelligence: Personal, team and organisational leadership (NQF L5 · 8 credits)
+
+## The results
+
+Every face improved. Overall leadership development, the average across all six faces, rose by **+32.2%**.
+
+![Bar chart of average pre- to post-course gains by Super-Cube® face: Choices +26.6, Principles +45.1, Mental +29.7, Emotional +39.5, Physical +27.7, Spiritual +24.6, overall +32.2 percentage points.](/news/fmcg-leadership-results-chart.png)
+
+- **Choices:** 52.9% → 79.6% (+26.6%)
+- **Principles:** 38.4% → 83.5% (+45.1%)
+- **Mental:** 49.9% → 79.6% (+29.7%)
+- **Emotional:** 48.5% → 88.0% (+39.5%)
+- **Physical:** 56.0% → 83.8% (+27.7%)
+- **Spiritual:** 61.9% → 86.6% (+24.6%)
+- **Overall, all six faces:** +32.2%
+
+*Gains are the change in average assessment score, in percentage points.*
+
+**Principles showed the largest gain (+45.1%).** It also had the lowest starting point. Corporate governance scores climbed from 23.5% to 79.8% (+56.3%) and ethical decisions from 38.7% to 85.7% (+47.1%).
+
+**Emotional intelligence followed at +39.5%,** with the highest finishing score of any face (88.0%). Conflict resolution rose from 37.0% to 83.2% (+46.2%), and understanding of emotional intelligence components doubled, from 45.4% to 90.8%.
+
+**Choices rose +26.6%.** Ethical decisions moved from 46.2% to 84.9% and risk assessment from 38.7% to 73.1%. **Mental** gained +29.7%, led by study and learning techniques (+37.0%). **Physical** gained +27.7%, led by physical wellbeing (+37.8%). **Spiritual** gained +24.6% from the highest starting point of the six faces, with personal leadership up from 55.5% to 84.0%.
+
+## What changed for people
+
+The numbers show the scale of the shift. The learners describe what it felt like.
+
+> "It was a wonderful and enlightening experience. I have learnt about myself weakness and strengths, and how to grow and improve as a person. I feel the content learnt will help me be a great manager and leader in the future."
+
+— Kaveshin Govender, Kerry Foods
+
+> "This programme has been a journey of learning, growth and development. The model has potential to engage and influence people across age, education, class and culture as it is not bound to a rigid concept or theory of what a leader or leadership is. Instead, it explores that which comprises moral, effective human functioning, especially in a leadership context."
+
+— Vernon Moodley, Kerry Foods
+
+Asked whether the Super-Cube® leadership model positively influences his leadership behaviour, Theolen Thevan of Kerry Foods answered:
+
+> "More than the word influence, it provokes your behaviour and calls for change."
+
+At Imana Foods, Tracey Norton put it simply:
+
+> "I think it is a fantastic model which needs to be shared with all South Africans and later internationally."
+
+— Tracey Norton, Imana Foods
+
+> "The programme is what the world is waiting for."
+
+— Sydney Mkhwanazi, Imana Foods
+
+## Why it matters
+
+Three things stand out. First, the largest gains came in **ethics, governance and conflict resolution**. These skills are hard to teach and costly to get wrong. Second, the improvement was **broad**: all six faces moved, not just one skill set, which is the point of developing the whole leader. Third, the programme was **measured**. Each face was assessed before and after, so the progress can be seen and reported. It doesn't have to be assumed.
+
+That before-and-after loop now sits at the heart of every Super-Cube® programme: measure, practise, prove.
+
+## Start with your own baseline
+
+- **Individuals:** take the free Super-Cube® baseline in about 10 minutes and see where your six faces stand today: [start your free baseline](/learn/start) at super-cube.me
+- **Organisations:** run a Super-Cube® pilot for your managers: a baseline for every leader, six short courses, a re-assessment and a before-and-after cohort report you can take to your board: [plan a pilot for your organisation](/organisations)
+
+
+**About these results.** These are aggregated pre- and post-course assessment results from Super-Cube® leadership development interventions (NQF levels 3–5) at South African and international FMCG organisations, including Imana Foods and Kerry Foods, as reported in the Super-Cube® company profile (September 2023). Gains are changes in average assessment scores in percentage points. They describe these cohorts and are not a guarantee of results for any individual or organisation. Separately, the structure of the six-face model was validated in Dr Craig Muller's doctoral research at the University of KwaZulu-Natal (2021).
+
+*Quotes are reproduced verbatim from learner feedback, with permission.*`;
+
+/*
+ * Case study 2 (field snapshot, anonymised: the school is never named, no learner is named or pictured).
+ * Figures are survey answers from slide 3 to 9 of "Leadership results" (Grade 12 boarders, Aug 2024, n = 33):
+ * 0% = "Which scientific leadership approach do you use?" (0% yes; open answers named none, per Craig),
+ * 88% = would like to develop leadership using a scientific approach, 94% = leadership is important.
+ * Not before/after results.
+ */
+const SCHOOL_SNAPSHOT_BODY = `Ask a group of Grade 12 boarders whether leadership matters, and the answer is clear. Ask which leadership model they use to develop it, and the answer is just as clear: none. That's what Dr Craig Muller found when 33 Grade 12 boarders at a leading high school in South Africa took part in a brief Super-Cube® leadership intervention in August 2024 and completed a leadership questionnaire.
+
+## They had no leadership model at all
+
+Asked which leadership approach they use to develop their leadership, **none of the boarders named one**. In the report's words, **0%** use a scientific approach to develop their leadership skills.
+
+> "The key thing here is that they never had a leadership model to use as a navigation tool."
+
+— Dr Craig Muller
+
+That's no criticism of the learners or their school. Young people mostly learn leadership by example: on the sports field, in the boarding house and through responsibility. That matters, but it rarely comes with a framework that shows them where they're strong, where they're not and what to work on next.
+
+## They want, and need, one
+
+The motivation is already there. **94%** said leadership is important. And **88%** would like to develop their leadership using a scientific approach. As the report puts it, 88% "want to develop their leadership skills".
+
+![Bar chart of survey answers from 33 Grade 12 boarders at a leading South African high school: 0% had a leadership model they actually used (none named a leadership approach they use); 88% would like to develop their leadership using a scientific approach; 94% believe leadership is important.](/news/grade-12-leadership-snapshot-chart.png)
+
+*Source: Leadership results, Grade 12 boarders, a leading South African high school, August 2024 (Dr Craig Muller). Survey answers as reported (n = 33). 0%: asked which scientific leadership approach they use, none answered yes and the open answers named none in use.*
+
+## Strong values, fewer tools
+
+The questions on the six Super-Cube® faces told the same story: strong values, with fewer formal tools to act on them.
+
+- **Values are strong.** 100% say the choices they make in life are important, and 100% say principles are important. 90.9% care about other people's well-being. 84.8% believe they have the skills to lead people, and 84.8% would like a formal leadership position one day.
+- **Formal methods are thinner.** 63.6% have been taught a formal studying or learning technique, and 57.5% have been taught different thinking techniques. 69.7% don't have a formal (scientific) way to manage stress.
+
+## What the report recommends
+
+Based on the boarders' answers, the report makes three recommendations:
+
+- **Offer leadership development** as a subject or course for those who want to develop their skills.
+- **Use a scientific approach**, with relevant, grade-appropriate and stimulating content to help accelerate leadership education.
+- **Give each learner a bespoke Super-Cube® leadership plan.**
+
+It proposes eight contact sessions across the school year: an introduction to leadership, the six Super-Cube® faces (**Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**) and a closing summary. Along the way, learners prepare and revise a plan for their lives, including the values they believe are important, and present it to their parents and/or teachers.
+
+## What it means
+
+Young people can value leadership, and want to grow in it, and still have no model to steer by. Super-Cube® gives them one: a single, structured model of six faces they can use to see where they stand, choose what to work on and keep coming back to as they grow.
+
+That's the thinking behind **Super-Cube® Adolescents** (ages 13–21): identity, influence and wise decisions, in age-appropriate language, with real-world scenarios from school, sport and digital life.
+
+- A **free baseline** across all six faces
+- **Six age-adapted construct courses**, with practice labs and checks
+- A **post-assessment and personal report**
+- **R99 once**, with lifetime access and no subscription
+
+Schools can run the same pathway with a whole grade, using cohort codes for teachers. Learner journals stay private, and progress is shared only with consent.
+
+## Give young leaders a model to steer by
+
+- **Parents and learners:** [start the free baseline](/learn/start), then unlock [Super-Cube® Adolescents](/pricing#adolescents) for R99 once.
+- **Schools:** [bring Super-Cube® to a grade or the whole school](/schools#quote).
+
+**About this field snapshot.** These are self-reported survey answers from one group of 33 Grade 12 boarders at a leading high school in South Africa who took part in a brief Super-Cube® leadership intervention in August 2024. They are not assessment scores or before-and-after results. On the survey, 24.2% said they knew of another leadership model before Super-Cube® and 6.1% ticked yes to using a scientific leadership model, but when asked which approach they use, none named one. The school is not named, and no learner is named or pictured.`;
+
 export const codeNewsPosts: NewsPost[] = [
+  {
+    id: "code_fmcg_case_study_2026",
+    slug: "twelve-weeks-six-faces-fmcg-leadership",
+    title: "Twelve weeks, six faces, +32.2%: how FMCG leaders at Imana Foods and Kerry Foods grew with Super-Cube®",
+    excerpt:
+      "Leaders at Imana Foods and Kerry Foods completed a 12-week, accredited Super-Cube® leadership development intervention. Across the six faces, average assessment scores rose by 32.2 percentage points from the start of the course to the end.",
+    body: FMCG_CASE_STUDY_BODY,
+    tag: "Case study · FMCG leadership",
+    status: "published",
+    coverImage: "/news/fmcg-leadership-case-study-cover.jpg",
+    coverWide: "/news/fmcg-leadership-case-study-cover-wide.jpg",
+    coverAlt:
+      "Super-Cube® results card: overall leadership development +32.2% across all six faces, pre- to post-course, with gains by face: Choices +26.6%, Principles +45.1%, Mental +29.7%, Emotional +39.5%, Physical +27.7%, Spiritual +24.6%.",
+    shareImage: "/images/og/news/fmcg-leadership-case-study.jpg",
+    publishedAt: "2026-10-07T12:10:00.000Z",
+    updatedAt: "2026-10-07T12:10:00.000Z",
+    source: "code",
+  },
+  {
+    id: "code_school_snapshot_2026",
+    slug: "grade-12-boarders-leadership-field-snapshot",
+    title: "No leadership model at all, and a clear wish for one: what 33 Grade 12 boarders told us",
+    excerpt:
+      "A Super-Cube® field snapshot from a leading high school in South Africa: none of the boarders had a leadership model they actually used, yet 88% want to develop their leadership using a scientific approach.",
+    body: SCHOOL_SNAPSHOT_BODY,
+    tag: "Field snapshot · School leadership",
+    status: "published",
+    coverImage: "/news/grade-12-leadership-snapshot-cover.jpg",
+    coverWide: "/news/grade-12-leadership-snapshot-cover-wide.jpg",
+    coverAlt:
+      "Super-Cube® field snapshot card: 0% had a leadership model they actually used, 88% want to develop their leadership using a scientific approach, 94% believe leadership is important. Survey answers from 33 Grade 12 boarders, August 2024, not before/after results.",
+    shareImage: "/images/og/news/grade-12-leadership-snapshot.jpg",
+    publishedAt: "2026-10-07T12:00:00.000Z",
+    updatedAt: "2026-10-07T12:00:00.000Z",
+    source: "code",
+  },
   {
     id: "code_lifetime_access_r99",
     slug: "start-free-pay-once-lifetime-access-r99",

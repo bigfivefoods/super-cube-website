@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EnquiryForm } from "@/components/EnquiryForm";
-import { CaseStudyComingSoon, HowItWorks, OfferList } from "@/components/OfferBlocks";
+import { CaseStudyFeature, HowItWorks, OfferList } from "@/components/OfferBlocks";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
 import { SEAT_PACKS, formatSeatPackPrice } from "@/lib/seat-packs";
@@ -64,7 +64,22 @@ export default function SchoolsPage() {
         </div>
       </section>
 
-      <CaseStudyComingSoon audience="school" />
+      <CaseStudyFeature
+        testId="case-study-school"
+        eyebrow="Field snapshot · School survey, 2024"
+        title="No leadership model at all, and a clear wish for one."
+        body="We surveyed 33 Grade 12 boarders at a leading high school in South Africa who took part in a brief Super-Cube® leadership intervention."
+        stats={[
+          { value: "0%", label: "had a leadership model they actually used" },
+          { value: "88%", label: "would like to develop their leadership using a scientific approach" },
+          { value: "94%", label: "believe leadership is important" },
+        ]}
+        source="Field snapshot: survey answers from 33 Grade 12 boarders at a leading South African high school, August 2024 (Dr Craig Muller). Self-reported answers, not assessment scores or before-and-after results. 0%: asked which leadership approach they use, none named one."
+        href="/news/grade-12-boarders-leadership-field-snapshot"
+        linkLabel="Read the field snapshot"
+        image="/news/grade-12-leadership-snapshot-cover.jpg"
+        imageAlt="Super-Cube® field snapshot card: 0% had a leadership model they actually used, 88% want to develop their leadership using a scientific approach, 94% believe leadership is important."
+      />
 
       <section id="quote" className="section-pad scroll-mt-24 border-t border-line bg-surface">
         <div className="container-site grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:gap-12">

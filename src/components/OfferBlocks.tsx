@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import { BrandText } from "@/components/news/BrandText";
 import { SectionHeading } from "@/components/ui";
 
 export type Step = { title: string; body: string };
@@ -88,6 +90,88 @@ export function OfferList({
             </li>
           ))}
         </ul>
+      </div>
+    </section>
+  );
+}
+
+export type CaseStudyStat = { value: string; label: string };
+
+/**
+ * A published case study (or field snapshot) on a landing page: square cover, headline,
+ * up to three figures with a short source line, an optional quote, and a link to the post.
+ * Figures must match the post and its source exactly.
+ */
+export function CaseStudyFeature({
+  eyebrow,
+  title,
+  body,
+  stats,
+  source,
+  quote,
+  href,
+  linkLabel,
+  image,
+  imageAlt,
+  testId,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  stats: CaseStudyStat[];
+  source: string;
+  quote?: { text: string; cite: string };
+  href: string;
+  linkLabel: string;
+  image: string;
+  imageAlt: string;
+  testId?: string;
+}) {
+  return (
+    <section className="section-pad border-t border-line" data-testid={testId}>
+      <div className="container-site grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-12">
+        <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-2xl border border-line bg-void lg:max-w-none">
+          <Image src={image} alt={imageAlt} fill sizes="(max-width: 1024px) 28rem, 40vw" className="object-cover" />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{eyebrow}</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+            <BrandText text={title} />
+          </h2>
+          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
+            <BrandText text={body} />
+          </p>
+          <dl className="mt-6 grid gap-3 sm:grid-cols-3">
+            {stats.map((s) => (
+              <div key={s.label} className="sc-card p-4">
+                <dt className="sr-only">{s.label}</dt>
+                <dd>
+                  <span className="block text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr">
+                    {s.value}
+                  </span>
+                  <span className="mt-1 block text-sm leading-snug text-slate">{s.label}</span>
+                </dd>
+              </div>
+            ))}
+          </dl>
+          {quote && (
+            <figure className="mt-6 border-l-2 border-line-strong pl-4">
+              <blockquote className="text-base leading-relaxed text-ink">“{quote.text}”</blockquote>
+              <figcaption className="mt-1.5 text-sm text-muted">{quote.cite}</figcaption>
+            </figure>
+          )}
+          <p className="mt-5 max-w-2xl text-xs leading-relaxed text-muted">
+            <BrandText text={source} />
+          </p>
+          <p className="mt-5">
+            <Link
+              href={href}
+              className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink underline underline-offset-4"
+            >
+              {linkLabel} <span aria-hidden>→</span>
+            </Link>
+          </p>
+        </div>
       </div>
     </section>
   );

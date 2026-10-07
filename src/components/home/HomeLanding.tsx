@@ -347,6 +347,15 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               <p className="mt-3 text-xs text-muted">
                 {s.researchNote}
               </p>
+              <p className="mt-3 text-sm">
+                <Link
+                  href="/news/twelve-weeks-six-faces-fmcg-leadership"
+                  className="inline-flex min-h-6 items-center gap-1 font-semibold text-ink underline underline-offset-2"
+                  data-testid="home-case-study-link"
+                >
+                  {s.readCaseStudy} <span aria-hidden className="rtl:-scale-x-100">→</span>
+                </Link>
+              </p>
             </div>
             <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
               <Button href="/research" hrefLang={hl("/research")} variant="ghost">

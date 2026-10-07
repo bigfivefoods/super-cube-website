@@ -56,6 +56,8 @@ export type HomeStrings = {
   researchOverall: string;
   researchNote: string;
   readResearch: string;
+  /** Link to the FMCG case study post (English post; other languages fall back to this label). */
+  readCaseStudy: string;
   aboutCraig: string;
   nextEyebrow: string;
   nextTitle: string;
@@ -170,6 +172,7 @@ const en: HomeStrings = {
   researchNote:
     "Average pre- to post-assessment improvement reported in the doctoral research. Not live programme data.",
   readResearch: "Read the research and theory",
+  readCaseStudy: "Read the FMCG case study",
   aboutCraig: "About Dr Craig Muller",
   nextEyebrow: "Next step",
   nextTitle: "Start with a free 10-minute baseline.",
