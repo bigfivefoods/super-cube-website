@@ -4,6 +4,7 @@ import { getNewsletterAdmin } from "@/lib/newsletter/admin-auth";
 import { SignInForm } from "./SignInForm";
 import { signOutAction, toggleHandledAction } from "./actions";
 import { EnquiriesTab, type Enquiry } from "./EnquiriesTab";
+import { NewsTab } from "./NewsTab";
 import { NEWSLETTER_TABLE, newsletterDb, subscriberStatus, type Subscriber } from "@/lib/newsletter/db";
 
 export const dynamic = "force-dynamic";
@@ -25,10 +26,10 @@ function fmt(iso: string | null) {
 export default async function AdminPage({
   searchParams,
 }: {
-  searchParams: Promise<{ tab?: string }>;
+  searchParams: Promise<{ tab?: string; edit?: string; done?: string }>;
 }) {
-  const { tab: tabParam } = await searchParams;
-  const tab = tabParam === "subscribers" ? "subscribers" : "enquiries";
+  const { tab: tabParam, edit, done } = await searchParams;
+  const tab = tabParam === "subscribers" ? "subscribers" : tabParam === "news" ? "news" : "enquiries";
   const admin = await getNewsletterAdmin();
   if (!admin.ok) {
     return (
@@ -49,7 +50,9 @@ export default async function AdminPage({
   let rows: Subscriber[] = [];
   let enquiries: Enquiry[] = [];
   let error: string | null = null;
-  if (!db) error = "The store isn’t configured (Supabase URL / service role key).";
+  if (tab === "news") {
+    // NewsTab loads its own data (and reports a missing store itself).
+  } else if (!db) error = "The store isn’t configured (Supabase URL / service role key).";
   else if (tab === "subscribers") {
     const res = await db
       .from(NEWSLETTER_TABLE)
@@ -94,12 +97,17 @@ export default async function AdminPage({
           <Link href="/newsletter/admin?tab=subscribers" className={tabCls(tab === "subscribers")} aria-current={tab === "subscribers" ? "page" : undefined}>
             Newsletter subscribers
           </Link>
+          <Link href="/newsletter/admin?tab=news" className={tabCls(tab === "news")} aria-current={tab === "news" ? "page" : undefined}>
+            News posts
+          </Link>
           <Link href="/admin" className={tabCls(false)}>
             Learning admin →
           </Link>
         </nav>
 
-        {tab === "enquiries" ? (
+        {tab === "news" ? (
+          <NewsTab edit={edit} done={done} />
+        ) : tab === "enquiries" ? (
           error ? (
             <p className="mt-6 rounded-xl border border-line bg-elevated p-4 text-sm text-ink" role="alert">{error}</p>
           ) : (

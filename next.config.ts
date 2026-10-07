@@ -20,6 +20,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
+  experimental: {
+    // News cover uploads in the admin (covers ≤ 4 MB; Vercel caps request bodies at 4.5 MB).
+    serverActions: { bodySizeLimit: "4.5mb" },
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920],

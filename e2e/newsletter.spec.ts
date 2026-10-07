@@ -35,3 +35,22 @@ test.describe("newsletter double opt-in", () => {
     await expect(form.getByText(/confirm by email/i)).toBeVisible();
   });
 });
+
+test.describe("news admin is private", () => {
+  test("the news tab and post previews ask for an admin sign-in", async ({ page }) => {
+    await page.goto("/newsletter/admin?tab=news&edit=new");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Super-Cube® admin");
+    await expect(page.getByLabel("Password")).toBeVisible();
+    await expect(page.locator("#post-title")).toHaveCount(0);
+    await page.goto("/newsletter/admin/preview/0b7c2a52-6a0e-4a43-9f3e-1d2c3b4a5f60");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Sign in to preview");
+    await expect(page.locator("article")).toHaveCount(0);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+  });
+
+  test("share cards exist only for published admin posts", async ({ request }) => {
+    expect((await request.get("/news/not-a-post/share-image")).status()).toBe(404);
+    // Code posts ship static 1200×630 cards instead.
+    expect((await request.get("/news/super-cube-lms-accelerating-leadership-development/share-image")).status()).toBe(404);
+  });
+});
