@@ -24,6 +24,34 @@ export const audienceNav = [
   { href: "/pricing", label: "Pricing", i18n: "nav.pricing" },
 ] as const;
 
+/**
+ * "The Model" mega-menu (desktop header + mobile menu section).
+ * Research lives here on desktop rather than as its own top-bar item, so the
+ * bar keeps six items and stays on one line at 1024px in every language.
+ */
+export const modelMenuLinks = [
+  { href: "/the-model", label: "Model overview", i18n: "model.overview" },
+  { href: "/constructs", label: "All six faces in depth", i18n: "model.sixFaces" },
+  { href: "/research", label: "Research & evidence", i18n: "model.research" },
+  { href: "/learn/start", label: "Free baseline assessment", i18n: "model.assessment" },
+] as const;
+
+/** Top-bar items folded into "The Model" menu on desktop. */
+export const modelMenuFoldedHrefs: readonly string[] = ["/research"];
+
+/** Where each construct sits on the cube (matches SuperCube's face layout). */
+export const facePosition: Record<
+  "choices" | "principles" | "mental" | "emotional" | "physical" | "spiritual",
+  "top" | "bottom" | "side"
+> = {
+  choices: "top",
+  principles: "bottom",
+  mental: "side",
+  emotional: "side",
+  physical: "side",
+  spiritual: "side",
+};
+
 /** Secondary links shown in the mobile menu (and footer). */
 export const menuMoreNav = [
   { href: "/the-model", label: "The model" },

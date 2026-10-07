@@ -95,4 +95,53 @@ test.describe("Super-Cube smoke", () => {
       "Emotional: Emotional intelligence, Empathy, Social relationships, Motivation, Inspiration"
     );
   });
+
+  test("The Model mega-menu: six faces, keyboard and Esc", async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto(base + "/research");
+    const button = page.locator("#model-menu-button");
+    await expect(button).toHaveText(/The Model/);
+    await expect(button).toHaveAttribute("aria-expanded", "false");
+    await button.focus();
+    await page.keyboard.press("Enter");
+    await expect(button).toHaveAttribute("aria-expanded", "true");
+    const panel = page.locator("#model-menu");
+    for (const face of ["Choices", "Principles", "Mental", "Emotional", "Physical", "Spiritual"]) {
+      await expect(panel.getByRole("link", { name: new RegExp(`^${face}`) })).toHaveAttribute(
+        "href",
+        `/constructs#${face.toLowerCase()}`
+      );
+    }
+    await expect(panel.getByText("Decision-making intelligence · Moral values · Judgement · Risk-taking")).toBeVisible();
+    await expect(panel.getByRole("link", { name: /model overview/i })).toHaveAttribute("href", "/the-model");
+    await expect(panel.getByRole("link", { name: /research & evidence/i })).toHaveAttribute("href", "/research");
+    await expect(panel.getByRole("link", { name: /free baseline assessment/i })).toHaveAttribute("href", "/learn/start");
+    await page.keyboard.press("Escape");
+    await expect(button).toHaveAttribute("aria-expanded", "false");
+    await expect(button).toBeFocused();
+  });
+
+  test("mobile menu: The Model expands to the six faces", async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(base + "/");
+    await page.locator('button[aria-controls="mobile-nav"]').click();
+    const toggle = page.locator('button[aria-controls="mobile-model"]');
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await toggle.click();
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(page.locator("#mobile-model").getByRole("link", { name: /^Spiritual/ })).toBeVisible();
+  });
+
+  test("breadcrumbs: labelled trail with JSON-LD, none on home", async ({ page }) => {
+    await page.goto(base + "/constructs");
+    const crumbs = page.getByRole("navigation", { name: "Breadcrumb" });
+    await expect(crumbs.locator("ol > li")).toHaveCount(3);
+    await expect(crumbs.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
+    await expect(crumbs.getByRole("link", { name: "The Model" })).toHaveAttribute("href", "/the-model");
+    await expect(crumbs.locator('[aria-current="page"]')).toHaveText("Six faces");
+    const ld = await page.locator('script[type="application/ld+json"]').allTextContents();
+    expect(ld.some((j) => j.includes('"BreadcrumbList"') && j.includes("https://www.super-cube.me/constructs"))).toBe(true);
+    await page.goto(base + "/");
+    await expect(page.getByRole("navigation", { name: "Breadcrumb" })).toHaveCount(0);
+  });
 });

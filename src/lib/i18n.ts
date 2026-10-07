@@ -82,6 +82,27 @@ const en = {
   "nav.speaking": "Speaking",
   "nav.moreLinks": "More from Super-Cube",
 
+  // The Model mega-menu
+  "nav.theModel": "The Model",
+  "model.menuTitle": "The Super-Cube® Model",
+  "model.menuBlurb": "Six developable faces, with you at the centre.",
+  "model.cubeAlt":
+    "The Super-Cube®: Choices on top, Principles at the bottom, and Mental, Emotional, Physical and Spiritual around the sides",
+  "model.overview": "Model overview",
+  "model.sixFaces": "All six faces in depth",
+  "model.research": "Research & evidence",
+  "model.assessment": "Free baseline assessment",
+  "model.facesHeading": "The six faces",
+  "model.top": "Top",
+  "model.bottom": "Bottom",
+  "model.side": "Side",
+
+  // Breadcrumbs
+  "bc.label": "Breadcrumb",
+  "bc.home": "Home",
+  "bc.verify": "Certificate verification",
+  "bc.unsubscribe": "Unsubscribe",
+
   // Footer
   "footer.product": "Product",
   "footer.understand": "Understand",
@@ -354,6 +375,25 @@ const zu: Record<I18nKey, string> = {
   "nav.speaking": "Izinkulumo",
   "nav.moreLinks": "Okunye kwe-Super-Cube",
 
+  "nav.theModel": "Imodeli",
+  "model.menuTitle": "Imodeli ye-Super-Cube®",
+  "model.menuBlurb": "Ubuso obuyisithupha obungathuthukiswa, wena usenkabeni.",
+  "model.cubeAlt":
+    "I-Super-Cube®: Izinketho phezulu, Izimiso phansi, kanye neNgqondo, Imizwa, Umzimba noMoya ezinhlangothini",
+  "model.overview": "Isifinyezo semodeli",
+  "model.sixFaces": "Ubuso obuyisithupha ngokujulile",
+  "model.research": "Ucwaningo nobufakazi",
+  "model.assessment": "Ukuhlolwa kwesisekelo kwamahhala",
+  "model.facesHeading": "Ubuso obuyisithupha",
+  "model.top": "Phezulu",
+  "model.bottom": "Phansi",
+  "model.side": "Eceleni",
+
+  "bc.label": "Indlela",
+  "bc.home": "Ikhaya",
+  "bc.verify": "Ukuqinisekisa isitifiketi",
+  "bc.unsubscribe": "Zikhiphe ohlwini",
+
   "footer.product": "Umkhiqizo",
   "footer.understand": "Qonda",
   "footer.practice": "Zilolonge",
@@ -616,6 +656,25 @@ const af: Record<I18nKey, string> = {
   "nav.schools": "Skole",
   "nav.speaking": "Toesprake",
   "nav.moreLinks": "Meer van Super-Cube",
+
+  "nav.theModel": "Die Model",
+  "model.menuTitle": "Die Super-Cube®-model",
+  "model.menuBlurb": "Ses ontwikkelbare vlakke, met jou in die middel.",
+  "model.cubeAlt":
+    "Die Super-Cube®: Keuses bo, Beginsels onder, en Geestelik, Emosioneel, Fisies en Spiritueel aan die kante",
+  "model.overview": "Modeloorsig",
+  "model.sixFaces": "Al ses vlakke in diepte",
+  "model.research": "Navorsing en bewyse",
+  "model.assessment": "Gratis basislynassessering",
+  "model.facesHeading": "Die ses vlakke",
+  "model.top": "Bo",
+  "model.bottom": "Onder",
+  "model.side": "Kant",
+
+  "bc.label": "Broodkrummelpad",
+  "bc.home": "Tuis",
+  "bc.verify": "Sertifikaatverifikasie",
+  "bc.unsubscribe": "Teken uit",
 
   "footer.product": "Produk",
   "footer.understand": "Verstaan",

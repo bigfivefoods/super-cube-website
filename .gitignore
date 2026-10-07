@@ -58,3 +58,7 @@ public/videos/courses/_audio/
 public/videos/sessions/_audio/
 # 130 session mp4s (~1.8GB) — exceed git/Vercel limits; serve via CDN if needed
 public/videos/sessions/*.mp4
+
+# Playwright local output
+/test-results/
+/playwright-report/
