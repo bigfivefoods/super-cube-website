@@ -1,4 +1,6 @@
 import { test, expect } from "@playwright/test";
+import { readdirSync, readFileSync, statSync } from "node:fs";
+import { join } from "node:path";
 import { constructs } from "@/lib/content";
 import { FACE_CONTENT } from "@/lib/lms/sessions";
 import { ADOLESCENT_FACE_TAGLINES, KIDS_FACE_TAGLINES, faceTagline } from "@/lib/lms/face-taglines";
@@ -40,5 +42,24 @@ test.describe("face taglines per programme", () => {
       expect(t.split(/\s+/).length).toBeLessThanOrEqual(14);
       expect(t).not.toMatch(/\d/);
     }
+  });
+
+  test("learner pages show face taglines via faceTagline(), not the adult site line", () => {
+    // Per-programme surfaces must not render construct.tagline directly. The course
+    // layout's SEO metadata has no programme context, so it keeps the site line.
+    const roots = ["src/app/learn", "src/components/learn", "src/app/admin/instrument-v2"];
+    const files: string[] = [];
+    const walk = (d: string) => {
+      for (const f of readdirSync(d)) {
+        const p = join(d, f);
+        if (statSync(p).isDirectory()) walk(p);
+        else if (/\.tsx?$/.test(f) && !/layout\.tsx$/.test(f)) files.push(p);
+      }
+    };
+    roots.forEach(walk);
+    const offenders = files.filter((f) =>
+      /\b(construct|constructMeta|face|c)\??\.tagline\b/.test(readFileSync(f, "utf8")),
+    );
+    expect(offenders).toEqual([]);
   });
 });
