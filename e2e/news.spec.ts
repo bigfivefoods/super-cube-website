@@ -190,3 +190,24 @@ for (const path of ["/impact", "/research"]) {
     );
   });
 }
+
+/* Leadership Is Learnable (the paid book, 8 Oct 2026): landing-size hero, share card with the Super-Cube® mark,
+ * one Amazon link from AMAZON_URL_TBD (src/lib/book.ts) and the free book as the starting point. */
+test("Leadership Is Learnable post: hero size, share card, Amazon and free-book links", async ({ page }) => {
+  const path = "/news/leadership-is-learnable-new-book";
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  const home = await page.locator(".page-hero").first().boundingBox();
+  await page.goto(path);
+  const hero = await page.locator("header.page-hero").first().boundingBox();
+  expect(Math.abs(home!.height - hero!.height)).toBeLessThanOrEqual(1);
+  expect(Math.abs(home!.width - hero!.width)).toBeLessThanOrEqual(1);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/Leadership Is Learnable/);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/images\/og\/news\/leadership-is-learnable\.jpg$/);
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /Super-Cube®/);
+  const body = page.locator(".news-body");
+  await expect(body).toContainText("+24.6%");
+  await expect(body.getByRole("link", { name: "Buy Leadership Is Learnable on Amazon" })).toHaveAttribute("href", /amazon\./);
+  await expect(body.getByRole("link", { name: "Download the free Super-Cube® book" })).toHaveAttribute("href", "/book");
+  await expect(page.locator("main")).not.toContainText(/kwaden|®®/i);
+});

@@ -1,3 +1,4 @@
+import { AMAZON_URL_TBD, BOOK, PAID_BOOK } from "@/lib/book";
 import type { NewsPost } from "./types";
 
 /*
@@ -219,7 +220,79 @@ Schools can run the same pathway with a whole grade, using cohort codes for teac
 
 **About this field snapshot.** These are self-reported survey answers from one group of 33 Grade 12 boarders at a leading high school in South Africa who took part in a brief Super-Cube® leadership intervention in August 2024. They are not assessment scores or before-and-after results. On the survey, 24.2% said they knew of another leadership model before Super-Cube® and 6.1% ticked yes to using a scientific leadership model, but when asked which approach they use, none named one. The school is not named, and no learner is named or pictured.`;
 
+/*
+ * Leadership Is Learnable, the paid book (DRAFT for Craig's review, 8 Oct 2026). Facts only from the book's
+ * store listing: 132-person survey, ten director interviews, the six faces, the 12-week Imana Foods and Kerry
+ * Foods intervention (+32.2% overall, Principles +45.1%, Emotional +39.5%, Spiritual +24.6%), the SDG chapter
+ * (official icons used with UN permission), DBA UKZN thesis 2020, degree 2021. No endorsements, reviews or
+ * sales figures. The Amazon link is AMAZON_URL_TBD (src/lib/book.ts). The free book (/book) is the free start.
+ * Matches the bigfivegroup.africa update of the same day.
+ */
+const LEADERSHIP_IS_LEARNABLE_BODY = `*By Dr Craig R. Muller, author of the Super-Cube® Leadership Model*
+
+Leadership is not a gift handed to a lucky few. It is a set of skills that can be learnt, practised and measured. That belief has shaped most of my working life, and today I am proud to share the book that sets out the evidence for it: **Leadership Is Learnable: The Super-Cube® model, the evidence behind it, and how to develop leaders at every level**, published by Big Five Group in paperback and as a Kindle e-book on Amazon.
+
+![Leadership Is Learnable by Dr Craig R. Muller: the white-covered paperback beside the Kindle edition on an e-reader, both showing the six-colour Super-Cube® hexagon](/news/leadership-is-learnable-cover-wide.jpg)
+
+## Where the book comes from
+
+The Super-Cube® model grew out of my Doctor of Business Administration at the University of KwaZulu-Natal (thesis 2020, degree conferred 2021). The research rests on three foundations: a review of more than a century of leadership science, a survey of **132 people** in an African FMCG business network, and face-to-face interviews with **ten of its directors**. Together they produced a practical model of six interconnected faces of leadership: **Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**.
+
+## What the evidence shows
+
+When leaders at Imana Foods and Kerry Foods completed a 12-week accredited Super-Cube® leadership intervention, their average assessment scores rose by **+32.2%** overall across the six faces, with gains on every face, including **Principles (+45.1%)**, **Emotional (+39.5%)** and **Spiritual (+24.6%)**. The gains are changes in average assessment scores, in percentage points. They describe those cohorts, not a promise for every reader, and the book is candid about what these results can and cannot show, and about how a stronger study could test the model further. You can read the full results in our [FMCG case study](/news/twelve-weeks-six-faces-fmcg-leadership).
+
+## What is inside
+
+- **A chapter on each face**: a story, the research evidence, frameworks from the accredited Super-Cube® programmes, practices, common traps, a self-check and one thing to do today.
+- **Every research figure traced to its source**, with endnotes for each chapter.
+- **Examples from African workplaces**, with lessons that apply anywhere.
+- **The ripple effect**: how leadership development spreads from one leader to teams, businesses, supply chains and communities.
+- **Leaders for the Global Goals**: why every one of the UN Sustainable Development Goals needs leaders, with the official SDG icons used with the permission of the United Nations, and my case for leadership skills as an enabling goal.
+- **A step-by-step guide** for HR directors, boards and facilitators to building a leadership programme.
+- **Appendices**: the survey as administered, the interview schedule, full statistical tables, a glossary, references and a facilitator guide.
+
+## Three ways to read it
+
+Busy executives can follow a two-hour route through the essentials. Facilitators and HR professionals get frameworks they can teach on Monday. Students and researchers can judge the method and the evidence for themselves.
+
+## Start free, then go deeper
+
+If Super-Cube® is new to you, start with the free short book, **${BOOK.title}** (${BOOK.pages} pages, PDF), which you can [download free here](${BOOK.page}) or from [bigfivegroup.africa](https://bigfivegroup.africa/leadership). *Leadership Is Learnable* is the comprehensive edition: the full research, the evidence and the tools to put the model to work. And if you would like to see where your own six faces stand today, the [free Super-Cube® baseline](/learn/start) takes about ten minutes.
+
+## Get the book
+
+- **Paperback**: ${PAID_BOOK.paperback.pages} pages in full colour, ${PAID_BOOK.paperback.price}, ISBN ${PAID_BOOK.paperback.isbn}.
+- **Kindle e-book**: ${PAID_BOOK.kindle.price}, ISBN ${PAID_BOOK.kindle.isbn}.
+
+Prices may differ between Amazon stores.
+
+[Buy Leadership Is Learnable on Amazon](${AMAZON_URL_TBD}) · [Download the free Super-Cube® book](${BOOK.page}) · [Start your free baseline](/learn/start)
+
+## Who it is for
+
+Leaders at every level and the people who develop them: managers, HR and learning professionals, coaches, boards, educators and those who run leadership programmes for young adults. It is for anyone who believes that better leaders build a better Africa, and a better world.`;
+
 export const codeNewsPosts: NewsPost[] = [
+  {
+    id: "code_leadership_is_learnable_2026",
+    slug: "leadership-is-learnable-new-book",
+    title: "Leadership Is Learnable: a new book on the Super-Cube® model and the evidence behind it",
+    excerpt:
+      "Dr Craig R. Muller's new book sets out the Super-Cube® leadership model, the research and results behind it, and how to develop leaders at every level. In paperback and on Kindle, from Amazon.",
+    body: LEADERSHIP_IS_LEARNABLE_BODY,
+    tag: "Book · Leadership Is Learnable",
+    status: "published",
+    coverImage: "/news/leadership-is-learnable-cover.jpg",
+    coverWide: "/news/leadership-is-learnable-cover-wide.jpg",
+    coverAlt:
+      "Leadership Is Learnable by Dr Craig R. Muller: the white-covered paperback beside the Kindle edition on an e-reader, both showing the six-colour Super-Cube® hexagon",
+    shareImage: "/images/og/news/leadership-is-learnable.jpg",
+    author: "Dr Craig R. Muller",
+    publishedAt: "2026-10-08T08:00:00.000Z",
+    updatedAt: "2026-10-08T08:00:00.000Z",
+    source: "code",
+  },
   {
     id: "code_fmcg_case_study_2026",
     slug: "twelve-weeks-six-faces-fmcg-leadership",

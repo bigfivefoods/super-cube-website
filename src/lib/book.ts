@@ -37,3 +37,23 @@ export const BOOK_CHAPTERS: readonly { n?: number; title: string; note: string }
   { title: "Epilogue: A Super-Cube® World Awaits", note: "Leadership for the generations to come" },
   { title: "Resources and Next Steps", note: "Further reading, research and where to go next" },
 ];
+
+/**
+ * The paid book, Leadership Is Learnable (white cover, Big Five Group), by Dr Craig R. Muller.
+ * The free book above stays the free starting point. Used by the /news launch post (src/lib/news/posts.ts).
+ *
+ * AMAZON_URL_TBD is a PLACEHOLDER: the book is going live on Amazon KDP and the product URL is not known yet.
+ * Until then it points at an Amazon search for the paperback ISBN. When the listing is live, replace this one
+ * value with the real Amazon product URL; every Amazon link on the site reads it from here.
+ */
+export const AMAZON_URL_TBD = "https://www.amazon.com/s?k=9781048361612";
+
+export const PAID_BOOK = {
+  title: "Leadership Is Learnable",
+  subtitle: "The Super-Cube® model, the evidence behind it, and how to develop leaders at every level",
+  author: "Dr Craig R. Muller",
+  imprint: "Big Five Group",
+  amazonUrl: AMAZON_URL_TBD,
+  paperback: { isbn: "978-1-0483-6161-2", pages: 312, price: "R299 / $17.99" },
+  kindle: { isbn: "978-1-0483-6160-5", price: "$8.99 (about R149)" },
+} as const;
