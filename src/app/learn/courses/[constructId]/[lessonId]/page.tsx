@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { useLmsState } from "@/components/learn/useLearnState";
 import { LessonContent } from "@/components/learn/LessonContent";
@@ -60,10 +60,14 @@ export default function LessonPlayerPage() {
     data && !isSampleLesson(data.lesson.id) && !hasFullPathwayAccess(state),
   );
   const lessonStatus = data ? state.lessonProgress[data.lesson.id] : undefined;
+  const openedId = useRef<string | null>(null);
 
   useEffect(() => {
     if (!data || !construct || locked) return;
-    void recordLessonOpen(programmeId, constructId, data.lesson.id);
+    if (openedId.current !== data.lesson.id) {
+      openedId.current = data.lesson.id;
+      void recordLessonOpen(programmeId, constructId, data.lesson.id);
+    }
     if (lessonStatus === "completed" || lessonStatus === "in_progress") return;
     markLessonInProgress(data.lesson.id, constructId);
   }, [lessonId, constructId, data, construct, locked, programmeId, lessonStatus]);
