@@ -12,7 +12,7 @@ import { BOOK as FREE_BOOK } from "@/lib/book";
  * The free Super-Cube® book (DRAFT for Craig's review, 8 Oct 2026). Goes out before the Leadership Is Learnable
  * launch post. Facts only from the live PDF (public/super-cube-leadership-book.pdf, 71 pages): the 13 chapters, the
  * foreword by Dr Housainou Taal, 36 practices, six self-assessment pages, the 30-day plan, the new Global Goals
- * chapter, the DBA thesis (UKZN, 2020; degree 2021: 18-item survey of 132 leaders, then interviews), the 12-week
+ * chapter, the DBA thesis (UKZN, 2020; degree 2021: 18-item survey of 132 people, then interviews), the 12-week
  * Imana Foods and Kerry Foods intervention (+32.2% overall, Principles +45.1%, Emotional +39.5%, Spiritual +24.6%)
  * and the Grade 12 field snapshot (school and learners not named). The comprehensive edition is only a teaser:
  * no Amazon link, price or buy button until its own launch post. Matches the bigfivegroup.africa update.
@@ -40,7 +40,7 @@ You can see every chapter on the [free book page](${FREE_BOOK.page}).
 
 ## Where the model comes from
 
-The Super-Cube® grew out of my Doctor of Business Administration at the University of KwaZulu-Natal (thesis 2020, degree conferred 2021): an 18-item survey of **132 leaders** in an African FMCG business network, followed by in-depth interviews with senior leaders. Since then it has been developed and tested in practice. When leaders at Imana Foods and Kerry Foods completed a 12-week accredited Super-Cube® leadership intervention, their average assessment scores rose by **+32.2%** overall across the six faces, including **Principles (+45.1%)**, **Emotional (+39.5%)** and **Spiritual (+24.6%)**. Those gains come from that intervention, not from the thesis. They are changes in group averages, in percentage points, and describe those cohorts rather than promise a result for every reader. The full results are in our [FMCG case study](/news/twelve-weeks-six-faces-fmcg-leadership).
+The Super-Cube® grew out of my Doctor of Business Administration at the University of KwaZulu-Natal (thesis 2020, degree conferred 2021): an 18-item survey of **132 people** in an African FMCG business network, followed by in-depth interviews with senior leaders. Since then it has been developed and tested in practice. When leaders at Imana Foods and Kerry Foods completed a 12-week accredited Super-Cube® leadership intervention, their average assessment scores rose by **32.2 percentage points** across the six faces, including **Principles +45.1**, **Emotional +39.5** and **Spiritual +24.6**. Those gains come from that intervention, not from the thesis. They are changes in group averages, in percentage points, and describe those cohorts rather than promise a result for every reader. The full results are in our [FMCG case study](/news/twelve-weeks-six-faces-fmcg-leadership).
 
 ## Why I am giving it away
 
