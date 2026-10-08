@@ -100,7 +100,7 @@ function stageDetail(r: LearnerRow) {
     case "no_seat":
       return "Grant a cohort seat or wait for payment";
     case "needs_consent":
-      return "Guardian must complete consent";
+      return "A parent or guardian must record consent on their own account";
     default:
       return "";
   }
@@ -384,7 +384,7 @@ async function Consents({ db }: { db: Parameters<typeof loadLearners>[0] }) {
     <>
       <ErrorNote error={error} />
       <p className="mt-6 text-sm text-slate">
-        POPIA s35: a parent or guardian must consent before we use a child’s information. Guardian emails are masked here; learners under 18 can’t start until consent is granted.
+        POPIA s35: a parent or guardian must consent before we use a child’s information. That consent has to be recorded by someone other than the learner. Guardian emails are masked here; learners under 18 can’t start until that consent is on record.
       </p>
       <section className="mt-4" aria-labelledby="waiting-h">
         <h2 id="waiting-h" className={h2}>Waiting for consent <span className="font-normal text-slate">({waiting.length})</span></h2>

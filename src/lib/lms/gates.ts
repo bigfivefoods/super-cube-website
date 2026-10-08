@@ -26,6 +26,41 @@ export const POST_MIN_SESSION_SHARE = num(
 );
 /** Sessions per face that must be completed before the after-test (default 1). */
 export const POST_MIN_SESSIONS_PER_FACE = 1;
+/**
+ * A device clock may disagree with the server by this much. A claimed baseline
+ * keeps its device time only inside this window; anything older is the server clock,
+ * so a backdated claim cannot start the 21-day wait in the past.
+ */
+export const CLAIM_CLOCK_SKEW_MS = 2 * 60 * 1000;
+/**
+ * A lesson counts toward the after-test only after the server has seen it open
+ * for at least this long. Naming the lesson id is not enough.
+ */
+export const SESSION_TRUST_MIN_MS = 30_000;
+
+/**
+ * When a signed-out baseline is claimed, the stored time is the server clock
+ * unless the device time is inside a narrow skew window (not in the future, not days ago).
+ */
+export function baselineRecordedAt(clientCompletedAt: unknown, now = Date.now()): string {
+  const t =
+    typeof clientCompletedAt === "string" || typeof clientCompletedAt === "number"
+      ? Date.parse(String(clientCompletedAt))
+      : Number.NaN;
+  if (Number.isFinite(t) && t <= now + CLAIM_CLOCK_SKEW_MS && now - t <= CLAIM_CLOCK_SKEW_MS) {
+    return new Date(t).toISOString();
+  }
+  return new Date(now).toISOString();
+}
+
+/** True when this server recorded the lesson opening long enough before completion. */
+export function completionCountsForGate(openedAt: string | null | undefined, now = Date.now()): boolean {
+  if (!openedAt) return false;
+  const t = Date.parse(openedAt);
+  if (!Number.isFinite(t)) return false;
+  if (t > now + CLAIM_CLOCK_SKEW_MS) return false;
+  return now - t >= SESSION_TRUST_MIN_MS;
+}
 
 export type PostGateInput = {
   programmeId: ProgrammeId;

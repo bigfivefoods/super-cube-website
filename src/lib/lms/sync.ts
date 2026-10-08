@@ -35,6 +35,35 @@ function progressRank(s?: string): number {
   return 0;
 }
 
+/**
+ * The cloud row is the whole learner blob. Keep every key (profile, guardian
+ * consent, server entitlement, drafts) so a second device does not write a
+ * thinner copy back over the saved one.
+ */
+export function remoteStateForMerge(payload: Partial<LocalLmsState> | null | undefined): LocalLmsState {
+  const remote = payload && typeof payload === "object" ? payload : {};
+  return {
+    ...remote,
+    lessonProgress: remote.lessonProgress ?? {},
+    attempts: remote.attempts ?? [],
+    reflections: remote.reflections ?? {},
+    facePulses: remote.facePulses ?? [],
+  };
+}
+
+function keepEntitlement(
+  preferred: LocalLmsState["serverEntitlement"],
+  fallback: LocalLmsState["serverEntitlement"],
+): LocalLmsState["serverEntitlement"] {
+  const usable = (e: LocalLmsState["serverEntitlement"]) => Boolean(e && e.kind !== "none");
+  if (usable(preferred) && usable(fallback)) {
+    return Date.parse(preferred!.checkedAt) >= Date.parse(fallback!.checkedAt) ? preferred : fallback;
+  }
+  if (usable(preferred)) return preferred;
+  if (usable(fallback)) return fallback;
+  return preferred ?? fallback;
+}
+
 /** Merge two device states without losing completion or journal entries. */
 export function mergeLmsStates(
   a: LocalLmsState,
@@ -180,6 +209,7 @@ export function mergeLmsStates(
       ...(newer.microPracticeLog || {}),
     },
     certificateId: newer.certificateId || older.certificateId,
+    serverEntitlement: keepEntitlement(newer.serverEntitlement, older.serverEntitlement),
   };
 }
 
@@ -272,26 +302,7 @@ export async function syncLearnerState(
     const remotePayload = (remoteRow?.payload || null) as LocalLmsState | null;
     let merged = local;
     if (remotePayload && typeof remotePayload === "object") {
-      const remoteNormalized: LocalLmsState = {
-        lessonProgress: remotePayload.lessonProgress ?? {},
-        attempts: remotePayload.attempts ?? [],
-        reflections: remotePayload.reflections ?? {},
-        practiceStreak: remotePayload.practiceStreak,
-        user: remotePayload.user,
-        subscription: remotePayload.subscription,
-        orientation: remotePayload.orientation,
-        lastLessonId: remotePayload.lastLessonId,
-        lastConstructId: remotePayload.lastConstructId,
-        lastActivityAt: remotePayload.lastActivityAt,
-        notifyPractice: remotePayload.notifyPractice,
-        certificateEarnedAt: remotePayload.certificateEarnedAt,
-        facePulses: remotePayload.facePulses ?? [],
-        orgCode: remotePayload.orgCode,
-        shareProgressWithCoach: remotePayload.shareProgressWithCoach,
-        microPracticeLog: remotePayload.microPracticeLog,
-        certificateId: remotePayload.certificateId,
-      };
-      merged = mergeLmsStates(local, remoteNormalized);
+      merged = mergeLmsStates(local, remoteStateForMerge(remotePayload));
     }
 
     const programmeFromMeta =
@@ -359,8 +370,6 @@ export async function pushLearnerState(): Promise<SyncResult> {
   if (!user) return { status: "unsigned" };
 
   const local = loadLmsState();
-  const clientUpdatedAt = local.lastActivityAt || new Date().toISOString();
-
   await ensureProfile(
     client,
     user.id,
@@ -369,10 +378,23 @@ export async function pushLearnerState(): Promise<SyncResult> {
     local.user?.programmeId || local.subscription?.programmeId
   );
 
+  const { data: remoteRow, error: readErr } = await client
+    .from("learner_state")
+    .select("payload")
+    .eq("user_id", user.id)
+    .maybeSingle();
+  if (readErr) return { status: "error", message: readErr.message };
+  const remotePayload = (remoteRow?.payload || null) as LocalLmsState | null;
+  const merged =
+    remotePayload && typeof remotePayload === "object"
+      ? mergeLmsStates(local, remoteStateForMerge(remotePayload))
+      : local;
+  const clientUpdatedAt = merged.lastActivityAt || local.lastActivityAt || new Date().toISOString();
+
   const { error } = await client.from("learner_state").upsert(
     {
       user_id: user.id,
-      payload: toPayload(local),
+      payload: toPayload(merged),
       client_updated_at: clientUpdatedAt,
     },
     { onConflict: "user_id" }

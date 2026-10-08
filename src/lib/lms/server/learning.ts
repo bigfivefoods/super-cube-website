@@ -32,12 +32,15 @@ export async function loadLearning(
       .order("created_at", { ascending: true }),
     admin
       .from("lms_lesson_completions")
-      .select("lesson_id")
+      .select("lesson_id, counts_for_gate")
       .eq("user_id", userId)
       .eq("programme_id", programmeId),
   ]);
   const list = (attempts ?? []) as ServerAttempt[];
-  const done = (completions ?? []).map((c) => c.lesson_id as string);
+  // Only sessions the server has a reason to trust (counts_for_gate) open the after-test.
+  const done = ((completions ?? []) as { lesson_id: string; counts_for_gate?: boolean }[])
+    .filter((c) => c.counts_for_gate === true)
+    .map((c) => c.lesson_id);
   const pre = list.find((a) => a.phase === "pre");
   const gate = evaluatePostGate({
     programmeId,

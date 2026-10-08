@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { consentCounts, type ConsentGrant } from "@/lib/lms/guardian-gate";
 import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement } from "@/lib/lms/server/entitlement";
 import { loadLearning } from "@/lib/lms/server/learning";
@@ -25,10 +26,10 @@ export async function GET(request: Request) {
       .maybeSingle(),
     ctx.admin
       .from("guardian_consents")
-      .select("id, status, granted_at")
+      .select("id, status, granted_at, learner_user_id, recorded_by, method, learner_age_band, consent_text_version, guardian_name, relationship")
       .eq("learner_user_id", ctx.user.id)
       .eq("status", "granted")
-      .limit(1),
+      .limit(5),
   ]);
 
   return NextResponse.json({
@@ -49,6 +50,25 @@ export async function GET(request: Request) {
     completions: learning.completions,
     postGate: learning.gate,
     certificate: certificate.data ?? null,
-    guardianConsent: (consent.data ?? [])[0] ?? null,
+    guardianConsent: (() => {
+      const row = ((consent.data ?? []) as (ConsentGrant & {
+        id: string;
+        granted_at: string;
+        learner_age_band: string;
+        consent_text_version: string;
+        guardian_name: string;
+        relationship: string;
+      })[]).find((item) => consentCounts(ctx.user.id, item));
+      if (!row) return null;
+      return {
+        id: row.id,
+        status: row.status,
+        granted_at: row.granted_at,
+        learner_age_band: row.learner_age_band,
+        consent_text_version: row.consent_text_version,
+        guardian_name: row.guardian_name,
+        relationship: row.relationship,
+      };
+    })(),
   });
 }
