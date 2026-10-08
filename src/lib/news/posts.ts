@@ -279,7 +279,7 @@ export const codeNewsPosts: NewsPost[] = [
     slug: "leadership-is-learnable-new-book",
     title: "Leadership Is Learnable: a new book on the Super-Cube® model and the evidence behind it",
     excerpt:
-      "Dr Craig R. Muller's new book sets out the Super-Cube® leadership model, the research and results behind it, and how to develop leaders at every level. In paperback and on Kindle, from Amazon.",
+      "Dr Craig R. Muller's new book: the Super-Cube® model, the evidence behind it and how to develop leaders at every level. Paperback and Kindle, from Amazon.",
     body: LEADERSHIP_IS_LEARNABLE_BODY,
     tag: "Book · Leadership Is Learnable",
     status: "published",
