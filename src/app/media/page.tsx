@@ -191,8 +191,7 @@ export default function MediaKitPage() {
               ))}
             </div>
             <p className="mt-4 text-xs text-muted">
-              From the About the Author page of <em>{PAID_BOOK.title}</em> ({PAID_BOOK.imprint}, 2026). Free to quote in
-              full or in part.
+              Adapted from the About the Author page of <em>{PAID_BOOK.title}</em> ({PAID_BOOK.imprint}, 2026).
             </p>
           </div>
           <div className="min-w-0">
