@@ -9,7 +9,7 @@ export const metadata: Metadata = pageMeta({
   path: "/speaking",
   title: "Speaking and media · Dr Craig Muller",
   description:
-    "Book Dr Craig Muller, creator of the Super-Cube® leadership model (DBA, University of KwaZulu-Natal, 2021), for keynotes, workshops and panels on learnable leadership.",
+    "Book Dr Craig Muller, creator of the Super-Cube® leadership model (DBA, University of KwaZulu-Natal, 2021) and author of Leadership Is Learnable (2026), for keynotes, workshops and panels on learnable leadership.",
 });
 
 const topics = [
@@ -38,6 +38,7 @@ const topics = [
 const facts = [
   "Doctor of Business Administration (DBA), University of KwaZulu-Natal, 2021",
   "Creator of the Super-Cube® leadership model, developed in his 2020 doctoral thesis",
+  "Author of Leadership Is Learnable (2026), the comprehensive book on the Super-Cube® model and the evidence behind it",
   "Research published in peer-reviewed journals (SAJEMS and the Journal of Contemporary Management)",
   "Over 20 years of blue-chip experience in FMCG, supply chain and consulting",
 ];

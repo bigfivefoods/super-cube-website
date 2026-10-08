@@ -340,6 +340,38 @@ export default function WhyLeadershipPage() {
         </div>
       </section>
 
+      {/* The enabling goal: the author's proposal in Leadership Is Learnable, Chapter 15 (not a UN goal). */}
+      <section className="section-pad border-b border-line bg-paper" data-testid="enabling-goal">
+        <div className="container-site max-w-4xl">
+          <SectionHeading
+            eyebrow="From the book · Leadership Is Learnable, Chapter 15"
+            title="An enabling goal: leadership skills for all."
+            description="In Leadership Is Learnable (2026), Dr Craig R. Muller proposes an enabling goal: build leadership skills for everyone, at every level, so that people can lead the progress all seventeen Goals require."
+          />
+          <p className="mt-6 rounded-xl border border-line bg-elevated p-4 text-sm font-semibold leading-relaxed text-ink">
+            A proposal by the author. It is not one of the United Nations’ 17 Goals and has not been adopted by the UN.
+          </p>
+          <div className="prose-site mt-6 space-y-4">
+            <p>
+              It does not compete with the seventeen: it sits underneath them, the way a foundation sits under a
+              house. The Goals describe what must be achieved; leadership skills describe the capacity of people to
+              achieve it.
+            </p>
+            <p>
+              The SDG framework already points this way. Target 4.4 calls for more youth and adults with relevant
+              skills for employment, decent jobs and entrepreneurship; target 4.7 for learners to gain the knowledge
+              and skills needed to promote sustainable development; and target 16.7 for responsive, inclusive,
+              participatory and representative decision-making at all levels.
+            </p>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button href="/book#comprehensive-edition" variant="ghost">
+              About the book
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Closing call */}
       <section className="section-pad bg-surface">
         <div className="container-site max-w-3xl text-center">

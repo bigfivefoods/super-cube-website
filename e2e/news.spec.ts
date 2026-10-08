@@ -168,8 +168,8 @@ test("home results card credits +32.2% to the 12-week interventions and links th
   await expect(overall).toContainText("Overall growth across all six faces");
   await expect(page.getByTestId("home-results-emotional")).toContainText("+39.5%");
   const card = overall.locator("xpath=ancestor::div[contains(@class,'sc-card')][1]");
-  await expect(card).toContainText("12-week Super-Cube® leadership interventions");
-  await expect(card).toContainText("Source: Super-Cube® company profile, Sept 2023");
+  await expect(card).toContainText("12-week Super-Cube® leadership intervention");
+  await expect(card).toContainText("Source: Leadership Is Learnable (2026), Chapter 18");
   await expect(card).not.toContainText("UKZN");
   await expect(page.getByTestId("home-case-study-link")).toHaveAttribute("href", "/news/twelve-weeks-six-faces-fmcg-leadership");
   await page.goto("/fr");
@@ -182,7 +182,7 @@ for (const path of ["/impact", "/research"]) {
     await page.goto(path);
     const source = page.getByTestId("impact-results-source");
     await expect(source).toContainText("+32.2% overall growth across all six faces");
-    await expect(source).toContainText("Super-Cube® company profile, Sept 2023");
+    await expect(source).toContainText("Leadership Is Learnable (2026), Chapter 18");
     await expect(page.getByText("Research results · UKZN doctoral study")).toHaveCount(0);
     await expect(page.getByRole("link", { name: /Read the FMCG case study/ }).first()).toHaveAttribute(
       "href",

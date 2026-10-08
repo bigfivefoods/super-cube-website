@@ -6,6 +6,7 @@ import { TestimonialsStrip } from "@/components/Testimonials";
 import { Button, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
 import { BOOK } from "@/lib/book";
+import { PaidBookCard } from "@/components/book/PaidBook";
 import { COMPANY_PROFILE } from "@/lib/company-profile";
 import { constructs } from "@/lib/content";
 import { COURSE_PRICE_USD, COURSE_PRICE_ZAR } from "@/lib/programmes";
@@ -424,6 +425,19 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 )}
               </div>
             </div>
+          </div>
+          {/* The comprehensive edition (paid): the Amazon button stays hidden until AMAZON_URL_TBD is live. */}
+          <div className="mt-6">
+            <PaidBookCard
+              testId="home-paid-book"
+              eyebrow={translate(dict, "home.paidEyebrow")}
+              body={translate(dict, "home.paidBody")}
+              moreLabel={translate(dict, "home.paidMore")}
+              soonLabel={translate(dict, "home.paidSoon")}
+              buyLabel={translate(dict, "home.paidBuy")}
+              coverAlt={translate(dict, "home.paidCoverAlt")}
+              hrefLang={en}
+            />
           </div>
         </div>
       </section>

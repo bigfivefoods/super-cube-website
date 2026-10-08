@@ -1,6 +1,6 @@
 # Super-Cube® LMS: benchmark research and design rules
 
-Prepared 7 October 2026 (SAST) for Dr Craig R. Muller. This compares how world-leading assessment instruments and learning products work, then turns that into concrete rules for the Super-Cube® LMS. Every source below is public and checkable. The only Super-Cube® research figure used anywhere in the new content is the one already on the site: **Emotional +39.5% (UKZN)**. No other statistics about Super-Cube® are claimed.
+Prepared 7 October 2026 (SAST) for Dr Craig R. Muller. This compares how world-leading assessment instruments and learning products work, then turns that into concrete rules for the Super-Cube® LMS. Every source below is public and checkable. The only Super-Cube® research figure used anywhere in the new content is the one already on the site: **Emotional +39.5% (12-week Imana Foods and Kerry Foods intervention, not the UKZN study)**. No other statistics about Super-Cube® are claimed.
 
 ---
 

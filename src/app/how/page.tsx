@@ -59,7 +59,7 @@ const pillars = [
   },
   {
     title: "Evidence-informed",
-    body: "The six-construct structure was tested in doctoral research (mixed methods, African FMCG network) so education is built on a validated frame.",
+    body: "The six-construct structure was tested in doctoral research (mixed methods, African FMCG network) so education is built on a tested frame.",
   },
   {
     title: "Continuous & adaptive",
@@ -229,7 +229,7 @@ export default function HowPage() {
       <ImpactResults
         eyebrow="Does it work?"
         title="Intervention gains you can measure."
-        description="Average pre- to post-course gains from 12-week Super-Cube® leadership interventions at FMCG organisations, by face and overall."
+        description="Average pre- to post-course gains from the 12-week Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods, by face and overall."
       />
 
       <TestimonialsSection

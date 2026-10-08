@@ -77,6 +77,7 @@ async function prepImages(dir) {
   await jpeg("sdg", "images/hero/hero-sdg.jpg", { width: 1100, cropLeft: 0.3 });
   await jpeg("origami", "images/hero/leadership-hero.jpg", { width: 1400, quality: 80 });
   await jpeg("craig", "images/people/craig-muller.webp", { width: 600, quality: 82 });
+  await jpeg("bookCover", "images/book/leadership-is-learnable-cover.jpg", { width: 300, quality: 82 });
   for (let g = 1; g <= 17; g++) {
     const id = String(g).padStart(2, "0");
     await jpeg(`sdg${id}`, `images/sdgs/goal-${id}.jpg`, { width: 180, quality: 80 });
@@ -185,6 +186,8 @@ function build(L, img) {
   const { cohortCalendar } = L.facilitator;
   const { sdgGoals } = L.sdgs;
   const { sdgChallenges, leadershipChallengeThesis } = L["leadership-challenges"];
+  const { PAID_BOOK, PAID_BOOK_DETAILS, PAID_BOOK_CITATION, amazonBuyUrl } = L.book;
+  const { AUTHOR_BIO } = L.author;
   const by = Object.fromEntries(constructs.map((c) => [c.id, c]));
   const radarOrder = ["choices", "mental", "emotional", "principles", "physical", "spiritual"];
   const zar = (n) => `R${n.toLocaleString("en-ZA").replace(/\s/g, " ")}`;
@@ -248,9 +251,7 @@ function build(L, img) {
         <div>
           <h2>Dr Craig R. Muller</h2>
           <p class="sub">Visionary architect of Kingdom-centred leadership and sustainable impact in Africa</p>
-          <p>Dr Craig Muller is a driven innovator—a DBA-credentialed executive with over 20 years of blue-chip experience in FMCG, supply chain optimisation, and global consulting.</p>
-          <p>His goal is to <b>feed</b> (Big Five Foods), <b>educate</b> (Super-Cube® leadership development), and <b>empower</b> (SupplierAdvisor®) people across the African continent—to help progress humanity.</p>
-          <p>The Super-Cube® Leadership Model was developed as the core output of his Doctor of Business Administration thesis at the University of KwaZulu-Natal (December 2020; degree conferred 2021), a case study of an African FMCG business network.</p>
+          ${AUTHOR_BIO.map((t) => `<p>${esc(t)}</p>`).join("")}
           <div class="chips">${["Integrity", "Excellence", "Compassionate empowerment"].map((v) => `<span>${v}</span>`).join("")}</div>
         </div>
       </div>
@@ -261,27 +262,26 @@ function build(L, img) {
             <dt>Doctor of Business Administration (DBA)</dt><dd>University of KwaZulu-Natal · 2021 · Creator of the Super-Cube® leadership model</dd>
             <dt>Master of Business Administration (MBA)</dt><dd>University of KwaZulu-Natal · 2006</dd>
             <dt>Postgraduate Diploma in Management</dt><dd>University of KwaZulu-Natal · 2004</dd>
-            <dt>Bachelor of Commerce (B.Comm)</dt><dd>University of KwaZulu-Natal · 2002</dd>
+            <dt>Bachelor of Commerce (B.Comm)</dt><dd>University of Natal · 2002</dd>
           </dl>
         </div>
-        <div class="card">
-          <p class="k">At a glance</p>
-          <dl class="dl kv">
-            <dt>Degree</dt><dd>Doctor of Business Administration (DBA)</dd>
-            <dt>Institution</dt><dd>University of KwaZulu-Natal (2021)</dd>
-            <dt>Model</dt><dd>Super-Cube® (2020 thesis · peer-reviewed)</dd>
-            <dt>Case context</dt><dd>African FMCG business-network</dd>
-            <dt>Validation</dt><dd>Mixed-methods · CFA · thematic interviews</dd>
-          </dl>
+        <div class="card bookcard">
+          <p class="k">Author · ${esc(PAID_BOOK_DETAILS.edition)}</p>
+          <div class="bk">
+            <img src="${img.bookCover}" alt="Cover of ${esc(PAID_BOOK.title)} by ${esc(PAID_BOOK.author)}">
+            <div>
+              <p class="lt">${esc(PAID_BOOK.title)}</p>
+              <p class="small">${esc(PAID_BOOK.subtitle)}</p>
+              <p class="small">${esc(PAID_BOOK.imprint)} · ${esc(PAID_BOOK_DETAILS.publishedLabel)} · ${PAID_BOOK_DETAILS.pages} pp · 6 × 9 in, full colour</p>
+              <p class="small">Paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} / $${PAID_BOOK_DETAILS.paperbackPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.paperback.isbn}</span><br>eBook R${PAID_BOOK_DETAILS.ebookPrice.zar} / $${PAID_BOOK_DETAILS.ebookPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.kindle.isbn}</span></p>
+              <p class="small"><b>${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy on Amazon") : "Coming soon on Amazon"}</b> · ${link(`${SITE}/book`, "super-cube.me/book")}</p>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="card speak">
-        <p class="k">Origins · born inside a real business network</p>
-        <p>The thesis addressed leadership capacity challenges in Africa’s fast-moving consumer goods sector: rapid population growth, talent abundance alongside skills shortages, corruption pressures, poverty, conflict, and institutional weaknesses. Rather than import a purely Western template, Muller built and tested a multidimensional framework inside a live African business-network—bridging theory and practice for emerging-market leadership development.</p>
       </div>
       <div class="card speak">
         <p class="k">Speaking</p>
-        <p>Keynotes, workshops and panels on the Super-Cube® leadership model and human-centric leadership: <b>Leadership is learnable: the six faces of the Super-Cube®</b> · <b>Measure growth, not attendance</b> · <b>Ubuntu and I–Thou: human-centric leadership</b> · <b>Leadership education as a development lever</b> · <b>Raising leaders early</b>. ${link(`${SITE}/speaking`, "super-cube.me/speaking")}</p>
+        <p>Keynotes, workshops and panels: <b>Leadership is learnable: the six faces of the Super-Cube®</b> · <b>Measure growth, not attendance</b> · <b>Ubuntu and I–Thou: human-centric leadership</b> · <b>Leadership education as a development lever</b> · <b>Raising leaders early</b>. ${link(`${SITE}/speaking`, "super-cube.me/speaking")}</p>
       </div>
     </div>`));
 
@@ -356,7 +356,7 @@ function build(L, img) {
     <div class="pad">
       ${eyebrow("The research")}
       <h2>Tested before it was taught.</h2>
-      <p class="lede">Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (thesis, 2020). The model was tested with a survey of 132 employees and interviews with 10 senior leaders, and published in peer-reviewed journals.</p>
+      <p class="lede">Super-Cube® came out of Dr Craig Muller’s doctoral research at the University of KwaZulu-Natal (thesis, 2020). The model was tested with a survey of 132 people and interviews with ten directors, published in peer-reviewed journals in 2022, and set out in full in the book <i>Leadership Is Learnable</i> (2026).</p>
       <div class="research-top">
         <div class="hero-num"><p class="k">12-week intervention result · Emotional face</p><p class="huge">+${interventionGains.find((g) => g.constructId === "emotional").gainPct}%</p><p class="small">Overall, all six faces: <b>+${overallInterventionGain}%</b></p></div>
         <figure class="photo"><img src="${img.research}" alt="A university library reading room"></figure>
@@ -367,7 +367,7 @@ function build(L, img) {
         <p class="note">Intervention results: average pre- to post-assessment improvement in the 12-week, accredited Super-Cube® leadership intervention (NQF levels 3–5) with leaders at Imana Foods and Kerry Foods. The doctoral study built the model; it did not measure these gains. Highest gains: Principles (+45.1%) and Emotional (+39.5%). Not a promised outcome and not live programme data.</p>
       </div>
       <div class="grid4">${researchHighlights.map((h) => `<div><p class="lt">${esc(h.title)}</p><p class="small">${esc(h.body)}</p></div>`).join("")}</div>
-      <div class="pubs">${publications.map((p) => `<p><span class="badge">${esc(p.badge)}</span> ${esc(p.authors)} (${p.year}). <b>${esc(p.title)}</b>. <i>${esc(p.journal)}</i>. ${link(p.doi, esc(p.doi.replace("https://", "")))}</p>`).join("")}</div>
+      <div class="pubs">${publications.map((p) => `<p><span class="badge">${esc(p.badge)}</span> ${esc(p.authors)} (${p.year}). <b>${esc(p.title)}</b>. <i>${esc(p.journal)}</i>. ${link(p.doi, esc(p.doi.replace("https://", "")))}</p>`).join("")}<p><span class="badge">Book</span> ${esc(PAID_BOOK_CITATION)}</p></div>
     </div>`));
 
   // 8 · What we offer
@@ -702,6 +702,14 @@ p + p { margin-top: 2mm; }
 .dl.kv dt { color: #6b6b6b; font-weight: 500; }
 .dl.kv dd { color: #0a0a0a; font-weight: 600; }
 .speak { margin-top: 5mm; }
+.founder p:not(.sub) { margin-top: 1.6mm; font-size: 8.3pt; line-height: 1.4; }
+.founder + .split { margin-top: 5mm; }
+.founder ~ .speak { margin-top: 4mm; }
+.bk { display: grid; grid-template-columns: 22mm 1fr; gap: 4mm; margin-top: 2.4mm; align-items: start; }
+.bk img { width: 22mm; height: auto; display: block; border-radius: 1mm; box-shadow: 0 2mm 5mm -2mm rgba(0,0,0,.35); border: 0.4px solid rgba(0,0,0,.12); }
+.bk .small { margin-top: 1.2mm; }
+.bk .lt { margin: 0; }
+.bk .nw { white-space: nowrap; }
 .speak p:last-child { font-size: 8.4pt; }
 
 /* model */
@@ -899,7 +907,7 @@ td.r { font-weight: 600; }
 async function main() {
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "sc-profile-"));
   const L = await loadLib(
-    ["content", "programmes", "programme-theme", "impact", "seat-packs", "testimonials", "facilitator", "sdgs", "leadership-challenges"],
+    ["content", "programmes", "programme-theme", "impact", "seat-packs", "testimonials", "facilitator", "sdgs", "leadership-challenges", "book", "author"],
     tmp,
   );
   const img = await prepImages(tmp);
