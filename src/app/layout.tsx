@@ -3,6 +3,7 @@ import { Inter, Noto_Sans_Arabic } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import { VercelAnalytics } from "@/components/VercelAnalytics";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
@@ -133,6 +134,7 @@ export default function RootLayout({
             <CapacitorPush />
             <SentryInit />
             <AnalyticsProvider />
+            <VercelAnalytics />
             <div className="site-chrome contents">
               <Header />
             </div>
