@@ -1,4 +1,5 @@
 import type { NewsPost } from "./types";
+import { BOOK as FREE_BOOK } from "@/lib/book";
 
 /*
  * Seeded posts. Every fact here is already on super-cube.me (pricing, programmes, the six faces,
@@ -6,6 +7,54 @@ import type { NewsPost } from "./types";
  * with Imana Foods and Kerry Foods (+39.5% Emotional).
  * The LMS post matches the bigfivegroup.africa update of 7 October 2026.
  */
+
+/*
+ * The free Super-Cube® book (DRAFT for Craig's review, 8 Oct 2026). Goes out before the Leadership Is Learnable
+ * launch post. Facts only from the live PDF (public/super-cube-leadership-book.pdf, 71 pages): the 13 chapters, the
+ * foreword by Dr Housainou Taal, 36 practices, six self-assessment pages, the 30-day plan, the new Global Goals
+ * chapter, the DBA thesis (UKZN, 2020; degree 2021: 18-item survey of 132 people, then interviews), the 12-week
+ * Imana Foods and Kerry Foods intervention (+32.2% overall, Principles +45.1%, Emotional +39.5%, Spiritual +24.6%)
+ * and the Grade 12 field snapshot (school and learners not named). The comprehensive edition is only a teaser:
+ * no Amazon link, price or buy button until its own launch post. Matches the bigfivegroup.africa update.
+ */
+const FREE_BOOK_BODY = `*By Dr Craig R. Muller, author of the Super-Cube® Leadership Model*
+
+Leadership is not a gift handed to a lucky few. It can be learnt, practised and measured, by anyone, at any age. I want that idea in as many hands as possible, so from today my short book, **${FREE_BOOK.title}: ${FREE_BOOK.subtitle}**, is free to download, read and share. There is no sign-up and no payment: just the PDF.
+
+**[Download free (PDF, ${FREE_BOOK.pages} pages, ${FREE_BOOK.size})](${FREE_BOOK.href})**
+
+![The black cover of The Super-Cube® Leadership Model by Dr Craig R. Muller on a tablet and a phone, with a Download free button](/news/free-super-cube-leadership-book-cover-wide.jpg)
+
+## What is inside
+
+In ${FREE_BOOK.pages} pages and 13 short chapters, the book sets out the six faces of the Super-Cube® model, with you at the centre: **Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**. It is written to be used, not just read:
+
+- **A chapter on each face**, with a story, practices and one thing you can do today.
+- **36 practices** you can start this week, and **six self-assessment workbook pages**.
+- **A 30-day action plan** to begin building your own Super-Cube®.
+- **From self to society**: how the model scales from one leader to teams, organisations and communities.
+- **Leaders for the Global Goals**: a new chapter on why every one of the UN Sustainable Development Goals needs leaders.
+- **A foreword by Dr Housainou Taal**, Director of the African Leadership Institute.
+
+You can see every chapter on the [free book page](${FREE_BOOK.page}).
+
+## Where the model comes from
+
+The Super-Cube® grew out of my Doctor of Business Administration at the University of KwaZulu-Natal (thesis 2020, degree conferred 2021): an 18-item survey of **132 people** in an African FMCG business network, followed by in-depth interviews with senior leaders. Since then it has been developed and tested in practice. When leaders at Imana Foods and Kerry Foods completed a 12-week accredited Super-Cube® leadership intervention, their average assessment scores rose by **32.2 percentage points** across the six faces, including **Principles +45.1**, **Emotional +39.5** and **Spiritual +24.6**. Those gains come from that intervention, not from the thesis. They are changes in group averages, in percentage points, and describe those cohorts rather than promise a result for every reader. The full results are in our [FMCG case study](/news/twelve-weeks-six-faces-fmcg-leadership).
+
+## Why I am giving it away
+
+When 33 Grade 12 learners at a leading high school in South Africa answered a leadership questionnaire after a brief Super-Cube® leadership intervention, 94% said leadership is important and 88% said they would like to develop their leadership using a scientific approach. Not one had a leadership model they actually used ([field snapshot](/news/grade-12-boarders-leadership-field-snapshot); self-reported answers, not before-and-after results). The wish to grow is there; the missing piece is a model. A free book is the simplest way I know to put one in people's hands.
+
+## Coming soon: the comprehensive edition
+
+This free book is the short introduction. *Leadership Is Learnable*, the comprehensive edition, goes much further: the full research and evidence behind the model, each face in depth, and how to develop leaders at every level. It is coming soon on Amazon, in paperback and as an e-book, and we will share the news here when it is out.
+
+## Download it, then pass it on
+
+[Download free (PDF, ${FREE_BOOK.pages} pages)](${FREE_BOOK.href}) · [See the chapters](${FREE_BOOK.page}) · [Start your free baseline](/learn/start)
+
+Read it, try one practice today, and share it with someone who leads, or someone who is about to. The book is also free at [bigfivegroup.africa](https://bigfivegroup.africa/leadership). And if you want to see where your own six faces stand, the [free Super-Cube® baseline](/learn/start) takes about ten minutes.`;
 
 const LMS_BODY = `*By Dr Craig R. Muller, author of the Super-Cube® Leadership Model*
 
@@ -291,6 +340,32 @@ export const codeNewsPosts: NewsPost[] = [
     author: "Dr Craig R. Muller",
     publishedAt: "2026-10-07T09:00:00.000Z",
     updatedAt: "2026-10-07T09:00:00.000Z",
+    source: "code",
+  },
+  {
+    id: "code_super_cube_free_book_2026",
+    slug: "free-super-cube-leadership-book",
+    title: "Free to download today: The Super-Cube® Leadership Model, a book for every leader",
+    excerpt:
+      "Dr Craig R. Muller's short book on the Super-Cube® model is free today: six learnable faces of leadership, 36 practices and a 30-day plan. 71-page PDF.",
+    body: FREE_BOOK_BODY,
+    tag: "Free book · Super-Cube®",
+    status: "published",
+    coverImage: "/news/free-super-cube-leadership-book-cover.jpg",
+    coverWide: "/news/free-super-cube-leadership-book-cover-wide.jpg",
+    coverAlt:
+      "The black cover of The Super-Cube® Leadership Model by Dr Craig R. Muller on a tablet and a phone, with a Download free button",
+    shareImage: "/images/og/news/free-super-cube-leadership-book.jpg",
+    cta: {
+      label: "Download free",
+      href: FREE_BOOK.href,
+      download: true,
+      note: `PDF · ${FREE_BOOK.pages} pages · ${FREE_BOOK.size} · no sign-up`,
+      ariaLabel: `Download free: the Super-Cube® book (PDF, ${FREE_BOOK.pages} pages, ${FREE_BOOK.size})`,
+    },
+    author: "Dr Craig R. Muller",
+    publishedAt: "2026-10-08T07:00:00.000Z",
+    updatedAt: "2026-10-08T07:00:00.000Z",
     source: "code",
   },
 ];
