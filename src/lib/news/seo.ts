@@ -14,9 +14,13 @@ export function absolute(url: string): string {
   return url.startsWith("http") ? url : `${base}${url.startsWith("/") ? url : `/${url}`}`;
 }
 
-/** Plain text for <title>, share text and feeds: drops the ® / ™ marks. */
+/**
+ * Text for <title>, share text and JSON-LD: drops ™ and stray ® marks, but keeps exactly one ® on
+ * "Super-Cube®" and "SupplierAdvisor®" (Craig's rule: those brands always carry ® in posts, titles and share
+ * previews; never in URLs, slugs, domains, emails or hashtags, and never a doubled mark).
+ */
 export function stripMarks(s: string): string {
-  return s.replace(/[®™]/g, "");
+  return s.replace(/™/g, "").replace(/(?<!Super[-]Cube|SupplierAdvisor)®/g, "");
 }
 
 /** Keep a meta description within 160 characters, cutting at a word and adding an ellipsis. */

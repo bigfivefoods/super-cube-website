@@ -3,6 +3,7 @@ import { HeroPicture } from "@/components/news/HeroPicture";
 import { NewsBody } from "@/components/news/NewsBody";
 import { NewsImage } from "@/components/news/NewsImage";
 import { ShareButtons } from "@/components/news/ShareButtons";
+import { Button } from "@/components/ui";
 import { NEWS_HERO } from "@/lib/news/hero";
 import { clampDescription, formatNewsDate, newsUrl, readingMinutes, stripMarks } from "@/lib/news/seo";
 import type { NewsPost } from "@/lib/news/types";
@@ -44,6 +45,21 @@ export function NewsArticle({ post }: { post: NewsPost }) {
               <span aria-hidden> · </span>
               {minutes} min read
             </p>
+            {post.cta && (
+              <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4" data-news-cta>
+                <Button
+                  href={post.cta.href}
+                  download={post.cta.download}
+                  variant="primary"
+                  ariaLabel={post.cta.ariaLabel}
+                  className="w-full !bg-white !text-ink hover:!bg-white/90 focus-visible:!outline-white sm:w-auto"
+                >
+                  {post.cta.download && <DownloadIcon />}
+                  {post.cta.label}
+                </Button>
+                {post.cta.note && <p className="text-sm text-white/75">{post.cta.note}</p>}
+              </div>
+            )}
             <div className="mt-6">
               <ShareButtons {...share} tone="dark" position="top" />
             </div>
@@ -74,5 +90,16 @@ export function NewsArticle({ post }: { post: NewsPost }) {
         </div>
       </div>
     </article>
+  );
+}
+
+function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+      <path d="M14 2v6h6" />
+      <path d="M12 11v6" />
+      <path d="m9 14 3 3 3-3" />
+    </svg>
   );
 }

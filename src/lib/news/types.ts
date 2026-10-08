@@ -30,6 +30,11 @@ export type NewsPost = {
   coverAlt: string;
   /** 1200×630 share card (Open Graph / X). Falls back to the generated share image. */
   shareImage?: string;
+  /**
+   * Optional call to action in the post hero, above the share row (e.g. the free book's "Download free").
+   * `download` saves a file (plain <a download>) instead of routing.
+   */
+  cta?: { label: string; href: string; note?: string; download?: boolean; ariaLabel?: string };
   /** Byline shown at the top of the article. */
   author?: string;
   /** ISO timestamps (UTC). */
