@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { handleInsightsCollect } from "@/lib/website-insights-collect";
 import {
+  INSIGHTS_COLLECT_URL,
   VISITOR_MAX_AGE,
   clickEvent,
   clientFamily,
@@ -8,11 +9,12 @@ import {
   networkFromIpinfo,
   planCollect,
   requestOptedOut,
-  resolveIngestUrl,
   sanitizeClientEvent,
   screenBand,
   scrollBand,
 } from "@/lib/website-insights";
+
+const EVENT_ID = /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
 
 const NOW = Date.UTC(2026, 9, 8);
 const IP = "203.0.113.9";
@@ -67,9 +69,28 @@ test("private links, raw IPs and client-supplied email are not recordable", () =
   expect(event?.utm_source).toBe("linkedin");
   expect(event?.utm_content).toBe("hero");
   expect(event?.utm_term).toBe("leaders");
+  expect(event?.id).toMatch(EVENT_ID);
   expect(JSON.stringify(event)).not.toContain(IP);
   expect(JSON.stringify(event)).not.toContain("person@example.com");
   expect(JSON.stringify(event)).not.toContain("email=a");
+  expect("email" in (event ?? {})).toBe(false);
+});
+
+test("a button click is stored as click, and each event keeps a valid id", () => {
+  const page = "https://www.super-cube.me/book";
+  const supplied = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+  const click = sanitizeClientEvent({ k: "button", p: page, l: "Book a pilot", id: supplied });
+  expect(click?.k).toBe("click");
+  expect(click?.id).toBe(supplied);
+  const minted = sanitizeClientEvent({ k: "pageview", p: "/pricing", id: "not-an-id" });
+  expect(minted?.id).toMatch(EVENT_ID);
+  expect(minted?.id).not.toBe("not-an-id");
+});
+
+test("engage needs half a second on the page or a scroll past the top", () => {
+  expect(sanitizeClientEvent({ k: "engage", p: "/pricing", ms: 499, scroll: 0 })).toBeNull();
+  expect(sanitizeClientEvent({ k: "engage", p: "/pricing", ms: 500 })?.ms).toBe(500);
+  expect(sanitizeClientEvent({ k: "engage", p: "/pricing", scroll: 25 })?.scroll).toBe(25);
 });
 
 test("clicks keep a file name, an outbound site name, or a button label", () => {
@@ -81,7 +102,10 @@ test("clicks keep a file name, an outbound site name, or a button label", () => 
     "un.org",
   );
   expect(clickEvent({ pageUrl: page, href: "https://203.0.113.9/x", download: false, button: false, label: "" })).toBeNull();
-  expect(clickEvent({ pageUrl: page, href: null, download: false, button: true, label: "Book a pilot" })?.l).toBe("Book a pilot");
+  const button = clickEvent({ pageUrl: page, href: null, download: false, button: true, label: "Book a pilot" });
+  expect(button?.k).toBe("click");
+  expect(button?.l).toBe("Book a pilot");
+  expect(button?.id).toMatch(EVENT_ID);
   expect(clickEvent({ pageUrl: page, href: null, download: false, button: true, label: "a@b.c" })).toBeNull();
   expect(clickEvent({ pageUrl: "https://www.super-cube.me/admin", href: null, download: false, button: true, label: "Save" })).toBeNull();
 });
@@ -109,7 +133,6 @@ test("a new visit gets a random id and a return visit keeps it", () => {
     mint: MINT,
     family: clientFamily("Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0"),
     network: networkFromIpinfo(ipinfo),
-    email: "Learner@Example.com",
   });
   expect(first.record).toBe(true);
   if (!first.record) return;
@@ -130,8 +153,11 @@ test("a new visit gets a random id and a return visit keeps it", () => {
   expect(event?.industry).toBe("Telecommunications");
   expect(event?.size).toBe("1000-5000");
   expect(event?.network).toBe("isp");
-  expect(event?.email).toBe("learner@example.com");
-  expect(first.payload.site).toBe("super-cube");
+  expect(event?.id).toMatch(EVENT_ID);
+  expect(event && "email" in event).toBe(false);
+  expect(first.payload.v).toBe(1);
+  expect(first.payload.site).toBe("super-cube.me");
+  expect("host" in first.payload).toBe(false);
   const wire = JSON.stringify(first.payload);
   expect(wire).not.toContain(IP);
   expect(wire).not.toContain("-29.6006");
@@ -163,24 +189,31 @@ test("network lookup drops coordinates and treats a VPN as the network type", ()
   expect(JSON.stringify(vpn)).not.toContain(IP);
 });
 
-test("the ingest URL must be another https host", () => {
-  expect(resolveIngestUrl(undefined, "www.super-cube.me")).toBeNull();
-  expect(resolveIngestUrl("http://example.com/collect", "www.super-cube.me")).toBeNull();
-  expect(resolveIngestUrl("https://www.super-cube.me/api/insights/collect", "www.super-cube.me")).toBeNull();
-  expect(resolveIngestUrl("https://user:pass@bigfivegroup.africa/api/insights/collect", "www.super-cube.me")).toBeNull();
-  expect(resolveIngestUrl("https://bigfivegroup.africa/api/insights/collect", "www.super-cube.me")).toBe(
-    "https://bigfivegroup.africa/api/insights/collect",
-  );
+test("a batch keeps at most ten events and the canonical site", () => {
+  const events = Array.from({ length: 12 }, (_, i) => ({ k: "pageview", p: `/p${i}` }));
+  const plan = planCollect({
+    headers: headers(),
+    cookie: undefined,
+    body: JSON.stringify({ v: 1, site: "bigfivegroup.africa", e: events }),
+    now: NOW,
+    mint: MINT,
+  });
+  expect(plan.record).toBe(true);
+  if (!plan.record) return;
+  expect(plan.payload.e).toHaveLength(10);
+  expect(plan.payload.site).toBe("super-cube.me");
+  expect(JSON.stringify(plan.payload)).not.toContain("bigfivegroup.africa");
+  expect(plan.payload.e.every((event) => EVENT_ID.test(event.id))).toBe(true);
 });
 
 test("the collect route forwards a visit and sets the 180-day cookie", async () => {
-  const calls: { url: string; body?: string; authorization?: string }[] = [];
+  const calls: { url: string; body?: string; headers: Headers }[] = [];
   const fetchImpl: typeof fetch = async (input, init) => {
     const url = String(input);
     calls.push({
       url,
       body: typeof init?.body === "string" ? init.body : undefined,
-      authorization: new Headers(init?.headers).get("authorization") ?? undefined,
+      headers: new Headers(init?.headers),
     });
     if (url.includes("ipinfo.io")) {
       return new Response(JSON.stringify(ipinfo), { status: 200 });
@@ -198,8 +231,10 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
       },
       body: JSON.stringify({
         v: 1,
+        site: "www.super-cube.me",
         e: [
           {
+            id: "BBBBBBBB-BBBB-4BBB-8BBB-BBBBBBBBBBBB",
             k: "pageview",
             p: "/pricing",
             ns: true,
@@ -211,20 +246,21 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
             ip: IP,
             email: "spoof@example.com",
           },
+          { k: "button", p: "/pricing", l: "Book a pilot" },
         ],
       }),
     }),
     {
       env: {
         NODE_ENV: "production",
-        WEBSITE_INSIGHTS_INGEST_URL: "https://bigfivegroup.africa/api/insights/collect",
-        WEBSITE_INSIGHTS_INGEST_SECRET: "test-secret",
+        WEBSITE_INSIGHTS_INGEST_URL: "https://evil.example/collect",
+        WEBSITE_INSIGHTS_INGEST_SECRET: "old-secret",
+        INSIGHTS_INGEST_KEY: "test-ingest-key",
         IPINFO_TOKEN: "token-not-committed",
       },
       now: NOW,
       mint: MINT,
       fetchImpl,
-      sessionEmail: async () => "learner@example.com",
       allow: async () => true,
     },
   );
@@ -240,13 +276,16 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
 
   expect(calls.map((c) => c.url.split("?")[0])).toEqual([
     `https://ipinfo.io/${encodeURIComponent(IP)}/json`,
-    "https://bigfivegroup.africa/api/insights/collect",
+    INSIGHTS_COLLECT_URL,
   ]);
   const forwarded = calls[1]?.body ?? "";
-  const payload = JSON.parse(forwarded) as { site: string; host: string; e: Record<string, unknown>[] };
-  expect(payload.site).toBe("super-cube");
-  expect(payload.host).toBe("www.super-cube.me");
+  const payload = JSON.parse(forwarded) as { v: number; site: string; host?: string; e: Record<string, unknown>[] };
+  expect(payload.v).toBe(1);
+  expect(payload.site).toBe("super-cube.me");
+  expect(payload.host).toBeUndefined();
+  expect(Object.keys(payload).sort()).toEqual(["e", "site", "v"]);
   expect(payload.e[0]).toMatchObject({
+    id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
     k: "pageview",
     p: "/pricing",
     screen: "phone",
@@ -255,15 +294,20 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
     city: "Pietermaritzburg",
     organisation: "Example Fibre",
     returning: false,
-    email: "learner@example.com",
     utm_source: "linkedin",
     utm_content: "hero",
     utm_term: "leaders",
   });
+  expect(payload.e[1]).toMatchObject({ k: "click", p: "/pricing", l: "Book a pilot" });
+  expect(payload.e[1]?.id).toMatch(EVENT_ID);
   expect(forwarded).not.toContain(IP);
   expect(forwarded).not.toContain("spoof@example.com");
+  expect(forwarded).not.toContain("learner@example.com");
   expect(forwarded).not.toContain("-29.6006");
-  expect(calls[1]?.authorization).toBe("Bearer test-secret");
+  expect(forwarded).not.toContain("bigfivegroup.africa");
+  expect(calls[1]?.headers.get("x-insights-key")).toBe("test-ingest-key");
+  expect(calls[1]?.headers.get("authorization")).toBeNull();
+  expect(calls.some((c) => c.url.includes("evil.example"))).toBe(false);
   expect(calls.some((c) => c.url.includes("token-not-committed") && c.url.includes("bigfivegroup"))).toBe(false);
 });
 
@@ -277,14 +321,13 @@ test("Do Not Track does not look up, forward, or set a cookie", async () => {
     }),
     {
       env: {
-        WEBSITE_INSIGHTS_INGEST_URL: "https://bigfivegroup.africa/api/insights/collect",
+        INSIGHTS_INGEST_KEY: "test-ingest-key",
         IPINFO_TOKEN: "token",
       },
       fetchImpl: async () => {
         called = true;
         return new Response("no");
       },
-      sessionEmail: async () => "learner@example.com",
       allow: async () => true,
     },
   );
@@ -295,7 +338,7 @@ test("Do Not Track does not look up, forward, or set a cookie", async () => {
   expect(setCookie).not.toContain("learner@example.com");
 });
 
-test("without the ingest URL nothing is forwarded and no cookie is set", async () => {
+test("without the ingest key nothing is forwarded and no cookie is set", async () => {
   let called = false;
   const res = await handleInsightsCollect(
     new Request("https://www.super-cube.me/api/insights/collect", {
@@ -304,7 +347,11 @@ test("without the ingest URL nothing is forwarded and no cookie is set", async (
       body: JSON.stringify({ v: 1, e: [{ k: "pageview", p: "/pricing", ns: true }] }),
     }),
     {
-      env: { IPINFO_TOKEN: "token" },
+      env: {
+        IPINFO_TOKEN: "token",
+        WEBSITE_INSIGHTS_INGEST_URL: "https://bigfivegroup.africa/api/insights/collect",
+        WEBSITE_INSIGHTS_INGEST_SECRET: "old-secret",
+      },
       fetchImpl: async () => {
         called = true;
         return new Response("no");

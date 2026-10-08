@@ -137,10 +137,10 @@ export default function PrivacyPage() {
               store coordinates.
             </p>
             <p className="mt-3 text-slate">
-              If you are signed in, the email on that session may be included
-              with the visit in the investor Website Insights that administrators
-              already use. We do not show your name or email on any public page,
-              and a visit does not send an email, Slack message or other alert.
+              A visit record does not include your email address, your IP
+              address, GPS coordinates, or anything you type into a form. We do
+              not show your name or email on any public page, and a visit does
+              not send an email, Slack message or other alert.
             </p>
             <p className="mt-3 text-slate">
               Optional analytics (e.g. Google Analytics) and error monitoring

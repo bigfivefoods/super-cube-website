@@ -2,19 +2,22 @@
  * First-party visit events for the investor Website Insights report.
  *
  * The browser posts a short batch to `/api/insights/collect`. This module turns
- * that batch into the shape bigfivegroup.africa already stores: `{ v, site, host, e }`
- * with the live collector's keys (`k`, `p`, `a`, `r`, `u`, `l`, `ms`) plus the
- * metadata the report accepts (screen-width band, scroll, paths, organisation
- * label, coarse network location, new/returning). The server adds location and
- * the signed-in email. The raw IP is never a field on the payload.
+ * that batch into the body the Big Five Group store accepts:
+ * `{ v: 1, site: "super-cube.me", e: [events] }`. Each event has `k`, `p` and
+ * `id`. Kinds are pageview, engage, pdf, outbound and click. The server adds
+ * device family and, when configured, a coarse network location. Email, the
+ * raw IP, GPS and form contents are never fields on the payload.
  *
  * Do Not Track and Global Privacy Control drop the visit before a cookie is set.
  */
 
 import { redactAnalyticsUrl } from "@/lib/vercel-analytics";
 
-export const INSIGHTS_SITE = "super-cube";
+/** Canonical site tag. Aliases such as `super-cube` are not sent. */
+export const INSIGHTS_SITE = "super-cube.me";
+/** Public host used only to resolve a path-only page URL. Not sent as `site`. */
 export const INSIGHTS_HOST = "www.super-cube.me";
+export const INSIGHTS_COLLECT_URL = "https://bigfivegroup.africa/api/insights/collect";
 export const VISITOR_COOKIE = "sc_visitor";
 /** About 180 days, sliding on each recorded visit. */
 export const VISITOR_MAX_AGE = 60 * 60 * 24 * 180;
@@ -22,12 +25,13 @@ export const VISITOR_MAX_AGE = 60 * 60 * 24 * 180;
 export const SCREEN_BANDS = ["phone", "tablet", "laptop", "desktop"] as const;
 export type ScreenBand = (typeof SCREEN_BANDS)[number];
 
-export type InsightKind = "pageview" | "engage" | "pdf" | "outbound" | "button";
+export type InsightKind = "pageview" | "engage" | "pdf" | "outbound" | "click";
 
 /** Live collector UTM keys, plus content (`n`) and term (`t`). */
 export type Utm = { s?: string; m?: string; c?: string; n?: string; t?: string };
 
 export type ClientEvent = {
+  id?: unknown;
   k?: unknown;
   p?: unknown;
   a?: unknown;
@@ -48,6 +52,7 @@ export type ClientEvent = {
 };
 
 export type StoredEvent = {
+  id: string;
   k: InsightKind;
   p: string;
   a?: boolean;
@@ -80,13 +85,11 @@ export type StoredEvent = {
   returning?: boolean;
   frequency?: number;
   recency_days?: number;
-  email?: string;
 };
 
 export type InsightsPayload = {
   v: 1;
   site: typeof INSIGHTS_SITE;
-  host: typeof INSIGHTS_HOST;
   e: StoredEvent[];
 };
 
@@ -95,7 +98,9 @@ export type NetworkFields = Pick<
   "country" | "region" | "city" | "timezone" | "organisation" | "industry" | "size" | "network"
 >;
 
-const KINDS = new Set<InsightKind>(["pageview", "engage", "pdf", "outbound", "button"]);
+const KINDS = new Set<InsightKind>(["pageview", "engage", "pdf", "outbound", "click"]);
+/** 32 hex characters, or a UUID. The store rejects any other event id. */
+const EVENT_ID = /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 const SCROLLS = new Set([0, 25, 50, 75, 100]);
 
 /** Phone < 600, tablet < 1024, laptop < 1440, desktop otherwise. The pixel value is not returned. */
@@ -235,15 +240,25 @@ function pagesOf(raw: unknown): string[] | undefined {
   return out.length ? out : undefined;
 }
 
-/** Drop anything the browser is not allowed to assert (IP, email, exact pixels). */
+function kindOf(raw: unknown): InsightKind | null {
+  if (raw === "button") return "click";
+  if (typeof raw === "string" && KINDS.has(raw as InsightKind)) return raw as InsightKind;
+  return null;
+}
+
+function eventId(raw: unknown): string {
+  if (typeof raw === "string" && EVENT_ID.test(raw)) return raw.toLowerCase();
+  return crypto.randomUUID();
+}
+
+/** Drop anything the browser is not allowed to assert (IP, email, exact pixels, form contents). */
 export function sanitizeClientEvent(raw: ClientEvent): StoredEvent | null {
   if (!raw || typeof raw !== "object") return null;
-  const k = raw.k;
-  if (typeof k !== "string" || !KINDS.has(k as InsightKind)) return null;
-  const kind = k as InsightKind;
+  const kind = kindOf(raw.k);
+  if (!kind) return null;
   const path = typeof raw.p === "string" ? recordablePath(raw.p) : null;
   if (!path) return null;
-  const event: StoredEvent = { k: kind, p: path };
+  const event: StoredEvent = { id: eventId(raw.id), k: kind, p: path };
   if (raw.a === true) event.a = true;
   const r = referrerOf(raw.r);
   if (r) event.r = r;
@@ -256,7 +271,7 @@ export function sanitizeClientEvent(raw: ClientEvent): StoredEvent | null {
     if (u.n) event.utm_content = u.n;
     if (u.t) event.utm_term = u.t;
   }
-  if (kind === "pdf" || kind === "outbound" || kind === "button") {
+  if (kind === "pdf" || kind === "outbound" || kind === "click") {
     const l = labelOf(kind, raw.l);
     if (!l) return null;
     event.l = l;
@@ -453,27 +468,6 @@ export function isPublicIp(ip: string): boolean {
   return true;
 }
 
-export function resolveIngestUrl(raw: string | undefined, requestHost: string): string | null {
-  if (!raw?.trim()) return null;
-  let url: URL;
-  try {
-    url = new URL(raw.trim());
-  } catch {
-    return null;
-  }
-  const local = url.hostname === "localhost" || url.hostname === "127.0.0.1";
-  if (url.protocol !== "https:" && !(url.protocol === "http:" && local)) return null;
-  if (url.username || url.password) return null;
-  if (requestHost && url.hostname === requestHost) return null;
-  return url.toString();
-}
-
-export function sessionEmail(raw: string | null | undefined): string | undefined {
-  const s = clip(raw, 200)?.toLowerCase();
-  if (!s || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)) return undefined;
-  return s;
-}
-
 export type CollectPlan =
   | { record: false; clearCookie: boolean }
   | {
@@ -491,7 +485,6 @@ export function planCollect(input: {
   mint: () => string;
   family?: { device: string; browser: string; os: string };
   network?: NetworkFields;
-  email?: string;
 }): CollectPlan {
   if (requestOptedOut(input.headers)) {
     return { record: false, clearCookie: Boolean(input.cookie) };
@@ -510,7 +503,6 @@ export function planCollect(input: {
   if (!events.length) return { record: false, clearCookie: false };
   const newSession = list.slice(0, 10).some((item) => (item as ClientEvent)?.ns === true);
   const visitor = nextVisitor(parseVisitor(input.cookie), newSession, input.now, input.mint);
-  const email = sessionEmail(input.email);
   const enriched = events.map((event) => {
     const next: StoredEvent = {
       ...event,
@@ -520,14 +512,13 @@ export function planCollect(input: {
       frequency: visitor.frequency,
     };
     if (visitor.recency_days != null) next.recency_days = visitor.recency_days;
-    if (email) next.email = email;
     return next;
   });
   return {
     record: true,
     visitorId: visitor.state.id,
     cookieValue: visitorCookieValue(visitor.state),
-    payload: { v: 1, site: INSIGHTS_SITE, host: INSIGHTS_HOST, e: enriched },
+    payload: { v: 1, site: INSIGHTS_SITE, e: enriched },
   };
 }
 
@@ -564,5 +555,5 @@ export function clickEvent(input: {
     }
   }
   if (!input.button) return null;
-  return sanitizeClientEvent({ k: "button", p: page, l: input.label });
+  return sanitizeClientEvent({ k: "click", p: page, l: input.label });
 }

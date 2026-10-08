@@ -42,16 +42,15 @@ Vercel Web Analytics is already on (`@vercel/analytics` in the root layout). Dai
 
 ## First-party Website Insights
 
-`WebsiteInsights` posts a visit batch to `POST /api/insights/collect` on this site. The server adds device, browser and operating system family, the visitor cookie (new versus returning, frequency, recency), and — only when `IPINFO_TOKEN` is set — coarse network location and an organisation label. A signed-in session email is included only on that forwarded batch. The batch is then sent to the existing insights store.
+`WebsiteInsights` posts a visit batch to `POST /api/insights/collect` on this site. The server adds device, browser and operating system family, the visitor cookie (new versus returning, frequency, recency), and — only when `IPINFO_TOKEN` is set — coarse network location and an organisation label. The batch is then posted to the Big Five Group insights store at `https://bigfivegroup.africa/api/insights/collect`. That URL is fixed in code. The site tag on every batch is `super-cube.me`.
 
-Set on Vercel (Production), and do not commit either value:
+Set on Vercel (Production). Do not commit the values:
 
 | Variable | Role |
 | --- | --- |
-| `WEBSITE_INSIGHTS_INGEST_URL` | **Still required.** HTTPS URL of the insights collect endpoint the investor-portal report already reads. Events are not stored until this is set. It must not be this site’s own `/api/insights/collect` (that would loop). |
-| `WEBSITE_INSIGHTS_INGEST_SECRET` | Optional. Sent as `Authorization: Bearer` when the store expects one. |
-| `IPINFO_TOKEN` | Optional. Without it, city, region, country, timezone, organisation, industry, size and network type are omitted. The token must not be committed. The raw IP is not written to the payload, the database, the cache or our logs. |
+| `INSIGHTS_INGEST_KEY` | Sent as the `x-insights-key` header. Already saved on the Vercel project. If it is missing, the browser beacon is accepted and dropped. The value is never written to the payload, a log line, or this repository. |
+| `IPINFO_TOKEN` | Optional and server-side only. Without it, city, region, country, timezone, organisation, industry, size and network type are omitted. The raw IP is not written to the payload, the database, the cache or our logs. |
 
 Do Not Track and `Sec-GPC: 1` record nothing and set no cookie. There is no cookie banner.
 
-The forwarded body is `{ v: 1, site: "super-cube", host: "www.super-cube.me", e: [...] }` using the same event keys as bigfivegroup.africa (`k`, `p`, `a`, `r`, `u`, `l`, `ms`) plus the metadata fields (`screen`, `scroll`, `landing`, `exit`, `pages`, `organisation`, `returning`, and the rest listed on `/privacy`).
+The forwarded body is `{ v: 1, site: "super-cube.me", e: [...] }` with at most 10 events. Each event has `k`, `p` and `id` (a UUID or 32 hex characters). Kinds are `pageview`, `engage`, `pdf`, `outbound` and `click` (a button click is stored as `click`). An `engage` event is kept only when time on the page is at least 500 ms or scroll depth is above 0. Email, the raw IP, GPS and form contents are not included. The batch is not tagged `bigfivegroup.africa`.
