@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { pageMeta } from "@/lib/seo";
 import { TestimonialsSection } from "@/components/Testimonials";
 import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
+import { AUTHOR_BIO } from "@/lib/author";
+import { BOOK, PAID_BOOK, PAID_BOOK_DETAILS } from "@/lib/book";
 
 export const metadata: Metadata = pageMeta({
   path: "/about",
@@ -13,11 +15,12 @@ export const metadata: Metadata = pageMeta({
 
 const glance = [
   ["Author", "Dr Craig Ross Muller"],
+  ["Book", "Leadership Is Learnable (Big Five Group, 2026)"],
   ["Degree", "Doctor of Business Administration (DBA)"],
   ["Institution", "University of KwaZulu-Natal (2021)"],
   ["Model", "Super-Cube® (2020 thesis · peer-reviewed)"],
   ["Case context", "African FMCG business-network"],
-  ["Validation", "Mixed-methods · CFA · thematic interviews"],
+  ["Methods", "Mixed methods · CFA · thematic interviews"],
 ];
 
 const pillars = [
@@ -54,7 +57,7 @@ const education = [
   },
   {
     degree: "Bachelor of Commerce (B.Comm)",
-    detail: "University of KwaZulu-Natal · 2002",
+    detail: "University of Natal · 2002",
   },
 ];
 
@@ -91,25 +94,18 @@ export default function AboutPage() {
                 Visionary architect of Kingdom-centred leadership and
                 sustainable impact in Africa
               </p>
-              <div className="prose-site mt-5 space-y-4 sm:mt-6">
-                <p>
-                  Dr Craig Muller is a driven innovator—a DBA-credentialed
-                  executive with over 20 years of blue-chip experience in FMCG,
-                  supply chain optimisation, and global consulting.
-                </p>
-                <p>
-                  His goal is to <strong>feed</strong> (Big Five Foods),{" "}
-                  <strong>educate</strong> (Super-Cube® leadership development),
-                  and <strong>empower</strong> (SupplierAdvisor®) people across
-                  the African continent—to help progress humanity.
-                </p>
-                <p>
-                  Purpose is carried through three integrated platforms that
-                  accelerate food security, transformative leadership, and
-                  economic empowerment via scalable, evidence-based solutions
-                  aligned with Zero Hunger, Quality Education, and No Poverty.
-                </p>
+              <div className="prose-site mt-5 space-y-4 sm:mt-6" data-testid="author-bio">
+                {AUTHOR_BIO.map((para) => (
+                  <p key={para.slice(0, 32)}>{para}</p>
+                ))}
               </div>
+              <p className="mt-5 text-sm font-semibold text-ink">
+                Author of{" "}
+                <Link href={`/book#${PAID_BOOK_DETAILS.anchor}`} className="underline underline-offset-2">
+                  <em>{PAID_BOOK.title}</em>
+                </Link>{" "}
+                ({PAID_BOOK.imprint}, 2026)
+              </p>
               <div className="mt-6 flex flex-wrap gap-2">
                 {["Integrity", "Excellence", "Compassionate empowerment"].map(
                   (v) => (
@@ -146,6 +142,32 @@ export default function AboutPage() {
                     </p>
                   </li>
                 ))}
+              </ul>
+              <p className="mt-6 text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+                Books
+              </p>
+              <ul className="mt-4 space-y-4" data-testid="author-books">
+                <li className="border-b border-line pb-4">
+                  <p className="text-sm font-semibold tracking-tight text-ink">
+                    <Link href={`/book#${PAID_BOOK_DETAILS.anchor}`} className="hover:underline">
+                      {PAID_BOOK.title}
+                    </Link>
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate sm:text-sm">
+                    {PAID_BOOK.imprint} · {PAID_BOOK_DETAILS.publishedLabel} · {PAID_BOOK_DETAILS.pages} pp · ISBN{" "}
+                    {PAID_BOOK.paperback.isbn} (paperback) · ISBN {PAID_BOOK.kindle.isbn} (eBook)
+                  </p>
+                </li>
+                <li>
+                  <p className="text-sm font-semibold tracking-tight text-ink">
+                    <Link href={BOOK.page} className="hover:underline">
+                      {BOOK.title}
+                    </Link>
+                  </p>
+                  <p className="mt-1 text-xs leading-relaxed text-slate sm:text-sm">
+                    Free book · 2026 · {BOOK.pages} pp · PDF
+                  </p>
+                </li>
               </ul>
               <p className="mt-5 text-xs text-muted">
                 Contact:{" "}

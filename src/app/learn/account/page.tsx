@@ -18,7 +18,7 @@ import { track } from "@/lib/analytics";
 import { reflectionCount } from "@/lib/lms/continue";
 import { getNextBestAction } from "@/lib/lms/next-action";
 import {
-  AGE_BANDS,
+  findAgeBand,
   COHORT_KINDS,
   CONTEXTS,
   ROLES,
@@ -293,7 +293,7 @@ function AccountPageInner() {
     ? CONTEXTS.find((c) => c.id === profile.context)?.label
     : null;
   const ageLabel = profile?.ageBand
-    ? AGE_BANDS.find((a) => a.id === profile.ageBand)?.label
+    ? findAgeBand(profile.ageBand)?.label
     : null;
   const cohortLabel = profile?.cohortKind
     ? COHORT_KINDS.find((c) => c.id === profile.cohortKind)?.label

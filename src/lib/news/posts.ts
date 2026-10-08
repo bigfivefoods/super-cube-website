@@ -151,7 +151,7 @@ That before-and-after loop now sits at the heart of every Super-Cube® programme
 - **Organisations:** run a Super-Cube® pilot for your managers: a baseline for every leader, six short courses, a re-assessment and a before-and-after cohort report you can take to your board: [plan a pilot for your organisation](/organisations)
 
 
-**About these results.** These are aggregated pre- and post-course assessment results from Super-Cube® leadership development interventions (NQF levels 3–5) at South African and international FMCG organisations, including Imana Foods and Kerry Foods, as reported in the Super-Cube® company profile (September 2023). Gains are changes in average assessment scores in percentage points. They describe these cohorts and are not a guarantee of results for any individual or organisation. Separately, the structure of the six-face model was validated in Dr Craig Muller's doctoral research at the University of KwaZulu-Natal (thesis, 2020).
+**About these results.** These are average pre- and post-course assessment scores from the 12-week accredited Super-Cube® leadership intervention (NQF levels 3–5) with leaders at Imana Foods and Kerry Foods, a South African and an international FMCG business, as reported in Leadership Is Learnable (2026), Chapter 18. Gains are changes in average assessment scores in percentage points. They describe these cohorts and are not a guarantee of results for any individual or organisation. Separately, the structure of the six-face model was tested in Dr Craig Muller's doctoral research at the University of KwaZulu-Natal (thesis, 2020).
 
 *Quotes are reproduced verbatim from learner feedback, with permission.*`;
 

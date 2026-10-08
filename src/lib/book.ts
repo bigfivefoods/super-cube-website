@@ -18,6 +18,41 @@ export const BOOK = {
   share: { url: "/images/og/super-cube-leadership-book.jpg", width: 1200, height: 630 },
 } as const;
 
+/**
+ * The comprehensive edition (the paid book, white cover): the extra details shown on /book, the home page,
+ * /about, /media and the company profile. Title, subtitle, ISBNs and the Amazon URL live in PAID_BOOK and
+ * AMAZON_URL_TBD at the end of this file (shared with the /news launch post).
+ */
+export const PAID_BOOK_DETAILS = {
+  edition: "Comprehensive edition",
+  pages: 312,
+  format: "Paperback · 6 × 9 in · full colour",
+  /** Publication date (ISO) and its label. */
+  published: "2026-10-31",
+  publishedLabel: "31 October 2026",
+  paperbackPrice: { zar: 299, usd: 17.99 },
+  ebookPrice: { zar: 149, usd: 8.99 },
+  cover: { src: "/images/book/leadership-is-learnable-cover.jpg", width: 1000, height: 1500 },
+  /** In-page anchor on /book. */
+  anchor: "comprehensive-edition",
+} as const;
+
+/**
+ * The Amazon "Buy" link, or null while the book is not live. Every buy button on the site calls this, so the
+ * one switch is AMAZON_URL_TBD: while it is empty or still the Amazon *search* placeholder, buttons stay hidden
+ * and the site shows "Coming soon on Amazon". Set AMAZON_URL_TBD to the real product URL (…/dp/…) to show them.
+ */
+export function amazonBuyUrl(url: string = AMAZON_URL_TBD): string | null {
+  const u = (url || "").trim();
+  if (!/^https:\/\/(www\.)?amazon\.[a-z.]+\//i.test(u) && !/^https:\/\/amzn\.(to|eu)\//i.test(u)) return null;
+  if (/amazon\.[a-z.]+\/s(\/|\?)/i.test(u)) return null; // search placeholder, not a product page
+  return u;
+}
+
+/** How to cite the comprehensive edition (APA style). */
+export const PAID_BOOK_CITATION =
+  "Muller, C. R. (2026). Leadership is learnable: The Super-Cube® model, the evidence behind it, and how to develop leaders at every level. Big Five Group. ISBN 978-1-0483-6161-2 (paperback); ISBN 978-1-0483-6160-5 (EPUB/Kindle).";
+
 /** Chapters and their subtitles, as in the book's contents. */
 export const BOOK_CHAPTERS: readonly { n?: number; title: string; note: string }[] = [
   { title: "Foreword", note: "Dr Housainou Taal, Director, African Leadership Institute" },
@@ -37,3 +72,23 @@ export const BOOK_CHAPTERS: readonly { n?: number; title: string; note: string }
   { title: "Epilogue: A Super-Cube® World Awaits", note: "Leadership for the generations to come" },
   { title: "Resources and Next Steps", note: "Further reading, research and where to go next" },
 ];
+
+/**
+ * The paid book, Leadership Is Learnable (white cover, Big Five Group), by Dr Craig R. Muller.
+ * The free book above stays the free starting point. Used by the /news launch post (src/lib/news/posts.ts).
+ *
+ * AMAZON_URL_TBD is a PLACEHOLDER: the book is going live on Amazon KDP and the product URL is not known yet.
+ * Until then it points at an Amazon search for the paperback ISBN. When the listing is live, replace this one
+ * value with the real Amazon product URL; every Amazon link on the site reads it from here.
+ */
+export const AMAZON_URL_TBD = "https://www.amazon.com/s?k=9781048361612";
+
+export const PAID_BOOK = {
+  title: "Leadership Is Learnable",
+  subtitle: "The Super-Cube® model, the evidence behind it, and how to develop leaders at every level",
+  author: "Dr Craig R. Muller",
+  imprint: "Big Five Group",
+  amazonUrl: AMAZON_URL_TBD,
+  paperback: { isbn: "978-1-0483-6161-2", pages: 312, price: "R299 / $17.99" },
+  kindle: { isbn: "978-1-0483-6160-5", price: "$8.99 (about R149)" },
+} as const;

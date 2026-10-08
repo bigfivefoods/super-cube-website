@@ -2,7 +2,7 @@ export const site = {
   name: "Super-Cube®",
   tagline: "Human-centric leadership, developed from the core outward.",
   description:
-    "The Super-Cube® Leadership Model is an empirically validated, multidimensional framework for developing leadership capacity at personal, organisational, and network levels.",
+    "The Super-Cube® Leadership Model is a multidimensional framework, developed and tested in doctoral research, for developing leadership capacity at personal, organisational, and network levels.",
   url: "https://www.super-cube.me",
   email: "hello@super-cube.me",
   researchGateUrl: "https://www.researchgate.net/profile/Craig-Muller",
@@ -505,7 +505,7 @@ export const stats = [
     value: "+32.2%",
     label: "Overall growth across all six faces",
     detail:
-      "12-week Super-Cube® leadership interventions: aggregated pre/post results, South African and international FMCG organisations (Super-Cube® company profile, Sept 2023)",
+      "12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods: average pre/post gain in percentage points (Leadership Is Learnable, 2026, Chapter 18)",
   },
   {
     value: "+45.1%",
@@ -519,8 +519,8 @@ export const stats = [
   },
   {
     value: "70–76%",
-    label: "Leadership developable",
-    detail: "Through deliberate practice—not fixed by heredity alone",
+    label: "Linked to experience and learning",
+    detail: "Genes explain roughly 24–30% of who holds leadership roles; about 70–76% is linked to experience, environment and learning",
   },
 ];
 
@@ -538,8 +538,8 @@ export const researchHighlights = [
     body: "Confirmatory factor analysis: CMIN/DF 2.232, CFI 0.86, RMSEA 0.097—collectively indicating acceptable structural fit.",
   },
   {
-    title: "10 senior interviews",
-    body: "Thematic analysis of decision-maker interviews validated all six constructs in lived leadership practice.",
+    title: "Ten director interviews",
+    body: "Thematic analysis of interviews with ten directors supported all six constructs in lived leadership practice.",
   },
 ];
 

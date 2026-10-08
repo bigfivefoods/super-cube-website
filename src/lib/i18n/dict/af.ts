@@ -128,6 +128,12 @@ const af: Dict = {
   "home.bookMore": "Oor die boek",
   "home.bookLang": "In Engels",
   "home.bookCoverAlt": "Voorblad van The Super-Cube® Leadership Model deur Dr. Craig R. Muller",
+  "home.paidEyebrow": "Nuut · Volledige uitgawe",
+  "home.paidBody": "312 bladsye oor die navorsing en bewyse agter die Super-Cube®-model, elke gesig in diepte, en hoe om leiers op elke vlak te ontwikkel. Sagteband en Kindle, 31 Oktober 2026.",
+  "home.paidMore": "Oor die volledige uitgawe",
+  "home.paidSoon": "Binnekort op Amazon",
+  "home.paidBuy": "Koop op Amazon",
+  "home.paidCoverAlt": "Voorblad van Leadership Is Learnable deur Dr. Craig R. Muller",
 
   "cta.tryFree": "Begin gratis basislyn",
   "cta.bookPilot": "Bespreek ’n loods",
@@ -156,14 +162,14 @@ const af: Dict = {
     "Gegrond in Buber se I–Thou, die Afrika-filosofie van Ubuntu, en Wilber se AQAL-integrale raam—mense as subjekte-in-verhouding, nooit voorwerpe van beheer nie.",
   "home.theoryTitle": "Teorie",
   "home.theoryBody":
-    "Illeris se driedimensionele leer (inhoud, dryfveer, interaksie) plus groot leierskap-literatuur. Ongeveer 70–76% van leierskapvermoë is ontwikkelbaar deur doelbewuste oefening.",
+    "Illeris se driedimensionele leer (inhoud, dryfveer, interaksie) plus groot leierskap-literatuur. Gene verklaar slegs sowat ’n kwart tot ’n derde van wie leiersrolle beklee; die res hou verband met ervaring, omgewing en leer.",
   "home.modelTitle": "Model",
   "home.modelBody":
     "Super-Cube® maak daardie filosofie en teorie beoefenbaar: jy in die middel, ses onderlinge vlakke, pre→post meting, en doelbewuste groei.",
   "home.coreBeliefEyebrow": "Kernooruiging",
   "home.coreBelief": "Leierskap is grootliks leerbaar.",
   "home.coreBeliefBody":
-    "Super-Cube® hou dat ongeveer 70–76% van leierskapvermoë ontwikkelbaar is deur doelbewuste oefening, ervaring en gestruktureerde intervensie—nie net erflikheid nie. Ontwikkeling volg Illeris se inhoud, dryfveer en interaksie.",
+    "Super-Cube® hou dat leierskapvermoë grootliks ontwikkelbaar is deur doelbewuste oefening, ervaring en gestruktureerde intervensie—nie deur erflikheid vasgelê nie: gene verklaar sowat 24–30% van wie leiersrolle beklee, en sowat 70–76% hou verband met ervaring, omgewing en leer. Ontwikkeling volg Illeris se inhoud, dryfveer en interaksie.",
   "home.theoryMapLabel": "Teoriekaart (opsomming)",
   "home.ptmTheoryMap": "Maak volle literatuurkaart oop",
   "home.ptmHow": "Hoe ontwikkeling werk",
@@ -196,7 +202,7 @@ const af: Dict = {
     "Ja. Refleksies en joernaalteks bly standaard op jou toestel. As jy by ’n kohort aansluit en instem, sien afrigters slegs tellings en voltooiing—nie joernaalteks nie.",
   "faq.q5": "Watter tale word ondersteun?",
   "faq.a5":
-    "Die kieslys, voetskrif en sleutelbladsye is beskikbaar in Engels (verstek), Français, العربية, Português, Kiswahili, isiZulu en Afrikaans: gebruik die taalknoppie bo-aan. Kursussessies en die navorsingsassessering bly in Engels, sodat elke leerder dieselfde gevalideerde items beantwoord en resultate vergelykbaar bly.",
+    "Die kieslys, voetskrif en sleutelbladsye is beskikbaar in Engels (verstek), Français, العربية, Português, Kiswahili, isiZulu en Afrikaans: gebruik die taalknoppie bo-aan. Kursussessies en die Super-Cube®-vraelys bly in Engels, sodat elke leerder dieselfde items beantwoord en resultate vergelykbaar bly.",
   "faq.q6": "Kan skole en maatskappye ’n loods hardloop?",
   "faq.a6":
     "Ja. Gebruik die loods-pakket vir pryse, 8-week kalender, toestemmingsnotas en afrigter-gereedskap. Skep ’n kohortkode, nooi leerders, en voer rooster-vordering uit wanneer SQL-organisasies aangeskakel is.",

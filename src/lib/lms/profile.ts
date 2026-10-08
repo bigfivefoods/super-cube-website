@@ -9,6 +9,9 @@ import { loadLmsState, saveLmsState, type LocalLmsState } from "@/lib/lms/store"
 export type AgeBand =
   | "under-13"
   | "13-17"
+  | "18-21"
+  | "22-24"
+  /** Legacy band (before Oct 2026): kept so saved profiles still read; no longer offered. */
   | "18-24"
   | "25-34"
   | "35-44"
@@ -58,12 +61,28 @@ export const AGE_BANDS: { id: AgeBand; label: string; programmeId: ProgrammeId }
   [
     { id: "under-13", label: "Under 13", programmeId: "kids" },
     { id: "13-17", label: "13–17", programmeId: "adolescents" },
-    { id: "18-24", label: "18–24", programmeId: "adolescents" },
+    { id: "18-21", label: "18–21", programmeId: "adolescents" },
+    { id: "22-24", label: "22–24", programmeId: "adults" },
     { id: "25-34", label: "25–34", programmeId: "adults" },
     { id: "35-44", label: "35–44", programmeId: "adults" },
     { id: "45-54", label: "45–54", programmeId: "adults" },
     { id: "55+", label: "55+", programmeId: "adults" },
   ];
+
+/**
+ * Bands no longer offered but still found in saved profiles. "18-24" was split on 8 Oct 2026 so the
+ * programmes match the published age ranges (Adolescents 13–21, Adults 22+); existing learners keep
+ * the programme they already chose.
+ */
+const LEGACY_AGE_BANDS: { id: AgeBand; label: string; programmeId: ProgrammeId }[] = [
+  { id: "18-24", label: "18–24", programmeId: "adolescents" },
+];
+
+/** Look up a band, including legacy bands from older saved profiles. */
+export function findAgeBand(id?: AgeBand | null) {
+  if (!id) return undefined;
+  return AGE_BANDS.find((a) => a.id === id) ?? LEGACY_AGE_BANDS.find((a) => a.id === id);
+}
 
 export const ROLES: { id: LearnerRole; label: string }[] = [
   { id: "student", label: "Student" },
@@ -124,7 +143,7 @@ export function saveProfile(
   const age = partial.ageBand ?? prev.ageBand;
   const programmeId =
     partial.programmeId ??
-    (age ? AGE_BANDS.find((a) => a.id === age)?.programmeId : undefined) ??
+    findAgeBand(age)?.programmeId ??
     prev.programmeId;
 
   const profile: LearnerProfile = {

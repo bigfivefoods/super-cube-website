@@ -61,7 +61,7 @@ export default function TheModelPage() {
               Doctor of Business Administration thesis at the University of
               KwaZulu-Natal, the model was empirically shaped within an African
               FMCG business-network and is among the first frameworks of its
-              kind validated in that context.
+              kind tested in that context.
             </p>
           </div>
           <div className="flex justify-center md:justify-end">

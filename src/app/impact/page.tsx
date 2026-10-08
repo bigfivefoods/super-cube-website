@@ -38,9 +38,9 @@ export default function ImpactPage() {
 
       {/* 2. Intervention results (Imana Foods and Kerry Foods), not the doctoral study */}
       <ImpactResults
-        eyebrow="Results · 12-week Super-Cube® leadership interventions"
+        eyebrow="Results · 12-week Super-Cube® leadership intervention"
         title="+32.2% overall growth across all six faces."
-        description="Aggregated pre- and post-course results from the 12-week Super-Cube® leadership interventions with Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face (source: Super-Cube® company profile, Sept 2023). These are programme results, not live LMS data."
+        description="Average pre- and post-course scores from the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face in percentage points (source: Leadership Is Learnable, 2026, Chapter 18). These are programme results, not live LMS data."
       />
 
       {/* 3. Example pattern (illustrative) */}

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { JsonLd } from "@/components/JsonLd";
+import { PaidBookSection, paidBookJsonLd } from "@/components/book/PaidBook";
 import { ShareButtons } from "@/components/news/ShareButtons";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { BOOK, BOOK_CHAPTERS } from "@/lib/book";
@@ -72,6 +73,7 @@ export default function BookPage() {
   return (
     <>
       <JsonLd data={bookJsonLd()} />
+      <JsonLd data={paidBookJsonLd()} />
       <PageHero
         theme="model"
         eyebrow="Free book · PDF download"
@@ -122,7 +124,14 @@ export default function BookPage() {
               </p>
               <p className="text-sm text-muted">
                 The stories are illustrative composites. The self-assessments are reflective tools for personal
-                growth, not the validated research instrument.
+                growth, not the research questionnaire.
+              </p>
+              <p>
+                Want the research and evidence in full? The 312-page comprehensive edition,{" "}
+                <a href="#comprehensive-edition" className="font-semibold text-ink underline underline-offset-2">
+                  <em>Leadership Is Learnable</em>
+                </a>
+                , is published on 31 October 2026 in paperback and Kindle.
               </p>
             </div>
             <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -193,6 +202,9 @@ export default function BookPage() {
           </ol>
         </div>
       </section>
+
+      {/* The comprehensive edition (paid): Amazon button hidden until AMAZON_URL_TBD is a real product URL. */}
+      <PaidBookSection />
 
       {/* Download CTA */}
       <section className="section-pad">

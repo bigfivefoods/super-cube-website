@@ -136,6 +136,12 @@ const en = {
   "home.bookMore": "About the book",
   "home.bookLang": "In English",
   "home.bookCoverAlt": "Cover of The Super-Cube® Leadership Model by Dr Craig R. Muller",
+  "home.paidEyebrow": "New · Comprehensive edition",
+  "home.paidBody": "312 pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Paperback and Kindle, 31 October 2026.",
+  "home.paidMore": "About the comprehensive edition",
+  "home.paidSoon": "Coming soon on Amazon",
+  "home.paidBuy": "Buy on Amazon",
+  "home.paidCoverAlt": "Cover of Leadership Is Learnable by Dr Craig R. Muller",
 
   // CTAs & common
   "cta.tryFree": "Start free baseline",
@@ -168,14 +174,14 @@ const en = {
     "Grounded in Buber’s I–Thou, the African philosophy of Ubuntu, and Wilber’s AQAL integral frame—people as subjects-in-relation, never objects of control.",
   "home.theoryTitle": "Theory",
   "home.theoryBody":
-    "Illeris’s three-dimensional learning (content, incentive, interaction) plus major leadership literature strands. Roughly 70–76% of leadership capacity is developable through deliberate practice.",
+    "Illeris’s three-dimensional learning (content, incentive, interaction) plus major leadership literature strands. Genes explain only about a quarter to a third of who holds leadership roles; the rest is linked to experience, environment and learning.",
   "home.modelTitle": "Model",
   "home.modelBody":
     "Super-Cube® makes that philosophy and theory practiceable: you at the centre, six interdependent faces, pre→post measurement, and deliberate growth.",
   "home.coreBeliefEyebrow": "Core belief",
   "home.coreBelief": "Leadership is largely learnable.",
   "home.coreBeliefBody":
-    "Super-Cube® holds that roughly 70–76% of leadership capacity is developable through deliberate practice, experience, and structured intervention—not fixed by heredity alone. Development follows Illeris’s content, incentive, and interaction.",
+    "Super-Cube® holds that leadership capacity is largely developable through deliberate practice, experience and structured intervention, not fixed by heredity: genes explain roughly 24–30% of who holds leadership roles, and about 70–76% is linked to experience, environment and learning. Development follows Illeris’s content, incentive, and interaction.",
   "home.theoryMapLabel": "Theory map (summary)",
   "home.ptmTheoryMap": "Open full literature map",
   "home.ptmHow": "How development works",
@@ -210,7 +216,7 @@ const en = {
     "Yes. Reflections and journal text stay on your device by default. If you join a cohort and opt in, coaches only see scores and completion—not journal text.",
   "faq.q5": "What languages are supported?",
   "faq.a5":
-    "The menus, footer and key pages are available in English (default), Français, العربية, Português, Kiswahili, isiZulu and Afrikaans: use the language button in the header. Course sessions and the research assessment stay in English, so every learner answers the same validated items and results stay comparable.",
+    "The menus, footer and key pages are available in English (default), Français, العربية, Português, Kiswahili, isiZulu and Afrikaans: use the language button in the header. Course sessions and the Super-Cube® questionnaire stay in English, so every learner answers the same items and results stay comparable.",
   "faq.q6": "Can schools and companies run a pilot?",
   "faq.a6":
     "Yes. Use the pilot pack for pricing, 8-week calendar, consent notes, and coach tools. Create a cohort code, invite learners, and export roster progress when SQL orgs are enabled.",
