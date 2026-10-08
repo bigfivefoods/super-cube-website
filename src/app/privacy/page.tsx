@@ -95,6 +95,9 @@ export default function PrivacyPage() {
               Analytics & errors
             </h2>
             <p className="mt-3 text-slate">
+              We count page views with Vercel Web Analytics: no cookies, no
+              account details, and private links (shared reports, feedback
+              invitations, certificates) are recorded without their codes.
               Optional analytics (e.g. Google Analytics) and error monitoring
               (e.g. Sentry) may run when configured. They help improve the
               product and do not require journal content.
