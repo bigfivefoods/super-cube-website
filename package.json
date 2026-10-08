@@ -36,7 +36,7 @@
     "@vercel/analytics": "^2.0.1",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
-    "next": "16.2.10",
+    "next": "16.4.0",
     "qrcode-generator": "^2.0.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -49,9 +49,9 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
+    "eslint-config-next": "16.4.0",
     "pptxgenjs": "^4.0.1",
-    "sharp": "^0.35.3",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

@@ -35,6 +35,7 @@ export const RATE_RULES = {
   shares: { limit: 20, windowSec: 3600 },
   "share-view": { limit: 60, windowSec: 600 },
   "csp-report": { limit: 60, windowSec: 600 },
+  "insights-collect": { limit: 120, windowSec: 600 },
   "feedback360-create": { limit: 5, windowSec: 3600 },
   "feedback360-rater": { limit: 30, windowSec: 600 },
   "email-ip": { limit: 20, windowSec: 600 },
