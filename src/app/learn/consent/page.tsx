@@ -14,7 +14,7 @@ import {
   hasValidGuardianConsent,
   isMinorProfile,
 } from "@/lib/lms/consent";
-import { AGE_BANDS, getProfile, type LearnerProfile } from "@/lib/lms/profile";
+import { findAgeBand, getProfile, type LearnerProfile } from "@/lib/lms/profile";
 import { loadLmsState, saveLmsState } from "@/lib/lms/store";
 
 function safeNext(raw: string | null): string {
@@ -42,7 +42,7 @@ function ConsentForm() {
     track("page_view", { path: "/learn/consent" });
   }, []);
 
-  const band = AGE_BANDS.find((a) => a.id === profile?.ageBand);
+  const band = findAgeBand(profile?.ageBand);
   const canSubmit = guardianName.trim().length >= 2 && relationship && attested && !busy;
 
   async function submit() {

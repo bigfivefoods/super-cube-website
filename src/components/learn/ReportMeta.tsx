@@ -3,7 +3,7 @@
 import { formatDateZA } from "@/lib/datetime";
 import Link from "next/link";
 import {
-  AGE_BANDS,
+  findAgeBand,
   COHORT_KINDS,
   CONTEXTS,
   ROLES,
@@ -38,7 +38,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
     ? CONTEXTS.find((c) => c.id === profile.context)?.label
     : null;
   const age = profile?.ageBand
-    ? AGE_BANDS.find((a) => a.id === profile.ageBand)?.label
+    ? findAgeBand(profile.ageBand)?.label
     : null;
   const cohort = profile?.cohortKind
     ? COHORT_KINDS.find((c) => c.id === profile.cohortKind)?.label

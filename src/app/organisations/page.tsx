@@ -78,7 +78,7 @@ export default function OrganisationsPage() {
           text: "More than the word influence, it provokes your behaviour and calls for change.",
           cite: "Theolen Thevan, Kerry Foods",
         }}
-        source="Average gain in assessment score, pre- to post-course, in percentage points. 12-week Super-Cube® interventions (NQF levels 3–5) at Imana Foods and Kerry Foods. Source: Super-Cube® company profile, September 2023."
+        source="Average gain in assessment score, pre- to post-course, in percentage points. 12-week accredited Super-Cube® intervention (NQF levels 3–5) with leaders at Imana Foods and Kerry Foods. Source: Leadership Is Learnable (2026), Chapter 18."
         href="/news/twelve-weeks-six-faces-fmcg-leadership"
         linkLabel="Read the case study"
         image="/news/fmcg-leadership-case-study-cover.jpg"
