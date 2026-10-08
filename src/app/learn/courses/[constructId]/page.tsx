@@ -2,15 +2,14 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import { CourseVideo } from "@/components/learn/CourseVideo";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { constructs, type ConstructId } from "@/lib/content";
 import { faceTagline } from "@/lib/lms/face-taglines";
 import { faceDescription, faceSkills } from "@/lib/lms/face-copy";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { getCourse } from "@/lib/lms/curriculum";
-import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { faceInkStyle } from "@/lib/contrast";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 
@@ -23,8 +22,7 @@ const TYPE_LABEL: Record<string, string> = {
 export default function CourseDetailPage() {
   const params = useParams();
   const constructId = params.constructId as ConstructId;
-  const [state, setState] = useState<LocalLmsState | null>(null);
-  useEffect(() => setState(loadLmsState()), []);
+  const state = useLmsState();
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||

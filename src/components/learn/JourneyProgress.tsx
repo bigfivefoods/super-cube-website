@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 import {
   getJourney,
   journeyStepFromPath,
@@ -10,7 +10,7 @@ import {
   type JourneyStep,
   type JourneyStepStatus,
 } from "@/lib/lms/journey";
-import { loadLmsState } from "@/lib/lms/store";
+import { useLmsState } from "@/components/learn/useLearnState";
 
 function statusClasses(status: JourneyStepStatus, activeHere: boolean) {
   if (status === "done") {
@@ -254,43 +254,14 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
   );
 }
 
-/** Hook + client wrapper: loads journey from localStorage */
-export function useJourney(): JourneySnapshot | null {
-  const [journey, setJourney] = useState<JourneySnapshot | null>(null);
-  const refresh = () => setJourney(getJourney(loadLmsState()));
-
-  useEffect(() => {
-    refresh();
-  }, []);
-
-  const pathname = usePathname();
-  useEffect(() => {
-    refresh();
-  }, [pathname]);
-
-  useEffect(() => {
-    const onStorage = (e: StorageEvent) => {
-      if (e.key === "supercube_lms_v1" || e.key === null) refresh();
-    };
-    const onLocal = () => refresh();
-    window.addEventListener("storage", onStorage);
-    window.addEventListener("sc-lms-update", onLocal);
-    return () => {
-      window.removeEventListener("storage", onStorage);
-      window.removeEventListener("sc-lms-update", onLocal);
-    };
-  }, []);
-
-  return journey;
+/** Pathway snapshot from the device store. Ready on the first client render. */
+export function useJourney(): JourneySnapshot {
+  const state = useLmsState();
+  return useMemo(() => getJourney(state), [state]);
 }
 
 export function JourneyRailLive() {
   const journey = useJourney();
-  if (!journey) {
-    return (
-      <div className="mb-5 h-[7.5rem] animate-pulse rounded-2xl border border-line bg-surface sm:mb-6" />
-    );
-  }
   return (
     <div className="mb-5 sm:mb-6">
       <JourneyRail journey={journey} />

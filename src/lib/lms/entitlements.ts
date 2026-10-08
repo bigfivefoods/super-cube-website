@@ -2,7 +2,7 @@
  * Access / entitlement model for Super-Cube® Learn.
  *
  * free:     orient + baseline (always)
- * demo:     free sample sessions only (overview + first skill per face)
+ * demo:     free sample only (Choices overview and its first skill)
  * paid:     Paystack payment verified server-side, or a cohort seat
  * open:     NEXT_PUBLIC_DEMO_LMS_OPEN=true (whole LMS free; never in production)
  *

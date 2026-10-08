@@ -194,13 +194,14 @@ export function changeBand(
   const sDiff = Math.sqrt(2) * sd * Math.sqrt(1 - reliability);
   const rci = Math.round((delta / sDiff) * 100) / 100;
   const threshold = reliableChangeThreshold(kind);
+  // Labels stay provisional: reliability and SD above are placeholders, not norms.
   if (rci >= 1.96)
-    return { id: "real_growth", label: "Real growth", short: "Real", rci, threshold, tone: "good" };
+    return { id: "real_growth", label: "Larger rise (provisional)", short: "Provisional rise", rci, threshold, tone: "good" };
   if (rci >= 1)
-    return { id: "possible_growth", label: "Possible growth (not yet certain)", short: "Possible", rci, threshold, tone: "neutral" };
+    return { id: "possible_growth", label: "Smaller rise (provisional)", short: "Provisional", rci, threshold, tone: "neutral" };
   if (rci > -1)
-    return { id: "within_noise", label: "Within normal noise", short: "Noise", rci, threshold, tone: "neutral" };
+    return { id: "within_noise", label: "Inside the placeholder band", short: "Unclear", rci, threshold, tone: "neutral" };
   if (rci > -1.96)
-    return { id: "possible_decline", label: "Possible dip (not yet certain)", short: "Possible dip", rci, threshold, tone: "neutral" };
-  return { id: "real_decline", label: "Real decline", short: "Decline", rci, threshold, tone: "bad" };
+    return { id: "possible_decline", label: "Smaller dip (provisional)", short: "Provisional dip", rci, threshold, tone: "neutral" };
+  return { id: "real_decline", label: "Larger dip (provisional)", short: "Provisional dip", rci, threshold, tone: "bad" };
 }

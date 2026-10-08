@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { LearnNavTile } from "@/components/learn/LearnPage";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { JourneyRail, useJourney } from "@/components/learn/JourneyProgress";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { constructs } from "@/lib/content";
 import { track } from "@/lib/analytics";
 import { formatDateZA, SA_TIME_ZONE } from "@/lib/datetime";
@@ -13,7 +14,10 @@ import { stepLabel } from "@/lib/lms/journey";
 import { liveStreak } from "@/lib/lms/badges";
 import { getDashboardAction, processLabel } from "@/lib/lms/next-action";
 import { LEARN_PROCESS_ACCENT } from "@/lib/lms/nav";
-import { loadLmsState, localDayKey, type LocalLmsState } from "@/lib/lms/store";
+import { nextSpacedReview } from "@/lib/lms/review";
+import { serverHasRecordedPractice } from "@/lib/lms/rewards";
+import { localDayKey } from "@/lib/lms/store";
+import { syncFromServer } from "@/lib/lms/cloud";
 
 function greeting(now = new Date()): string {
   const hour = Number(
@@ -28,22 +32,31 @@ function greeting(now = new Date()): string {
  * Today — one clear "next action" card (the single primary button on the page),
  * then streak / sessions / journal at a glance, the six-step pathway and shortcuts.
  */
+function readReviewsDone(): Record<string, string> {
+  if (typeof window === "undefined") return {};
+  try {
+    const raw = localStorage.getItem("sc-session-v2:reviews-done");
+    return raw ? (JSON.parse(raw) as Record<string, string>) : {};
+  } catch {
+    return {};
+  }
+}
+
 export default function LearnDashboardPage() {
+  const state = useLmsState();
   const journey = useJourney();
-  const [state, setState] = useState<LocalLmsState | null>(null);
+  const [reviewsDone, setReviewsDone] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    setState(loadLmsState());
+    setReviewsDone(readReviewsDone());
     track("page_view", { path: "/learn", surface: "today_page" });
-  }, [journey?.doneCount]);
+  }, [journey.doneCount, state.lastActivityAt]);
 
-  if (!journey || !state) {
-    return (
-      <LearnShell>
-        <p className="learn-meta">Loading…</p>
-      </LearnShell>
-    );
-  }
+  const programmeId = state.subscription?.programmeId || state.user?.programmeId || state.profile?.programmeId;
+  useEffect(() => {
+    if (!programmeId) return;
+    void syncFromServer(programmeId);
+  }, [programmeId]);
 
   const action = getDashboardAction(state, Boolean(journey.programmeId));
   const pulseToday = Boolean(getTodayPulse(state));
@@ -61,6 +74,19 @@ export default function LearnDashboardPage() {
   const firstName = (state.profile?.displayName || state.user?.fullName || "").trim().split(/\s+/)[0];
   const complete = journey.doneCount === journey.total;
   const journalUnlocked = journey.preDone || journey.orientationDone;
+  const pre = state.attempts.find((a) => a.phase === "pre");
+  const review = nextSpacedReview(pre?.completedAt, reviewsDone);
+  const rewardsReady = serverHasRecordedPractice(state);
+  const reviewWhen =
+    review.status === "needs-baseline"
+      ? "Starts after your baseline · days 3, 7 and 14"
+      : review.status === "finished"
+        ? "Day 3, 7 and 14 are done"
+        : review.due
+          ? review.status === "due"
+            ? `Due since ${formatDateZA(review.due)}`
+            : `Due ${formatDateZA(review.due)}`
+          : "Days 3, 7 and 14";
   const eyebrow =
     action.process === "journaling"
       ? `${processLabel(action.process)} · today`
@@ -155,6 +181,16 @@ export default function LearnDashboardPage() {
         </div>
       </dl>
 
+      <Link
+        href={review.href}
+        className="mt-3 block rounded-2xl border border-line bg-elevated p-4 transition hover:border-black/15 sm:mt-4 sm:p-5"
+        data-testid="next-review"
+      >
+        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Next spaced review</p>
+        <p className="mt-1 text-[1rem] font-semibold tracking-tight text-ink">{review.title}</p>
+        <p className="mt-1 text-[0.875rem] leading-snug text-slate">{reviewWhen}</p>
+      </Link>
+
       {/* ── Pathway ── */}
       <div className="mt-4 sm:mt-5">
         <JourneyRail journey={journey} hideCta />
@@ -178,13 +214,23 @@ export default function LearnDashboardPage() {
           status={pulseToday ? "Done" : undefined}
           accent={LEARN_PROCESS_ACCENT.journaling.color}
         />
-        <LearnNavTile
-          href="/learn/report"
-          kicker="Progress"
-          title="Growth report"
-          detail="Scores, patterns, sharing and certificate"
-          accent={constructs[5].color}
-        />
+        {rewardsReady ? (
+          <LearnNavTile
+            href="/learn/report"
+            kicker="Earned"
+            title="Growth report and certificate"
+            detail="The server has recorded your practice"
+            accent={constructs[5].color}
+          />
+        ) : (
+          <div className="rounded-2xl border border-dashed border-line bg-elevated p-4" data-testid="rewards-locked">
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Not yet earned</p>
+            <p className="mt-1 text-[0.9375rem] font-semibold text-ink">Growth report and certificate</p>
+            <p className="mt-1 text-[0.8125rem] leading-snug text-slate">
+              Offered when the server has recorded your sessions and after-test. A score kept only on this device does not unlock them.
+            </p>
+          </div>
+        )}
         <LearnNavTile href="/learn/account" kicker="You" title="Profile and settings" detail="Your details, consent and data" />
       </div>
     </LearnShell>

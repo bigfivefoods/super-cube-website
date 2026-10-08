@@ -111,7 +111,7 @@ export interface LocalLmsState {
   certificateId?: string;
   /** School / company / family cohort code */
   orgCode?: string;
-  /** Free demo unlock (one construct sample) without full paywall */
+  /** Free demo unlock (Choices sample sessions) without full paywall */
   demoUnlocked?: boolean;
   /** Last session win-of-the-day lines */
   sessionWins?: SessionWin[];
@@ -200,8 +200,51 @@ export function loadLmsState(): LocalLmsState {
   }
 }
 
+/**
+ * Stable snapshots for useSyncExternalStore. getSnapshot must return the same
+ * object until the stored JSON changes, or React re-renders forever.
+ */
+const SERVER_SNAPSHOT: LocalLmsState = empty();
+let snapshotRaw: string | null | undefined;
+let snapshot: LocalLmsState = SERVER_SNAPSHOT;
+
+export function getLmsSnapshot(): LocalLmsState {
+  if (typeof window === "undefined") return SERVER_SNAPSHOT;
+  let raw: string | null = null;
+  try {
+    raw = localStorage.getItem(KEY);
+  } catch {
+    raw = null;
+  }
+  if (snapshotRaw !== undefined && raw === snapshotRaw) return snapshot;
+  snapshotRaw = raw;
+  snapshot = loadLmsState();
+  return snapshot;
+}
+
+export function getLmsServerSnapshot(): LocalLmsState {
+  return SERVER_SNAPSHOT;
+}
+
+export function subscribeLms(onStoreChange: () => void): () => void {
+  const bump = () => {
+    snapshotRaw = undefined;
+    onStoreChange();
+  };
+  const onStorage = (e: StorageEvent) => {
+    if (e.key === KEY || e.key === null) bump();
+  };
+  window.addEventListener("sc-lms-update", bump);
+  window.addEventListener("storage", onStorage);
+  return () => {
+    window.removeEventListener("sc-lms-update", bump);
+    window.removeEventListener("storage", onStorage);
+  };
+}
+
 export function saveLmsState(state: LocalLmsState) {
   if (typeof window === "undefined") return;
+  snapshotRaw = undefined;
   localStorage.setItem(KEY, JSON.stringify(state));
   try {
     window.dispatchEvent(new CustomEvent("sc-lms-update"));
@@ -377,7 +420,7 @@ export function setOrgCode(code: string): LocalLmsState {
 }
 
 /**
- * "Try free": opens the free sample sessions only (overview + first skill per face).
+ * "Try free": opens the free sample only (the Choices overview and its first skill).
  * It never creates an active subscription.
  */
 export function unlockDemo(programmeId: ProgrammeId): LocalLmsState {

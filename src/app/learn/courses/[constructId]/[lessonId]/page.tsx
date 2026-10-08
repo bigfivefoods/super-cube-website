@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { LessonContent } from "@/components/learn/LessonContent";
 import { SessionReflection } from "@/components/learn/SessionReflection";
 import { SessionArc } from "@/components/learn/session/SessionArc";
@@ -17,11 +18,9 @@ import { isSampleLesson } from "@/lib/lms/gates";
 import { track } from "@/lib/analytics";
 import { sessionWinLine } from "@/lib/lms/wins";
 import {
-  loadLmsState,
   markLessonCompleted,
   markLessonInProgress,
   recordSessionWin,
-  type LocalLmsState,
 } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
 
@@ -36,11 +35,9 @@ export default function LessonPlayerPage() {
   const router = useRouter();
   const constructId = params.constructId as ConstructId;
   const lessonId = params.lessonId as string;
-  const [state, setState] = useState<LocalLmsState | null>(null);
+  const state = useLmsState();
   const [winBanner, setWinBanner] = useState<string | null>(null);
   const [syncNote, setSyncNote] = useState<string | null>(null);
-
-  useEffect(() => setState(loadLmsState()), []);
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||
@@ -60,16 +57,20 @@ export default function LessonPlayerPage() {
 
   // Track resume + in-progress when opening a session
   const locked = Boolean(
-    state && data && !isSampleLesson(data.lesson.id) && !hasFullPathwayAccess(state),
+    data && !isSampleLesson(data.lesson.id) && !hasFullPathwayAccess(state),
   );
+  const lessonStatus = data ? state.lessonProgress[data.lesson.id] : undefined;
+  const openedId = useRef<string | null>(null);
 
   useEffect(() => {
     if (!data || !construct || locked) return;
-    void recordLessonOpen(programmeId, constructId, data.lesson.id);
-    if (state?.lessonProgress[data.lesson.id] === "completed") return;
-    setState(markLessonInProgress(data.lesson.id, constructId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- open once per lesson id
-  }, [lessonId, constructId, data?.lesson.id, locked, programmeId]);
+    if (openedId.current !== data.lesson.id) {
+      openedId.current = data.lesson.id;
+      void recordLessonOpen(programmeId, constructId, data.lesson.id);
+    }
+    if (lessonStatus === "completed" || lessonStatus === "in_progress") return;
+    markLessonInProgress(data.lesson.id, constructId);
+  }, [lessonId, constructId, data, construct, locked, programmeId, lessonStatus]);
 
   function markComplete() {
     if (!data || locked) return;
@@ -80,7 +81,6 @@ export default function LessonPlayerPage() {
     markLessonCompleted(data.lesson.id, constructId);
     const win = sessionWinLine(constructId, programmeId, data.lesson.title);
     recordSessionWin(data.lesson.id, constructId, win);
-    setState(loadLmsState());
     setWinBanner(win);
     // Server record (signed-in learners): this is what the after-test gate counts.
     void recordCompletion(programmeId, constructId, data.lesson.id).then((r) => {
@@ -111,14 +111,6 @@ export default function LessonPlayerPage() {
     } else {
       router.push(`/learn/courses/${constructId}`);
     }
-  }
-
-  if (!state) {
-    return (
-      <LearnShell title="Lesson">
-        <p className="learn-meta">Loading…</p>
-      </LearnShell>
-    );
   }
 
   if (!data || !construct) {
@@ -167,7 +159,8 @@ export default function LessonPlayerPage() {
     );
   }
 
-  const done = state.lessonProgress[data.lesson.id] === "completed";
+  const done = lessonStatus === "completed";
+  const faceIndex = Math.max(0, constructs.findIndex((c) => c.id === constructId));
   const idx = data.course.lessons.findIndex((l) => l.id === data.lesson.id);
   const prev = data.course.lessons[idx - 1];
   const next = data.course.lessons[idx + 1];
@@ -192,10 +185,28 @@ export default function LessonPlayerPage() {
               {construct.name}
             </span>
             <span className="learn-meta font-medium">
-              {TYPE_LABEL[data.lesson.lessonType]}
+              Face {faceIndex + 1} of {constructs.length}
             </span>
           </div>
-          <p className="mt-1.5 text-[0.8125rem] font-medium leading-snug text-ink">
+          <ol className="mt-2.5 flex flex-wrap gap-1" aria-label="The six faces">
+            {constructs.map((c, i) => {
+              const here = c.id === constructId;
+              return (
+                <li key={c.id}>
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6875rem] font-semibold ${
+                      here ? "text-white" : "bg-white/70 text-ink"
+                    }`}
+                    style={here ? { background: c.color } : undefined}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: here ? "#fff" : c.color }} aria-hidden />
+                    {i + 1} {c.shortName}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-2.5 text-[0.9375rem] font-medium leading-snug text-ink">
             {data.lesson.outcome}
           </p>
           <div className="mt-2.5 flex gap-1">
@@ -216,15 +227,24 @@ export default function LessonPlayerPage() {
               />
             ))}
           </div>
-          <p className="learn-meta mt-1.5">
+          <p className="learn-meta mt-2">
             {data.lesson.arc
-              ? "Eight short steps: tap any step below to jump to it."
+              ? "Hook, example, reflection, practice, then a check. The 15-second face intro plays on the module page."
               : data.lesson.lab
                 ? "Challenge → WOOP plan → checklist → reflect"
                 : data.lesson.faceCheck
                   ? "Recall every skill → teach it back → lock one habit"
                   : "Read → Engage → Apply"}
           </p>
+          {data.lesson.arc && (
+            <Link
+              href={`/learn/courses/${constructId}`}
+              className="mt-2 inline-block text-[0.8125rem] font-semibold underline-offset-2 hover:underline"
+              style={{ color }}
+            >
+              Play the {construct.name} intro
+            </Link>
+          )}
         </div>
       </div>
 
