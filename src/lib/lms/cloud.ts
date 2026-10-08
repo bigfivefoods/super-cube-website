@@ -7,6 +7,8 @@
 
 import type { ConstructScore, ResponseMap } from "@/lib/lms/scoring";
 import type { PostGate } from "@/lib/lms/gates";
+import { CONSENT_TEXT_VERSION } from "@/lib/lms/consent";
+import type { AgeBand } from "@/lib/lms/profile";
 import type { ProgrammeId } from "@/lib/programmes";
 import { loadLmsState, saveLmsState, type LocalAttempt } from "@/lib/lms/store";
 
@@ -30,7 +32,15 @@ export type ServerStatus = {
   completions: string[];
   postGate: PostGate;
   certificate: { id: string; issued_at: string } | null;
-  guardianConsent: { id: string; status: string; granted_at: string } | null;
+  guardianConsent: {
+    id: string;
+    status: string;
+    granted_at: string;
+    learner_age_band?: string;
+    consent_text_version?: string;
+    guardian_name?: string;
+    relationship?: string;
+  } | null;
 };
 
 export type CloudResult<T> =
@@ -129,6 +139,18 @@ export async function syncFromServer(programmeId: ProgrammeId): Promise<CloudRes
     state.certificateId = s.certificate.id;
     state.certificateEarnedAt = state.certificateEarnedAt || s.certificate.issued_at;
   }
+  const consent = s.guardianConsent;
+  if (consent?.status === "granted" && consent.guardian_name && consent.learner_age_band) {
+    state.guardianConsent = {
+      guardianName: consent.guardian_name,
+      relationship: consent.relationship || "Parent",
+      ageBand: consent.learner_age_band as AgeBand,
+      textVersion: consent.consent_text_version || CONSENT_TEXT_VERSION,
+      grantedAt: consent.granted_at,
+      method: "on_device_attestation",
+      cloudSaved: true,
+    };
+  }
   saveLmsState(state);
   return r;
 }
@@ -157,10 +179,17 @@ export function mirrorServerStreak(s: ServerStreak | null | undefined) {
   saveLmsState(state);
 }
 
-export async function recordCompletion(programmeId: ProgrammeId, constructId: string, lessonId: string) {
-  const r = await call<{ ok: true; engagement?: ServerActivity | null }>("/api/lms/progress", {
+export async function recordLessonOpen(programmeId: ProgrammeId, constructId: string, lessonId: string) {
+  return call<{ ok: true; opened?: boolean }>("/api/lms/progress", {
     method: "POST",
-    body: JSON.stringify({ programmeId, constructId, lessonId }),
+    body: JSON.stringify({ action: "open", programmeId, constructId, lessonId }),
+  });
+}
+
+export async function recordCompletion(programmeId: ProgrammeId, constructId: string, lessonId: string) {
+  const r = await call<{ ok: true; countsForGate?: boolean; engagement?: ServerActivity | null }>("/api/lms/progress", {
+    method: "POST",
+    body: JSON.stringify({ action: "complete", programmeId, constructId, lessonId }),
   });
   if (r.kind === "ok") mirrorServerStreak(r.data.engagement?.streak);
   return r;

@@ -1,21 +1,20 @@
 import { NextResponse } from "next/server";
+import { baselineRecordedAt } from "@/lib/lms/gates";
 import { awardBadges } from "@/lib/lms/server/engagement";
 import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/server/attempts";
 import { requireUser } from "@/lib/lms/server/context";
+import { guardianConsentBlock } from "@/lib/lms/server/guardian-gate";
 import { loadLearning } from "@/lib/lms/server/learning";
 import { isInstrumentV2EnabledServer, versionOfResponses } from "@/lib/lms/instruments";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { limitRequest } from "@/lib/server/rate-limit";
 
-const DAY = 86_400_000;
-/** Oldest signed-out baseline we accept, so a stale device can't backdate the 21-day gate far. */
-const MAX_AGE_DAYS = 180;
-
 /**
  * Claim a baseline taken while signed out (stored on this device) for the
  * signed-in account. First one wins: if the account already has a baseline,
- * that one stays and is returned. The server re-scores the answers; the
- * original completion time is kept (clamped) so the 21-day gate stays honest.
+ * that one stays and is returned. The server re-scores the answers. The
+ * stored time is the server clock unless the device time is only a small
+ * clock skew away, so a backdated claim cannot open the after-test.
  * This closes the "take it anonymously, then sign up and retake" loophole.
  */
 export async function POST(request: Request) {
@@ -23,6 +22,8 @@ export async function POST(request: Request) {
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
   const limited = await limitRequest(request, "attempts-claim", [`user:${ctx.user.id}`]);
   if (limited) return limited;
+  const blocked = await guardianConsentBlock(ctx.admin, ctx.user.id);
+  if (blocked) return blocked;
 
   let body: { programmeId?: string; responses?: Record<string, unknown>; completedAt?: string; meta?: AttemptMetaInput };
   try {
@@ -60,11 +61,7 @@ export async function POST(request: Request) {
   const parsed = parseAttempt(programmeId, body.responses, body.meta ?? {}, version);
   if (!parsed.ok) return NextResponse.json({ error: parsed.error, itemId: parsed.itemId }, { status: 400 });
 
-  const now = Date.now();
-  const t = Date.parse(String(body.completedAt || ""));
-  const createdAt = new Date(
-    Number.isFinite(t) ? Math.min(now, Math.max(now - MAX_AGE_DAYS * DAY, t)) : now,
-  ).toISOString();
+  const createdAt = baselineRecordedAt(body.completedAt);
 
   const saved = await recordAttempt(ctx.admin, {
     userId: ctx.user.id,

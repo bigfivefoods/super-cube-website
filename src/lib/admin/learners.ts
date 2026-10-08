@@ -18,7 +18,7 @@ export type StageId =
   | "certified";
 
 export const STAGES: { id: StageId; label: string; hint: string }[] = [
-  { id: "needs_consent", label: "Needs guardian consent", hint: "Under 18 with no granted consent on record" },
+  { id: "needs_consent", label: "Needs guardian consent", hint: "Under 18 with no consent recorded by someone other than the learner" },
   { id: "no_baseline", label: "No baseline yet", hint: "Account created, baseline not taken" },
   { id: "no_seat", label: "Baseline done, no seat", hint: "Needs a paid programme or a cohort seat" },
   { id: "learning", label: "Learning", hint: "Working through sessions" },

@@ -3,6 +3,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { dayKeyIn, SA_TIME_ZONE } from "@/lib/datetime";
 import { BADGES, earnedBadges, isBadgeId, type BadgeId, type StreakView } from "@/lib/lms/badges";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { consentCounts, type ConsentGrant } from "@/lib/lms/guardian-gate";
 import { isMinorLearner } from "@/lib/lms/server/share-links";
 import type { ProgrammeId } from "@/lib/programmes";
 
@@ -146,11 +147,14 @@ export async function minorMayGetPush(admin: SupabaseClient, userId: string): Pr
   if (!(await isMinorLearner(admin, userId))) return true;
   const { data } = await admin
     .from("guardian_consents")
-    .select("scope")
+    .select("learner_user_id, recorded_by, status, method, scope")
     .eq("learner_user_id", userId)
     .eq("status", "granted")
     .limit(5);
-  return (data ?? []).some((c) => Array.isArray(c.scope) && (c.scope as string[]).includes("learning"));
+  return (data ?? []).some((c) => {
+    const row = c as ConsentGrant & { scope?: unknown };
+    return consentCounts(userId, row) && Array.isArray(row.scope) && row.scope.includes("learning");
+  });
 }
 
 export async function getEngagement(admin: SupabaseClient, userId: string): Promise<EngagementView> {

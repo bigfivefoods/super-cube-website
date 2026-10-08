@@ -1,6 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { MINOR_AGE_BANDS } from "@/lib/lms/consent";
+import { consentCounts, type ConsentGrant } from "@/lib/lms/guardian-gate";
 import type { ConstructScore } from "@/lib/lms/scoring";
 import {
   SERVER_CERT_ID_RE,
@@ -88,11 +89,14 @@ export async function isMinorLearner(admin: SupabaseClient, userId: string): Pro
 export async function minorMayShare(admin: SupabaseClient, userId: string): Promise<boolean> {
   const { data } = await admin
     .from("guardian_consents")
-    .select("id, scope")
+    .select("learner_user_id, recorded_by, status, method, scope")
     .eq("learner_user_id", userId)
     .eq("status", "granted")
     .limit(5);
-  return (data ?? []).some((c) => Array.isArray(c.scope) && (c.scope as string[]).includes("progress_reports"));
+  return (data ?? []).some((c) => {
+    const row = c as ConsentGrant & { scope?: unknown };
+    return consentCounts(userId, row) && Array.isArray(row.scope) && row.scope.includes("progress_reports");
+  });
 }
 
 const asList = (v: unknown): ConstructScore[] => (Array.isArray(v) ? (v as ConstructScore[]) : []);

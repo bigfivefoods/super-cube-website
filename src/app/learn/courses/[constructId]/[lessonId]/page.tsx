@@ -11,7 +11,7 @@ import { PracticeLabView } from "@/components/learn/session/PracticeLabView";
 import { FaceCheckView } from "@/components/learn/session/FaceCheckView";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
-import { recordCompletion } from "@/lib/lms/cloud";
+import { recordCompletion, recordLessonOpen } from "@/lib/lms/cloud";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
 import { isSampleLesson } from "@/lib/lms/gates";
 import { track } from "@/lib/analytics";
@@ -65,10 +65,11 @@ export default function LessonPlayerPage() {
 
   useEffect(() => {
     if (!data || !construct || locked) return;
+    void recordLessonOpen(programmeId, constructId, data.lesson.id);
     if (state?.lessonProgress[data.lesson.id] === "completed") return;
     setState(markLessonInProgress(data.lesson.id, constructId));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- open once per lesson id
-  }, [lessonId, constructId, data?.lesson.id, locked]);
+  }, [lessonId, constructId, data?.lesson.id, locked, programmeId]);
 
   function markComplete() {
     if (!data || locked) return;
@@ -85,8 +86,12 @@ export default function LessonPlayerPage() {
     void recordCompletion(programmeId, constructId, data.lesson.id).then((r) => {
       if (r.kind === "error" && r.status === 402) {
         setSyncNote("Saved on this device only: the server needs a verified purchase or cohort seat for this session.");
+      } else if (r.kind === "error" && r.status === 403) {
+        setSyncNote("Saved on this device. A parent or guardian needs to record consent on their own account before this session counts.");
       } else if (r.kind === "signed_out") {
         setSyncNote("Saved on this device. Sign in so your progress counts towards a verifiable after-test and certificate.");
+      } else if (r.kind === "ok" && r.data.countsForGate === false) {
+        setSyncNote("Saved on this device. It counts towards your after-test once the session has been open for a short while. Mark it complete again in a moment.");
       }
     });
     track("lesson_complete", {

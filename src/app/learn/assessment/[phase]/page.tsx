@@ -223,7 +223,9 @@ export default function AssessmentRunnerPage() {
                 ? "The after-test needs the full pathway (payment or cohort seat)."
                 : code === "post_locked"
                   ? "Your after-test is already recorded."
-                  : `Could not save: ${code || server.status}`,
+                  : code === "consent_required"
+                    ? "A parent or guardian needs to record consent on their own account before this can be saved."
+                    : `Could not save: ${code || server.status}`,
         );
         if (server.status === 403 && server.body.gate) setServerGate(server.body.gate as PostGate);
         return;

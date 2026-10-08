@@ -3,7 +3,7 @@
 ## What changed
 | Area | Behaviour |
 | --- | --- |
-| Signed-out baselines | A baseline taken before signing in is kept on the device and **claimed** by the account on first sign-in (`POST /api/lms/attempts/claim`). First one wins: if the account already has a baseline, it stays and the device copy is replaced by it. The server re-scores the answers and keeps the original completion time (clamped to the last 180 days) so the day-21 gate stays honest. This closes the "take it anonymously, sign up, retake" loophole. |
+| Signed-out baselines | A baseline taken before signing in is kept on the device and **claimed** by the account on first sign-in (`POST /api/lms/attempts/claim`). First one wins: if the account already has a baseline, it stays and the device copy is replaced by it. The server re-scores the answers. The stored time is the server clock unless the device time is only a couple of minutes off, so a backdated claim cannot open the day-21 gate. This closes the "take it anonymously, sign up, retake" loophole. |
 | Item order | Statements are shuffled **within each face** with a per-attempt seed (`mulberry32`). Faces keep their order. The seed is saved with drafts so resuming shows the same order. |
 | Attention check | One instructed item ("choose 4 · Agree") is placed on a seed-chosen face, never first. It is stored, never scored. |
 | Quality flags | `lms_attempts.flags`: `attention_failed`, `attention_missing`, `straight_lining` (≥90 % identical answers, n ≥ 6), `too_fast` (< 1.5 s per statement). Attempts are **never rejected** for flags; learners who give nearly identical answers get a gentle "take another look" prompt they can dismiss. |
