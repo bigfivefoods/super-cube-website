@@ -8,6 +8,8 @@
  * - query strings are dropped except utm_* campaign tags, and the #fragment is dropped.
  *
  * The daily totals feed the Investors Website Insights on bigfivegroup.africa.
+ * The first-party recorder (components/WebsiteInsights.tsx) sends the richer
+ * visit metadata separately; these daily totals stay cookieless.
  */
 
 import { PREFIXED_LOCALES } from "@/lib/i18n/config";

@@ -4,6 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
 import { VercelAnalytics } from "@/components/VercelAnalytics";
+import { WebsiteInsights } from "@/components/WebsiteInsights";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
@@ -135,6 +136,7 @@ export default function RootLayout({
             <SentryInit />
             <AnalyticsProvider />
             <VercelAnalytics />
+            <WebsiteInsights />
             <div className="site-chrome contents">
               <Header />
             </div>
