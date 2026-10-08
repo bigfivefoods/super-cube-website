@@ -1,21 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { PaywallCard } from "@/components/learn/PaywallCard";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { constructs } from "@/lib/content";
 import { faceTagline } from "@/lib/lms/face-taglines";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum";
-import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { faceInkStyle } from "@/lib/contrast";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function CoursesPage() {
-  const [state, setState] = useState<LocalLmsState | null>(null);
-  useEffect(() => setState(loadLmsState()), []);
+  const state = useLmsState();
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||

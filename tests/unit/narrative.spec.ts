@@ -34,7 +34,7 @@ test("narrative lists the strongest face first and opens every face with a stren
 });
 
 test("face growth wording is noise-aware", () => {
-  expect(faceGrowthLine("Mental", 50, 80)).toMatch(/more than normal measurement noise/);
+  expect(faceGrowthLine("Mental", 50, 80)).toMatch(/placeholder band/);
   expect(faceGrowthLine("Mental", 50, 51)).toMatch(/held steady/);
   expect(faceGrowthLine("Mental", 70, 40)).toMatch(/response shift/);
 });

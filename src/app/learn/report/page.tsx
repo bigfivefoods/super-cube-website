@@ -1,12 +1,13 @@
 "use client";
 
 import { formatDateZA } from "@/lib/datetime";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { ConstructDeepDive } from "@/components/learn/ConstructDeepDive";
 import { Feedback360Panel } from "@/components/learn/Feedback360Panel";
 import { DownloadReportButton } from "@/components/learn/DownloadReportButton";
 import { GrowthStoryCard } from "@/components/learn/GrowthStoryCard";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { LongitudinalPanel } from "@/components/learn/LongitudinalPanel";
 import { RadarChart } from "@/components/learn/RadarChart";
 import { ReportMeta } from "@/components/learn/ReportMeta";
@@ -24,23 +25,17 @@ import { depthLabel } from "@/lib/lms/orientation";
 import { ShareLinksPanel } from "@/components/learn/ShareLinksPanel";
 import { isMinorProfile } from "@/lib/lms/consent";
 import type { ProgrammeId } from "@/lib/programmes";
-import {
-  loadLmsState,
-  type LocalLmsState,
-} from "@/lib/lms/store";
+import { serverHasRecordedPractice } from "@/lib/lms/rewards";
 import { getProgramme } from "@/lib/programmes";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function ReportPage() {
-  const [state, setState] = useState<LocalLmsState | null>(null);
+  const state = useLmsState();
+  const programmeHint = state.subscription?.programmeId || state.user?.programmeId || state.profile?.programmeId;
   useEffect(() => {
-    const s = loadLmsState();
-    setState(s);
-    const pid = s.subscription?.programmeId || s.user?.programmeId || "adults";
-    void syncFromServer(pid).then((r) => {
-      if (r.kind === "ok") setState(loadLmsState());
-    });
-  }, []);
+    if (!programmeHint) return;
+    void syncFromServer(programmeHint);
+  }, [programmeHint]);
 
   const orientation = state?.orientation;
   const pre = state?.attempts.find((a) => a.phase === "pre");
@@ -57,14 +52,6 @@ export default function ReportPage() {
   }, [pre, post]);
 
   const recs = pre ? recommendations(post?.result ?? pre.result) : [];
-
-  if (!state) {
-    return (
-      <LearnShell title="Report">
-        <p className="learn-meta">Loading…</p>
-      </LearnShell>
-    );
-  }
 
   if (!pre) {
     return (
@@ -220,14 +207,23 @@ export default function ReportPage() {
           </div>
         </section>
 
-        {post && programmeId && (
+        {post && programmeId && serverHasRecordedPractice(state) && (
           <CertificatePanel
             state={state}
             pre={pre}
             post={post}
             programmeId={programmeId}
-            onStateChange={setState}
+            onStateChange={() => {}}
           />
+        )}
+        {post && !serverHasRecordedPractice(state) && (
+          <section className="mb-4 rounded-2xl border border-dashed border-line bg-elevated p-4 sm:p-5" data-testid="certificate-locked">
+            <p className="learn-eyebrow">Not yet earned</p>
+            <h2 className="mt-1 text-base font-semibold text-ink">Certificate</h2>
+            <p className="learn-body mt-1">
+              The certificate is offered when the server has recorded your practice and after-test. A score kept only on this device does not earn it.
+            </p>
+          </section>
         )}
 
         {orientation && (
@@ -355,12 +351,11 @@ export default function ReportPage() {
             </div>
             {post && (
               <p className="learn-meta mt-3" data-testid="change-bands-note">
-                How to read change: self-report scores move a little between any
-                two sittings. A face needs about ±{reliableChangeThreshold("face")} points
-                (overall ±{reliableChangeThreshold("overall")}) before we call it real
-                change at 95% confidence. Smaller moves are shown as possible
-                change or normal noise. These thresholds are provisional until the
-                instrument&apos;s reliability is measured on Super-Cube® data.
+                These change bands are provisional. They use placeholder spreads
+                (about ±{reliableChangeThreshold("face")} points on a face, ±
+                {reliableChangeThreshold("overall")} overall), not Super-Cube® norms.
+                A larger move is not reliable change. Real norms do not exist in this
+                build yet.
               </p>
             )}
           </div>
@@ -451,7 +446,7 @@ function BandBadge({ band, compact = false }: { band: ChangeBand | null; compact
   return (
     <span
       className={`${compact ? "ml-1.5" : "mt-1.5"} inline-block rounded-full border px-1.5 py-0.5 text-[0.625rem] font-semibold uppercase tracking-wide ${tone}`}
-      title={`${band.label} · reliable change index ${band.rci} · real change needs ±${band.threshold} pts`}
+      title={`${band.label}. Placeholder band only, about ±${band.threshold} points. Not a reliable-change claim.`}
       data-band={band.id}
     >
       {compact ? band.short : band.label}

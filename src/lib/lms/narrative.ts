@@ -303,16 +303,16 @@ export function faceGrowthLine(name: string, pre: number, post: number): string 
   const signed = `${delta > 0 ? "+" : ""}${delta}`;
   switch (band?.id) {
     case "real_growth":
-      return `${name} grew ${signed} points, more than normal measurement noise. Name what you did differently so you can keep doing it.`;
+      return `${name} moved ${signed} points, past a placeholder band. The band is provisional until real norms exist, so treat it as a clue and name what you practised.`;
     case "possible_growth":
-      return `${name} rose ${signed} points. That may be real growth; keep practising to confirm it.`;
+      return `${name} rose ${signed} points on a placeholder scale. Keep practising. This is not a measured change.`;
     case "within_noise":
       return post >= 60
         ? `${name} held steady at a strong level (${signed}). Keep using it, and pick one stretch practice to take it further.`
         : `${name} held steady (${signed}). This is a good face for your next 21 days of practice.`;
     case "possible_decline":
-      return `${name} dipped ${signed} points, which may be noise or a tougher few weeks. Treat it as useful data, not a verdict.`;
+      return `${name} dipped ${signed} points on a placeholder scale. Treat it as useful data, not a verdict.`;
     default:
-      return `${name} fell ${signed} points. Greater self-awareness after a programme can sometimes lower self-ratings (known as response shift); talk it through with a coach or mentor and choose one practice.`;
+      return `${name} fell ${signed} points on a placeholder scale. Greater self-awareness after a programme can sometimes lower self-ratings (known as response shift); talk it through with a coach or mentor and choose one practice.`;
   }
 }

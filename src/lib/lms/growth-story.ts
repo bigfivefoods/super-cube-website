@@ -61,18 +61,18 @@ export function buildGrowthStory(state: LocalLmsState): {
   const sessionsDone = Object.values(state.lessonProgress).filter((v) => v === "completed").length;
   const signed = `${growth > 0 ? "+" : ""}${growth}`;
 
-  // Honest framing: only call it growth when it is bigger than measurement noise,
-  // and never attribute change to practice that did not happen.
+  // Placeholder bands only. Do not call a move reliable change, and do not
+  // credit practice that was not recorded.
   const headline =
     band?.id === "real_growth"
-      ? `${name}, your overall score rose ${signed}, more than normal measurement noise.`
+      ? `${name}, your overall score rose ${signed}. That clears a placeholder band, not a measured norm.`
       : band?.id === "possible_growth"
-        ? `${name}, your overall score rose ${signed}. That may be real growth, but it is not yet bigger than measurement noise.`
+        ? `${name}, your overall score rose ${signed}. The band is provisional until real norms exist.`
         : band?.id === "within_noise"
-          ? `${name}, your overall score moved ${signed}, which is within normal measurement noise.`
+          ? `${name}, your overall score moved ${signed}, inside the placeholder band.`
           : band?.id === "possible_decline"
-            ? `${name}, your overall score dipped ${signed}. That may be noise; treat it as data, not a verdict.`
-            : `${name}, your overall score fell ${signed}. Use this as honest data, not a verdict.`;
+            ? `${name}, your overall score dipped ${signed} on a placeholder scale. Treat it as data, not a verdict.`
+            : `${name}, your overall score fell ${signed} on a placeholder scale. Use this as honest data, not a verdict.`;
 
   const parts: string[] = [];
   if (sessionsDone === 0) {
