@@ -14,6 +14,7 @@ import {
   sanitizeClientEvent,
   screenBand,
   scrollBand,
+  isSamePageLink,
 } from "@/lib/website-insights";
 
 const EVENT_ID = /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
@@ -48,7 +49,15 @@ test("screen width is a band and scroll depth is a quartile", () => {
   expect(screenBand(1920)).toBe("desktop");
   expect(screenBand(0)).toBeUndefined();
   expect(scrollBand(0, 1000, 400)).toBe(0);
-  expect(scrollBand(450, 1000, 400)).toBe(75);
+  expect(scrollBand(450, 1000, 400)).toBe(70);
+  // One screen down a long page (home) is no longer rounded to 0%.
+  expect(scrollBand(800, 7366, 800)).toBe(10);
+  expect(scrollBand(5950, 7366, 800)).toBe(100);
+  expect(isSamePageLink("/", "https://www.super-cube.me/")).toBe(true);
+  expect(isSamePageLink("https://www.super-cube.me/", "https://www.super-cube.me/")).toBe(true);
+  expect(isSamePageLink("/#faq", "https://www.super-cube.me/")).toBe(false);
+  expect(isSamePageLink("/about", "https://www.super-cube.me/")).toBe(false);
+  expect(isSamePageLink("/", "https://www.super-cube.me/", "_blank")).toBe(false);
   expect(scrollBand(0, 400, 400)).toBe(100);
 });
 
@@ -94,6 +103,8 @@ test("engage needs half a second on the page or a scroll past the top", () => {
   expect(sanitizeClientEvent({ k: "engage", p: "/pricing", ms: 499, scroll: 0 })).toBeNull();
   expect(sanitizeClientEvent({ k: "engage", p: "/pricing", ms: 500 })?.ms).toBe(500);
   expect(sanitizeClientEvent({ k: "engage", p: "/pricing", scroll: 25 })?.scroll).toBe(25);
+  expect(sanitizeClientEvent({ k: "engage", p: "/pricing", scroll: 30 })?.scroll).toBe(30);
+  expect(sanitizeClientEvent({ k: "engage", p: "/pricing", scroll: 33 })?.scroll).toBeUndefined();
 });
 
 test("clicks keep a file name, an outbound site name, or a button label", () => {
