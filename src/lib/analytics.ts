@@ -6,6 +6,8 @@
  * - Optional NEXT_PUBLIC_GA_ID loads via AnalyticsProvider
  */
 
+import { FUNNEL_ACTIONS, trackInsightsAction } from "@/lib/insights-action";
+
 export type FunnelEvent =
   | "page_view"
   | "signup_view"
@@ -125,6 +127,9 @@ export function track(
   writeLog(log);
 
   const payload = { ...props, path };
+
+  const action = FUNNEL_ACTIONS[event];
+  if (action) trackInsightsAction(action);
 
   try {
     const w = window as Window & {

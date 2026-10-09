@@ -6,6 +6,11 @@
  * The collect URL is fixed. The ingest key is read from INSIGHTS_INGEST_KEY
  * and sent as x-insights-key. If that key is missing, the beacon is accepted
  * and dropped.
+ *
+ * Crawlers and scripts (by User-Agent) are dropped here, and the User-Agent is
+ * also forwarded as x-insights-ua so the store can apply the same rule. Place
+ * comes from Vercel's edge headers; IPinfo, when configured, adds only the
+ * organisation fields (and place if Vercel gave none).
  */
 
 import { clientIp, hit } from "@/lib/server/rate-limit";
@@ -14,6 +19,8 @@ import {
   VISITOR_COOKIE,
   VISITOR_MAX_AGE,
   clientFamily,
+  geoFromHeaders,
+  isBotUa,
   isPublicIp,
   networkFromIpinfo,
   planCollect,
@@ -76,7 +83,8 @@ export async function handleInsightsCollect(
   const now = deps?.now ?? Date.now();
 
   // Plan without a network lookup first so a dropped visit never looks one up.
-  const family = clientFamily(request.headers.get("user-agent") ?? "");
+  const ua = request.headers.get("user-agent") ?? "";
+  const family = clientFamily(ua);
   const planned = planCollect({
     headers: request.headers,
     cookie,
@@ -86,6 +94,7 @@ export async function handleInsightsCollect(
     family,
   });
   if (!planned.record) return empty(planned.clearCookie ? cookiePair("", 0, secure) : undefined);
+  if (isBotUa(ua)) return empty();
 
   const key = env.INSIGHTS_INGEST_KEY?.trim();
   if (!key) return empty();
@@ -103,7 +112,18 @@ export async function handleInsightsCollect(
   if (!(await allow(`vid:${planned.visitorId}`))) return empty();
 
   const token = env.IPINFO_TOKEN?.trim();
-  const network = token && isPublicIp(ip) ? await lookupNetwork(ip, token, fetchImpl) : {};
+  const looked = token && isPublicIp(ip) ? await lookupNetwork(ip, token, fetchImpl) : {};
+  const geo = geoFromHeaders(request.headers);
+  const network: NetworkFields = geo.country
+    ? {
+        ...geo,
+        organisation: looked.organisation,
+        industry: looked.industry,
+        size: looked.size,
+        network: looked.network,
+      }
+    : looked;
+  for (const k of Object.keys(network) as (keyof NetworkFields)[]) if (!network[k]) delete network[k];
 
   const ready = planCollect({
     headers: request.headers,
@@ -124,6 +144,7 @@ export async function handleInsightsCollect(
       headers: {
         "content-type": "application/json",
         "x-insights-key": key,
+        "x-insights-ua": ua.slice(0, 500),
       },
       body: JSON.stringify(ready.payload),
     });
