@@ -205,7 +205,7 @@ export default function ResearchPage() {
       <ImpactResults
         light
         eyebrow="Intervention results · 12-week Super-Cube® intervention"
-        title="+32.2% overall growth across all six faces."
+        title="+32.2 percentage points of overall growth across all six faces."
         description="Average pre- and post-course scores from the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face in percentage points (source: Leadership Is Learnable, 2026, Chapter 18). These gains come from the intervention, not from the doctoral study, which tested the model’s structure. Not live programme data."
       />
 

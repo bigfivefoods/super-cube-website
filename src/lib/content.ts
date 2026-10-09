@@ -502,15 +502,15 @@ export const levels = [
 
 export const stats = [
   {
-    value: "+32.2%",
+    value: "+32.2 pts",
     label: "Overall growth across all six faces",
     detail:
       "12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods: average pre/post gain in percentage points (Leadership Is Learnable, 2026, Chapter 18)",
   },
   {
-    value: "+45.1%",
+    value: "+45.1 pts",
     label: "Principles (highest)",
-    detail: "Largest construct gain—integrity, context, and accountable practice",
+    detail: "Largest construct gain in percentage points—integrity, context, and accountable practice",
   },
   {
     value: "6",

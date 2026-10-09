@@ -52,7 +52,8 @@ export function SessionReviewCard({ state, fallback }: { state: LocalLmsState; f
   const day = item.days[item.days.length - 1];
   return (
     <section
-      className="rounded-2xl border border-line bg-elevated p-4 sm:p-5"
+      // An open review takes the full row at desktop so the questions have room.
+      className={`rounded-2xl border border-line bg-elevated p-4 sm:p-5${open ? " sm:col-span-2" : ""}`}
       style={color ? { boxShadow: `inset 4px 0 0 ${color}` } : undefined}
       aria-labelledby="review-due-h"
       data-testid="next-review"

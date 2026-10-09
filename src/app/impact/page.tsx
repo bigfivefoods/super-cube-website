@@ -39,7 +39,7 @@ export default function ImpactPage() {
       {/* 2. Intervention results (Imana Foods and Kerry Foods), not the doctoral study */}
       <ImpactResults
         eyebrow="Results · 12-week Super-Cube® leadership intervention"
-        title="+32.2% overall growth across all six faces."
+        title="+32.2 percentage points of overall growth across all six faces."
         description="Average pre- and post-course scores from the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face in percentage points (source: Leadership Is Learnable, 2026, Chapter 18). These are programme results, not live LMS data."
       />
 
@@ -57,9 +57,9 @@ export default function ImpactPage() {
               This example shows the format of a cohort report: an overall
               score on a 0–100 scale before and after the programme, and the
               change for each face. Real cohorts will differ. For measured
-              results, see the 12-week intervention results above: +32.2%
-              overall growth across all six faces, with an Emotional gain of
-              +39.5%.
+              results, see the 12-week intervention results above: average scores
+              rose by 32.2 percentage points across all six faces, with an
+              Emotional gain of +39.5 points.
             </p>
             <div className="mt-5 grid grid-cols-3 gap-2">
               {[

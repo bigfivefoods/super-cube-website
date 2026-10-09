@@ -82,7 +82,7 @@ export default function OrganisationsPage() {
         href="/news/twelve-weeks-six-faces-fmcg-leadership"
         linkLabel="Read the case study"
         image="/news/fmcg-leadership-case-study-cover.jpg"
-        imageAlt="Super-Cube® results card: overall leadership development +32.2% across all six faces, with gains by face: Choices +26.6%, Principles +45.1%, Mental +29.7%, Emotional +39.5%, Physical +27.7%, Spiritual +24.6%."
+        imageAlt="Super-Cube® results card: average scores rose by 32.2 percentage points across all six faces, with gains by face in percentage points: Choices +26.6, Principles +45.1, Mental +29.7, Emotional +39.5, Physical +27.7, Spiritual +24.6."
       />
 
       <section id="quote" className="section-pad scroll-mt-24 border-t border-line bg-surface">

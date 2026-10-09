@@ -281,7 +281,7 @@ export const codeNewsPosts: NewsPost[] = [
     coverImage: "/news/fmcg-leadership-case-study-cover.jpg",
     coverWide: "/news/fmcg-leadership-case-study-cover-wide.jpg",
     coverAlt:
-      "Super-Cube® results card: overall leadership development +32.2% across all six faces, pre- to post-course, with gains by face: Choices +26.6%, Principles +45.1%, Mental +29.7%, Emotional +39.5%, Physical +27.7%, Spiritual +24.6%.",
+      "Super-Cube® results card: average scores rose by 32.2 percentage points across all six faces, pre- to post-course, with gains by face in percentage points: Choices +26.6, Principles +45.1, Mental +29.7, Emotional +39.5, Physical +27.7, Spiritual +24.6.",
     shareImage: "/images/og/news/fmcg-leadership-case-study.jpg",
     publishedAt: "2026-10-07T12:10:00.000Z",
     updatedAt: "2026-10-07T12:10:00.000Z",
