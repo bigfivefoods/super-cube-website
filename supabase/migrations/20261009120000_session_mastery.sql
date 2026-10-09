@@ -30,6 +30,7 @@ create policy "lms_session_checks_select_own"
   to authenticated
   using (user_id = auth.uid());
 
--- Only the server (service role) writes attempts.
-revoke all on public.lms_session_checks from anon;
-revoke insert, update, delete on public.lms_session_checks from authenticated;
+-- Only the server (service role) writes attempts. Signed-in learners may
+-- only SELECT (and RLS limits that to their own rows); anon gets nothing.
+revoke all on public.lms_session_checks from anon, authenticated;
+grant select on public.lms_session_checks to authenticated;
