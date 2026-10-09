@@ -113,7 +113,8 @@ export type NetworkFields = Pick<
 const KINDS = new Set<InsightKind>(["pageview", "engage", "pdf", "outbound", "click", "vital"]);
 /** 32 hex characters, or a UUID. The store rejects any other event id. */
 const EVENT_ID = /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
-const SCROLLS = new Set([0, 25, 50, 75, 100]);
+/** Scroll depth in 10% steps (older builds sent quarters, so any multiple of 5 is accepted). */
+const SCROLLS = new Set(Array.from({ length: 21 }, (_, i) => i * 5));
 
 /** Phone < 600, tablet < 1024, laptop < 1440, desktop otherwise. The pixel value is not returned. */
 export function screenBand(width: number): ScreenBand | undefined {
@@ -124,16 +125,37 @@ export function screenBand(width: number): ScreenBand | undefined {
   return "desktop";
 }
 
-/** Coarse scroll depth. Exact scroll offsets are not returned. */
+/**
+ * Coarse scroll depth in 10% steps (90%+ counts as the whole page). Exact scroll offsets are not
+ * returned. Quarters were too coarse: on the long home page one screen is ~12% of the scroll
+ * range, so most real scrolling rounded down to 0%.
+ */
 export function scrollBand(scrollTop: number, scrollHeight: number, clientHeight: number): number {
   const range = scrollHeight - clientHeight;
   if (!Number.isFinite(range) || range <= 0) return 100;
   const pct = Math.max(0, Math.min(100, (scrollTop / range) * 100));
   if (pct >= 90) return 100;
-  if (pct >= 75) return 75;
-  if (pct >= 50) return 50;
-  if (pct >= 25) return 25;
-  return 0;
+  return Math.floor(pct / 10) * 10;
+}
+
+/** Current page scroll position, whichever element is the document scroller. */
+export function pageScrollBand(): number {
+  const el = document.scrollingElement || document.documentElement;
+  const top = Math.max(window.scrollY || 0, el.scrollTop || 0, document.body?.scrollTop || 0);
+  const height = Math.max(el.scrollHeight, document.body?.scrollHeight || 0);
+  return scrollBand(top, height, window.innerHeight || el.clientHeight);
+}
+
+/** A click on a link to the page already open (logo on home, nav item for the current page). */
+export function isSamePageLink(href: string | null, current: string, target?: string | null): boolean {
+  if (!href || (target && target !== "_self")) return false;
+  try {
+    const here = new URL(current);
+    const to = new URL(href, here);
+    return to.origin === here.origin && to.pathname === here.pathname && to.search === here.search && !to.hash;
+  } catch {
+    return false;
+  }
 }
 
 export function requestOptedOut(headers: Headers): boolean {

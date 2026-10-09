@@ -6,8 +6,9 @@ import {
   browserOptedOut,
   clickEvent,
   sanitizeClientEvent,
+  isSamePageLink,
+  pageScrollBand,
   screenBand,
-  scrollBand,
   skipAutomatedBrowser,
   type ClientEvent,
 } from "@/lib/website-insights";
@@ -26,6 +27,9 @@ let memorySession = false;
 let lastViewKey = "";
 let lastViewAt = 0;
 let vitalsStarted = false;
+let flushVitals: () => void = () => {};
+/** Page-speed readings waiting to ride with the next engagement beacon. */
+const pendingVitals: ClientEvent[] = [];
 
 /** A whitelisted `data-insights` slug on the element or an ancestor, e.g. `cta-amazon`. */
 function dataLabel(el: Element): string | null {
@@ -34,22 +38,21 @@ function dataLabel(el: Element): string | null {
 }
 
 function send(events: ClientEvent[], beacon = false) {
-  if (!events.length) return;
-  const body = JSON.stringify({ v: 1, e: events.slice(0, 10) });
-  try {
-    if (beacon && navigator.sendBeacon) {
-      navigator.sendBeacon(ENDPOINT, new Blob([body], { type: "text/plain" }));
-      return;
+  for (let i = 0; i < events.length; i += 10) {
+    const body = JSON.stringify({ v: 1, e: events.slice(i, i + 10) });
+    try {
+      // Leaving the page: sendBeacon survives the unload; if the browser refuses it, keepalive fetch.
+      if (beacon && navigator.sendBeacon && navigator.sendBeacon(ENDPOINT, new Blob([body], { type: "text/plain" }))) continue;
+      void fetch(ENDPOINT, {
+        method: "POST",
+        body,
+        keepalive: true,
+        credentials: "same-origin",
+        headers: { "Content-Type": "text/plain" },
+      }).catch(() => {});
+    } catch {
+      /* A failed beacon must not affect the page. */
     }
-    void fetch(ENDPOINT, {
-      method: "POST",
-      body,
-      keepalive: true,
-      credentials: "same-origin",
-      headers: { "Content-Type": "text/plain" },
-    }).catch(() => {});
-  } catch {
-    /* A failed beacon must not affect the page. */
   }
 }
 
@@ -118,15 +121,19 @@ export function WebsiteInsights() {
     if (browserOptedOut() || skipAutomatedBrowser()) return;
     const pageUrl = `${location.origin}${pathname}${location.search}`;
     const seen = new Set<string>();
-    let started = Date.now();
-    let hiddenAt: number | null = document.visibilityState === "hidden" ? Date.now() : null;
-    let maxScroll = scrollBand(window.scrollY, document.documentElement.scrollHeight, window.innerHeight);
-    let flushed = false;
+    // Engaged time is counted in slices: each flush sends only the visible time since the last one,
+    // so a tab switched away and back (or a same-page click) never double-counts or loses time.
+    let sliceStart = document.visibilityState === "visible" ? Date.now() : 0;
+    let carried = 0;
+    let maxScroll = pageScrollBand();
+    let scrollSent = -1;
 
-    const visibleMs = () => {
-      const now = Date.now();
-      const hidden = hiddenAt != null ? now - hiddenAt : 0;
-      return Math.max(0, now - started - hidden);
+    const takeMs = () => {
+      let ms = carried;
+      if (sliceStart) ms += Date.now() - sliceStart;
+      carried = 0;
+      sliceStart = document.visibilityState === "visible" ? Date.now() : 0;
+      return Math.max(0, ms);
     };
 
     const context = remember(pathname);
@@ -154,38 +161,38 @@ export function WebsiteInsights() {
     }
 
     const flush = (beacon: boolean) => {
-      if (flushed) return;
-      const ms = visibleMs();
-      if (ms < 500 && maxScroll < 25) return;
-      const engage = sanitizeClientEvent({
-        k: "engage",
-        p: pageUrl,
-        ms,
-        scroll: maxScroll,
-        exit: pathname,
-        landing: context.landing,
-        pages: context.pages,
-      });
-      if (!engage) return;
-      flushed = true;
-      send([engage], beacon);
+      const ms = takeMs();
+      const batch: ClientEvent[] = [];
+      // Enough time, or a deeper scroll than the last engagement row said.
+      if (ms >= 500 || maxScroll > Math.max(0, scrollSent)) {
+        const engage = sanitizeClientEvent({
+          k: "engage",
+          p: pageUrl,
+          ms: ms >= 500 ? Math.min(ms, 3_600_000) : undefined,
+          scroll: maxScroll,
+          exit: pathname,
+          landing: context.landing,
+          pages: context.pages,
+        });
+        if (engage) {
+          batch.push(engage);
+          scrollSent = maxScroll;
+        }
+      }
+      if (beacon) {
+        // Leaving or hiding: page speed travels in the same beacon as the engaged time.
+        flushVitals();
+        batch.push(...pendingVitals.splice(0, pendingVitals.length));
+      }
+      send(batch, beacon);
     };
     const onVisibility = () => {
-      if (document.visibilityState === "hidden") {
-        hiddenAt = Date.now();
-        flush(true);
-      } else {
-        if (hiddenAt != null) started += Date.now() - hiddenAt;
-        hiddenAt = null;
-        flushed = false;
-      }
+      if (document.visibilityState === "hidden") flush(true);
+      else if (!sliceStart) sliceStart = Date.now();
     };
     const onPageHide = () => flush(true);
     const onScroll = () => {
-      maxScroll = Math.max(
-        maxScroll,
-        scrollBand(window.scrollY, document.documentElement.scrollHeight, window.innerHeight),
-      );
+      maxScroll = Math.max(maxScroll, pageScrollBand());
     };
     const sendOnce = (recorded: ClientEvent | null) => {
       if (!recorded?.l) return;
@@ -197,6 +204,11 @@ export function WebsiteInsights() {
     const onClick = (event: MouseEvent) => {
       const el = (event.target as Element | null)?.closest?.("a[href], button, [role='button']");
       if (!el) return;
+      if (el instanceof HTMLAnchorElement && isSamePageLink(el.href, location.href, el.getAttribute("target"))) {
+        // The path does not change, so this effect does not re-run: bank the time so far (the
+        // click may also reload the page) and keep counting from here.
+        flush(false);
+      }
       const named = dataLabel(el);
       if (named) sendOnce(sanitizeClientEvent({ k: "click", p: pageUrl, l: named }));
       const recorded = clickEvent({
@@ -221,12 +233,13 @@ export function WebsiteInsights() {
       // Page speed for the page this load started on: one reading per metric, sent when hidden.
       vitalsStarted = true;
       const vitalsPage = pageUrl;
-      const pending: ClientEvent[] = [];
-      observeVitals((name, value) => {
-        pending.push({ k: "vital", p: vitalsPage, l: name, v: value });
-        queueMicrotask(() => {
-          if (pending.length) send(pending.splice(0, pending.length), true);
-        });
+      flushVitals = observeVitals((name, value) => {
+        pendingVitals.push({ k: "vital", p: vitalsPage, l: name, v: value });
+        // Normally drained by flush() in the same hide/pagehide; a task (not a microtask) so the
+        // engagement listener runs first and both travel together.
+        setTimeout(() => {
+          if (pendingVitals.length) send(pendingVitals.splice(0, pendingVitals.length), true);
+        }, 0);
       });
     }
 
