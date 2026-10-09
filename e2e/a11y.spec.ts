@@ -63,6 +63,8 @@ const PAGES = [
   "/learn/practice",
   "/learn/account",
   "/learn/report",
+  "/learn/progress",
+  "/learn/feedback",
   "/learn/courses/choices/not-a-session",
   "/share/report/not-a-real-token",
   "/news",

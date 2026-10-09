@@ -25,7 +25,7 @@ export function FaceCheckView({
 }) {
   const kids = programmeId === "kids";
   return (
-    <div className="space-y-3" style={faceInkStyle(color)} data-testid="face-check">
+    <div id="face-check" className="scroll-mt-24 space-y-3" style={faceInkStyle(color)} data-testid="face-check">
       <section className="rounded-2xl border border-line bg-elevated p-3.5 sm:p-5" aria-labelledby="fc-h">
         <h2 id="fc-h" className="learn-eyebrow face-ink">Face check · {faceName}</h2>
         <p className="learn-meta mt-1 mb-3">

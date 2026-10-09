@@ -67,12 +67,12 @@ export default function OrganisationsPage() {
       <CaseStudyFeature
         testId="case-study-fmcg"
         eyebrow="Case study · FMCG leadership"
-        title="Twelve weeks, six faces, +32.2%."
+        title="Twelve weeks, six faces, +32.2 points."
         body="Leaders at Imana Foods and Kerry Foods completed a 12-week, accredited Super-Cube® leadership development intervention, assessed on every face before and after the course."
         stats={[
-          { value: "+32.2%", label: "Overall growth, all six faces" },
-          { value: "+45.1%", label: "Principles" },
-          { value: "+39.5%", label: "Emotional" },
+          { value: "+32.2 pts", label: "Overall growth, all six faces (percentage points)" },
+          { value: "+45.1 pts", label: "Principles (percentage points)" },
+          { value: "+39.5 pts", label: "Emotional (percentage points)" },
         ]}
         quote={{
           text: "More than the word influence, it provokes your behaviour and calls for change.",

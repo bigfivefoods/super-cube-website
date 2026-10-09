@@ -52,9 +52,9 @@ export const LEARN_PRIMARY_NAV: LearnNavItem[] = [
   },
   {
     id: "progress",
-    href: "/learn/report",
+    href: "/learn/progress",
     label: "Progress",
-    hint: "Scores & growth report",
+    hint: "Cube, levels & report",
     process: "learning",
   },
   {
@@ -123,10 +123,16 @@ export const LEARN_PROCESS_ACCENT: Record<
   journaling: { color: "#16979A", label: "Journaling" },
 };
 
+/** Pathway steps that happen before the courses (shown under Today, where the pathway lives). */
+const TODAY_PATHS = [/^\/learn\/start(\/|$)/, /^\/learn\/assessment\/(orientation|pre)(\/|$)/];
+
 export function isLearnNavActive(
   pathname: string,
   item: Pick<LearnNavItem, "href" | "exact" | "id">
 ): boolean {
+  if (item.id === "today") {
+    return pathname === "/learn" || pathname === "/learn/" || TODAY_PATHS.some((r) => r.test(pathname));
+  }
   if (item.exact) {
     return pathname === item.href || pathname === "/learn/";
   }
@@ -141,9 +147,11 @@ export function isLearnNavActive(
   }
   if (item.id === "progress") {
     return (
+      pathname.startsWith("/learn/progress") ||
       pathname.startsWith("/learn/report") ||
+      pathname.startsWith("/learn/review") ||
       pathname.startsWith("/learn/analytics") ||
-      pathname.startsWith("/learn/assessment")
+      /^\/learn\/assessment\/(post|mid)(\/|$)/.test(pathname)
     );
   }
   if (item.id === "you") {

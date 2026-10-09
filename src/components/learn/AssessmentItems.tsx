@@ -1,7 +1,7 @@
 "use client";
 
-import type { AssessmentOption } from "@/lib/lms/curriculum";
-import { LIKERT_LABELS } from "@/lib/lms/curriculum";
+import type { AssessmentOption } from "@/lib/lms/assessment-items";
+import { LIKERT_LABELS } from "@/lib/lms/assessment-items";
 
 /**
  * One rating-scale statement (v1 agreement or v2 frequency labels).

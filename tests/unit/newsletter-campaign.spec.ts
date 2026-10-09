@@ -51,7 +51,7 @@ test.describe("newsletter campaigns", () => {
       expect(s.text).not.toMatch(/\*\*|\]\(|^#/);
       expect(s.text.length).toBeLessThanOrEqual(300);
       // A result is never cut away from its source (the Imana Foods and Kerry Foods intervention).
-      if (s.text.includes("+39.5%")) expect(s.text).toContain("Imana Foods");
+      if (s.text.includes("+39.5")) expect(s.text).toContain("Imana Foods");
     }
   });
 

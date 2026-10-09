@@ -9,7 +9,7 @@
  */
 
 import { constructs, type ConstructId } from "@/lib/content";
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import type { ProgrammeId } from "@/lib/programmes";
 
 function num(v: string | undefined, fallback: number): number {

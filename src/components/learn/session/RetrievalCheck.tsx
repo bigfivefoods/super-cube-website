@@ -4,27 +4,43 @@ import { useId, useState } from "react";
 import { track } from "@/lib/analytics";
 import { faceInkStyle } from "@/lib/contrast";
 import type { RetrievalQ } from "@/lib/lms/sessions";
+import { setCheckAnswers, useCheckRound } from "./check-store";
 import { saveMisses } from "./useLocalField";
 
 /**
  * Retrieval practice with immediate, explanatory feedback. Learners can change
  * their answer; the first choice is what counts towards the score and the
- * spaced-review queue (misses come back in the Day 3/7/14 reviews).
+ * spaced-review queue (misses come back in the Day 3/7/21 reviews).
  */
-export function RetrievalCheck({
-  questions,
-  color,
-  storageKey,
-  kids = false,
-  context,
-}: {
+type Props = {
   questions: RetrievalQ[];
   color: string;
   /** Lesson id (or review id) for the spaced-review queue; omit to skip saving */
   storageKey?: string;
   kids?: boolean;
   context?: Record<string, string>;
-}) {
+  /** Called once every question has a first answer */
+  onComplete?: (firstAnswers: number[], correct: number) => void;
+  /** Hide the closing summary line (the caller shows its own) */
+  hideSummary?: boolean;
+};
+
+export function RetrievalCheck(props: Props) {
+  // A retry (from the mastery panel) bumps the round and remounts the check empty.
+  const round = useCheckRound(props.storageKey);
+  return <RetrievalCheckRound key={round} round={round} {...props} />;
+}
+
+function RetrievalCheckRound({
+  questions,
+  color,
+  storageKey,
+  kids = false,
+  context,
+  onComplete,
+  hideSummary = false,
+  round,
+}: Props & { round: number }) {
   const uid = useId();
   const [chosen, setChosen] = useState<(number | null)[]>(() => questions.map(() => null));
   const [first, setFirst] = useState<(number | null)[]>(() => questions.map(() => null));
@@ -40,9 +56,11 @@ export function RetrievalCheck({
       const nextFirst = first.slice();
       nextFirst[qi] = oi;
       setFirst(nextFirst);
+      if (storageKey) setCheckAnswers(storageKey, nextFirst);
       if (nextFirst.every((f) => f !== null)) {
         const missed = questions.filter((q, i) => nextFirst[i] !== q.answer).map((q) => q.q);
-        if (storageKey) saveMisses(storageKey, missed);
+        if (storageKey && round === 0) saveMisses(storageKey, missed);
+        onComplete?.(nextFirst as number[], questions.length - missed.length);
         track("retrieval_check", {
           ...context,
           correct: String(questions.length - missed.length),
@@ -53,7 +71,12 @@ export function RetrievalCheck({
   }
 
   return (
-    <div className="space-y-4" style={faceInkStyle(color)}>
+    <div className="space-y-4" style={faceInkStyle(color)} data-testid="retrieval-check" data-round={round}>
+      {round > 0 && (
+        <p className="rounded-xl border border-line bg-elevated px-3 py-2 text-[0.8125rem] text-ink" role="status">
+          {kids ? "Second go! Take your time." : "Second go. Take your time; the explanations you just read are the key."}
+        </p>
+      )}
       {questions.map((q, qi) => {
         const name = `${uid}-q${qi}`;
         const pickIdx = chosen[qi];
@@ -109,7 +132,7 @@ export function RetrievalCheck({
           </fieldset>
         );
       })}
-      {allDone && (
+      {allDone && !hideSummary && (
         <p className="rounded-xl border border-line bg-elevated px-3 py-2.5 text-[0.8125rem] text-ink" role="status">
           <strong className="font-semibold">
             {correctFirst} of {questions.length} right first time.
@@ -120,7 +143,7 @@ export function RetrievalCheck({
               : "Strong recall. These ideas will come back once more in your spaced review."
             : kids
               ? "Great trying! We'll practise these again soon."
-              : "Good effort. The ones you missed will come back in your Day 3, 7 and 14 reviews, which is exactly how memory gets stronger."}
+              : "Good effort. The ones you missed will come back in your Day 3, 7 and 21 reviews, which is exactly how memory gets stronger."}
         </p>
       )}
     </div>

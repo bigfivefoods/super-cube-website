@@ -6,7 +6,7 @@ import type { LocalLmsState } from "@/lib/lms/store";
 
 const DAY = 24 * 60 * 60 * 1000;
 
-test("spaced review names day 3, 7 and 14 from the baseline", () => {
+test("spaced review names day 3, 7 and 21 from the baseline", () => {
   const start = new Date("2026-01-01T08:00:00.000Z");
   const before = nextSpacedReview(start.toISOString(), {}, new Date(start.getTime() + 2 * DAY));
   expect(before.status).toBe("upcoming");
@@ -23,10 +23,18 @@ test("spaced review names day 3, 7 and 14 from the baseline", () => {
 
   const finished = nextSpacedReview(
     start.toISOString(),
-    { "3": "a", "7": "b", "14": "c" },
-    new Date(start.getTime() + 20 * DAY),
+    { "3": "a", "7": "b", "21": "c" },
+    new Date(start.getTime() + 22 * DAY),
   );
   expect(finished.status).toBe("finished");
+
+  const third = nextSpacedReview(start.toISOString(), { "3": "a", "7": "b" }, new Date(start.getTime() + 15 * DAY));
+  expect(third.day).toBe(21);
+  expect(third.status).toBe("upcoming");
+
+  // A Day 14 review done before the change still counts for Day 21.
+  const legacy = nextSpacedReview(start.toISOString(), { "3": "a", "7": "b", "14": "c" }, new Date(start.getTime() + 15 * DAY));
+  expect(legacy.status).toBe("finished");
   expect(nextSpacedReview(null).status).toBe("needs-baseline");
 });
 

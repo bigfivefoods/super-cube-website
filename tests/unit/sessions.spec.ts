@@ -55,10 +55,12 @@ test("every resolved arc has all eight steps and a facilitator guide", () => {
   }
 });
 
-test("no invented statistics: the only percentage is the Imana Foods and Kerry Foods Emotional result", () => {
+test("no invented statistics: the only figure is the Imana Foods and Kerry Foods Emotional gain, in percentage points", () => {
   const text = JSON.stringify(FACE_CONTENT);
-  const pct = text.match(/[0-9.]+\s?%/g) ?? [];
-  expect(pct.every((m) => m.replace(/\s/g, "") === "39.5%")).toBe(true);
+  expect(text.match(/[0-9.]+\s?%/g) ?? []).toEqual([]);
+  const gains = text.match(/\+[0-9.]+ percentage points/g) ?? [];
+  expect(gains.length).toBeGreaterThan(0);
+  expect(gains.every((m) => m === "+39.5 percentage points")).toBe(true);
   expect(text).toContain("Imana Foods and Kerry Foods");
   expect(text).not.toContain("UKZN doctoral study");
 });
@@ -113,13 +115,13 @@ test("markdown fallback contains every step", () => {
 });
 
 
-test("spaced reviews: Day 3/7/14, interleaved across faces, misses first", () => {
+test("spaced reviews: Day 3/7/21, interleaved across faces, misses first", () => {
   const s = reviewSchedule("2026-10-01T08:00:00.000Z");
-  expect(s.map((x) => x.day)).toEqual([3, 7, 14]);
+  expect(s.map((x) => x.day)).toEqual([3, 7, 21]);
   expect(s[0].due?.toISOString()).toBe("2026-10-04T08:00:00.000Z");
   expect(reviewSchedule(null)[0].due).toBeNull();
   for (const p of programmes) {
-    for (const day of [3, 7, 14]) {
+    for (const day of [3, 7, 21]) {
       const r = buildReview(p.id, day);
       expect(r.length).toBe(p.id === "kids" ? 4 : 6);
       expect(new Set(r.map((q) => q.constructId)).size).toBe(r.length); // one per face

@@ -9,9 +9,21 @@ import { getProfile, profileComplete } from "@/lib/lms/profile";
 import { loadLmsState, unlockDemo, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { programmeCopy } from "@/lib/lms/programme-copy";
+import { buildAssessmentItems } from "@/lib/lms/assessment-items";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
+import { questionnaireMinutes } from "@/lib/lms/duration";
+
+/** Honest timings, worked out from the real questionnaire and the first session. */
+function firstRunMinutes(programmeId: ProgrammeId) {
+  const baselineMin = questionnaireMinutes(buildAssessmentItems(programmeId).length + 1, programmeId);
+  const firstSessionMin = getCoursesForProgramme(programmeId)[0]?.lessons[0]?.durationMinutes ?? 8;
+  const orientMin = 2;
+  const winMin = 1;
+  return { baselineMin, firstSessionMin, orientMin, winMin, totalMin: orientMin + baselineMin + firstSessionMin + winMin };
+}
 
 /**
- * Guided 10-minute first run — never dump users on full dashboard.
+ * Guided first run with honest timings (computed from the content); never dump users on the full dashboard.
  */
 export default function GuidedStartPage() {
   const router = useRouter();
@@ -38,7 +50,7 @@ export default function GuidedStartPage() {
 
   if (!ready || !state) {
     return (
-      <LearnShell title="Your first 10 minutes">
+      <LearnShell title={`Your first ${firstRunMinutes("adults").totalMin} minutes`}>
         <p className="learn-meta">Loading…</p>
       </LearnShell>
     );
@@ -60,10 +72,12 @@ export default function GuidedStartPage() {
 
   const name = state.profile?.displayName || state.user?.fullName;
 
+  const { baselineMin, firstSessionMin, orientMin, winMin, totalMin } = firstRunMinutes(programmeId);
+
   const steps = [
     {
       n: 1,
-      min: "2 min",
+      min: `${orientMin} min`,
       t: "Orient",
       d: "How you see leadership levels—quick pre-pre check.",
       href: "/learn/assessment/orientation",
@@ -71,7 +85,7 @@ export default function GuidedStartPage() {
     },
     {
       n: 2,
-      min: "3–5 min",
+      min: `${baselineMin} min`,
       t: "Baseline (start)",
       d: "Six faces, honest ratings. You can save mid-way and resume.",
       href: "/learn/assessment/pre",
@@ -79,7 +93,7 @@ export default function GuidedStartPage() {
     },
     {
       n: 3,
-      min: "4 min",
+      min: `${firstSessionMin} min`,
       t: "One session",
       d: "After baseline, open your weekly plan’s first face—or start any course.",
       href: preDone ? "/learn" : "/learn/courses",
@@ -87,7 +101,7 @@ export default function GuidedStartPage() {
     },
     {
       n: 4,
-      min: "1 min",
+      min: `${winMin} min`,
       t: "First win",
       d: "Complete a session to unlock win-of-the-day and streak.",
       href: "/learn",
@@ -101,8 +115,8 @@ export default function GuidedStartPage() {
     <LearnShell
       title={
         name
-          ? `${name.split(" ")[0]}, your first 10 minutes`
-          : "Your first 10 minutes"
+          ? `${name.split(" ")[0]}, your first ${totalMin} minutes`
+          : `Your first ${totalMin} minutes`
       }
       subtitle={programmeCopy("start.subtitle", programmeId, { programme: programme?.name ?? "Super-Cube®" })}
       hideJourneyRail

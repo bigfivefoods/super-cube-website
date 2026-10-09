@@ -9,7 +9,7 @@ import { constructs, type ConstructId } from "@/lib/content";
 import { faceTagline } from "@/lib/lms/face-taglines";
 import { faceDescription, faceSkills } from "@/lib/lms/face-copy";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
-import { getCourse } from "@/lib/lms/curriculum";
+import { getCourseMeta as getCourse } from "@/lib/lms/curriculum-meta";
 import { faceInkStyle } from "@/lib/contrast";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 

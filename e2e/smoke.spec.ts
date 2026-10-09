@@ -62,7 +62,7 @@ test.describe("Super-Cube smoke", () => {
 
   test("guided start path", async ({ page }) => {
     await page.goto(base + "/learn/start");
-    await expect(page.getByText(/first 10 minutes/i).first()).toBeVisible();
+    await expect(page.getByText(/first \d+ minutes/i).first()).toBeVisible();
   });
 
   test("insights + practices + facilitator", async ({ page }) => {

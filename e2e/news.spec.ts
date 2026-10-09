@@ -102,7 +102,7 @@ const CASE_STUDIES = [
   {
     path: "/news/twelve-weeks-six-faces-fmcg-leadership",
     og: /\/images\/og\/news\/fmcg-leadership-case-study\.jpg$/,
-    figures: ["+32.2%", "+45.1%", "+39.5%"],
+    figures: ["+32.2 pts", "+45.1 pts", "+39.5 pts", "percentage points"],
     chart: "/news/fmcg-leadership-results-chart.png",
     landing: { path: "/organisations", testId: "case-study-fmcg" },
   },

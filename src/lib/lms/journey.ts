@@ -1,4 +1,4 @@
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { evaluatePostGate } from "@/lib/lms/gates";
 import {
   hasLocalAccess,

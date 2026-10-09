@@ -5,6 +5,7 @@ import { InstallAppBanner } from "@/components/learn/InstallAppBanner";
 import { LearnBottomNav } from "@/components/learn/LearnBottomNav";
 import { LmsSyncProvider } from "@/components/learn/LmsSyncProvider";
 import { ProfileGate } from "@/components/learn/ProfileGate";
+import { CelebrationToast } from "@/components/learn/progress/CelebrationToast";
 
 export const metadata: Metadata = {
   ...pageMeta({
@@ -51,6 +52,7 @@ export default function LearnLayout({
             <InstallAppBanner />
           </div>
           {children}
+          <CelebrationToast />
           <LearnBottomNav />
         </ProfileGate>
       </LmsSyncProvider>

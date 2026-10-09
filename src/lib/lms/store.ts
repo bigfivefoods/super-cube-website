@@ -13,6 +13,7 @@ import type {
 import type { FacePulse } from "@/lib/lms/face-tracking";
 import type { LearnerProfile } from "@/lib/lms/profile";
 import type { GuardianConsentRecord } from "@/lib/lms/consent";
+import { advanceStreak, localDayKey } from "@/lib/lms/day";
 
 const KEY = "supercube_lms_v1";
 
@@ -63,6 +64,23 @@ export interface PracticeStreak {
   best: number;
   /** YYYY-MM-DD of last activity (local) */
   lastDate: string | null;
+}
+
+export interface MasteryRecord {
+  /** Completion attempts at the knowledge check */
+  attempts: number;
+  /** Correct answers on the first attempt */
+  firstCorrect: number;
+  /** Best correct answers across attempts */
+  bestCorrect: number;
+  total: number;
+  /** Correct answers needed for mastery */
+  needed?: number;
+  /** Reached the threshold on the first attempt */
+  firstTry: boolean;
+  /** Completed after a retry with explanations */
+  retried: boolean;
+  passedAt?: string;
 }
 
 export interface SessionWin {
@@ -148,6 +166,22 @@ export interface LocalLmsState {
   facePulses?: FacePulse[];
   /** Parent/guardian consent (required for under-18 learners) */
   guardianConsent?: GuardianConsentRecord;
+  /** Local day a streak freeze last covered a missed day (shown once as a notice) */
+  streakFreezeUsedOn?: string;
+  /** When each session was first completed (ISO); drives spaced reviews and the weekly goal */
+  sessionCompletedAt?: Record<string, string>;
+  /** Knowledge-check mastery per session (see lib/lms/mastery.ts) */
+  mastery?: Record<string, MasteryRecord>;
+  /** Day 3 / 7 / 21 spaced reviews per session: review day → ISO time done and score */
+  sessionReviews?: Record<string, Partial<Record<"3" | "7" | "21", { at: string; correct: number; total: number }>>>;
+  /** Weekly goal the learner chose: sessions, practices and reviews per week */
+  weeklyGoal?: { target: number; setAt: string };
+  /** Progress badges first seen on this device (id → ISO) */
+  progressBadges?: Record<string, string>;
+  /** Highest level already celebrated (so level-ups celebrate once) */
+  celebratedLevel?: number;
+  /** Face light tiers already celebrated (face → tier) */
+  celebratedTiers?: Partial<Record<ConstructId, number>>;
   /** Last entitlement confirmed by the server (/api/lms/status) */
   serverEntitlement?: {
     kind: "paid" | "cohort" | "open" | "none";
@@ -258,46 +292,18 @@ export function saveLmsState(state: LocalLmsState) {
   }
 }
 
-/** Local calendar day YYYY-MM-DD */
-export function localDayKey(d = new Date()): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${y}-${m}-${day}`;
-}
+/** Local calendar day YYYY-MM-DD (shared helper; re-exported for existing imports) */
+export { localDayKey } from "@/lib/lms/day";
 
-function daysBetween(a: string, b: string): number {
-  const da = new Date(a + "T12:00:00");
-  const db = new Date(b + "T12:00:00");
-  return Math.round((db.getTime() - da.getTime()) / 86400000);
-}
-
-/** Update streak + last activity timestamps */
+/** Update streak (local day, freezes) + last activity timestamps */
 export function touchActivity(state: LocalLmsState): LocalLmsState {
-  const today = localDayKey();
-  const streak = state.practiceStreak ?? {
-    current: 0,
-    best: 0,
-    lastDate: null,
-  };
-  let { current, best, lastDate } = streak;
-
-  if (!lastDate) {
-    current = 1;
-  } else if (lastDate === today) {
-    // same day
-  } else if (daysBetween(lastDate, today) === 1) {
-    current += 1;
-  } else {
-    current = 1;
-  }
-  best = Math.max(best, current);
-  lastDate = today;
-
+  const step = advanceStreak(state.practiceStreak, state.streakFreezes ?? 0, localDayKey());
   return {
     ...state,
     lastActivityAt: new Date().toISOString(),
-    practiceStreak: { current, best, lastDate },
+    practiceStreak: step.streak,
+    streakFreezes: step.freezes,
+    ...(step.freezesUsed > 0 ? { streakFreezeUsedOn: localDayKey() } : {}),
   };
 }
 
@@ -328,6 +334,9 @@ export function markLessonCompleted(
     ...state.lessonProgress,
     [lessonId]: "completed",
   };
+  if (!state.sessionCompletedAt?.[lessonId]) {
+    state.sessionCompletedAt = { ...(state.sessionCompletedAt ?? {}), [lessonId]: new Date().toISOString() };
+  }
   state.lastLessonId = lessonId;
   state.lastConstructId = constructId;
   state = touchActivity(state);
@@ -506,25 +515,77 @@ export function clearAssessmentDraft(): LocalLmsState {
 }
 
 export function logMicroPractice(practiceId: string): LocalLmsState {
-  const state = loadLmsState();
-  const day = new Date().toISOString().slice(0, 10);
+  let state = loadLmsState();
+  const day = localDayKey();
   const log = { ...(state.microPracticeLog ?? {}) };
   const list = new Set(log[day] ?? []);
   list.add(practiceId);
   log[day] = [...list];
   state.microPracticeLog = log;
-  const streak = state.practiceStreak ?? { current: 0, best: 0, lastDate: null };
-  if (streak.lastDate !== day) {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const y = yesterday.toISOString().slice(0, 10);
-    streak.current = streak.lastDate === y ? streak.current + 1 : 1;
-    streak.best = Math.max(streak.best, streak.current);
-    streak.lastDate = day;
-  }
-  state.practiceStreak = streak;
+  state = touchActivity(state);
   saveLmsState(state);
   return state;
+}
+
+/** True when this micro-practice is already logged for the learner's local today. */
+export function practiceDoneToday(state: Pick<LocalLmsState, "microPracticeLog"> | null | undefined, practiceId?: string): boolean {
+  const list = state?.microPracticeLog?.[localDayKey()];
+  if (!list || list.length === 0) return false;
+  return practiceId ? list.includes(practiceId) : true;
+}
+
+/** Save a knowledge-check attempt for a session (device; synced with the learner state). */
+export function saveMasteryRecord(lessonId: string, record: MasteryRecord): LocalLmsState {
+  const state = loadLmsState();
+  state.mastery = { ...(state.mastery ?? {}), [lessonId]: record };
+  saveLmsState(state);
+  return state;
+}
+
+/** Set the weekly goal (3, 5 or 7 sessions, practices or reviews a week). */
+export function setWeeklyGoal(target: number): LocalLmsState {
+  const state = loadLmsState();
+  state.weeklyGoal = { target, setAt: state.weeklyGoal?.setAt && state.weeklyGoal.target === target ? state.weeklyGoal.setAt : new Date().toISOString() };
+  saveLmsState(state);
+  return state;
+}
+
+/** Record a Day 3 / 7 / 21 review of one session (one sitting covers every review day that is due). */
+export function saveSessionReview(
+  lessonId: string,
+  days: readonly (3 | 7 | 21)[],
+  correct: number,
+  total: number,
+): LocalLmsState {
+  let state = loadLmsState();
+  const at = new Date().toISOString();
+  const byDay = { ...(state.sessionReviews?.[lessonId] ?? {}) };
+  for (const d of days) byDay[String(d) as "3" | "7" | "21"] = { at, correct: d === days[0] ? correct : 0, total };
+  state.sessionReviews = { ...(state.sessionReviews ?? {}), [lessonId]: byDay };
+  state = touchActivity(state);
+  saveLmsState(state);
+  return state;
+}
+
+/** Remember what has been celebrated, so each level, light tier and badge celebrates once. */
+export function markCelebrated(patch: Pick<LocalLmsState, "celebratedLevel" | "celebratedTiers" | "progressBadges">): void {
+  const state = loadLmsState();
+  if (patch.celebratedLevel !== undefined) state.celebratedLevel = Math.max(state.celebratedLevel ?? 0, patch.celebratedLevel);
+  if (patch.celebratedTiers) {
+    const tiers = { ...(state.celebratedTiers ?? {}) };
+    for (const [face, t] of Object.entries(patch.celebratedTiers) as [ConstructId, number][]) tiers[face] = Math.max(tiers[face] ?? 0, t);
+    state.celebratedTiers = tiers;
+  }
+  if (patch.progressBadges) state.progressBadges = { ...patch.progressBadges, ...(state.progressBadges ?? {}) };
+  saveLmsState(state);
+}
+
+/** Clear the one-time "a freeze covered a missed day" notice. */
+export function clearFreezeNotice(): void {
+  const state = loadLmsState();
+  if (!state.streakFreezeUsedOn) return;
+  state.streakFreezeUsedOn = undefined;
+  saveLmsState(state);
 }
 
 export function markFirstRunStep(

@@ -14,10 +14,14 @@ import { stepLabel } from "@/lib/lms/journey";
 import { liveStreak } from "@/lib/lms/badges";
 import { getDashboardAction, processLabel } from "@/lib/lms/next-action";
 import { LEARN_PROCESS_ACCENT } from "@/lib/lms/nav";
-import { nextSpacedReview } from "@/lib/lms/review";
+import { nextSpacedReview } from "@/lib/lms/review-schedule";
 import { serverHasRecordedPractice } from "@/lib/lms/rewards";
 import { localDayKey } from "@/lib/lms/store";
 import { syncFromServer } from "@/lib/lms/cloud";
+import { progression } from "@/lib/lms/progression";
+import { GoalRing } from "@/components/learn/progress/GoalRing";
+import { SessionReviewCard } from "@/components/learn/progress/SessionReviewCard";
+import { weeklyGoal } from "@/lib/lms/progression";
 
 function greeting(now = new Date()): string {
   const hour = Number(
@@ -79,14 +83,14 @@ export default function LearnDashboardPage() {
   const rewardsReady = serverHasRecordedPractice(state);
   const reviewWhen =
     review.status === "needs-baseline"
-      ? "Starts after your baseline · days 3, 7 and 14"
+      ? "Starts after your baseline · days 3, 7 and 21"
       : review.status === "finished"
-        ? "Day 3, 7 and 14 are done"
+        ? "Day 3, 7 and 21 are done"
         : review.due
           ? review.status === "due"
             ? `Due since ${formatDateZA(review.due)}`
             : `Due ${formatDateZA(review.due)}`
-          : "Days 3, 7 and 14";
+          : "Days 3, 7 and 21";
   const eyebrow =
     action.process === "journaling"
       ? `${processLabel(action.process)} · today`
@@ -143,14 +147,14 @@ export default function LearnDashboardPage() {
           <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Streak</dt>
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink sm:text-xl">
             {streak} {streak === 1 ? "day" : "days"}
+            {(best > streak || freezes > 0) && (
+              <span className="mt-0.5 block text-[0.7rem] font-normal text-slate">
+                {best > streak ? `Best ${best}` : ""}
+                {best > streak && freezes > 0 ? " · " : ""}
+                {freezes > 0 ? `❄ ${freezes} freeze${freezes === 1 ? "" : "s"}` : ""}
+              </span>
+            )}
           </dd>
-          {(best > streak || freezes > 0) && (
-            <p className="mt-0.5 text-[0.7rem] text-slate">
-              {best > streak ? `Best ${best}` : ""}
-              {best > streak && freezes > 0 ? " · " : ""}
-              {freezes > 0 ? `${freezes} freeze${freezes === 1 ? "" : "s"}` : ""}
-            </p>
-          )}
         </div>
         <div className="rounded-2xl border border-line bg-elevated p-3 sm:p-4">
           <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Sessions</dt>
@@ -181,15 +185,10 @@ export default function LearnDashboardPage() {
         </div>
       </dl>
 
-      <Link
-        href={review.href}
-        className="mt-3 block rounded-2xl border border-line bg-elevated p-4 transition hover:border-black/15 sm:mt-4 sm:p-5"
-        data-testid="next-review"
-      >
-        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Next spaced review</p>
-        <p className="mt-1 text-[1rem] font-semibold tracking-tight text-ink">{review.title}</p>
-        <p className="mt-1 text-[0.875rem] leading-snug text-slate">{reviewWhen}</p>
-      </Link>
+      <div className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
+        <TodayProgress state={state} />
+        <SessionReviewCard state={state} fallback={{ title: review.title, when: reviewWhen, href: review.href }} />
+      </div>
 
       {/* ── Pathway ── */}
       <div className="mt-4 sm:mt-5">
@@ -234,5 +233,36 @@ export default function LearnDashboardPage() {
         <LearnNavTile href="/learn/account" kicker="You" title="Profile and settings" detail="Your details, consent and data" />
       </div>
     </LearnShell>
+  );
+}
+
+/** Level, points and the weekly goal ring, linking to the full Progress page. */
+function TodayProgress({ state }: { state: ReturnType<typeof useLmsState> }) {
+  const v = progression(state);
+  const g = weeklyGoal(state);
+  return (
+    <Link
+      href="/learn/progress"
+      className="flex items-center gap-4 rounded-2xl border border-line bg-elevated p-4 transition hover:border-black/15 sm:p-5"
+      data-testid="today-progress"
+    >
+      {g.target ? (
+        <GoalRing done={g.done} target={g.target} size={72} stroke={7} color="#16979A" label={`Weekly goal: ${g.done} of ${g.target}`} />
+      ) : null}
+      <span className="min-w-0">
+        <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">
+          Level {v.level.level.n} · {v.total} points
+        </span>
+        <span className="mt-0.5 block text-[1rem] font-semibold tracking-tight text-ink">{v.level.level.name}</span>
+        <span className="mt-0.5 block text-[0.8125rem] leading-snug text-slate">
+          {g.target
+            ? g.reached
+              ? "Weekly goal reached. "
+              : `${g.target - g.done} more for your weekly goal. `
+            : "Set a weekly goal on your Progress page. "}
+          {v.level.next ? `${v.level.toNext} points to ${v.level.next.name}.` : ""}
+        </span>
+      </span>
+    </Link>
   );
 }

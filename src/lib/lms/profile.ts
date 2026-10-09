@@ -107,7 +107,7 @@ export const CONTEXTS: { id: LearningContext; label: string }[] = [
 ];
 
 export const COHORT_KINDS: { id: CohortKind; label: string; hint: string }[] = [
-  { id: "solo", label: "Just me", hint: "Learn on your own pace" },
+  { id: "solo", label: "Just me", hint: "Learn at your own pace" },
   { id: "family", label: "Family", hint: "Parents, kids, household" },
   { id: "school", label: "School / class", hint: "Teacher or school code" },
   { id: "company", label: "Company / team", hint: "Work cohort or pilot" },

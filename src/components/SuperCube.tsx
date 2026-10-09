@@ -34,6 +34,20 @@ const byId = Object.fromEntries(constructs.map((c) => [c.id, c])) as Record<
 
 const DEFAULT_ROT = { x: -22, y: 32, z: 0 };
 
+/** Progress light tiers: a dark face slowly takes on its full colour and then glows. */
+const LIGHT_STYLE: { dim: number; glow?: number }[] = [{ dim: 0.84 }, { dim: 0.6 }, { dim: 0.32 }, { dim: 0 }, { dim: 0, glow: 22 }];
+
+/**
+ * Dim a face by laying a dark veil over its colour. Only the background darkens,
+ * so the white face text keeps (and gains) contrast. Fading the whole face with
+ * opacity used to drop the text below 4.5:1.
+ */
+function faceBackground(color: string, dim: number): string {
+  if (dim <= 0) return color;
+  const a = Math.min(0.9, dim).toFixed(2);
+  return `linear-gradient(rgba(24, 27, 34, ${a}), rgba(24, 27, 34, ${a})), ${color}`;
+}
+
 export function SuperCube({
   className = "",
   showSkills = true,
@@ -41,6 +55,9 @@ export function SuperCube({
   autoSpin = true,
   scores,
   showScores = false,
+  light,
+  celebrate = null,
+  hideControls = false,
 }: {
   className?: string;
   /** Show high-level skills under each face name */
@@ -52,6 +69,12 @@ export function SuperCube({
   scores?: Partial<Record<ConstructId, number>>;
   /** Show numeric score under face name when scores provided */
   showScores?: boolean;
+  /** Progress light per face, tier 0 (dark) to 4 (fully lit): the cube lights up face by face */
+  light?: Partial<Record<ConstructId, number>>;
+  /** A face that just moved up a tier gets a short glow pulse (off with reduced motion) */
+  celebrate?: ConstructId | null;
+  /** Hide the rotate buttons (compact progress views) */
+  hideControls?: boolean;
 }) {
   const [rot, setRot] = useState(DEFAULT_ROT);
   const [dragging, setDragging] = useState(false);
@@ -182,32 +205,45 @@ export function SuperCube({
             const c = byId[face.id];
             const score = scores?.[face.id];
             const hasScore = typeof score === "number";
-            // Map 0–100 → opacity 0.35–1 so weak faces read dimmer
-            const intensity = hasScore
-              ? Math.min(1, Math.max(0.35, 0.35 + (score / 100) * 0.65))
-              : 1;
+            // Weak faces read dimmer: 0 → a 0.55 veil, 100 → none
+            const scoreDim = hasScore ? Math.max(0, Math.min(0.55, (1 - score / 100) * 0.55)) : 0;
+            const tier = light ? Math.max(0, Math.min(4, light[face.id] ?? 0)) : null;
+            const lit = tier === null ? null : LIGHT_STYLE[tier];
             return (
               <div
                 key={face.className}
-                className={`cube-face cube-face--colored ${face.className}`}
+                className={`cube-face cube-face--colored ${face.className}${tier !== null ? ` cube-face--tier-${tier}` : ""}${
+                  celebrate === face.id ? " cube-face--celebrate" : ""
+                }`}
+                data-face={face.id}
+                data-tier={tier ?? undefined}
                 style={
                   {
                     "--face-bg": c.color,
                     // All face text is white (Craig, Oct 2026); a soft dark shadow
                     // (globals.css) keeps it readable on the lighter faces.
                     "--face-fg": "#ffffff",
-                    background: c.color,
+                    background: faceBackground(c.color, lit ? lit.dim : scoreDim),
                     color: "#ffffff",
                     textShadow: "0 1px 2px rgba(0, 0, 0, 0.45)",
-                    opacity: intensity,
-                    boxShadow:
-                      hasScore && score >= 70
+                    boxShadow: lit
+                      ? lit.glow
+                        ? `0 0 ${lit.glow}px ${c.color}, inset 0 0 0 1px rgba(255,255,255,0.35)`
+                        : undefined
+                      : hasScore && score >= 70
                         ? `0 0 18px ${c.color}`
                         : undefined,
                   } as CSSProperties
                 }
               >
                 <span className="cube-face__name">{c.name}</span>
+                {tier !== null && (
+                  <span className="cube-face__pips" aria-hidden>
+                    {[1, 2, 3, 4].map((t) => (
+                      <i key={t} className={t <= tier ? "on" : undefined} />
+                    ))}
+                  </span>
+                )}
                 {showScores && hasScore && (
                   <span className="mt-1 block text-[0.65rem] font-bold tabular-nums">
                     {Math.round(score)}
@@ -241,6 +277,16 @@ export function SuperCube({
         </ul>
       )}
 
+      {light && (
+        <ul className="sr-only" aria-label="How far each Super-Cube® face is lit, out of 4">
+          {faceLayout.map((face) => (
+            <li key={face.id}>
+              {byId[face.id].name}: {light[face.id] ?? 0} of 4
+            </li>
+          ))}
+        </ul>
+      )}
+
       {/* The 3D faces are a picture (role="img"); give screen readers the faces and skills as text. */}
       {showSkills && !showScores && (
         <ul className="sr-only" aria-label="Super-Cube® faces and the skills each develops">
@@ -255,6 +301,7 @@ export function SuperCube({
         </ul>
       )}
 
+      {!hideControls && (
       <div className="flex w-full max-w-full flex-col items-center gap-2 px-0.5 sm:max-w-[20rem]">
         <p className="text-center text-[0.65rem] font-medium uppercase tracking-[0.12em] text-muted sm:text-[0.6875rem] sm:tracking-[0.14em]">
           <span className="sm:hidden">Drag to rotate</span>
@@ -326,6 +373,7 @@ export function SuperCube({
           </button>
         </div>
       </div>
+      )}
     </div>
   );
 }

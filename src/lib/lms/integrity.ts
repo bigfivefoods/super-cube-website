@@ -6,7 +6,7 @@
  *  - Cronbach's alpha for the live reliability view in admin
  * Shared by the browser and the server; no I/O here.
  */
-import type { AssessmentItem } from "@/lib/lms/curriculum";
+import type { AssessmentItem } from "@/lib/lms/assessment-items";
 import type { ProgrammeId } from "@/lib/programmes";
 
 export type QualityFlag =

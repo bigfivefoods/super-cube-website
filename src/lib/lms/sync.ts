@@ -204,12 +204,77 @@ export function mergeLmsStates(
     shareProgressWithCoach: Boolean(
       a.shareProgressWithCoach || b.shareProgressWithCoach
     ),
-    microPracticeLog: {
-      ...(older.microPracticeLog || {}),
-      ...(newer.microPracticeLog || {}),
-    },
+    microPracticeLog: unionLists(older.microPracticeLog, newer.microPracticeLog),
+    ...mergeProgression(a, b, newer),
     certificateId: newer.certificateId || older.certificateId,
     serverEntitlement: keepEntitlement(newer.serverEntitlement, older.serverEntitlement),
+  };
+}
+
+/** Per-day practice ids from both devices. */
+function unionLists(a?: Record<string, string[]>, b?: Record<string, string[]>): Record<string, string[]> {
+  const out: Record<string, string[]> = { ...(a || {}) };
+  for (const [day, ids] of Object.entries(b || {})) out[day] = [...new Set([...(out[day] || []), ...ids])];
+  return out;
+}
+
+function earlierIso(x?: string, y?: string): string | undefined {
+  if (!x) return y;
+  if (!y) return x;
+  return Date.parse(x) <= Date.parse(y) ? x : y;
+}
+
+/** Mastery, reviews, weekly goal and celebrations: never lose progress made on either device. */
+function mergeProgression(a: LocalLmsState, b: LocalLmsState, newer: LocalLmsState): Partial<LocalLmsState> {
+  const sessionCompletedAt: Record<string, string> = { ...(a.sessionCompletedAt || {}) };
+  for (const [id, iso] of Object.entries(b.sessionCompletedAt || {})) sessionCompletedAt[id] = earlierIso(sessionCompletedAt[id], iso)!;
+
+  const mastery: NonNullable<LocalLmsState["mastery"]> = { ...(a.mastery || {}) };
+  for (const [id, r] of Object.entries(b.mastery || {})) {
+    const cur = mastery[id];
+    if (!cur) {
+      mastery[id] = r;
+      continue;
+    }
+    const base = r.attempts > cur.attempts ? r : cur;
+    mastery[id] = {
+      ...base,
+      bestCorrect: Math.max(cur.bestCorrect, r.bestCorrect),
+      retried: cur.retried || r.retried,
+      passedAt: earlierIso(cur.passedAt, r.passedAt),
+    };
+  }
+
+  const sessionReviews: NonNullable<LocalLmsState["sessionReviews"]> = {};
+  for (const src of [a.sessionReviews, b.sessionReviews]) {
+    for (const [id, byDay] of Object.entries(src || {})) {
+      const into = { ...(sessionReviews[id] || {}) };
+      for (const [day, r] of Object.entries(byDay || {}) as ["3" | "7" | "21", { at: string; correct: number; total: number }][]) {
+        if (r && (!into[day] || Date.parse(r.at) < Date.parse(into[day]!.at))) into[day] = r;
+      }
+      sessionReviews[id] = into;
+    }
+  }
+
+  const progressBadges: Record<string, string> = { ...(a.progressBadges || {}) };
+  for (const [id, iso] of Object.entries(b.progressBadges || {})) progressBadges[id] = earlierIso(progressBadges[id], iso)!;
+
+  const celebratedTiers: NonNullable<LocalLmsState["celebratedTiers"]> = { ...(a.celebratedTiers || {}) };
+  for (const [face, t] of Object.entries(b.celebratedTiers || {}) as [keyof typeof celebratedTiers, number][]) {
+    celebratedTiers[face] = Math.max(celebratedTiers[face] ?? 0, t);
+  }
+
+  const goals = [a.weeklyGoal, b.weeklyGoal].filter(Boolean) as NonNullable<LocalLmsState["weeklyGoal"]>[];
+  const weeklyGoal = goals.sort((x, y) => Date.parse(y.setAt) - Date.parse(x.setAt))[0];
+
+  return {
+    sessionCompletedAt,
+    mastery,
+    sessionReviews,
+    progressBadges,
+    celebratedTiers,
+    celebratedLevel: Math.max(a.celebratedLevel ?? 0, b.celebratedLevel ?? 0) || undefined,
+    weeklyGoal: weeklyGoal ?? newer.weeklyGoal,
   };
 }
 

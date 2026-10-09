@@ -1,5 +1,5 @@
 /**
- * Spaced review across the 21-day journey (Day 3, 7 and 14 after the
+ * Spaced review across the 21-day journey (Day 3, 7 and 21 after the
  * baseline). Each review mixes retrieval questions across faces (interleaving)
  * and puts the questions a learner missed first.
  */
@@ -8,68 +8,16 @@ import { skillsForProgramme, type ProgrammeId } from "@/lib/programmes";
 import { courseId } from "@/lib/programmes";
 import { skillArc, overviewArc, type RetrievalQ } from "@/lib/lms/sessions";
 
-export const REVIEW_DAYS = [3, 7, 14] as const;
-export type ReviewDay = (typeof REVIEW_DAYS)[number];
+export {
+  REVIEW_DAYS,
+  isReviewDone,
+  nextSpacedReview,
+  reviewSchedule,
+  type ReviewDay,
+  type SpacedReviewNext,
+} from "@/lib/lms/review-schedule";
 
 export type ReviewQ = RetrievalQ & { constructId: ConstructId; lessonId: string };
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-export function reviewSchedule(startIso: string | null | undefined): { day: ReviewDay; due: Date | null }[] {
-  const start = startIso ? Date.parse(startIso) : NaN;
-  return REVIEW_DAYS.map((day) => ({ day, due: Number.isFinite(start) ? new Date(start + day * DAY_MS) : null }));
-}
-
-const REVIEW_NAMES: Record<ReviewDay, string> = {
-  3: "First recall",
-  7: "Mix it up",
-  14: "Lock it in",
-};
-
-export type SpacedReviewNext = {
-  day: ReviewDay | null;
-  due: Date | null;
-  status: "needs-baseline" | "upcoming" | "due" | "finished";
-  href: string;
-  title: string;
-};
-
-/** The next Day 3, 7 or 14 review, skipping days already marked done on this device. */
-export function nextSpacedReview(
-  startIso: string | null | undefined,
-  done: Readonly<Record<string, string>> = {},
-  now = new Date(),
-): SpacedReviewNext {
-  if (!startIso || !Number.isFinite(Date.parse(startIso))) {
-    return {
-      day: null,
-      due: null,
-      status: "needs-baseline",
-      href: "/learn/assessment/pre",
-      title: "Spaced review",
-    };
-  }
-  const schedule = reviewSchedule(startIso);
-  const open = schedule.find(({ day }) => !done[String(day)]);
-  if (!open) {
-    return {
-      day: 14,
-      due: schedule[2]?.due ?? null,
-      status: "finished",
-      href: "/learn/review",
-      title: "Spaced review complete",
-    };
-  }
-  const due = open.due;
-  const isDue = due ? due.getTime() <= now.getTime() : false;
-  return {
-    day: open.day,
-    due,
-    status: isDue ? "due" : "upcoming",
-    href: `/learn/review?day=${open.day}`,
-    title: `Day ${open.day} · ${REVIEW_NAMES[open.day]}`,
-  };
-}
 
 function hash(s: string): number {
   let h = 2166136261;

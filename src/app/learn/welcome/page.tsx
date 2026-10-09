@@ -42,8 +42,12 @@ export default function WelcomeProfilePage() {
   const [cohortKind, setCohortKind] = useState<CohortKind>("solo");
   const [codeInput, setCodeInput] = useState("");
 
+  // Read on the client only, so the server and first client render match (no React #418).
+  const [hasSavedProfile, setHasSavedProfile] = useState(false);
+
   useEffect(() => {
     const p = getProfile();
+    setHasSavedProfile(profileComplete(p));
     if (p) {
       setDisplayName(p.displayName || "");
       setEmail(p.email || "");
@@ -110,11 +114,20 @@ export default function WelcomeProfilePage() {
 
   return (
     <LearnShell
-      title="Welcome — tell us about you"
+      title="Welcome: tell us about you"
       subtitle="A 60-second profile so Learn, Report, and your cohort fit who you are. Private on this device until you sign in."
       hideJourneyRail
     >
-      <div className="mb-5 flex gap-1.5">
+      <div
+        className="mb-5 flex gap-1.5"
+        role="progressbar"
+        aria-label="Profile steps"
+        aria-valuemin={1}
+        aria-valuemax={4}
+        aria-valuenow={step}
+        aria-valuetext={`Step ${step} of 4`}
+        data-testid="welcome-progress"
+      >
         {([1, 2, 3, 4] as Step[]).map((s) => (
           <div
             key={s}
@@ -370,7 +383,7 @@ export default function WelcomeProfilePage() {
         </section>
       )}
 
-      {profileComplete(getProfile()) && (
+      {hasSavedProfile && (
         <p className="mt-4 text-center text-sm text-muted">
           Profile already saved.{" "}
           <Link

@@ -2,7 +2,7 @@ import { randomBytes } from "node:crypto";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { dayKeyIn, SA_TIME_ZONE } from "@/lib/datetime";
 import { BADGES, earnedBadges, isBadgeId, type BadgeId, type StreakView } from "@/lib/lms/badges";
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { consentCounts, type ConsentGrant } from "@/lib/lms/guardian-gate";
 import { isMinorLearner } from "@/lib/lms/server/share-links";
 import type { ProgrammeId } from "@/lib/programmes";

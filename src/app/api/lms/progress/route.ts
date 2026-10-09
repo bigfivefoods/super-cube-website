@@ -5,6 +5,7 @@ import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { recordActivitySafe } from "@/lib/lms/server/engagement";
 import { guardianConsentBlock } from "@/lib/lms/server/guardian-gate";
+import { enforceMastery } from "@/lib/lms/server/mastery";
 import { courseId, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import type { ConstructId } from "@/lib/content";
 
@@ -13,6 +14,10 @@ import type { ConstructId } from "@/lib/content";
  * An open is the server's evidence that the learner was in the session.
  * A completion counts toward the after-test only after that open has lasted
  * long enough. Posting a lesson id on its own is stored but does not open the gate.
+ *
+ * Mastery: a session with a knowledge check completes when about two-thirds of
+ * the answers are right (half for Kids), or on a second go after the learner
+ * has read the explanations. Otherwise the route answers 422 "mastery_retry".
  */
 export async function POST(request: Request) {
   const ctx = await requireUser();
@@ -25,6 +30,10 @@ export async function POST(request: Request) {
     constructId?: string;
     programmeId?: string;
     action?: string;
+    /** First answers to the session's knowledge check (option indexes) */
+    answers?: unknown;
+    /** The learner is completing after a retry with explanations */
+    retry?: boolean;
   };
   const action = body.action == null || body.action === "" ? "complete" : String(body.action);
   if (action !== "open" && action !== "complete") {
@@ -77,6 +86,24 @@ export async function POST(request: Request) {
   if (readError) return NextResponse.json({ error: readError.message }, { status: 500 });
 
   const row = existing as { counts_for_gate?: boolean } | null;
+
+  // Already completed sessions are never re-checked.
+  if (!row) {
+    const questions = found.lesson.arc?.check ?? found.lesson.faceCheck ?? [];
+    const gate = await enforceMastery(ctx.admin, {
+      userId: ctx.user.id,
+      lessonId,
+      programmeId: programme.id,
+      questions,
+      answers: body.answers,
+      retry: body.retry === true,
+    });
+    if (!gate.ok) {
+      const { correct, total, needed } = gate.verdict;
+      return NextResponse.json({ error: "mastery_retry", mastery: { correct, total, needed } }, { status: 422 });
+    }
+  }
+
   if (row) {
     if (countsForGate && row.counts_for_gate !== true) {
       const { error } = await ctx.admin

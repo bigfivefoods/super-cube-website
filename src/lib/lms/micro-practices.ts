@@ -1,3 +1,4 @@
+import { localDayKey } from "@/lib/lms/day";
 import { constructs, type ConstructId } from "@/lib/content";
 
 export interface MicroPractice {
@@ -141,6 +142,7 @@ export function pickDailyMicroPractice(
     weakestIds.length > 0
       ? weakestIds.flatMap((id) => getMicroPracticesFor(id))
       : getAllMicroPractices();
-  const day = Math.floor(Date.now() / 86_400_000);
+  // Rotate on the learner's local day, the same day the practice log and streak use.
+  const day = Math.floor(Date.parse(`${localDayKey()}T00:00:00Z`) / 86_400_000);
   return pool[day % pool.length]!;
 }
