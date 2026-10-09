@@ -40,7 +40,9 @@ export function GoalRing({
           {Math.min(done, 99)}
           <span className="text-[0.75rem] font-medium text-slate">/{target}</span>
         </span>
-        <span className="mt-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-slate">this week</span>
+        {size >= 88 && (
+          <span className="mt-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-slate">this week</span>
+        )}
       </span>
     </div>
   );
