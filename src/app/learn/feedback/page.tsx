@@ -85,7 +85,7 @@ export default function AssessmentFeedbackPage() {
             <Link href="/learn/practice" className="learn-btn learn-btn-ghost">
               Today’s micro-practice
             </Link>
-            <Link href="/learn/report" className="learn-btn learn-btn-ghost">
+            <Link href="/learn/progress#full-report" className="learn-btn learn-btn-ghost">
               Full report
             </Link>
           </div>

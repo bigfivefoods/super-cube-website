@@ -9,7 +9,7 @@
  * A learner's after-test always uses the same version as their baseline.
  */
 import { constructs, type ConstructId } from "@/lib/content";
-import { buildAssessmentItems, LIKERT_LABELS, type AssessmentItem } from "@/lib/lms/curriculum";
+import { buildAssessmentItems, LIKERT_LABELS, type AssessmentItem } from "@/lib/lms/assessment-items";
 import type { ProgrammeId } from "@/lib/programmes";
 import { HONESTY_ITEM, V2_BANK, V2_SCALE } from "@/lib/lms/instruments/v2-bank";
 

@@ -1,6 +1,6 @@
 import type { ConstructId } from "@/lib/content";
 import { constructs } from "@/lib/content";
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { deriveFacePattern } from "@/lib/lms/face-tracking";
 import type { LocalLmsState } from "@/lib/lms/store";
 import type { ProgrammeId } from "@/lib/programmes";

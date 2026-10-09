@@ -1412,3 +1412,74 @@ html[lang="ar"] :is(h1, h2, h3) {
 html[dir="rtl"] .rtl-mirror {
   transform: scaleX(-1);
 }
+
+/* ── Progress: the Super-Cube® lights up face by face ── */
+.cube-face__pips {
+  display: flex;
+  gap: 3px;
+  margin-top: 0.35rem;
+}
+.cube-face__pips i {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.35);
+}
+.cube-face__pips i.on {
+  background: #fff;
+}
+.cube-face--colored {
+  transition: box-shadow 600ms ease;
+}
+@keyframes sc-face-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  40% { box-shadow: 0 0 36px 6px rgba(255, 255, 255, 0.75); }
+}
+.cube-face--celebrate {
+  animation: sc-face-pulse 1.4s ease-out 2;
+}
+@keyframes sc-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.sc-rise {
+  animation: sc-rise 360ms ease-out both;
+}
+@keyframes sc-pop {
+  0% { transform: scale(0.6); opacity: 0; }
+  60% { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+.sc-pop {
+  animation: sc-pop 520ms cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@keyframes sc-confetti {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)); opacity: 0; }
+}
+.sc-confetti i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 2px;
+  animation: sc-confetti 1100ms ease-out forwards;
+}
+.sc-ring-arc {
+  transition: stroke-dashoffset 700ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cube-face--colored,
+  .sc-ring-arc {
+    transition: none;
+  }
+  .cube-face--celebrate,
+  .sc-rise,
+  .sc-pop {
+    animation: none;
+  }
+  .sc-confetti {
+    display: none;
+  }
+}

@@ -10,7 +10,7 @@ import { track } from "@/lib/analytics";
 import { constructs } from "@/lib/content";
 import { formatDateZA } from "@/lib/datetime";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
-import { buildReview, reviewSchedule, REVIEW_DAYS, type ReviewDay } from "@/lib/lms/review";
+import { buildReview, isReviewDone, reviewSchedule, REVIEW_DAYS, type ReviewDay } from "@/lib/lms/review";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import type { ProgrammeId } from "@/lib/programmes";
 
@@ -48,7 +48,7 @@ export default function ReviewPage() {
       title="Spaced review"
       subtitle={
         kids
-          ? "Little memory games on Day 3, 7 and 14 help you remember what you learned."
+          ? "Little memory games on Day 3, 7 and 21 help you remember what you learned."
           : "Three short reviews across your 21 days. Spacing practice out and mixing the faces is one of the most reliable ways to make learning last."
       }
     >
@@ -57,7 +57,7 @@ export default function ReviewPage() {
         <>
           <ol className="grid gap-3 sm:grid-cols-3" data-testid="review-schedule">
             {schedule.map(({ day, due }) => {
-              const completed = done[String(day)];
+              const completed = isReviewDone(done, day) ? done[String(day)] ?? done["14"] : undefined;
               const isDue = due ? due.getTime() <= now : false;
               return (
                 <li key={day} className="rounded-2xl border border-line bg-elevated p-4">

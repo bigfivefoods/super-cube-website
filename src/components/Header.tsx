@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { BrandWordmark } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { useLocale } from "@/components/LocaleProvider";
@@ -34,6 +34,36 @@ const desktopNav = audienceNav.filter((item) => !modelMenuFoldedHrefs.includes(i
 /** Mobile "More" list: the model pages now sit in The Model section. */
 const mobileMoreNav = menuMoreNav.filter((item) => item.href !== "/the-model" && item.href !== "/constructs");
 
+/** Has this device started the Learn journey? (Kept tiny: the header is on every page.) */
+function readStarted(): boolean {
+  try {
+    const raw = localStorage.getItem("supercube_lms_v1");
+    if (!raw) return false;
+    const s = JSON.parse(raw) as {
+      profile?: unknown;
+      attempts?: unknown[];
+      orientation?: unknown;
+      lessonProgress?: Record<string, unknown>;
+    };
+    return Boolean(s.profile || s.orientation || (s.attempts && s.attempts.length) || (s.lessonProgress && Object.keys(s.lessonProgress).length));
+  } catch {
+    return false;
+  }
+}
+
+function subscribeStarted(cb: () => void) {
+  window.addEventListener("sc-lms-update", cb);
+  window.addEventListener("storage", cb);
+  return () => {
+    window.removeEventListener("sc-lms-update", cb);
+    window.removeEventListener("storage", cb);
+  };
+}
+
+function useLearnStarted(): boolean {
+  return useSyncExternalStore(subscribeStarted, readStarted, () => false);
+}
+
 function Chevron() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className="opacity-40">
@@ -60,6 +90,11 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Inside the Learn app the site's marketing links step back: Learn has its own navigation.
+  const inLearn = pathname === "/learn" || pathname.startsWith("/learn/");
+  const started = useLearnStarted();
+  const showStartCta = !(inLearn && started);
 
   const isLightHero = matchesPath(pathname, lightHeroPaths);
   const isDarkHero = isDarkHeroPath(pathname);
@@ -146,7 +181,7 @@ export function Header() {
           className={`min-w-0 max-w-[min(100%,10rem)] shrink sm:max-w-none ${onDark ? "brightness-0 invert" : ""}`}
         />
 
-        <nav className="hidden items-center self-stretch lg:flex" aria-label={t("nav.main")}>
+        <nav className={`hidden items-center self-stretch ${inLearn ? "" : "lg:flex"}`} aria-label={t("nav.main")}>
           <ModelMegaMenu
             open={modelOpen}
             onOpenChange={setModelOpen}
@@ -180,21 +215,33 @@ export function Header() {
           <Link
             href="/login"
             hrefLang={enLang("/login")}
-            className={`hidden min-h-9 items-center whitespace-nowrap text-[0.8125rem] font-medium tracking-tight xl:inline-flex ${
+            className={`hidden min-h-9 items-center whitespace-nowrap text-[0.8125rem] font-medium tracking-tight ${inLearn ? "lg:inline-flex" : "xl:inline-flex"} ${
               onDark ? "text-white/70 hover:text-white" : "text-slate hover:text-ink"
             }`}
           >
             {t("nav.signIn")}
           </Link>
-          <Link
-            href="/learn/start"
-            hrefLang={enLang("/learn/start")}
-            className={`inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight transition ${
-              onDark ? "bg-white text-black hover:bg-white/90" : "sc-btn-primary"
-            }`}
-          >
-            {t("nav.startFreeBaseline")}
-          </Link>
+          {inLearn && (
+            <Link
+              href={L("/")}
+              className={`inline-flex min-h-9 items-center whitespace-nowrap text-[0.8125rem] font-medium tracking-tight ${
+                onDark ? "text-white/70 hover:text-white" : "text-slate hover:text-ink"
+              }`}
+            >
+              {t("nav.homeLabel")}
+            </Link>
+          )}
+          {showStartCta && (
+            <Link
+              href="/learn/start"
+              hrefLang={enLang("/learn/start")}
+              className={`inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight transition ${
+                onDark ? "bg-white text-black hover:bg-white/90" : "sc-btn-primary"
+              }`}
+            >
+              {t("nav.startFreeBaseline")}
+            </Link>
+          )}
         </div>
 
         <div className="flex items-center gap-0.5 lg:hidden">
@@ -290,15 +337,17 @@ export function Header() {
             <ThemeToggle />
           </div>
 
-          <div className="mt-auto pt-8">
-            <Link
-              href="/learn/start"
-              hrefLang={enLang("/learn/start")}
-              className="sc-btn-primary flex min-h-12 items-center justify-center rounded-full px-5 text-base font-semibold tracking-tight"
-            >
-              {t("nav.startFreeBaseline")}
-            </Link>
-          </div>
+          {showStartCta && (
+            <div className="mt-auto pt-8">
+              <Link
+                href="/learn/start"
+                hrefLang={enLang("/learn/start")}
+                className="sc-btn-primary flex min-h-12 items-center justify-center rounded-full px-5 text-base font-semibold tracking-tight"
+              >
+                {t("nav.startFreeBaseline")}
+              </Link>
+            </div>
+          )}
         </nav>
       </div>
     </header>

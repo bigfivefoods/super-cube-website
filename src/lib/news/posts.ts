@@ -4,7 +4,7 @@ import { BOOK as FREE_BOOK } from "@/lib/book";
 /*
  * Seeded posts. Every fact here is already on super-cube.me (pricing, programmes, the six faces,
  * the 21-day re-measure, verify IDs) or in the 12-week Super-Cube® leadership intervention results
- * with Imana Foods and Kerry Foods (+39.5% Emotional).
+ * with Imana Foods and Kerry Foods (+39.5 percentage points Emotional).
  * The LMS post matches the bigfivegroup.africa update of 7 October 2026.
  */
 
@@ -13,7 +13,7 @@ import { BOOK as FREE_BOOK } from "@/lib/book";
  * launch post. Facts only from the live PDF (public/super-cube-leadership-book.pdf, 71 pages): the 13 chapters, the
  * foreword by Dr Housainou Taal, 36 practices, six self-assessment pages, the 30-day plan, the new Global Goals
  * chapter, the DBA thesis (UKZN, 2020; degree 2021: 18-item survey of 132 people, then interviews), the 12-week
- * Imana Foods and Kerry Foods intervention (+32.2% overall, Principles +45.1%, Emotional +39.5%, Spiritual +24.6%)
+ * Imana Foods and Kerry Foods intervention (+32.2 percentage points overall, Principles +45.1, Emotional +39.5, Spiritual +24.6)
  * and the Grade 12 field snapshot (school and learners not named). The comprehensive edition is only a teaser:
  * no Amazon link, price or buy button until its own launch post. Matches the bigfivegroup.africa update.
  */
@@ -64,7 +64,7 @@ For much of my working life I have asked one question: can leadership be develop
 
 ## Six faces, with you at the centre
 
-Super-Cube® looks at the whole person, not one skill. It has six developable faces: **Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**, with the individual at the centre. Each face can be practised and strengthened. In the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods, the Emotional face improved by **+39.5%** from the first assessment to the second. That is a result for those cohorts, not a promise for every learner, and it is why we built a platform that measures before it teaches.
+Super-Cube® looks at the whole person, not one skill. It has six developable faces: **Choices**, **Principles**, **Mental**, **Emotional**, **Physical** and **Spiritual**, with the individual at the centre. Each face can be practised and strengthened. In the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods, the Emotional face improved by **+39.5 percentage points** from the first assessment to the second. That is a result for those cohorts, not a promise for every learner, and it is why we built a platform that measures before it teaches.
 
 ## The learning journey
 
@@ -142,25 +142,25 @@ Over 12 weeks, learners worked through six Super-Cube® modules, one for each fa
 
 ## The results
 
-Every face improved. Overall leadership development, the average across all six faces, rose by **+32.2%**.
+Every face improved. Overall leadership development, the average across all six faces, rose by **+32.2 percentage points**.
 
 ![Bar chart of average pre- to post-course gains by Super-Cube® face: Choices +26.6, Principles +45.1, Mental +29.7, Emotional +39.5, Physical +27.7, Spiritual +24.6, overall +32.2 percentage points.](/news/fmcg-leadership-results-chart.png)
 
-- **Choices:** 52.9% → 79.6% (+26.6%)
-- **Principles:** 38.4% → 83.5% (+45.1%)
-- **Mental:** 49.9% → 79.6% (+29.7%)
-- **Emotional:** 48.5% → 88.0% (+39.5%)
-- **Physical:** 56.0% → 83.8% (+27.7%)
-- **Spiritual:** 61.9% → 86.6% (+24.6%)
-- **Overall, all six faces:** +32.2%
+- **Choices:** 52.9% → 79.6% (+26.6 points)
+- **Principles:** 38.4% → 83.5% (+45.1 points)
+- **Mental:** 49.9% → 79.6% (+29.7 points)
+- **Emotional:** 48.5% → 88.0% (+39.5 points)
+- **Physical:** 56.0% → 83.8% (+27.7 points)
+- **Spiritual:** 61.9% → 86.6% (+24.6 points)
+- **Overall, all six faces:** +32.2 percentage points
 
 *Gains are the change in average assessment score, in percentage points.*
 
-**Principles showed the largest gain (+45.1%).** It also had the lowest starting point. Corporate governance scores climbed from 23.5% to 79.8% (+56.3%) and ethical decisions from 38.7% to 85.7% (+47.1%).
+**Principles showed the largest gain (+45.1 percentage points).** It also had the lowest starting point. Corporate governance scores climbed from 23.5% to 79.8% (+56.3 points) and ethical decisions from 38.7% to 85.7% (+47.1 points).
 
-**Emotional intelligence followed at +39.5%,** with the highest finishing score of any face (88.0%). Conflict resolution rose from 37.0% to 83.2% (+46.2%), and understanding of emotional intelligence components doubled, from 45.4% to 90.8%.
+**Emotional intelligence followed at +39.5 percentage points,** with the highest finishing score of any face (88.0%). Conflict resolution rose from 37.0% to 83.2% (+46.2 points), and understanding of emotional intelligence components doubled, from 45.4% to 90.8%.
 
-**Choices rose +26.6%.** Ethical decisions moved from 46.2% to 84.9% and risk assessment from 38.7% to 73.1%. **Mental** gained +29.7%, led by study and learning techniques (+37.0%). **Physical** gained +27.7%, led by physical wellbeing (+37.8%). **Spiritual** gained +24.6% from the highest starting point of the six faces, with personal leadership up from 55.5% to 84.0%.
+**Choices rose +26.6 points.** Ethical decisions moved from 46.2% to 84.9% and risk assessment from 38.7% to 73.1%. **Mental** gained +29.7 points, led by study and learning techniques (+37.0 points). **Physical** gained +27.7 points, led by physical wellbeing (+37.8 points). **Spiritual** gained +24.6 points from the highest starting point of the six faces, with personal leadership up from 55.5% to 84.0%.
 
 ## What changed for people
 
@@ -272,7 +272,7 @@ export const codeNewsPosts: NewsPost[] = [
   {
     id: "code_fmcg_case_study_2026",
     slug: "twelve-weeks-six-faces-fmcg-leadership",
-    title: "Twelve weeks, six faces, +32.2%: how FMCG leaders at Imana Foods and Kerry Foods grew with Super-Cube®",
+    title: "Twelve weeks, six faces, +32.2 points: how FMCG leaders at Imana Foods and Kerry Foods grew with Super-Cube®",
     excerpt:
       "Leaders at Imana Foods and Kerry Foods completed a 12-week, accredited Super-Cube® leadership development intervention. Across the six faces, average assessment scores rose by 32.2 percentage points from the start of the course to the end.",
     body: FMCG_CASE_STUDY_BODY,
@@ -281,7 +281,7 @@ export const codeNewsPosts: NewsPost[] = [
     coverImage: "/news/fmcg-leadership-case-study-cover.jpg",
     coverWide: "/news/fmcg-leadership-case-study-cover-wide.jpg",
     coverAlt:
-      "Super-Cube® results card: overall leadership development +32.2% across all six faces, pre- to post-course, with gains by face: Choices +26.6%, Principles +45.1%, Mental +29.7%, Emotional +39.5%, Physical +27.7%, Spiritual +24.6%.",
+      "Super-Cube® results card: average scores rose by 32.2 percentage points across all six faces, pre- to post-course, with gains by face in percentage points: Choices +26.6, Principles +45.1, Mental +29.7, Emotional +39.5, Physical +27.7, Spiritual +24.6.",
     shareImage: "/images/og/news/fmcg-leadership-case-study.jpg",
     publishedAt: "2026-10-07T12:10:00.000Z",
     updatedAt: "2026-10-07T12:10:00.000Z",

@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import { BLOCK_META, type SessionSection } from "@/lib/lms/curriculum";
+import { BLOCK_META } from "@/lib/lms/assessment-items";
+import type { SessionSection } from "@/lib/lms/course-content";
 
 export function renderInline(text: string): ReactNode {
   const parts = text.split(/(\*\*[^*]+\*\*|\*[^*\s][^*]*\*)/g);

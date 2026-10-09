@@ -186,10 +186,15 @@ export async function recordLessonOpen(programmeId: ProgrammeId, constructId: st
   });
 }
 
-export async function recordCompletion(programmeId: ProgrammeId, constructId: string, lessonId: string) {
+export async function recordCompletion(
+  programmeId: ProgrammeId,
+  constructId: string,
+  lessonId: string,
+  check?: { answers: (number | null)[]; retry: boolean },
+) {
   const r = await call<{ ok: true; countsForGate?: boolean; engagement?: ServerActivity | null }>("/api/lms/progress", {
     method: "POST",
-    body: JSON.stringify({ action: "complete", programmeId, constructId, lessonId }),
+    body: JSON.stringify({ action: "complete", programmeId, constructId, lessonId, answers: check?.answers, retry: check?.retry }),
   });
   if (r.kind === "ok") mirrorServerStreak(r.data.engagement?.streak);
   return r;

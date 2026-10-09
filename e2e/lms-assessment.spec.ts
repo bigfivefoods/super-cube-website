@@ -61,7 +61,7 @@ test.describe("assessment integrity", () => {
 
     // Signed out: take the baseline on this device, answering "4" to everything
     await page.goto("/learn/assessment/pre");
-    await expect(page.getByText(/Progress · 0\/\d+ statements/)).toBeVisible();
+    await expect(page.getByText(/Progress · 0\/\d+ answered/)).toBeVisible();
     await answerEverything(page, 4);
     await page.getByRole("button", { name: "Submit & see your narrative" }).click();
 

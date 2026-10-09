@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { constructs, type ConstructId } from "@/lib/content";
-import { getCoursesForProgramme, type Course } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme, type CourseMeta as Course } from "@/lib/lms/curriculum-meta";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
 

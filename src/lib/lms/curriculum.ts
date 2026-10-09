@@ -1,7 +1,6 @@
 import { faceChecklist, faceSummary } from "@/lib/lms/face-copy";
 import { constructs, type ConstructId } from "@/lib/content";
 import {
-  assessmentPrompt,
   courseId,
   programmes,
   skillsForProgramme,
@@ -19,6 +18,8 @@ import {
   type ResolvedArc,
   type RetrievalQ,
 } from "@/lib/lms/sessions";
+
+import { arcMinutes, faceCheckMinutes, labMinutes } from "@/lib/lms/duration";
 
 export type { SessionSection } from "@/lib/lms/course-content";
 
@@ -63,39 +64,6 @@ export interface Course {
   coverPath: string;
   sortOrder: number;
   lessons: Lesson[];
-}
-
-export interface AssessmentOption {
-  /** Stored response value (1-based option number) */
-  value: number;
-  text: string;
-  /** Provisional expert effectiveness key, 1 (least) to 4 (most effective) */
-  key: number;
-  /** Key on the 0–100 scale used for face scores */
-  score: number;
-  /** Feedback shown after the attempt (never during it) */
-  why?: string;
-}
-
-export interface AssessmentItem {
-  id: string;
-  instrumentId: string;
-  constructId: ConstructId;
-  /** Likert statement, or the SJT scenario */
-  prompt: string;
-  /** v1 items are all likert_5; v2 adds situational judgement items */
-  itemType: "likert_5" | "sjt";
-  sortOrder: number;
-  /** Reverse-keyed Likert item: scored as 6 − answer */
-  reverse?: boolean;
-  /** Skill (element) the item samples */
-  skill?: string;
-  /** Likert labels 1..5 when they differ from the v1 agreement scale */
-  scaleLabels?: readonly string[];
-  /** SJT options */
-  options?: AssessmentOption[];
-  /** Third-person wording for the observer (360) form; {name} is replaced */
-  observerPrompt?: string;
 }
 
 function sectionsToMd(sections: SessionSection[]): string {
@@ -264,7 +232,7 @@ export function buildCurriculum(): Course[] {
         bodyMd: sectionsToMd(overview.sections),
         lessonType: "content",
         sortOrder: order++,
-        durationMinutes: programme.id === "kids" ? 10 : 15,
+        durationMinutes: arcMinutes(overview.arc, programme.id),
         outcome: overview.outcome,
         arc: overview.arc,
       });
@@ -279,7 +247,7 @@ export function buildCurriculum(): Course[] {
           bodyMd: sectionsToMd(built.sections),
           lessonType: "content",
           sortOrder: order++,
-          durationMinutes: programme.id === "kids" ? 8 : 12,
+          durationMinutes: arcMinutes(built.arc, programme.id),
           outcome: built.outcome,
           arc: built.arc,
         });
@@ -298,7 +266,10 @@ export function buildCurriculum(): Course[] {
         bodyMd: sectionsToMd(practice.sections),
         lessonType: "practice",
         sortOrder: order++,
-        durationMinutes: 20,
+        durationMinutes: labMinutes(
+          [practice.lab.challenge, ...practice.lab.checklist, ...practice.lab.woop.map((w) => `${w.label} ${w.prompt}`)],
+          programme.id
+        ),
         outcome: practice.outcome,
         lab: practice.lab,
       });
@@ -312,7 +283,7 @@ export function buildCurriculum(): Course[] {
         bodyMd: sectionsToMd(quiz.sections),
         lessonType: "quiz",
         sortOrder: order++,
-        durationMinutes: 8,
+        durationMinutes: faceCheckMinutes(quiz.faceCheck, programme.id),
         outcome: quiz.outcome,
         faceCheck: quiz.faceCheck,
       });
@@ -355,43 +326,10 @@ export function getLesson(
   return { course, lesson };
 }
 
-export function buildAssessmentItems(
-  programmeId: ProgrammeId
-): AssessmentItem[] {
-  const instrumentId = `super_cube_${programmeId}_v1`;
-  const items: AssessmentItem[] = [];
-  let order = 0;
-
-  for (const construct of constructs) {
-    const skills = skillsForProgramme(programmeId, construct.id);
-    skills.forEach((skill, i) => {
-      items.push({
-        id: `${instrumentId}-${construct.id}-${i + 1}`,
-        instrumentId,
-        constructId: construct.id,
-        prompt: assessmentPrompt(programmeId, construct.id, skill, i),
-        itemType: "likert_5",
-        sortOrder: order++,
-      });
-    });
-  }
-
-  return items;
-}
-
-export const LIKERT_LABELS = [
-  "Strongly disagree",
-  "Disagree",
-  "Neutral",
-  "Agree",
-  "Strongly agree",
-] as const;
-
-export const BLOCK_META: Record<
-  SessionSection["block"],
-  { label: string; hint: string }
-> = {
-  read: { label: "Read", hint: "Understand the idea" },
-  engage: { label: "Engage", hint: "Think it through" },
-  apply: { label: "Apply", hint: "Do something real" },
-};
+export {
+  BLOCK_META,
+  LIKERT_LABELS,
+  buildAssessmentItems,
+  type AssessmentItem,
+  type AssessmentOption,
+} from "@/lib/lms/assessment-items";

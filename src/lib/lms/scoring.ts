@@ -1,6 +1,6 @@
 import type { ConstructId } from "@/lib/content";
 import { constructs } from "@/lib/content";
-import type { AssessmentItem } from "@/lib/lms/curriculum";
+import type { AssessmentItem } from "@/lib/lms/assessment-items";
 import { SJT_WEIGHT } from "@/lib/lms/instruments/v2-bank";
 
 export type ResponseMap = Record<string, number>; // itemId -> 1..5

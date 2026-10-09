@@ -79,7 +79,7 @@ export function ImpactResults({
               light ? "text-gold-bright" : "text-ink"
             }`}
           >
-            +{overallInterventionGain}%
+            +{overallInterventionGain} pts
           </p>
         </div>
 
@@ -129,7 +129,7 @@ export function ImpactResults({
                     light ? "text-cream" : "text-ink"
                   }`}
                 >
-                  +{g.gainPct}%
+                  +{g.gainPct} pts
                 </p>
               </div>
             );
@@ -142,12 +142,12 @@ export function ImpactResults({
           }`}
           data-testid="impact-results-source"
         >
-          +{overallInterventionGain}% overall growth across all six faces
-          (percentage points), from the 12-week accredited Super-Cube®
+          +{overallInterventionGain} percentage points of overall growth across all
+          six faces, from the 12-week accredited Super-Cube®
           leadership intervention with leaders at Imana Foods and Kerry Foods
           (South African and international FMCG): average pre- and
           post-course scores. Source: Leadership Is Learnable (2026), Chapter 18.
-          Highest gains: Principles (+45.1%) and Emotional (+39.5%). Not live
+          Highest gains: Principles (+45.1 points) and Emotional (+39.5 points). Not live
           programme data.
         </p>
         <p className="mt-3 text-sm">

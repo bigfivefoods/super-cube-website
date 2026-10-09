@@ -134,6 +134,13 @@ export function EngagementPanel() {
           );
         })}
       </ul>
+      <p className="learn-meta mt-2">
+        Mastery and weekly-goal badges, your level and your lit Super-Cube® are on{" "}
+        <Link href="/learn/progress" className="font-semibold text-ink underline underline-offset-2">
+          Progress
+        </Link>
+        .
+      </p>
 
       <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">Reminders</h3>
       {PUSH_ENABLED && view?.push.configured ? (

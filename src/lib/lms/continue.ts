@@ -1,4 +1,4 @@
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import type { LocalLmsState } from "@/lib/lms/store";
 import type { ConstructId } from "@/lib/content";
 import type { ProgrammeId } from "@/lib/programmes";

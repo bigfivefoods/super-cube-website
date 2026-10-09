@@ -102,7 +102,7 @@ const CASE_STUDIES = [
   {
     path: "/news/twelve-weeks-six-faces-fmcg-leadership",
     og: /\/images\/og\/news\/fmcg-leadership-case-study\.jpg$/,
-    figures: ["+32.2%", "+45.1%", "+39.5%"],
+    figures: ["+32.2 pts", "+45.1 pts", "+39.5 pts", "percentage points"],
     chart: "/news/fmcg-leadership-results-chart.png",
     landing: { path: "/organisations", testId: "case-study-fmcg" },
   },
@@ -160,13 +160,14 @@ test("News index and post heroes use the calm background on phones", async ({ pa
   await expect(page.locator(".page-hero img").first()).toHaveAttribute("src", /news%2Fhero%2Fnews-hero-wide/);
 });
 
-/* +32.2% is overall growth across all six faces from the 12-week interventions (company profile). */
-test("home results card credits +32.2% to the 12-week interventions and links the case study", async ({ page }) => {
+/* +32.2 percentage points is overall growth across all six faces from the 12-week interventions (company profile). */
+test("home results card credits +32.2 points to the 12-week interventions and links the case study", async ({ page }) => {
   await page.goto("/");
   const overall = page.getByTestId("home-results-overall");
-  await expect(overall).toContainText("+32.2%");
+  await expect(overall).toContainText("+32.2 pts");
+  await expect(overall.getByText("+32.2 pts")).toHaveAttribute("aria-label", "plus 32.2 percentage points");
   await expect(overall).toContainText("Overall growth across all six faces");
-  await expect(page.getByTestId("home-results-emotional")).toContainText("+39.5%");
+  await expect(page.getByTestId("home-results-emotional")).toContainText("+39.5 pts");
   const card = overall.locator("xpath=ancestor::div[contains(@class,'sc-card')][1]");
   await expect(card).toContainText("12-week Super-Cube® leadership intervention");
   await expect(card).toContainText("Source: Leadership Is Learnable (2026), Chapter 18");
@@ -178,10 +179,11 @@ test("home results card credits +32.2% to the 12-week interventions and links th
 });
 
 for (const path of ["/impact", "/research"]) {
-  test(`${path} credits +32.2% to the 12-week interventions`, async ({ page }) => {
+  test(`${path} credits +32.2 points to the 12-week interventions`, async ({ page }) => {
     await page.goto(path);
     const source = page.getByTestId("impact-results-source");
-    await expect(source).toContainText("+32.2% overall growth across all six faces");
+    await expect(source).toContainText("+32.2 percentage points of overall growth across all six faces");
+    await expect(source).not.toContainText("%)");
     await expect(source).toContainText("Leadership Is Learnable (2026), Chapter 18");
     await expect(page.getByText("Research results · UKZN doctoral study")).toHaveCount(0);
     await expect(page.getByRole("link", { name: /Read the FMCG case study/ }).first()).toHaveAttribute(
