@@ -113,3 +113,15 @@ test("sync keeps mastery, reviews and practices from both devices", () => {
   expect(m.weeklyGoal?.target).toBe(7);
   expect(m.celebratedLevel).toBe(2);
 });
+
+test("malformed synced review data never turns points into NaN", () => {
+  const p = facePoints({
+    lessonProgress: { "adults-choices-overview": "completed" },
+    mastery: {},
+    microPracticeLog: {},
+    // e.g. an older client that stored only a timestamp
+    sessionReviews: { "adults-choices-overview": { "3": "2026-10-01T08:00:00.000Z" } } as never,
+  });
+  expect(Number.isFinite(p.choices)).toBe(true);
+  expect(p.choices).toBe(10);
+});

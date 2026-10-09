@@ -37,7 +37,7 @@ export function CelebrationToast() {
       return;
     }
     const events: Toast[] = [];
-    if (v.level.level.n > state.celebratedLevel) {
+    if (v.level.level.n > Math.max(1, state.celebratedLevel)) {
       events.push({ title: `Level up: ${v.level.level.name}`, detail: v.level.level.line, color: "#0a0a0a" });
     }
     for (const c of constructs) {

@@ -69,7 +69,11 @@ export function facePoints(state: Pick<LocalLmsState, "lessonProgress" | "master
   for (const [lessonId, byDay] of Object.entries(state.sessionReviews ?? {})) {
     const f = faceOfLesson(lessonId);
     if (!f || !byDay) continue;
-    for (const r of Object.values(byDay)) if (r) pts[f.constructId] += POINTS.reviewCorrect * Math.max(0, r.correct);
+    for (const r of Object.values(byDay)) {
+      // Synced or hand-edited data can be malformed: never let it turn points into NaN.
+      const correct = typeof r === "object" && r && Number.isFinite(r.correct) ? Math.max(0, r.correct) : 0;
+      pts[f.constructId] += POINTS.reviewCorrect * correct;
+    }
   }
   return pts;
 }
