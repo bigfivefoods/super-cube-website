@@ -4,8 +4,11 @@
  * The browser posts a short batch to `/api/insights/collect`. This module turns
  * that batch into the body the Big Five Group store accepts:
  * `{ v: 1, site: "super-cube.me", e: [events] }`. Each event has `k`, `p` and
- * `id`. Kinds are pageview, engage, pdf, outbound and click. The server adds
- * device family and, when configured, a coarse network location. Email, the
+ * `id`. Kinds are pageview, engage, pdf, outbound, click and vital (a Core Web
+ * Vitals reading). `id` and `vid` carry the 180-day visitor cookie id so the
+ * store counts visitors, not events; `eid` is the per-event id. The server adds
+ * device family, a coarse location from Vercel's edge headers and, when
+ * configured, an organisation label from IPinfo. Email, the
  * raw IP, GPS and form contents are never fields on the payload.
  *
  * Do Not Track and Global Privacy Control drop the visit before a cookie is set.
@@ -25,7 +28,10 @@ export const VISITOR_MAX_AGE = 60 * 60 * 24 * 180;
 export const SCREEN_BANDS = ["phone", "tablet", "laptop", "desktop"] as const;
 export type ScreenBand = (typeof SCREEN_BANDS)[number];
 
-export type InsightKind = "pageview" | "engage" | "pdf" | "outbound" | "click";
+export type InsightKind = "pageview" | "engage" | "pdf" | "outbound" | "click" | "vital";
+
+export const VITAL_METRICS = ["lcp", "inp", "cls"] as const;
+export type VitalMetric = (typeof VITAL_METRICS)[number];
 
 /** Live collector UTM keys, plus content (`n`) and term (`t`). */
 export type Utm = { s?: string; m?: string; c?: string; n?: string; t?: string };
@@ -53,8 +59,14 @@ export type ClientEvent = {
 
 export type StoredEvent = {
   id: string;
+  /** Visitor cookie id (set by the server). */
+  vid?: string;
+  /** Per-event id. */
+  eid?: string;
   k: InsightKind;
   p: string;
+  /** Vital reading (ms for LCP/INP, unitless for CLS). */
+  v?: number;
   a?: boolean;
   r?: string;
   u?: Utm;
@@ -98,7 +110,7 @@ export type NetworkFields = Pick<
   "country" | "region" | "city" | "timezone" | "organisation" | "industry" | "size" | "network"
 >;
 
-const KINDS = new Set<InsightKind>(["pageview", "engage", "pdf", "outbound", "click"]);
+const KINDS = new Set<InsightKind>(["pageview", "engage", "pdf", "outbound", "click", "vital"]);
 /** 32 hex characters, or a UUID. The store rejects any other event id. */
 const EVENT_ID = /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i;
 const SCROLLS = new Set([0, 25, 50, 75, 100]);
@@ -259,6 +271,15 @@ export function sanitizeClientEvent(raw: ClientEvent): StoredEvent | null {
   const path = typeof raw.p === "string" ? recordablePath(raw.p) : null;
   if (!path) return null;
   const event: StoredEvent = { id: eventId(raw.id), k: kind, p: path };
+  if (kind === "vital") {
+    const metric = typeof raw.l === "string" ? raw.l.toLowerCase() : "";
+    if (!(VITAL_METRICS as readonly string[]).includes(metric)) return null;
+    const value = typeof raw.v === "number" ? raw.v : NaN;
+    if (!Number.isFinite(value) || value < 0 || value > (metric === "cls" ? 10 : 120_000)) return null;
+    event.l = metric;
+    event.v = Math.round(value * 1000) / 1000;
+    return event;
+  }
   if (raw.a === true) event.a = true;
   const r = referrerOf(raw.r);
   if (r) event.r = r;
@@ -468,6 +489,42 @@ export function isPublicIp(ip: string): boolean {
   return true;
 }
 
+const BOT_RE =
+  /bot\b|bot\/|crawl|spider|slurp|mediapartners|facebookexternalhit|embedly|quora link|preview|lighthouse|pagespeed|headlesschrome|phantomjs|puppeteer|playwright|selenium|wget|curl\/|python-requests|httpclient|axios|node-fetch|go-http|java\/|okhttp|vercel-screenshot|vercel-favicon|uptime|pingdom|monitor|statuscake|ahrefs|semrush|mj12|dotbot|petalbot|yandex|baiduspider|bytespider|gptbot|claudebot|perplexity|ccbot|applebot|bingpreview|whatsapp|telegrambot|discordbot|slackbot|linkedinbot|twitterbot|skypeuripreview/i;
+
+/** Same rule as the Big Five Group collector: crawler, preview fetcher, monitor or script. A missing or very short User-Agent counts as automated. */
+export function isBotUa(ua: string | null | undefined): boolean {
+  const u = (ua ?? "").trim();
+  if (u.length < 20) return true;
+  return BOT_RE.test(u);
+}
+
+function headerText(headers: Headers, name: string, max: number): string | undefined {
+  const raw = headers.get(name);
+  if (!raw) return undefined;
+  let value = raw;
+  try {
+    value = decodeURIComponent(raw);
+  } catch {
+    /* keep raw */
+  }
+  return text(value, max);
+}
+
+/** Coarse place from Vercel's edge headers: country, region, city, timezone. The IP is never read here. */
+export function geoFromHeaders(headers: Headers): NetworkFields {
+  const country = headerText(headers, "x-vercel-ip-country", 8)?.toUpperCase();
+  if (!country || !/^[A-Z]{2}$/.test(country) || country === "XX") return {};
+  const out: NetworkFields = { country };
+  const region = headerText(headers, "x-vercel-ip-country-region", 80);
+  const city = headerText(headers, "x-vercel-ip-city", 80);
+  const timezone = headerText(headers, "x-vercel-ip-timezone", 64);
+  if (region) out.region = region;
+  if (city) out.city = city;
+  if (timezone && /^[A-Za-z_]+(?:\/[A-Za-z0-9_+-]+){0,2}$/.test(timezone)) out.timezone = timezone;
+  return out;
+}
+
 export type CollectPlan =
   | { record: false; clearCookie: boolean }
   | {
@@ -503,9 +560,22 @@ export function planCollect(input: {
   if (!events.length) return { record: false, clearCookie: false };
   const newSession = list.slice(0, 10).some((item) => (item as ClientEvent)?.ns === true);
   const visitor = nextVisitor(parseVisitor(input.cookie), newSession, input.now, input.mint);
+  const vid = visitor.state.id;
   const enriched = events.map((event) => {
+    // Page-speed readings carry no visitor id, place or organisation; device only.
+    if (event.k === "vital") {
+      const { id, ...vital } = event;
+      const out: StoredEvent = { ...vital, id, eid: id };
+      if (input.family?.device) out.device = input.family.device;
+      return out;
+    }
+    // `id` stays the visitor id so an older collector that reads only `id` still
+    // counts visitors correctly; `vid` is the explicit field, `eid` the event id.
     const next: StoredEvent = {
       ...event,
+      id: vid,
+      vid,
+      eid: event.id,
       ...input.family,
       ...input.network,
       returning: visitor.returning,

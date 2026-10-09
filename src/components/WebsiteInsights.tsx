@@ -11,6 +11,11 @@ import {
   skipAutomatedBrowser,
   type ClientEvent,
 } from "@/lib/website-insights";
+import { INSIGHTS_ACTION_EVENT } from "@/lib/insights-action";
+import { observeVitals } from "@/lib/vitals";
+
+/** The free book's file name (src/lib/book.ts BOOK.fileName). */
+const BOOK_PDF = "super-cube-leadership-book.pdf";
 
 const ENDPOINT = "/api/insights/collect";
 const SESSION = "sc_ins_session";
@@ -20,6 +25,13 @@ const PAGES = "sc_ins_pages";
 let memorySession = false;
 let lastViewKey = "";
 let lastViewAt = 0;
+let vitalsStarted = false;
+
+/** A whitelisted `data-insights` slug on the element or an ancestor, e.g. `cta-amazon`. */
+function dataLabel(el: Element): string | null {
+  const v = el.closest("[data-insights]")?.getAttribute("data-insights") ?? "";
+  return /^[a-z0-9-]{2,40}$/.test(v) ? v : null;
+}
 
 function send(events: ClientEvent[], beacon = false) {
   if (!events.length) return;
@@ -175,9 +187,18 @@ export function WebsiteInsights() {
         scrollBand(window.scrollY, document.documentElement.scrollHeight, window.innerHeight),
       );
     };
+    const sendOnce = (recorded: ClientEvent | null) => {
+      if (!recorded?.l) return;
+      const key = `${String(recorded.k)}:${String(recorded.l)}`;
+      if (seen.has(key)) return;
+      seen.add(key);
+      send([recorded]);
+    };
     const onClick = (event: MouseEvent) => {
       const el = (event.target as Element | null)?.closest?.("a[href], button, [role='button']");
       if (!el) return;
+      const named = dataLabel(el);
+      if (named) sendOnce(sanitizeClientEvent({ k: "click", p: pageUrl, l: named }));
       const recorded = clickEvent({
         pageUrl,
         href: el instanceof HTMLAnchorElement ? el.href : null,
@@ -185,18 +206,37 @@ export function WebsiteInsights() {
         button: el instanceof HTMLButtonElement || el.getAttribute("role") === "button",
         label: (el.getAttribute("aria-label") || el.textContent || "").replace(/\s+/g, " ").trim(),
       });
-      if (!recorded?.l) return;
-      const key = `${recorded.k}:${recorded.l}`;
-      if (seen.has(key)) return;
-      seen.add(key);
-      send([recorded]);
+      if (recorded?.k === "pdf" && recorded.l === BOOK_PDF) {
+        sendOnce(sanitizeClientEvent({ k: "click", p: pageUrl, l: "cta-book-pdf" }));
+      }
+      sendOnce(recorded);
     };
+    const onAction = (event: Event) => {
+      const name = (event as CustomEvent<unknown>).detail;
+      if (typeof name !== "string" || !/^[a-z0-9-]{2,40}$/.test(name)) return;
+      const recorded = sanitizeClientEvent({ k: "click", p: pageUrl, l: `cta-${name}` });
+      if (recorded) send([recorded]);
+    };
+    if (!vitalsStarted) {
+      // Page speed for the page this load started on: one reading per metric, sent when hidden.
+      vitalsStarted = true;
+      const vitalsPage = pageUrl;
+      const pending: ClientEvent[] = [];
+      observeVitals((name, value) => {
+        pending.push({ k: "vital", p: vitalsPage, l: name, v: value });
+        queueMicrotask(() => {
+          if (pending.length) send(pending.splice(0, pending.length), true);
+        });
+      });
+    }
 
     document.addEventListener("visibilitychange", onVisibility);
     window.addEventListener("pagehide", onPageHide);
     window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("click", onClick, { capture: true });
+    window.addEventListener(INSIGHTS_ACTION_EVENT, onAction);
     return () => {
+      window.removeEventListener(INSIGHTS_ACTION_EVENT, onAction);
       flush(false);
       document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("pagehide", onPageHide);

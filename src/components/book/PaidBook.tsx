@@ -50,6 +50,7 @@ export function AmazonButton({
       rel="noopener noreferrer"
       className={`${base} sc-btn sc-btn-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${className}`}
       data-testid="paid-book-amazon"
+      data-insights="cta-amazon"
       aria-label={`${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
     >
       {buyLabel}

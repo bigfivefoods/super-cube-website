@@ -7,6 +7,7 @@ import { PageHero } from "@/components/ui";
 import { createClient } from "@/lib/supabase/client";
 import { loadLmsState, saveLmsState } from "@/lib/lms/store";
 import { programmes, type ProgrammeId } from "@/lib/programmes";
+import { trackInsightsAction } from "@/lib/insights-action";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -46,6 +47,7 @@ export default function SignupPage() {
       setError(err.message);
       return;
     }
+    trackInsightsAction("signup");
     // Seed local + cloud with programme choice
     const state = loadLmsState();
     state.user = { email, fullName, programmeId };

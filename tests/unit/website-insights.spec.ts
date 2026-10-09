@@ -5,6 +5,8 @@ import {
   VISITOR_MAX_AGE,
   clickEvent,
   clientFamily,
+  geoFromHeaders,
+  isBotUa,
   isPublicIp,
   networkFromIpinfo,
   planCollect,
@@ -19,6 +21,7 @@ const EVENT_ID = /^(?:[0-9a-f]{32}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{
 const NOW = Date.UTC(2026, 9, 8);
 const IP = "203.0.113.9";
 const MINT = () => "11111111-1111-4111-8111-111111111111";
+const UA = "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit Mobile";
 
 const ipinfo = {
   ip: IP,
@@ -225,7 +228,7 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
       method: "POST",
       headers: {
         "content-type": "text/plain",
-        "user-agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit Mobile",
+        "user-agent": UA,
         "x-forwarded-for": IP,
         cookie: "other=1",
       },
@@ -285,7 +288,10 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
   expect(payload.host).toBeUndefined();
   expect(Object.keys(payload).sort()).toEqual(["e", "site", "v"]);
   expect(payload.e[0]).toMatchObject({
-    id: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+    // id and vid are the visitor cookie id; the browser's event id moves to eid.
+    id: "11111111-1111-4111-8111-111111111111",
+    vid: "11111111-1111-4111-8111-111111111111",
+    eid: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
     k: "pageview",
     p: "/pricing",
     screen: "phone",
@@ -299,7 +305,10 @@ test("the collect route forwards a visit and sets the 180-day cookie", async () 
     utm_term: "leaders",
   });
   expect(payload.e[1]).toMatchObject({ k: "click", p: "/pricing", l: "Book a pilot" });
-  expect(payload.e[1]?.id).toMatch(EVENT_ID);
+  expect(payload.e[1]?.id).toBe("11111111-1111-4111-8111-111111111111");
+  expect(payload.e[1]?.eid).toMatch(EVENT_ID);
+  expect(payload.e[1]?.eid).not.toBe(payload.e[1]?.id);
+  expect(calls[1]?.headers.get("x-insights-ua")).toContain("iPhone");
   expect(forwarded).not.toContain(IP);
   expect(forwarded).not.toContain("spoof@example.com");
   expect(forwarded).not.toContain("learner@example.com");
@@ -359,6 +368,106 @@ test("without the ingest key nothing is forwarded and no cookie is set", async (
       allow: async () => true,
     },
   );
+  expect(called).toBe(false);
+  expect(res.headers.get("set-cookie")).toBeNull();
+});
+
+test("every event in a batch carries the visitor id; page-speed readings carry none", () => {
+  const plan = planCollect({
+    headers: headers(),
+    cookie: "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa.3.20000.2",
+    body: JSON.stringify({
+      v: 1,
+      e: [
+        { k: "pageview", p: "/book" },
+        { k: "engage", p: "/book", ms: 4000, scroll: 50 },
+        { k: "vital", p: "/book", l: "LCP", v: 1834.4444 },
+        { k: "vital", p: "/book", l: "cls", v: 42 },
+        { k: "vital", p: "/book", l: "fid", v: 12 },
+      ],
+    }),
+    now: NOW,
+    mint: MINT,
+    family: { device: "mobile", browser: "Safari", os: "iOS" },
+    network: { country: "ZA", city: "Durban", organisation: "Example Fibre" },
+  });
+  expect(plan.record).toBe(true);
+  if (!plan.record) return;
+  const [view, engage, vital] = plan.payload.e;
+  expect(plan.payload.e).toHaveLength(3);
+  expect(view?.id).toBe("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa");
+  expect(engage?.id).toBe(view?.id);
+  expect(engage?.vid).toBe(view?.id);
+  expect(view?.eid).toMatch(EVENT_ID);
+  expect(engage?.eid).not.toBe(view?.eid);
+  expect(view?.returning).toBe(true);
+  expect(vital).toEqual({ id: vital?.eid, eid: vital?.eid, k: "vital", p: "/book", l: "lcp", v: 1834.444, device: "mobile" });
+  expect(vital?.id).not.toBe(view?.id);
+});
+
+test("Vercel edge headers give coarse place; IPinfo adds the organisation only", async () => {
+  expect(
+    geoFromHeaders(
+      new Headers({
+        "x-vercel-ip-country": "za",
+        "x-vercel-ip-country-region": "KZN",
+        "x-vercel-ip-city": "Pietermaritzburg%20Central",
+        "x-vercel-ip-timezone": "Africa/Johannesburg",
+      }),
+    ),
+  ).toEqual({ country: "ZA", region: "KZN", city: "Pietermaritzburg Central", timezone: "Africa/Johannesburg" });
+  expect(geoFromHeaders(new Headers({ "x-vercel-ip-city": "Durban" }))).toEqual({});
+
+  const calls: { url: string; body?: string }[] = [];
+  const fetchImpl: typeof fetch = async (input, init) => {
+    const url = String(input);
+    calls.push({ url, body: typeof init?.body === "string" ? init.body : undefined });
+    if (url.includes("ipinfo.io")) return new Response(JSON.stringify(ipinfo), { status: 200 });
+    return new Response(null, { status: 204 });
+  };
+  await handleInsightsCollect(
+    new Request("https://www.super-cube.me/api/insights/collect", {
+      method: "POST",
+      headers: {
+        "user-agent": UA,
+        "x-forwarded-for": IP,
+        "x-vercel-ip-country": "ZA",
+        "x-vercel-ip-country-region": "GP",
+        "x-vercel-ip-city": "Johannesburg",
+      },
+      body: JSON.stringify({ v: 1, e: [{ k: "pageview", p: "/", ns: true }] }),
+    }),
+    { env: { INSIGHTS_INGEST_KEY: "k", IPINFO_TOKEN: "t" }, now: NOW, mint: MINT, fetchImpl, allow: async () => true },
+  );
+  const payload = JSON.parse(calls[calls.length - 1]?.body ?? "{}") as { e: Record<string, unknown>[] };
+  expect(payload.e[0]).toMatchObject({ country: "ZA", region: "GP", city: "Johannesburg", organisation: "Example Fibre" });
+  expect(JSON.stringify(payload)).not.toContain("Pietermaritzburg");
+  expect(JSON.stringify(payload)).not.toContain(IP);
+});
+
+test("crawlers and scripts are dropped before any lookup or forward", async () => {
+  expect(isBotUa("Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")).toBe(true);
+  expect(isBotUa("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 HeadlessChrome/120.0 Safari/537.36")).toBe(true);
+  expect(isBotUa("curl/8.4.0")).toBe(true);
+  expect(isBotUa("")).toBe(true);
+  expect(isBotUa(UA)).toBe(false);
+  let called = false;
+  const res = await handleInsightsCollect(
+    new Request("https://www.super-cube.me/api/insights/collect", {
+      method: "POST",
+      headers: { "user-agent": "Mozilla/5.0 (compatible; bingbot/2.0; +http://www.bing.com/bingbot.htm)", "x-forwarded-for": IP },
+      body: JSON.stringify({ v: 1, e: [{ k: "pageview", p: "/", ns: true }] }),
+    }),
+    {
+      env: { INSIGHTS_INGEST_KEY: "k", IPINFO_TOKEN: "t" },
+      fetchImpl: async () => {
+        called = true;
+        return new Response(null, { status: 204 });
+      },
+      allow: async () => true,
+    },
+  );
+  expect(res.status).toBe(204);
   expect(called).toBe(false);
   expect(res.headers.get("set-cookie")).toBeNull();
 });
