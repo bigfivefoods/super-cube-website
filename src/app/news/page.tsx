@@ -76,7 +76,8 @@ export default async function NewsPage() {
                     alt=""
                     priority
                     sizes="(max-width: 768px) 100vw, 560px"
-                    className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    // A feature image carries its own words, so it is never cropped (whole, on its own dark ground).
+                    className={`${featured.featureHero ? "bg-void object-contain" : "object-cover"} transition-transform duration-500 group-hover:scale-[1.03]`}
                   />
                 </div>
                 <div className="flex flex-col justify-center p-6 sm:p-8 lg:p-10">

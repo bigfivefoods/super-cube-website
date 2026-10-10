@@ -196,24 +196,32 @@ for (const path of ["/impact", "/research"]) {
 /* Leadership Is Learnable, now in paperback on Amazon (10 Oct 2026): landing-size hero with the white-paperback art,
  * the hero "Buy the paperback on Amazon" button (cta-amazon), the book card with Kindle coming soon, the share card with
  * the Super-Cube® mark, every Amazon link from AMAZON_URL_TBD (src/lib/book.ts) and the free book as the start. */
-test("Leadership Is Learnable post: hero size, Amazon paperback, Kindle soon, share card, free-book link", async ({ page }) => {
+test("Leadership Is Learnable post: feature-image hero, Amazon paperback, Kindle soon, share card, free-book link", async ({ page }) => {
   const path = "/news/leadership-is-learnable-new-book";
   await page.setViewportSize({ width: 1280, height: 800 });
-  await page.goto("/");
-  const home = await page.locator(".page-hero").first().boundingBox();
   await page.goto(path);
-  const hero = await page.locator("header.page-hero").first().boundingBox();
-  expect(Math.abs(home!.height - hero!.height)).toBeLessThanOrEqual(1);
-  expect(Math.abs(home!.width - hero!.width)).toBeLessThanOrEqual(1);
+  // Feature-image hero (10 Oct 2026, Craig): the LinkedIn launch design shows whole and full-bleed, the copy underneath.
+  const header = page.locator("header[data-feature-hero]");
+  const img = header.locator("img[data-feature-hero-image]");
+  await expect(img).toBeVisible();
+  await img.evaluate((i: HTMLImageElement) => (i.complete ? null : new Promise((r) => i.addEventListener("load", r, { once: true }))));
+  const m = await img.evaluate((i: HTMLImageElement) => {
+    const r = i.getBoundingClientRect();
+    return { w: r.width, h: r.height, nw: i.naturalWidth, nh: i.naturalHeight, bottom: r.bottom, src: i.currentSrc };
+  });
+  expect(m.w).toBeGreaterThanOrEqual(1279);
+  expect(m.w / m.h).toBeCloseTo(m.nw / m.nh, 1);
+  expect(m.src).toContain("leadership-is-learnable-paperback-hero");
+  expect((await header.locator("h1").boundingBox())!.y).toBeGreaterThanOrEqual(m.bottom - 1);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Leadership Is Learnable: the Super-Cube® book is now available in paperback on Amazon$/);
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/images\/og\/news\/leadership-is-learnable\.jpg$/);
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute("content", /\/images\/og\/news\/leadership-is-learnable-paperback\.jpg$/);
   await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", /Super-Cube®/);
   const cta = page.getByTestId("news-cta");
   await expect(cta).toHaveText(/Buy the paperback on Amazon/);
   await expect(cta).toHaveAttribute("href", "https://www.amazon.com/dp/1048361616");
   await expect(cta).toHaveAttribute("target", "_blank");
   await expect(cta).toHaveAttribute("data-insights", "cta-amazon");
-  await expect(page.locator("header.page-hero")).toContainText("Kindle edition coming soon");
+  await expect(page.locator("header[data-feature-hero]")).toContainText("Kindle edition coming soon");
   const body = page.locator(".news-body");
   for (const t of ["now available in paperback on Amazon", "32.2 percentage points", "+45.1 points", "+39.5 points", "+24.6 points", "132 people", "thesis 2020, degree conferred 2021", "Sustainable Development Goals", "R299 in South Africa"]) {
     await expect(body).toContainText(t);
@@ -227,4 +235,17 @@ test("Leadership Is Learnable post: hero size, Amazon paperback, Kindle soon, sh
   await expect(card.getByTestId("paid-book-amazon")).toHaveText("Buy the paperback on Amazon");
   await expect(card.getByTestId("paid-book-kindle-soon")).toHaveText("Kindle edition coming soon");
   await expect(page.locator("main")).not.toContainText(/kwaden|®®/i);
+});
+
+test("Leadership Is Learnable post on phones: the square feature image, whole, above the copy", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/news/leadership-is-learnable-new-book");
+  const img = page.locator("header[data-feature-hero] img[data-feature-hero-image]");
+  await expect(img).toBeVisible();
+  await img.evaluate((i: HTMLImageElement) => (i.complete ? null : new Promise((r) => i.addEventListener("load", r, { once: true }))));
+  const m = await img.evaluate((i: HTMLImageElement) => ({ w: i.getBoundingClientRect().width, h: i.getBoundingClientRect().height, src: i.currentSrc }));
+  expect(m.w).toBeGreaterThanOrEqual(389);
+  expect(Math.abs(m.w - m.h)).toBeLessThan(2);
+  expect(m.src).toContain("leadership-is-learnable-paperback-square");
+  await expect(page.getByTestId("news-cta")).toHaveAttribute("href", "https://www.amazon.com/dp/1048361616");
 });
