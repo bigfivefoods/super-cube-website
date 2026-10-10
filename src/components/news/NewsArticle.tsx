@@ -81,8 +81,9 @@ export function NewsArticle({ post }: { post: NewsPost }) {
          * header and breadcrumbs, then the hero copy follows underneath, full width.
          */
         <header
-          className="page-hero relative isolate flex w-full flex-col overflow-hidden bg-void !pb-0"
-          style={{ paddingTop: "calc(var(--hero-pad-top) + 2.5rem)" }}
+          className="page-hero relative isolate flex w-full flex-col overflow-hidden !pb-0"
+          // The image's own dark ground (inline: .page-hero sets the page background), so header, breadcrumbs and image read as one.
+          style={{ paddingTop: "calc(var(--hero-pad-top) + 2.5rem)", backgroundColor: "#0b0b0e" }}
           data-feature-hero
         >
           <FeaturePicture {...feature} />
