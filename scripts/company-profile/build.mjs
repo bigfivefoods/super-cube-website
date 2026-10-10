@@ -186,7 +186,7 @@ function build(L, img) {
   const { cohortCalendar } = L.facilitator;
   const { sdgGoals } = L.sdgs;
   const { sdgChallenges, leadershipChallengeThesis } = L["leadership-challenges"];
-  const { PAID_BOOK, PAID_BOOK_DETAILS, PAID_BOOK_CITATION, amazonBuyUrl } = L.book;
+  const { PAID_BOOK, PAID_BOOK_DETAILS, PAID_BOOK_CITATION, amazonBuyUrl, kindleBuyUrl } = L.book;
   const { AUTHOR_BIO } = L.author;
   const by = Object.fromEntries(constructs.map((c) => [c.id, c]));
   const radarOrder = ["choices", "mental", "emotional", "principles", "physical", "spiritual"];
@@ -273,8 +273,8 @@ function build(L, img) {
               <p class="lt">${esc(PAID_BOOK.title)}</p>
               <p class="small">${esc(PAID_BOOK.subtitle)}</p>
               <p class="small">${esc(PAID_BOOK.imprint)} · ${esc(PAID_BOOK_DETAILS.publishedLabel)} · ${PAID_BOOK_DETAILS.pages} pp · 6 × 9 in, full colour</p>
-              <p class="small">Paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} / $${PAID_BOOK_DETAILS.paperbackPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.paperback.isbn}</span><br>eBook R${PAID_BOOK_DETAILS.ebookPrice.zar} / $${PAID_BOOK_DETAILS.ebookPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.kindle.isbn}</span></p>
-              <p class="small"><b>${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy on Amazon") : "Coming soon on Amazon"}</b> · ${link(`${SITE}/book`, "super-cube.me/book")}</p>
+              <p class="small">Paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} / $${PAID_BOOK_DETAILS.paperbackPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.paperback.isbn}</span><br>Kindle ${kindleBuyUrl() ? "" : "(coming soon) "}$${PAID_BOOK_DETAILS.ebookPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.kindle.isbn}</span></p>
+              <p class="small"><b>${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy the paperback on Amazon") : "Coming soon on Amazon"}</b> · ${link(`${SITE}/book`, "super-cube.me/book")}</p>
             </div>
           </div>
         </div>

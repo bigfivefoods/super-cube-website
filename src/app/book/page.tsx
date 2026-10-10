@@ -131,7 +131,7 @@ export default function BookPage() {
                 <a href="#comprehensive-edition" className="font-semibold text-ink underline underline-offset-2">
                   <em>Leadership Is Learnable</em>
                 </a>
-                , is published on 31 October 2026 in paperback and Kindle.
+                , is out now in paperback on Amazon, with the Kindle edition coming soon.
               </p>
             </div>
             <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -203,7 +203,7 @@ export default function BookPage() {
         </div>
       </section>
 
-      {/* The comprehensive edition (paid): Amazon button hidden until AMAZON_URL_TBD is a real product URL. */}
+      {/* The comprehensive edition (paid): paperback on Amazon (AMAZON_URL_TBD); Kindle coming soon (KINDLE_URL_TBD). */}
       <PaidBookSection />
 
       {/* Download CTA */}

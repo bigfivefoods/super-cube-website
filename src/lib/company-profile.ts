@@ -7,5 +7,5 @@
 export const COMPANY_PROFILE = {
   href: "/super-cube-company-profile.pdf",
   pages: 15,
-  size: "0.9 MB",
+  size: "1.0 MB",
 } as const;

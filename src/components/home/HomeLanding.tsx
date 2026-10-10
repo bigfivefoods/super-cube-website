@@ -426,7 +426,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               </div>
             </div>
           </div>
-          {/* The comprehensive edition (paid): the Amazon button stays hidden until AMAZON_URL_TBD is live. */}
+          {/* The comprehensive edition (paid): paperback on Amazon (AMAZON_URL_TBD); Kindle coming soon (KINDLE_URL_TBD). */}
           <div className="mt-6">
             <PaidBookCard
               testId="home-paid-book"
@@ -435,6 +435,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               moreLabel={translate(dict, "home.paidMore")}
               soonLabel={translate(dict, "home.paidSoon")}
               buyLabel={translate(dict, "home.paidBuy")}
+              kindleSoonLabel={translate(dict, "home.paidKindleSoon")}
               coverAlt={translate(dict, "home.paidCoverAlt")}
               hrefLang={en}
             />
