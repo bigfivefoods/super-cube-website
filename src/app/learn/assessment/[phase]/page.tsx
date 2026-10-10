@@ -223,7 +223,9 @@ export default function AssessmentRunnerPage() {
                 ? "The after-test needs the full pathway (payment or cohort seat)."
                 : code === "post_locked"
                   ? "Your after-test is already recorded."
-                  : `Could not save: ${code || server.status}`,
+                  : code === "consent_required"
+                    ? "A parent or guardian needs to record consent on their own account before this can be saved."
+                    : `Could not save: ${code || server.status}`,
         );
         if (server.status === 403 && server.body.gate) setServerGate(server.body.gate as PostGate);
         return;
@@ -331,7 +333,11 @@ export default function AssessmentRunnerPage() {
       }
       subtitle={
         phase === "pre"
-          ? programmeCopy("assessment.pre.subtitle", programmeId, { programme: programme?.name ?? "Programme", n: totalItems })
+          ? programmeCopy("assessment.pre.subtitle", programmeId, {
+                programme: programme?.name ?? "Programme",
+                n: items.length,
+                checks: honesty ? "two quick checks" : "one quick check",
+              })
           : phase === "mid"
             ? programmeCopy("assessment.mid.subtitle", programmeId, { programme: programme?.name ?? "Programme" })
             : programmeCopy("assessment.post.subtitle", programmeId, { programme: programme?.name ?? "Programme" })
@@ -353,7 +359,7 @@ export default function AssessmentRunnerPage() {
       <div className="mb-4 rounded-xl border border-line bg-elevated p-3 sm:p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-[0.75rem] font-semibold text-ink">
-            Progress · {answered}/{totalItems} statements ({pct}%)
+            Progress · {answered}/{totalItems} answered ({pct}%)
           </p>
           <button
             type="button"

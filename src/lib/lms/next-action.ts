@@ -13,6 +13,7 @@ import { profileComplete, getProfile } from "@/lib/lms/profile";
 import type { LocalLmsState } from "@/lib/lms/store";
 import { localDayKey } from "@/lib/lms/store";
 import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
+import { serverHasRecordedPractice } from "@/lib/lms/rewards";
 
 export type NextActionKind =
   | "profile"
@@ -135,13 +136,26 @@ export function getLearningAction(
     };
   }
 
-  if (post) {
+  if (post && serverHasRecordedPractice(state)) {
     return {
       kind: "report",
       title: "Open your growth report",
       detail: programmeCopy("next.report.detail", learnerProgrammeId(state)),
       href: "/learn/report",
       cta: "View report →",
+      urgency: "low",
+      process: "learning",
+    };
+  }
+
+  if (post) {
+    return {
+      kind: "lesson",
+      title: "Keep practising",
+      detail:
+        "The growth report and certificate are offered when the server has recorded your sessions and after-test.",
+      href: "/learn/courses",
+      cta: "Back to sessions →",
       urgency: "low",
       process: "learning",
     };

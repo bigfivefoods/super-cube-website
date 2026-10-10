@@ -1,9 +1,12 @@
 /**
  * Lightweight funnel analytics for Super-Cube® Learn.
  * - Always records events in localStorage (debug + offline)
- * - Forwards to window.gtag / plausible / va when present
+ * - Forwards to window.gtag / plausible when present (Vercel Web Analytics counts page views
+ *   itself, see components/VercelAnalytics.tsx; funnel events are not sent to it)
  * - Optional NEXT_PUBLIC_GA_ID loads via AnalyticsProvider
  */
+
+import { FUNNEL_ACTIONS, trackInsightsAction } from "@/lib/insights-action";
 
 export type FunnelEvent =
   | "page_view"
@@ -125,11 +128,13 @@ export function track(
 
   const payload = { ...props, path };
 
+  const action = FUNNEL_ACTIONS[event];
+  if (action) trackInsightsAction(action);
+
   try {
     const w = window as Window & {
       gtag?: (...args: unknown[]) => void;
       plausible?: (e: string, o?: { props?: Record<string, unknown> }) => void;
-      va?: (e: string, p?: Record<string, unknown>) => void;
       dataLayer?: unknown[];
     };
     if (typeof w.gtag === "function") {
@@ -137,9 +142,6 @@ export function track(
     }
     if (typeof w.plausible === "function") {
       w.plausible(event, { props: payload as Record<string, unknown> });
-    }
-    if (typeof w.va === "function") {
-      w.va(event, payload as Record<string, unknown>);
     }
   } catch {
     /* third-party optional */

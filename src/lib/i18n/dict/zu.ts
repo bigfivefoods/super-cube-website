@@ -130,6 +130,12 @@ const zu: Dict = {
   "home.bookMore": "Mayelana nencwadi",
   "home.bookLang": "NgesiNgisi",
   "home.bookCoverAlt": "Ikhava ye-The Super-Cube® Leadership Model kaDkt Craig R. Muller",
+  "home.paidEyebrow": "Okusha · Uhlelo oluphelele",
+  "home.paidBody": "Amakhasi angu-312 ngocwaningo nobufakazi obusekela imodeli ye-Super-Cube®, uhlangothi ngalunye ngokujulile, nokuthi ungabathuthukisa kanjani abaholi kuwo wonke amazinga. Iphepha neKindle, 31 Okthoba 2026.",
+  "home.paidMore": "Mayelana nohlelo oluphelele",
+  "home.paidSoon": "Kuzofika maduze ku-Amazon",
+  "home.paidBuy": "Thenga ku-Amazon",
+  "home.paidCoverAlt": "Ikhava ye-Leadership Is Learnable kaDkt Craig R. Muller",
 
   "cta.tryFree": "Qala isisekelo samahhala",
   "cta.bookPilot": "Bhuka i-pilot",
@@ -159,14 +165,14 @@ const zu: Dict = {
     "Isuselwa ku-I–Thou ka-Buber, ifilosofi yase-Afrika ye-Ubuntu, nohlaka lwe-AQAL luka-Wilber—abantu njengezinto ezisebudlelwaneni, hhayi izinto zokulawula.",
   "home.theoryTitle": "Ithiyori",
   "home.theoryBody":
-    "Ukufunda kwezinhlangothi ezintathu kuka-Illeris (okuqukethwe, isisusa, ukuxhumana) kanye nemikhakha emikhulu yobuholi. Cishe u-70–76% wamandla obuholi ungathuthukiswa ngokuzilolonga ngamabomu.",
+    "Ukufunda kwezinhlangothi ezintathu kuka-Illeris (okuqukethwe, isisusa, ukuxhumana) kanye nemikhakha emikhulu yobuholi. Izakhi zofuzo zichaza cishe ingxenye yesine kuya kwesithathu kuphela yokuthi ubani obamba izikhundla zobuholi; okunye kuhlobene nesipiliyoni, indawo nokufunda.",
   "home.modelTitle": "Imodeli",
   "home.modelBody":
     "I-Super-Cube® yenza leyo filosofi nethiyori isebenze: wena phakathi, ubuso obuyisithupha obuxhumene, ukukala kwangaphambi → nangemva, nokukhula ngamabomu.",
   "home.coreBeliefEyebrow": "Inkolelo eyinhloko",
   "home.coreBelief": "Ubuholi bungafundwa kakhulu.",
   "home.coreBeliefBody":
-    "I-Super-Cube® ithi cishe u-70–76% wamandla obuholi ungathuthukiswa ngokuzilolonga ngamabomu, isipiliyoni, nokungenelela okuhleliwe—hhayi nje ifa lodwa. Ukuthuthuka kulandela okuqukethwe, isisusa, nokuxhumana kuka-Illeris.",
+    "I-Super-Cube® ithi amandla obuholi ngokuyinhloko angathuthukiswa ngokuzilolonga ngamabomu, isipiliyoni, nokungenelela okuhleliwe—awanqunywa yifa: izakhi zofuzo zichaza cishe u-24–30% wokuthi ubani obamba izikhundla zobuholi, kanti cishe u-70–76% uhlobene nesipiliyoni, indawo nokufunda. Ukuthuthuka kulandela okuqukethwe, isisusa, nokuxhumana kuka-Illeris.",
   "home.theoryMapLabel": "Imephu yethiyori (isifinyezo)",
   "home.ptmTheoryMap": "Vula imephu ephelele yezincwadi",
   "home.ptmHow": "Ukuthuthuka kusebenza kanjani",
@@ -199,7 +205,7 @@ const zu: Dict = {
     "Yebo. Ukucabanga nombhalo wedayari kuhlala kudivayisi yakho ngokuzenzakalelayo. Uma ujoyina iqembu futhi uvuma, abaqeqeshi babona kuphela amanani nokuqedwa—hhayi umbhalo wedayari.",
   "faq.q5": "Yiziphi izilimi ezisekelwayo?",
   "faq.a5":
-    "Imenyu, ingxenye engezansi namakhasi abalulekile atholakala ngesiNgisi (okuzenzakalelayo), Français, العربية, Português, Kiswahili, isiZulu nesiBhunu: sebenzisa inkinobho yolimi phezulu. Izifundo nokuhlolwa kocwaningo kuhlala kungesiNgisi, ukuze wonke umfundi aphendule imibuzo efanayo eqinisekisiwe futhi imiphumela ihlale iqhathaniseka.",
+    "Imenyu, ingxenye engezansi namakhasi abalulekile atholakala ngesiNgisi (okuzenzakalelayo), Français, العربية, Português, Kiswahili, isiZulu nesiBhunu: sebenzisa inkinobho yolimi phezulu. Izifundo nohlu lwemibuzo lwe-Super-Cube® kuhlala kungesiNgisi, ukuze wonke umfundi aphendule imibuzo efanayo futhi imiphumela ihlale iqhathaniseka.",
   "faq.q6": "Ingabe izikole nezinkampani zingenza i-pilot?",
   "faq.a6":
     "Yebo. Sebenzisa iphakethe le-pilot lamanani, ikhalenda yamaviki angu-8, amanothi emvume, namathuluzi omqeqeshi. Dala ikhodi yeqembu, mema abafundi, ukhiphe inqubekela phambili uma ama-SQL orgs evuliwe.",

@@ -6,6 +6,7 @@ import { SessionReflection } from "@/components/learn/SessionReflection";
 import type { ConstructId } from "@/lib/content";
 import { faceInkStyle } from "@/lib/contrast";
 import { ARC_STEPS, sessionNotes, type ResolvedArc } from "@/lib/lms/sessions";
+
 import type { ProgrammeId } from "@/lib/programmes";
 import { FacilitatorGuide } from "./FacilitatorGuide";
 import { RetrievalCheck } from "./RetrievalCheck";
@@ -199,8 +200,8 @@ export function SessionArc({
     <div style={faceInkStyle(color)} data-testid="session-arc">
       <SessionNotes programmeId={programmeId} constructId={constructId} />
 
-      <nav aria-label="Session steps" className="-mx-1 mb-3 overflow-x-auto px-1 pb-1">
-        <ol className="flex min-w-max gap-1.5">
+      <nav aria-label="The 8 steps of this session" className="mb-3">
+        <ol className="grid grid-cols-4 gap-1 sm:grid-cols-8">
           {ARC_STEPS.map((s, i) => {
             const on = active === s.id;
             return (
@@ -208,13 +209,13 @@ export function SessionArc({
                 <a
                   href={`#step-${s.id}`}
                   aria-current={on ? "step" : undefined}
-                  className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.6875rem] font-semibold transition ${
+                  className={`flex min-h-11 flex-col items-center justify-center rounded-xl border px-1 py-1.5 text-center text-[0.6875rem] font-semibold leading-tight transition ${
                     on ? "text-white" : "border-line bg-elevated text-slate hover:text-ink"
                   }`}
                   style={on ? { background: color, borderColor: color } : undefined}
                 >
                   <span className="tabular-nums">{i + 1}</span>
-                  {s.label}
+                  {kids && s.id === "check" ? "Quiz" : s.id === "practice" ? "Practice" : s.id === "ifthen" ? "If–then" : s.label}
                 </a>
               </li>
             );

@@ -1,5 +1,5 @@
 /**
- * Spaced review across the 21-day journey (Day 3, 7 and 14 after the
+ * Spaced review across the 21-day journey (Day 3, 7 and 21 after the
  * baseline). Each review mixes retrieval questions across faces (interleaving)
  * and puts the questions a learner missed first.
  */
@@ -8,17 +8,16 @@ import { skillsForProgramme, type ProgrammeId } from "@/lib/programmes";
 import { courseId } from "@/lib/programmes";
 import { skillArc, overviewArc, type RetrievalQ } from "@/lib/lms/sessions";
 
-export const REVIEW_DAYS = [3, 7, 14] as const;
-export type ReviewDay = (typeof REVIEW_DAYS)[number];
+export {
+  REVIEW_DAYS,
+  isReviewDone,
+  nextSpacedReview,
+  reviewSchedule,
+  type ReviewDay,
+  type SpacedReviewNext,
+} from "@/lib/lms/review-schedule";
 
 export type ReviewQ = RetrievalQ & { constructId: ConstructId; lessonId: string };
-
-const DAY_MS = 24 * 60 * 60 * 1000;
-
-export function reviewSchedule(startIso: string | null | undefined): { day: ReviewDay; due: Date | null }[] {
-  const start = startIso ? Date.parse(startIso) : NaN;
-  return REVIEW_DAYS.map((day) => ({ day, due: Number.isFinite(start) ? new Date(start + day * DAY_MS) : null }));
-}
 
 function hash(s: string): number {
   let h = 2166136261;

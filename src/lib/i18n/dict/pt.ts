@@ -139,6 +139,12 @@ const pt: Dict = {
   "home.bookMore": "Sobre o livro",
   "home.bookLang": "Em inglês",
   "home.bookCoverAlt": "Capa de The Super-Cube® Leadership Model, do Dr. Craig R. Muller",
+  "home.paidEyebrow": "Novo · Edição completa",
+  "home.paidBody": "312 páginas sobre a investigação e as evidências por trás do modelo Super-Cube®, cada face em profundidade e como desenvolver líderes em todos os níveis. Brochura e Kindle, 31 de outubro de 2026.",
+  "home.paidMore": "Sobre a edição completa",
+  "home.paidSoon": "Em breve na Amazon",
+  "home.paidBuy": "Comprar na Amazon",
+  "home.paidCoverAlt": "Capa de Leadership Is Learnable, do Dr. Craig R. Muller",
 
   "cta.tryFree": "Avaliação inicial grátis",
   "cta.bookPilot": "Marcar um piloto",
@@ -172,7 +178,7 @@ const pt: Dict = {
     "Sim. As reflexões e o texto do diário ficam, por predefinição, no seu dispositivo. Se aderir a uma turma e der consentimento, o coach vê apenas as pontuações e o progresso, nunca o texto do diário.",
   "faq.q5": "Que idiomas estão disponíveis?",
   "faq.a5":
-    "Os menus, o rodapé e as páginas principais estão disponíveis em inglês (predefinido), francês, árabe (العربية), português, suaíli (Kiswahili), isiZulu e africâner: use o botão de idioma no cabeçalho. As sessões dos cursos e a avaliação de investigação mantêm-se em inglês, para que todos os formandos respondam aos mesmos itens validados e os resultados continuem comparáveis.",
+    "Os menus, o rodapé e as páginas principais estão disponíveis em inglês (predefinido), francês, árabe (العربية), português, suaíli (Kiswahili), isiZulu e africâner: use o botão de idioma no cabeçalho. As sessões dos cursos e o questionário Super-Cube® mantêm-se em inglês, para que todos os formandos respondam aos mesmos itens e os resultados continuem comparáveis.",
   "faq.q6": "As escolas e as empresas podem fazer um piloto?",
   "faq.a6":
     "Sim. O pacote piloto inclui preços, um calendário de 8 semanas, notas sobre consentimento e ferramentas para o coach. Crie um código de turma, convide os formandos e exporte o progresso do grupo quando as organizações estiverem ativas.",

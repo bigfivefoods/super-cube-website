@@ -138,6 +138,12 @@ const sw: Dict = {
   "home.bookMore": "Kuhusu kitabu",
   "home.bookLang": "Kwa Kiingereza",
   "home.bookCoverAlt": "Jalada la The Super-Cube® Leadership Model, la Dkt. Craig R. Muller",
+  "home.paidEyebrow": "Mpya · Toleo kamili",
+  "home.paidBody": "Kurasa 312 kuhusu utafiti na ushahidi wa modeli ya Super-Cube®, kila uso kwa kina, na jinsi ya kukuza viongozi katika kila ngazi. Jalada laini na Kindle, 31 Oktoba 2026.",
+  "home.paidMore": "Kuhusu toleo kamili",
+  "home.paidSoon": "Inakuja hivi karibuni kwenye Amazon",
+  "home.paidBuy": "Nunua kwenye Amazon",
+  "home.paidCoverAlt": "Jalada la Leadership Is Learnable, la Dkt. Craig R. Muller",
 
   "cta.tryFree": "Anza tathmini ya bure",
   "cta.bookPilot": "Panga majaribio",
@@ -171,7 +177,7 @@ const sw: Dict = {
     "Ndiyo. Tafakari na maandishi ya shajara hubaki kwenye kifaa chako kwa chaguo-msingi. Ukijiunga na kundi na ukatoa idhini, kocha huona alama na maendeleo tu, si maandishi ya shajara yako.",
   "faq.q5": "Lugha zipi zinapatikana?",
   "faq.a5":
-    "Menyu, sehemu ya chini na kurasa muhimu zinapatikana kwa Kiingereza (chaguo-msingi), Kifaransa, Kiarabu (العربية), Kireno, Kiswahili, isiZulu na Kiafrikana: tumia kitufe cha lugha kilicho juu. Vipindi vya kozi na tathmini ya utafiti vinabaki kwa Kiingereza, ili kila mwanafunzi ajibu vipengele vilevile vilivyothibitishwa na matokeo yaweze kulinganishwa.",
+    "Menyu, sehemu ya chini na kurasa muhimu zinapatikana kwa Kiingereza (chaguo-msingi), Kifaransa, Kiarabu (العربية), Kireno, Kiswahili, isiZulu na Kiafrikana: tumia kitufe cha lugha kilicho juu. Vipindi vya kozi na dodoso la Super-Cube® vinabaki kwa Kiingereza, ili kila mwanafunzi ajibu vipengele vilevile na matokeo yaweze kulinganishwa.",
   "faq.q6": "Je, shule na makampuni yanaweza kufanya majaribio?",
   "faq.a6":
     "Ndiyo. Kifurushi cha majaribio kina bei, kalenda ya wiki 8, maelezo ya idhini na zana za kocha. Unda msimbo wa kundi, waalike wanafunzi na uhamishe maendeleo ya kundi mashirika yanapowashwa.",

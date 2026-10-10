@@ -38,7 +38,7 @@ export const PROGRAMME_COPY_ADULTS = {
   "course.subtitle": "{programme} · {n} sessions · eight-step learning arc",
 
   "assessment.pre.subtitle":
-    "{programme} · {n} statements across the six faces (rate each 1–5). Developmental self-report—not clinical. Save anytime.",
+    "{programme} · {n} statements across the six faces (rate each 1–5), plus {checks}. Developmental self-report, not clinical. Save anytime.",
   "assessment.mid.subtitle":
     "{programme} · Short re-measure to refresh your weekly plan. Same faces, honest scores.",
   "assessment.post.subtitle":
@@ -87,7 +87,7 @@ export const PROGRAMME_COPY_KIDS: Record<ProgrammeCopyKey, string> = {
   "course.subtitle": "{programme} · {n} short sessions",
 
   "assessment.pre.subtitle":
-    "{programme} · {n} sentences about you. Tap how true each one is. It's OK to stop and come back.",
+    "{programme} · {n} sentences about you, plus {checks}. Tap how true each one is. It's OK to stop and come back.",
   "assessment.mid.subtitle": "{programme} · A short check-in. Same six faces. Be honest.",
   "assessment.post.subtitle": "{programme} · The same sentences as last time. This opens after you finish your sessions.",
   "assessment.hub.subtitle": "Steps 2 and 3 help you start. After you practise, step 5 shows how you have grown.",
@@ -132,7 +132,7 @@ export const PROGRAMME_COPY_ADOLESCENTS: Record<ProgrammeCopyKey, string> = {
   "course.subtitle": "{programme} · {n} sessions · eight steps each",
 
   "assessment.pre.subtitle":
-    "{programme} · {n} statements across the six faces (rate each 1–5). Not a test and not a diagnosis. Your answers save as you go.",
+    "{programme} · {n} statements across the six faces (rate each 1–5), plus {checks}. Not a test and not a diagnosis. Your answers save as you go.",
   "assessment.mid.subtitle": "{programme} · A short check-in to refresh your weekly plan. Same faces, honest scores.",
   "assessment.post.subtitle":
     "{programme} · Same statements as your baseline. It opens once you've had time to practise and finished your sessions.",

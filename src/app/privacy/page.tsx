@@ -69,6 +69,12 @@ export default function PrivacyPage() {
                 message—used only to respond or route a pilot request.
               </li>
               <li>
+                <strong className="text-ink">Website visits (unless you opt out):</strong>{" "}
+                a random visitor cookie kept about 180 days, the pages you open,
+                and the visit details described under Analytics. We do not store
+                your IP address.
+              </li>
+              <li>
                 <strong className="text-ink">Newsletter (only if you tick the consent box):</strong>{" "}
                 your email address, where you signed up, and when you gave
                 and confirmed consent (we email you a link to confirm before
@@ -94,6 +100,57 @@ export default function PrivacyPage() {
             <h2 className="text-xl font-semibold tracking-tight text-ink">
               Analytics & errors
             </h2>
+            <p className="mt-3 text-slate">
+              We count page views with Vercel Web Analytics: no cookies, no
+              account details, and private links (shared reports, feedback
+              invitations, certificates) are recorded without their codes.
+              Those daily totals are one part of the investor Website Insights.
+            </p>
+            <p className="mt-3 text-slate">
+              We also keep our own first-party visit record, so the same investor
+              Website Insights can show how the site is used and not only daily
+              totals. If your browser sends Do Not Track or Global Privacy
+              Control, we record nothing and we do not set a cookie. We do not
+              show a cookie banner. Those two signals are the opt-out.
+            </p>
+            <p className="mt-3 text-slate">
+              When those signals are off, we set one random visitor cookie for
+              about 180 days. It is not derived from your IP address. It lets us
+              tell a new visit from a returning one, and how often and how
+              recently you came back. Along with that cookie we record the page
+              path, the landing page, the exit page and the first pages of a
+              multi-page visit; time on the page and scroll depth; a PDF
+              download&apos;s file name; the site name of an outbound link (not
+              the full address); the label of a button you use; and named
+              actions such as downloading the free book, signing up, or
+              starting and finishing an assessment. We also
+              record language, the device, browser and operating system family,
+              and a screen-width band (phone, tablet, laptop or desktop) rather
+              than exact pixels. We keep the referring site and the campaign
+              tags you arrived with: source, medium, campaign, content and term.
+            </p>
+            <p className="mt-3 text-slate">
+              Country, region, city and timezone are a coarse network location
+              from our hosting provider&apos;s (Vercel&apos;s) location headers,
+              not GPS. Where a server-side lookup can say so, we also keep an
+              organisation label, and industry, size and network type (for
+              example a business network, a mobile network or a hosting
+              network). The lookup runs on our server. We do not write your IP
+              address into the database, the cache or our logs, and we do not
+              store coordinates.
+            </p>
+            <p className="mt-3 text-slate">
+              We also measure how quickly each page loads and responds (Core
+              Web Vitals: LCP, INP and CLS). These page-speed readings are
+              stored per page with the device type only, without the visitor
+              cookie.
+            </p>
+            <p className="mt-3 text-slate">
+              A visit record does not include your email address, your IP
+              address, GPS coordinates, or anything you type into a form. We do
+              not show your name or email on any public page, and a visit does
+              not send an email, Slack message or other alert.
+            </p>
             <p className="mt-3 text-slate">
               Optional analytics (e.g. Google Analytics) and error monitoring
               (e.g. Sentry) may run when configured. They help improve the
@@ -146,7 +203,7 @@ export default function PrivacyPage() {
             </p>
           </div>
 
-          <p className="text-sm text-muted">Last updated: 2026-10-04</p>
+          <p className="text-sm text-muted">Last updated: 2026-10-08</p>
         </div>
       </section>
     </>

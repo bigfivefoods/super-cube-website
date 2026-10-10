@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { recordActivitySafe } from "@/lib/lms/server/engagement";
 import { parseAttempt, recordAttempt, type AttemptMetaInput } from "@/lib/lms/server/attempts";
 import { requireUser } from "@/lib/lms/server/context";
+import { guardianConsentBlock } from "@/lib/lms/server/guardian-gate";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { loadLearning } from "@/lib/lms/server/learning";
 import { isInstrumentV2EnabledServer, versionOf, type InstrumentVersion } from "@/lib/lms/instruments";
@@ -19,6 +20,8 @@ export async function POST(request: Request) {
   if (!ctx.ok) return NextResponse.json({ error: ctx.error }, { status: ctx.status });
   const limited = await limitRequest(request, "attempts", [`user:${ctx.user.id}`]);
   if (limited) return limited;
+  const blocked = await guardianConsentBlock(ctx.admin, ctx.user.id);
+  if (blocked) return blocked;
 
   let body: { phase?: string; programmeId?: string; responses?: Record<string, unknown>; meta?: AttemptMetaInput };
   try {

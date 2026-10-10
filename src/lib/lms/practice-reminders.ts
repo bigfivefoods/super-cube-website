@@ -1,5 +1,6 @@
 import { tEn } from "@/lib/i18n";
 import { getTodayPulse } from "@/lib/lms/face-tracking";
+import { localDayKey } from "@/lib/lms/day";
 import { loadLmsState } from "@/lib/lms/store";
 
 const LAST_KEY = "sc_practice_reminder_day";
@@ -11,8 +12,9 @@ const REMINDER_AFTER_HOUR = 8;
 let started = false;
 let timer: ReturnType<typeof setInterval> | null = null;
 
+/** The learner's local day (shared helper), so reminders agree with the streak. */
 function todayKey(): string {
-  return new Date().toISOString().slice(0, 10);
+  return localDayKey();
 }
 
 function practicedToday(state: ReturnType<typeof loadLmsState>): boolean {

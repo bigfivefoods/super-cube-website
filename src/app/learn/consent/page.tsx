@@ -13,75 +13,104 @@ import {
   GUARDIAN_RELATIONSHIPS,
   hasValidGuardianConsent,
   isMinorProfile,
+  MINOR_AGE_BANDS,
 } from "@/lib/lms/consent";
-import { AGE_BANDS, getProfile, type LearnerProfile } from "@/lib/lms/profile";
+import { AGE_BANDS, findAgeBand, getProfile, type AgeBand, type LearnerProfile } from "@/lib/lms/profile";
 import { loadLmsState, saveLmsState } from "@/lib/lms/store";
 
 function safeNext(raw: string | null): string {
   return raw && raw.startsWith("/learn") && !raw.startsWith("//") ? raw : "/learn/start";
 }
 
+function ConsentPoints() {
+  return (
+    <ul className="mt-3 space-y-2 text-[0.8125rem] leading-relaxed text-ink">
+      {CONSENT_POINTS.map((p) => (
+        <li key={p.label}>
+          <strong>{p.label}:</strong>{" "}
+          {p.label === "Questions" ? <a href={`mailto:${p.text}`} className="underline">{p.text}</a> : p.text}
+        </li>
+      ))}
+    </ul>
+  );
+}
+
 function ConsentForm() {
   const router = useRouter();
   const search = useSearchParams();
   const next = safeNext(search.get("next"));
+  const [ready, setReady] = useState(false);
   const [profile, setProfile] = useState<LearnerProfile | undefined>();
   const [already, setAlready] = useState(false);
   const [guardianName, setGuardianName] = useState("");
   const [relationship, setRelationship] = useState<string>("");
   const [guardianEmail, setGuardianEmail] = useState("");
+  const [learnerEmail, setLearnerEmail] = useState("");
+  const [learnerName, setLearnerName] = useState("");
+  const [ageBand, setAgeBand] = useState<AgeBand | "">("");
   const [attested, setAttested] = useState(false);
   const [busy, setBusy] = useState(false);
   const [note, setNote] = useState<string | null>(null);
 
-  useEffect(() => {
+  function readLocal() {
     const s = loadLmsState();
     const p = getProfile(s);
     setProfile(p);
     setAlready(hasValidGuardianConsent(p, s.guardianConsent) && isMinorProfile(p));
+    if (p?.displayName && !isMinorProfile(p)) setGuardianName((name) => name || p.displayName);
+  }
+
+  useEffect(() => {
+    readLocal();
+    setReady(true);
     track("page_view", { path: "/learn/consent" });
+    const onUpdate = () => readLocal();
+    window.addEventListener("sc-lms-update", onUpdate);
+    return () => window.removeEventListener("sc-lms-update", onUpdate);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- read local consent when the page opens or sync updates it
   }, []);
 
-  const band = AGE_BANDS.find((a) => a.id === profile?.ageBand);
-  const canSubmit = guardianName.trim().length >= 2 && relationship && attested && !busy;
+  const minor = isMinorProfile(profile);
+  const band = findAgeBand(profile?.ageBand);
+  const canSubmit =
+    guardianName.trim().length >= 2 &&
+    relationship &&
+    attested &&
+    learnerEmail.trim().includes("@") &&
+    ageBand &&
+    !busy;
 
   async function submit() {
-    if (!canSubmit || !profile?.ageBand) return;
+    if (!canSubmit || !ageBand) return;
     setBusy(true);
     setNote(null);
-    const record = {
-      guardianName: guardianName.trim(),
-      guardianEmail: guardianEmail.trim() || undefined,
-      relationship,
-      ageBand: profile.ageBand,
-      textVersion: CONSENT_TEXT_VERSION,
-      grantedAt: new Date().toISOString(),
-      method: "on_device_attestation" as const,
-      cloudSaved: false,
-    };
     try {
       const res = await fetch("/api/consent/guardian", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          guardianName: record.guardianName,
-          guardianEmail: record.guardianEmail,
+          guardianName: guardianName.trim(),
+          guardianEmail: guardianEmail.trim() || undefined,
           relationship,
-          ageBand: profile.ageBand,
-          learnerName: profile.displayName,
+          ageBand,
+          learnerName: learnerName.trim() || undefined,
+          learnerEmail: learnerEmail.trim(),
           attested: true,
         }),
       });
-      record.cloudSaved = res.ok;
+      const body = (await res.json().catch(() => ({}))) as { error?: string; message?: string };
+      if (!res.ok) {
+        setNote(body.message || "Consent was not recorded. Sign in as the parent or guardian, not as the learner.");
+        setBusy(false);
+        return;
+      }
+      track("guardian_consent", { ageBand, cloud: true });
+      setNote("Consent is recorded. The learner can continue the next time they open Super-Cube® on their account.");
+      setAttested(false);
     } catch {
-      record.cloudSaved = false;
+      setNote("Could not reach the server. Try again when you are online.");
     }
-    const s = loadLmsState();
-    s.guardianConsent = record;
-    saveLmsState(s);
-    track("guardian_consent", { ageBand: profile.ageBand, cloud: record.cloudSaved });
     setBusy(false);
-    router.push(next);
   }
 
   function withdraw() {
@@ -97,24 +126,15 @@ function ConsentForm() {
     setNote("Consent withdrawn. Learning is paused until a parent or guardian consents again. To erase all data, use Delete my data on the You page.");
   }
 
-  if (!profile) {
+  if (!ready) {
     return <p className="learn-meta">Loading…</p>;
   }
 
-  if (!isMinorProfile(profile)) {
-    return (
-      <div className="learn-card">
-        <p className="learn-body">Guardian consent is only needed for learners under 18.</p>
-        <Link href={next} className="learn-btn learn-btn-primary mt-3">Continue</Link>
-      </div>
-    );
-  }
-
-  if (already) {
+  if (minor && already) {
     return (
       <div className="learn-card" data-testid="consent-granted">
         <p className="learn-body">
-          A parent or guardian has given consent on this device. They can withdraw it at any time.
+          A parent or guardian has given consent. They can withdraw it at any time.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Link href={next} className="learn-btn learn-btn-primary">Continue learning</Link>
@@ -122,6 +142,32 @@ function ConsentForm() {
             Withdraw consent
           </button>
         </div>
+        {note && <p className="learn-meta mt-3" role="status">{note}</p>}
+      </div>
+    );
+  }
+
+  if (minor) {
+    return (
+      <div className="space-y-4" data-testid="consent-minor">
+        <section className="learn-card">
+          <p className="learn-eyebrow">For the parent or guardian</p>
+          <h2 className="learn-card-title mt-1">
+            Before {profile?.displayName || "your child"} starts
+            {band?.label ? <span className="learn-meta"> · {band.label}</span> : null}
+          </h2>
+          <p className="learn-body mt-2">{CONSENT_INTRO}</p>
+          <ConsentPoints />
+        </section>
+        <section className="learn-card">
+          <p className="learn-body">
+            This account is the learner’s. A parent or guardian has to record consent while signed in on their own account. The learner cannot consent for themselves.
+          </p>
+          <p className="learn-body mt-2">
+            Sign out, sign in as the parent or guardian, open this page, and enter the learner’s account email.
+          </p>
+          <Link href="/login?next=/learn/consent" className="learn-btn learn-btn-primary mt-3">Sign in as the parent or guardian</Link>
+        </section>
       </div>
     );
   }
@@ -130,22 +176,46 @@ function ConsentForm() {
     <div className="space-y-4" data-testid="consent-form">
       <section className="learn-card">
         <p className="learn-eyebrow">For the parent or guardian</p>
-        <h2 className="learn-card-title mt-1">
-          Before {profile.displayName || "your child"} starts
-          {band?.label ? <span className="learn-meta"> · {band.label}</span> : null}
-        </h2>
+        <h2 className="learn-card-title mt-1">Record consent for a learner under 18</h2>
         <p className="learn-body mt-2">{CONSENT_INTRO}</p>
-        <ul className="mt-3 space-y-2 text-[0.8125rem] leading-relaxed text-ink">
-          {CONSENT_POINTS.map((p) => (
-            <li key={p.label}>
-              <strong>{p.label}:</strong>{" "}
-              {p.label === "Questions" ? <a href={`mailto:${p.text}`} className="underline">{p.text}</a> : p.text}
-            </li>
-          ))}
-        </ul>
+        <ConsentPoints />
       </section>
 
       <section className="learn-card space-y-3">
+        <label className="block">
+          <span className="learn-label">Learner’s account email</span>
+          <input
+            className="learn-input mt-1.5 w-full"
+            type="email"
+            value={learnerEmail}
+            onChange={(e) => setLearnerEmail(e.target.value)}
+            autoComplete="off"
+            name="learnerEmail"
+          />
+        </label>
+        <label className="block">
+          <span className="learn-label">Learner’s first name or nickname (optional)</span>
+          <input
+            className="learn-input mt-1.5 w-full"
+            value={learnerName}
+            onChange={(e) => setLearnerName(e.target.value)}
+            name="learnerName"
+          />
+        </label>
+        <label className="block">
+          <span className="learn-label">Learner’s age band</span>
+          <select
+            className="learn-input mt-1.5 w-full"
+            value={ageBand}
+            onChange={(e) => setAgeBand(e.target.value as AgeBand | "")}
+            name="ageBand"
+          >
+            <option value="">Choose…</option>
+            {AGE_BANDS.filter((a) => MINOR_AGE_BANDS.includes(a.id)).map((a) => (
+              <option key={a.id} value={a.id}>{a.label}</option>
+            ))}
+          </select>
+        </label>
         <label className="block">
           <span className="learn-label">Your full name (parent or guardian)</span>
           <input
@@ -200,7 +270,7 @@ function ConsentForm() {
           {busy ? "Saving…" : "I consent · continue"}
         </button>
         <p className="learn-meta">
-          Consent version {CONSENT_TEXT_VERSION}. We&apos;ll only email you if you add your email address and ask us to.
+          Consent version {CONSENT_TEXT_VERSION}. This only counts from the parent or guardian’s own account. We’ll only email you if you add your email address and ask us to.
         </p>
       </section>
       {note && <p className="learn-meta" role="status">{note}</p>}
@@ -212,7 +282,7 @@ export default function GuardianConsentPage() {
   return (
     <LearnShell
       title="Parent or guardian consent"
-      subtitle="Needed before a learner under 18 can use Super-Cube® Learn."
+      subtitle="Needed before a learner under 18 can use Super-Cube® Learn. Recorded by the parent or guardian, not the learner."
       hideJourneyRail
     >
       <Suspense fallback={<p className="learn-meta">Loading…</p>}>

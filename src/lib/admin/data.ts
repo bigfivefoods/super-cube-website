@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { learnerStage, type LearnerRow } from "@/lib/admin/learners";
+import { consentCounts, type ConsentGrant } from "@/lib/lms/guardian-gate";
 
 export type Cohort = {
   id: string;
@@ -125,9 +126,9 @@ export async function loadLearners(db: SupabaseClient): Promise<{ error: string 
     // Only two scalar fields from the synced blob: never reflections or answers
     db.from("learner_state").select("user_id, age_band:payload->profile->>ageBand, last_activity:payload->>lastActivityAt, updated_at").limit(LIMIT * 2),
     db.from("lms_attempts").select("user_id, phase, created_at").limit(LIMIT * 4),
-    db.from("lms_lesson_completions").select("user_id").limit(100000),
+    db.from("lms_lesson_completions").select("user_id, counts_for_gate").limit(100000),
     db.from("certificates").select("user_id, revoked").limit(LIMIT * 2),
-    db.from("guardian_consents").select("learner_user_id, learner_age_band, status").limit(LIMIT * 2),
+    db.from("guardian_consents").select("learner_user_id, learner_age_band, status, recorded_by, method").limit(LIMIT * 2),
     db.from("org_members").select("user_id, org_id, role").limit(50000),
     db.from("organisations").select("id, code, active, seat_limit").limit(LIMIT),
     db.from("subscriptions").select("user_id, status, plan_id, paystack_subscription_code").eq("status", "active").limit(LIMIT * 2),
@@ -146,16 +147,19 @@ export async function loadLearners(db: SupabaseClient): Promise<{ error: string 
     if (m && (!m.has(a.user_id) || a.created_at < m.get(a.user_id)!)) m.set(a.user_id, a.created_at);
   }
   const done = new Map<string, number>();
-  for (const c of (completions.data ?? []) as { user_id: string }[]) done.set(c.user_id, (done.get(c.user_id) ?? 0) + 1);
+  for (const c of (completions.data ?? []) as { user_id: string; counts_for_gate?: boolean }[]) {
+    if (c.counts_for_gate !== true) continue;
+    done.set(c.user_id, (done.get(c.user_id) ?? 0) + 1);
+  }
   const certified = new Set(
     ((certs.data ?? []) as { user_id: string | null; revoked: boolean }[]).filter((c) => c.user_id && !c.revoked).map((c) => c.user_id!),
   );
   const consentOk = new Set<string>();
   const consentBand = new Map<string, string>();
-  for (const c of (consents.data ?? []) as { learner_user_id: string | null; learner_age_band: string; status: string }[]) {
+  for (const c of (consents.data ?? []) as (ConsentGrant & { learner_age_band: string })[]) {
     if (!c.learner_user_id) continue;
     consentBand.set(c.learner_user_id, c.learner_age_band);
-    if (c.status === "granted") consentOk.add(c.learner_user_id);
+    if (consentCounts(c.learner_user_id, c)) consentOk.add(c.learner_user_id);
   }
   const orgById = new Map(((orgs.data ?? []) as { id: string; code: string; active: boolean; seat_limit: number | null }[]).map((o) => [o.id, o]));
   const cohortsOf = new Map<string, string[]>();

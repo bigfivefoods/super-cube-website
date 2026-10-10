@@ -9,6 +9,7 @@ import { deriveFacePattern, recommendPractice } from "@/lib/lms/face-tracking";
 import {
   loadLmsState,
   logMicroPractice,
+  practiceDoneToday,
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { track } from "@/lib/analytics";
@@ -25,14 +26,41 @@ export default function MicroPracticePage() {
     track("page_view", { path: "/learn/practice" });
   }, []);
 
-  const pattern = useMemo(() => deriveFacePattern(state ?? undefined), [state]);
+  if (!state) {
+    // The page is prerendered: today's pick depends on the date and this device's
+    // check-ins, so render it only after mount (no server/client mismatch, React #418).
+    return (
+      <LearnShell title="Micro-practice" subtitle={programmeCopy("practice.subtitle", learnerProgrammeId(null))}>
+        <div className="h-72 animate-pulse rounded-2xl border border-line bg-elevated motion-reduce:animate-none" aria-busy="true" aria-label="Loading today’s practice" />
+      </LearnShell>
+    );
+  }
+  return <PracticeView state={state} setState={setState} done={done} setDone={setDone} note={note} setNote={setNote} />;
+}
+
+function PracticeView({
+  state,
+  setState,
+  done,
+  setDone,
+  note,
+  setNote,
+}: {
+  state: LocalLmsState;
+  setState: (s: LocalLmsState) => void;
+  done: boolean;
+  setDone: (v: boolean) => void;
+  note: string;
+  setNote: (v: string) => void;
+}) {
+  const pattern = useMemo(() => deriveFacePattern(state), [state]);
 
   const weakest = pattern.weakest as ConstructId[];
 
-  const daily = useMemo(() => recommendPractice(state ?? undefined), [state]);
+  const daily = useMemo(() => recommendPractice(state), [state]);
 
-  const day = new Date().toISOString().slice(0, 10);
-  const already = state?.microPracticeLog?.[day]?.includes(daily.id) || done;
+  // The learner's local day (shared helper), the same day the streak uses.
+  const already = practiceDoneToday(state, daily.id) || done;
 
   function complete() {
     logMicroPractice(daily.id);

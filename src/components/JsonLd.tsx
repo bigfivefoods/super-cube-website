@@ -17,7 +17,7 @@ export function organizationJsonLd(siteUrl: string) {
     logo: `${siteUrl}/brand/logo.png`,
     email: "hello@super-cube.me",
     description:
-      "Empirically validated, multidimensional leadership development framework and learning system.",
+      "Research-based, multidimensional leadership development framework and learning system, developed and tested in doctoral research.",
     founder: {
       "@type": "Person",
       name: "Craig Ross Muller",

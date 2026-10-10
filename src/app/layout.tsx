@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Noto_Sans_Arabic } from "next/font/google";
-import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { MarketingChrome } from "@/components/MarketingChrome";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
+import { VercelAnalytics } from "@/components/VercelAnalytics";
+import { WebsiteInsights } from "@/components/WebsiteInsights";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { CapacitorInit } from "@/components/CapacitorInit";
 import { CapacitorPush } from "@/components/CapacitorPush";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { LocaleHtml } from "@/components/LocaleHtml";
-import { LocaleNotice } from "@/components/LocaleNotice";
 import { LocaleProvider } from "@/components/LocaleProvider";
-import { MobileStickyCta } from "@/components/MobileStickyCta";
 import { PwaRegister } from "@/components/PwaRegister";
 import { SentryInit } from "@/components/SentryInit";
 import { SkipLink } from "@/components/SkipLink";
@@ -133,6 +133,8 @@ export default function RootLayout({
             <CapacitorPush />
             <SentryInit />
             <AnalyticsProvider />
+            <VercelAnalytics />
+            <WebsiteInsights />
             <div className="site-chrome contents">
               <Header />
             </div>
@@ -143,9 +145,7 @@ export default function RootLayout({
               </main>
             </ErrorBoundary>
             <div className="site-chrome contents">
-              <Footer />
-              <MobileStickyCta />
-              <LocaleNotice />
+              <MarketingChrome />
             </div>
           </LocaleProvider>
         </ThemeProvider>

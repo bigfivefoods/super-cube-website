@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PaidBookCard } from "@/components/book/PaidBook";
 import type { Metadata } from "next";
 import { ImpactResults } from "@/components/ImpactResults";
 import { TheoryOverview } from "@/components/TheoryOverview";
@@ -66,13 +67,13 @@ export default function ResearchPage() {
               Leadership capacity in emerging-market business networks is
               constrained by complexity, skills gaps, and imported models that
               under-weight whole-person development. This research developed and
-              validated a six-construct cubic model—Choices, Principles, Mental,
+              tested a six-construct cubic model—Choices, Principles, Mental,
               Emotional, Physical, Spiritual—with the individual at the centre.
             </p>
             <p>
               Mixed methods: survey (N=132) with confirmatory factor analysis
               (acceptable fit, CFI≈0.86; scale reliability α≈0.60–0.80) and
-              senior-leader interviews (N=10) for thematic validation.
+              interviews with ten directors (N=10) for thematic validation.
               Philosophy of mutual respect (Buber’s I–Thou) informs practice
               design.
             </p>
@@ -166,6 +167,13 @@ export default function ResearchPage() {
               </article>
             ))}
           </div>
+          <div className="mt-8">
+            <PaidBookCard
+              testId="research-paid-book"
+              eyebrow="Book · 2026"
+              body="The research in full, for a general reader: the survey of 132 people, the interviews with ten directors, each of the six faces in depth, the 12-week intervention results and how to build a programme. 312 pages, paperback and Kindle, 31 October 2026."
+            />
+          </div>
         </div>
       </section>
 
@@ -196,9 +204,9 @@ export default function ResearchPage() {
 
       <ImpactResults
         light
-        eyebrow="Intervention results · 12-week Super-Cube® programmes"
-        title="+32.2% overall growth across all six faces."
-        description="Aggregated pre- and post-course results from the 12-week Super-Cube® leadership interventions with Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face (source: Super-Cube® company profile, Sept 2023). These gains come from the interventions, not from the doctoral study, which tested the model’s structure. Not live programme data."
+        eyebrow="Intervention results · 12-week Super-Cube® intervention"
+        title="+32.2 percentage points of overall growth across all six faces."
+        description="Average pre- and post-course scores from the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face in percentage points (source: Leadership Is Learnable, 2026, Chapter 18). These gains come from the intervention, not from the doctoral study, which tested the model’s structure. Not live programme data."
       />
 
       <section className="section-pad border-y border-[var(--line)] bg-void text-void-fg">
@@ -249,7 +257,7 @@ export default function ResearchPage() {
         <div className="container-site">
           <SectionHeading
             eyebrow="Qualitative findings"
-            title="What senior leaders emphasised."
+            title="What the directors emphasised."
             description="Face-to-face semi-structured interviews with 10 key decision-makers (Nov 2018–Feb 2019) were analysed using inductive thematic analysis (Braun & Clarke)."
           />
 
@@ -316,7 +324,7 @@ export default function ResearchPage() {
             <SectionHeading eyebrow="Limitations" title="Honest about scope." />
             <div className="prose-site mt-6">
               <p>
-                The model was developed and validated within a single-case study
+                The model was developed and tested within a single-case study
                 of one African FMCG business-network. Findings are
                 context-specific and should not be over-generalised without
                 further testing.
@@ -336,14 +344,16 @@ export default function ResearchPage() {
             />
             <div className="prose-site mt-6">
               <p>
-                Super-Cube® stands as one of the first empirically validated
-                leadership development frameworks tailored to African FMCG
-                complexity—bridging Western-dominant theory and local
+                Super-Cube® is one of the first leadership development
+                frameworks built and tested inside an African FMCG business
+                network—bridging Western-dominant theory and local
                 organisational reality.
               </p>
               <p>
                 By emphasising human-centric constructs and the developable
-                nature of leadership (estimated at 70–76% through practice), it
+                nature of leadership (genes explain roughly 24–30% of who holds
+                leadership roles; about 70–76% is linked to experience,
+                environment and learning), it
                 offers a credible, context-sensitive alternative for
                 organisations building capacity at scale.
               </p>

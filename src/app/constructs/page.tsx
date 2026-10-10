@@ -214,7 +214,7 @@ export default function ConstructsPage() {
                         className="mt-6 inline-flex items-center rounded-full px-3.5 py-1.5 text-xs font-semibold text-white"
                         style={{ background: c.color }}
                       >
-                        12-week intervention gain · +{gain.gainPct}%
+                        12-week intervention gain · +{gain.gainPct} percentage points
                       </p>
                     )}
                   </div>

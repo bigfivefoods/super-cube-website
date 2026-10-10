@@ -1,4 +1,4 @@
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { evaluatePostGate } from "@/lib/lms/gates";
 import {
   hasLocalAccess,
@@ -189,7 +189,7 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
           cta = "Locked";
         } else if (orientDone) {
           status = "done";
-          detail = orientation!.result.label;
+          detail = orientation?.result?.label ?? "Done";
           cta = "Review orientation";
         } else {
           status = "upcoming";

@@ -38,6 +38,7 @@ export function LearnShell({
   title,
   subtitle,
   hero,
+  hideJourneyRail = false,
 }: {
   children: ReactNode;
   title?: string;
@@ -53,6 +54,8 @@ export function LearnShell({
   const [moreOpen, setMoreOpen] = useState(false);
   const uid = useId();
   const focus = isFocusPath(pathname);
+  // Today already shows the pathway (next-action card + rail); welcome has its own single bar.
+  const showPathway = Boolean(journey) && !hideJourneyRail && pathname !== "/learn";
 
   useEffect(() => {
     if (onCourses) setLearnOpen(true);
@@ -92,7 +95,7 @@ export function LearnShell({
           }`}
         >
           {/* Mobile: the bottom tab bar is the navigation; this is just "where am I" + next step */}
-          {journey && (
+          {showPathway && (
             <div className="lg:hidden" data-testid="mobile-pathway">
               <div className="flex items-center gap-3 rounded-2xl border border-line bg-elevated px-3 py-2.5">
                 <div className="min-w-0 flex-1">
@@ -105,7 +108,7 @@ export function LearnShell({
                   </div>
                 </div>
                 {/* Today already has the one next-action card; don't compete with it */}
-                {pathname !== "/learn" && (
+                {(
                   <Link
                     href={journey.current.href}
                     className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-void px-3.5 text-[0.75rem] font-semibold text-void-fg"
@@ -152,8 +155,8 @@ export function LearnShell({
               />
               <NavLink item={progress} pathname={pathname} />
 
-              {journey && (
-                <div className="mt-2 rounded-xl border border-line bg-surface/80 p-2.5">
+              {showPathway && (
+                <div className="mt-2 rounded-xl border border-line bg-surface/80 p-2.5" data-testid="sidebar-pathway">
                   <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-slate">
                     Your pathway
                   </p>
@@ -170,7 +173,7 @@ export function LearnShell({
                   <p className="mt-1 text-[0.7rem] text-slate">
                     {journey.doneCount} of {journey.total} steps done
                   </p>
-                  {pathname !== "/learn" && (
+                  {(
                     <Link
                       href={journey.current.href}
                       className="mt-1 inline-flex text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"

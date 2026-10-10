@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { constructs } from "@/lib/content";
-import type { AssessmentItem } from "@/lib/lms/curriculum";
+import type { AssessmentItem } from "@/lib/lms/assessment-items";
 import { buildInstrumentItems, honestyItem, type InstrumentVersion } from "@/lib/lms/instruments";
 import { attentionItem, itemOrder, qualityFlags, type QualityFlag } from "@/lib/lms/integrity";
 import { scoreAttempt } from "@/lib/lms/scoring";

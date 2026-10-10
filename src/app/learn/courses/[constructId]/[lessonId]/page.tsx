@@ -2,16 +2,21 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { LessonContent } from "@/components/learn/LessonContent";
 import { SessionReflection } from "@/components/learn/SessionReflection";
 import { SessionArc } from "@/components/learn/session/SessionArc";
 import { PracticeLabView } from "@/components/learn/session/PracticeLabView";
 import { FaceCheckView } from "@/components/learn/session/FaceCheckView";
+import { MasteryPanel, type MasteryPrompt } from "@/components/learn/session/MasteryPanel";
+import { LockedSessionCard } from "@/components/learn/LockedSessionCard";
+import { getCheckAnswers, getCheckRound, resetCheck } from "@/components/learn/session/check-store";
+import { gradeAnswers, masteryVerdict, mayComplete, recordAttempt } from "@/lib/lms/mastery";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
-import { recordCompletion } from "@/lib/lms/cloud";
+import { recordCompletion, recordLessonOpen } from "@/lib/lms/cloud";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
 import { isSampleLesson } from "@/lib/lms/gates";
 import { track } from "@/lib/analytics";
@@ -21,7 +26,7 @@ import {
   markLessonCompleted,
   markLessonInProgress,
   recordSessionWin,
-  type LocalLmsState,
+  saveMasteryRecord,
 } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
 
@@ -36,11 +41,10 @@ export default function LessonPlayerPage() {
   const router = useRouter();
   const constructId = params.constructId as ConstructId;
   const lessonId = params.lessonId as string;
-  const [state, setState] = useState<LocalLmsState | null>(null);
+  const state = useLmsState();
   const [winBanner, setWinBanner] = useState<string | null>(null);
   const [syncNote, setSyncNote] = useState<string | null>(null);
-
-  useEffect(() => setState(loadLmsState()), []);
+  const [masteryPrompt, setMasteryPrompt] = useState<MasteryPrompt | null>(null);
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||
@@ -60,15 +64,20 @@ export default function LessonPlayerPage() {
 
   // Track resume + in-progress when opening a session
   const locked = Boolean(
-    state && data && !isSampleLesson(data.lesson.id) && !hasFullPathwayAccess(state),
+    data && !isSampleLesson(data.lesson.id) && !hasFullPathwayAccess(state),
   );
+  const lessonStatus = data ? state.lessonProgress[data.lesson.id] : undefined;
+  const openedId = useRef<string | null>(null);
 
   useEffect(() => {
     if (!data || !construct || locked) return;
-    if (state?.lessonProgress[data.lesson.id] === "completed") return;
-    setState(markLessonInProgress(data.lesson.id, constructId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- open once per lesson id
-  }, [lessonId, constructId, data?.lesson.id, locked]);
+    if (openedId.current !== data.lesson.id) {
+      openedId.current = data.lesson.id;
+      void recordLessonOpen(programmeId, constructId, data.lesson.id);
+    }
+    if (lessonStatus === "completed" || lessonStatus === "in_progress") return;
+    markLessonInProgress(data.lesson.id, constructId);
+  }, [lessonId, constructId, data, construct, locked, programmeId, lessonStatus]);
 
   function markComplete() {
     if (!data || locked) return;
@@ -76,23 +85,69 @@ export default function LessonPlayerPage() {
       continueAfterWin();
       return;
     }
-    markLessonCompleted(data.lesson.id, constructId);
+    const id = data.lesson.id;
+    // Mastery: about two-thirds of the check right first time (half for Kids),
+    // or one more go after reading the explanations. The server enforces the same rule.
+    const questions = data.lesson.arc?.check ?? data.lesson.faceCheck ?? [];
+    const answers = getCheckAnswers(id);
+    const retried = getCheckRound(id) > 0;
+    let checkPayload: { answers: (number | null)[]; retry: boolean } | undefined;
+    if (questions.length > 0) {
+      const missing = questions.filter((_, i) => answers[i] == null).length;
+      if (missing > 0) {
+        setMasteryPrompt({ kind: "answer-first", missing });
+        return;
+      }
+      const verdict = masteryVerdict(gradeAnswers(questions, answers), questions.length, data.course.programmeId);
+      const prior = loadLmsState().mastery?.[id];
+      const allowed = mayComplete(verdict, prior?.attempts ?? 0, retried);
+      saveMasteryRecord(id, recordAttempt(prior, verdict, { retried, completed: allowed }));
+      track("mastery_check", { lessonId: id, passed: String(verdict.passed), retry: String(retried), correct: String(verdict.correct), total: String(verdict.total) });
+      if (!allowed) {
+        setMasteryPrompt({ kind: "retry", verdict, missed: questions.filter((q, i) => answers[i] !== q.answer) });
+        return;
+      }
+      checkPayload = { answers, retry: retried };
+    }
+    setMasteryPrompt(null);
+    markLessonCompleted(id, constructId);
     const win = sessionWinLine(constructId, programmeId, data.lesson.title);
-    recordSessionWin(data.lesson.id, constructId, win);
-    setState(loadLmsState());
+    recordSessionWin(id, constructId, win);
     setWinBanner(win);
     // Server record (signed-in learners): this is what the after-test gate counts.
-    void recordCompletion(programmeId, constructId, data.lesson.id).then((r) => {
+    const report = (r: Awaited<ReturnType<typeof recordCompletion>>) => {
       if (r.kind === "error" && r.status === 402) {
         setSyncNote("Saved on this device only: the server needs a verified purchase or cohort seat for this session.");
+      } else if (r.kind === "error" && r.status === 403) {
+        setSyncNote("Saved on this device. A parent or guardian needs to record consent on their own account before this session counts.");
       } else if (r.kind === "signed_out") {
         setSyncNote("Saved on this device. Sign in so your progress counts towards a verifiable after-test and certificate.");
+      } else if (r.kind === "ok" && r.data.countsForGate === false) {
+        setSyncNote("Saved on this device. It counts towards your after-test once the session has been open for a short while. Mark it complete again in a moment.");
       }
+    };
+    void recordCompletion(programmeId, constructId, id, checkPayload).then((r) => {
+      // The first try happened before sign-in, so the server has no record of it:
+      // it has now stored this attempt, and the retry it asks for is the one just made.
+      if (r.kind === "error" && r.status === 422 && checkPayload && retried) {
+        return recordCompletion(programmeId, constructId, id, { ...checkPayload, retry: true }).then(report);
+      }
+      report(r);
     });
     track("lesson_complete", {
       constructId,
-      lessonId: data.lesson.id,
+      lessonId: id,
       programmeId,
+    });
+  }
+
+  function retryCheck() {
+    if (!data) return;
+    resetCheck(data.lesson.id);
+    setMasteryPrompt(null);
+    track("mastery_retry", { lessonId: data.lesson.id });
+    requestAnimationFrame(() => {
+      document.getElementById(data.lesson.arc ? "step-check" : "face-check")?.scrollIntoView({ block: "start" });
     });
   }
 
@@ -106,14 +161,6 @@ export default function LessonPlayerPage() {
     } else {
       router.push(`/learn/courses/${constructId}`);
     }
-  }
-
-  if (!state) {
-    return (
-      <LearnShell title="Lesson">
-        <p className="learn-meta">Loading…</p>
-      </LearnShell>
-    );
   }
 
   if (!data || !construct) {
@@ -132,37 +179,20 @@ export default function LessonPlayerPage() {
 
   if (locked) {
     return (
-      <LearnShell title={data.lesson.title} subtitle="Part of the full pathway">
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 sm:p-5" data-testid="lesson-paywall">
-          <p className="learn-eyebrow text-amber-900">Full pathway</p>
-          <p className="mt-1 text-[0.9375rem] font-semibold text-ink">
-            This session is part of the paid pathway.
-          </p>
-          <p className="learn-body mt-1">
-            The free sample covers the Choices overview and its first skill session. Unlock every
-            session, the after-test and a verifiable certificate with a one-off payment or a
-            school or company seat.
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Link href="/pricing" className="learn-btn learn-btn-primary">View pricing</Link>
-            <Link href="/learn/org" className="learn-btn learn-btn-secondary">I have a cohort code</Link>
-          </div>
-          <p className="learn-meta mt-3">
-            Already paid?{" "}
-            <Link
-              href={`/login?next=${encodeURIComponent(`/learn/courses/${constructId}/${lessonId}`)}`}
-              className="underline"
-            >
-              Sign in
-            </Link>{" "}
-            to open your sessions on this device.
-          </p>
-        </div>
+      <LearnShell title={data.lesson.title} subtitle={`Part of the full pathway · ~${data.lesson.durationMinutes} min`}>
+        <LockedSessionCard
+          lesson={data.lesson}
+          programmeId={data.course.programmeId}
+          constructId={constructId}
+          color={construct.color}
+          colorSoft={construct.colorSoft}
+        />
       </LearnShell>
     );
   }
 
-  const done = state.lessonProgress[data.lesson.id] === "completed";
+  const done = lessonStatus === "completed";
+  const faceIndex = Math.max(0, constructs.findIndex((c) => c.id === constructId));
   const idx = data.course.lessons.findIndex((l) => l.id === data.lesson.id);
   const prev = data.course.lessons[idx - 1];
   const next = data.course.lessons[idx + 1];
@@ -187,18 +217,34 @@ export default function LessonPlayerPage() {
               {construct.name}
             </span>
             <span className="learn-meta font-medium">
-              {TYPE_LABEL[data.lesson.lessonType]}
+              Face {faceIndex + 1} of {constructs.length}
             </span>
           </div>
-          <p className="mt-1.5 text-[0.8125rem] font-medium leading-snug text-ink">
+          <ol className="mt-2.5 flex flex-wrap gap-1" aria-label="The six faces">
+            {constructs.map((c, i) => {
+              const here = c.id === constructId;
+              return (
+                <li key={c.id}>
+                  <span
+                    className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.6875rem] font-semibold ${
+                      here ? "text-white" : "bg-white/70 text-ink"
+                    }`}
+                    style={here ? { background: c.color } : undefined}
+                  >
+                    <span className="h-1.5 w-1.5 rounded-full" style={{ background: here ? "#fff" : c.color }} aria-hidden />
+                    {i + 1} {c.shortName}
+                  </span>
+                </li>
+              );
+            })}
+          </ol>
+          <p className="mt-2.5 text-[0.9375rem] font-medium leading-snug text-ink">
             {data.lesson.outcome}
           </p>
-          <div className="mt-2.5 flex gap-1">
+          <div className="mt-2.5 flex gap-1" aria-hidden="true">
             {data.course.lessons.map((l, i) => (
-              <Link
+              <span
                 key={l.id}
-                href={`/learn/courses/${constructId}/${l.id}`}
-                title={l.title}
                 className="h-1 flex-1 rounded-full transition"
                 style={{
                   background:
@@ -211,15 +257,24 @@ export default function LessonPlayerPage() {
               />
             ))}
           </div>
-          <p className="learn-meta mt-1.5">
+          <p className={`learn-meta mt-2${data.lesson.arc ? " hidden sm:block" : ""}`}>
             {data.lesson.arc
-              ? "Eight short steps: tap any step below to jump to it."
+              ? "8 steps: hook, core idea, example, reflect, micro-practice, if–then plan, check and journal. The 15-second face intro plays on the module page."
               : data.lesson.lab
                 ? "Challenge → WOOP plan → checklist → reflect"
                 : data.lesson.faceCheck
                   ? "Recall every skill → teach it back → lock one habit"
                   : "Read → Engage → Apply"}
           </p>
+          {data.lesson.arc && (
+            <Link
+              href={`/learn/courses/${constructId}`}
+              className="mt-2 inline-block text-[0.8125rem] font-semibold underline-offset-2 hover:underline"
+              style={{ color }}
+            >
+              Play the {construct.name} intro
+            </Link>
+          )}
         </div>
       </div>
 
@@ -261,6 +316,16 @@ export default function LessonPlayerPage() {
         <p className="learn-meta mt-4 rounded-xl border border-line bg-elevated px-3 py-2" role="status">
           {syncNote}
         </p>
+      )}
+
+      {masteryPrompt && !winBanner && (
+        <MasteryPanel
+          prompt={masteryPrompt}
+          programmeId={data.course.programmeId}
+          color={color}
+          checkAnchor={data.lesson.arc ? "step-check" : "face-check"}
+          onRetry={retryCheck}
+        />
       )}
 
       {winBanner && (

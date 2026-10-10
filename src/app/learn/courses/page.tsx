@@ -1,21 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { PaywallCard } from "@/components/learn/PaywallCard";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { constructs } from "@/lib/content";
 import { faceTagline } from "@/lib/lms/face-taglines";
-import { getCoursesForProgramme } from "@/lib/lms/curriculum";
-import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
+import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { faceInkStyle } from "@/lib/contrast";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function CoursesPage() {
-  const [state, setState] = useState<LocalLmsState | null>(null);
-  useEffect(() => setState(loadLmsState()), []);
+  const state = useLmsState();
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||
@@ -93,7 +91,7 @@ export default function CoursesPage() {
 
       <div className="mt-6 rounded-2xl border border-line bg-elevated p-4 sm:p-5" data-testid="review-card">
         <p className="learn-eyebrow">Make it stick</p>
-        <p className="mt-1 text-sm font-semibold text-ink">Spaced review on Day 3, 7 and 14, then the capstone</p>
+        <p className="mt-1 text-sm font-semibold text-ink">Spaced review on Day 3, 7 and 21, then the capstone</p>
         <p className="learn-meta mt-0.5">
           Three short mixed reviews bring back what you learned just as you start to forget it. The capstone
           brings all six faces together in one case and a personal leadership plan.

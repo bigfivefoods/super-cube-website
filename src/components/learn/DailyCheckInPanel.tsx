@@ -515,10 +515,10 @@ export function DailyCheckInPanel({
       </p>
       <p className="text-center">
         <Link
-          href="/learn/report"
+          href="/learn/progress"
           className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
         >
-          View progress report
+          View your progress
         </Link>
       </p>
     </div>

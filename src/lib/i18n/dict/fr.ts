@@ -139,6 +139,12 @@ const fr: Dict = {
   "home.bookMore": "À propos du livre",
   "home.bookLang": "En anglais",
   "home.bookCoverAlt": "Couverture de The Super-Cube® Leadership Model, du Dr Craig R. Muller",
+  "home.paidEyebrow": "Nouveau · Édition complète",
+  "home.paidBody": "312 pages sur la recherche et les preuves qui fondent le modèle Super-Cube®, chaque face en profondeur, et comment développer des leaders à tous les niveaux. Broché et Kindle, 31 octobre 2026.",
+  "home.paidMore": "À propos de l’édition complète",
+  "home.paidSoon": "Bientôt sur Amazon",
+  "home.paidBuy": "Acheter sur Amazon",
+  "home.paidCoverAlt": "Couverture de Leadership Is Learnable, du Dr Craig R. Muller",
 
   "cta.tryFree": "Bilan initial gratuit",
   "cta.bookPilot": "Réserver un pilote",
@@ -172,7 +178,7 @@ const fr: Dict = {
     "Oui. Vos réflexions et vos notes de journal restent par défaut sur votre appareil. Si vous rejoignez une cohorte et donnez votre accord, le coach voit uniquement les scores et l’avancement, jamais le texte de votre journal.",
   "faq.q5": "Quelles langues sont disponibles ?",
   "faq.a5":
-    "Les menus, le pied de page et les pages clés sont disponibles en anglais (par défaut), français, arabe (العربية), portugais, kiswahili, isiZulu et afrikaans : utilisez le bouton de langue dans l’en-tête. Les sessions de cours et l’évaluation de recherche restent en anglais, afin que chaque apprenant réponde aux mêmes items validés et que les résultats restent comparables.",
+    "Les menus, le pied de page et les pages clés sont disponibles en anglais (par défaut), français, arabe (العربية), portugais, kiswahili, isiZulu et afrikaans : utilisez le bouton de langue dans l’en-tête. Les sessions de cours et le questionnaire Super-Cube® restent en anglais, afin que chaque apprenant réponde aux mêmes items et que les résultats restent comparables.",
   "faq.q6": "Les écoles et les entreprises peuvent-elles mener un pilote ?",
   "faq.a6":
     "Oui. Le kit pilote réunit les tarifs, un calendrier sur 8 semaines, les notes de consentement et les outils du coach. Créez un code de cohorte, invitez les apprenants et exportez la progression du groupe lorsque les organisations sont activées.",
