@@ -3,6 +3,7 @@ import { HeroPicture } from "@/components/news/HeroPicture";
 import { NewsBody } from "@/components/news/NewsBody";
 import { NewsImage } from "@/components/news/NewsImage";
 import { ShareButtons } from "@/components/news/ShareButtons";
+import { PaidBookCard } from "@/components/book/PaidBook";
 import { Button } from "@/components/ui";
 import { NEWS_HERO } from "@/lib/news/hero";
 import { clampDescription, formatNewsDate, newsUrl, readingMinutes, stripMarks } from "@/lib/news/seo";
@@ -47,16 +48,31 @@ export function NewsArticle({ post }: { post: NewsPost }) {
             </p>
             {post.cta && (
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4" data-news-cta>
-                <Button
-                  href={post.cta.href}
-                  download={post.cta.download}
-                  variant="primary"
-                  ariaLabel={post.cta.ariaLabel}
-                  className="w-full !bg-white !text-ink hover:!bg-white/90 focus-visible:!outline-white sm:w-auto"
-                >
-                  {post.cta.download && <DownloadIcon />}
-                  {post.cta.label}
-                </Button>
+                {post.cta.external ? (
+                  <a
+                    href={post.cta.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={post.cta.ariaLabel}
+                    data-insights={post.cta.insights}
+                    data-testid="news-cta"
+                    className="sc-btn sc-btn-primary inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full !bg-white px-5 py-2.5 text-sm font-semibold tracking-tight !text-ink hover:!bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:!outline-white sm:w-auto sm:px-6"
+                  >
+                    {post.cta.label}
+                    <ExternalIcon />
+                  </a>
+                ) : (
+                  <Button
+                    href={post.cta.href}
+                    download={post.cta.download}
+                    variant="primary"
+                    ariaLabel={post.cta.ariaLabel}
+                    className="w-full !bg-white !text-ink hover:!bg-white/90 focus-visible:!outline-white sm:w-auto"
+                  >
+                    {post.cta.download && <DownloadIcon />}
+                    {post.cta.label}
+                  </Button>
+                )}
                 {post.cta.note && <p className="text-sm text-white/75">{post.cta.note}</p>}
               </div>
             )}
@@ -84,6 +100,11 @@ export function NewsArticle({ post }: { post: NewsPost }) {
             </figure>
           )}
           <NewsBody body={post.body} />
+          {post.bookCard === "paid" && (
+            <div className="mt-10" data-news-book-card>
+              <PaidBookCard testId="news-paid-book" eyebrow="Out now in paperback · Amazon" />
+            </div>
+          )}
           <div className="mt-12 border-t border-line pt-8">
             <ShareButtons {...share} position="bottom" label="Found this useful? Share it" />
           </div>
@@ -100,6 +121,16 @@ function DownloadIcon() {
       <path d="M14 2v6h6" />
       <path d="M12 11v6" />
       <path d="m9 14 3 3 3-3" />
+    </svg>
+  );
+}
+
+function ExternalIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 3h6v6" />
+      <path d="M10 14 21 3" />
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
     </svg>
   );
 }

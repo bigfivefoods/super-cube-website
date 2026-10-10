@@ -34,7 +34,19 @@ export type NewsPost = {
    * Optional call to action in the post hero, above the share row (e.g. the free book's "Download free").
    * `download` saves a file (plain <a download>) instead of routing.
    */
-  cta?: { label: string; href: string; note?: string; download?: boolean; ariaLabel?: string };
+  cta?: {
+    label: string;
+    href: string;
+    note?: string;
+    download?: boolean;
+    ariaLabel?: string;
+    /** An outside link (e.g. Amazon): opens in a new tab. */
+    external?: boolean;
+    /** A whitelisted `data-insights` slug for click tracking (e.g. `cta-amazon`). */
+    insights?: string;
+  };
+  /** Optional book card after the body: "paid" shows Leadership Is Learnable with its Amazon button. */
+  bookCard?: "paid";
   /** Byline shown at the top of the article. */
   author?: string;
   /** ISO timestamps (UTC). */
