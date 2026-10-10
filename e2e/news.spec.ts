@@ -275,10 +275,8 @@ test("home: the free book and the comprehensive edition are two cards of the sam
     const free = (await page.getByTestId("home-book").locator(".sc-card").first().boundingBox())!;
     const paid = (await page.getByTestId("home-paid-book").boundingBox())!;
     expect(Math.abs(free.width - paid.width)).toBeLessThanOrEqual(1);
-    if (w >= 1024) {
-      expect(Math.abs(free.height - paid.height)).toBeLessThanOrEqual(1);
-      expect(Math.abs(free.y - paid.y)).toBeLessThanOrEqual(1);
-    }
+    expect(Math.abs(free.height - paid.height)).toBeLessThanOrEqual(1);
+    if (w >= 1024) expect(Math.abs(free.y - paid.y)).toBeLessThanOrEqual(1);
     const covers = await page.getByTestId("home-book").locator(".sc-card img").evaluateAll((is) => is.map((i) => Math.round(i.getBoundingClientRect().width)));
     expect(covers.length).toBe(2);
     expect(covers[0]).toBe(covers[1]);

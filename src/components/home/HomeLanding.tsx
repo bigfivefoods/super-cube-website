@@ -378,7 +378,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
       <section className="section-pad border-t border-line bg-paper" data-testid="home-book" aria-labelledby="home-book-title">
         <div className="container-site">
           {/* Two cards of the same size (the free book's design): side by side from lg, stacked the same way below. */}
-          <div className="grid items-stretch gap-6 lg:grid-cols-2">
+          <div className="grid auto-rows-fr items-stretch gap-6 lg:grid-cols-2">
             <BookPairCard
               cover={{ src: BOOK.cover.src, width: BOOK.cover.width, height: BOOK.cover.height, alt: translate(dict, "home.bookCoverAlt") }}
               eyebrow={translate(dict, "home.bookEyebrow")}
