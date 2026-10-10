@@ -6,7 +6,8 @@ import { absoluteUrl } from "@/lib/seo";
 /**
  * Leadership Is Learnable, the comprehensive edition (the paid book). The "Buy the paperback on Amazon" button
  * shows while amazonBuyUrl() returns a real product URL (src/lib/book.ts; otherwise "Coming soon on Amazon").
- * The Kindle edition reads kindleBuyUrl() and shows "Kindle edition coming soon" until its listing is live.
+ * The Kindle e-book reads kindleBuyUrl(): "Buy the Kindle e-book on Amazon" (live since 10 Oct 2026, tracked as
+ * cta-amazon-kindle), or "Kindle edition coming soon" if KINDLE_URL_TBD is emptied.
  */
 
 const D = PAID_BOOK_DETAILS;
@@ -61,11 +62,11 @@ export function AmazonButton({
   );
 }
 
-/** The Kindle edition: a link once kindleBuyUrl() is live, otherwise "Kindle edition coming soon" (only while the paperback is live). */
+/** The Kindle e-book: "Buy the Kindle e-book on Amazon" while kindleBuyUrl() is set, otherwise "Kindle edition coming soon" (only while the paperback is live). */
 export function KindleNote({
   className = "",
   soonLabel = "Kindle edition coming soon",
-  buyLabel = "Kindle edition on Amazon",
+  buyLabel = "Buy the Kindle e-book on Amazon",
 }: {
   className?: string;
   soonLabel?: string;
@@ -89,7 +90,8 @@ export function KindleNote({
       rel="noopener noreferrer"
       className={`${base} border border-line-strong text-ink hover:bg-surface ${className}`}
       data-testid="paid-book-kindle"
-      data-insights="cta-amazon"
+      data-insights="cta-amazon-kindle"
+      aria-label={`${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
     >
       {buyLabel}
     </a>
@@ -153,7 +155,7 @@ export function PaidBookSection() {
             <AmazonButton />
             <KindleNote />
             <p className="text-sm text-muted">
-              {amazonBuyUrl() ? "Paperback out now" : "Paperback and Kindle"} · English · by {PAID_BOOK.author}
+              {amazonBuyUrl() ? (kindleBuyUrl() ? "Paperback and Kindle out now" : "Paperback out now") : "Paperback and Kindle"} · English · by {PAID_BOOK.author}
             </p>
           </div>
         </div>
@@ -165,7 +167,7 @@ export function PaidBookSection() {
 /** Compact card: home page, /about, /research. Strings can be translated by the caller. */
 export function PaidBookCard({
   eyebrow = `New · ${D.edition}`,
-  body = `${D.pages} pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback; Kindle edition coming soon.`,
+  body = `${D.pages} pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback and Kindle.`,
   moreLabel = "About the book",
   soonLabel,
   buyLabel,
@@ -223,7 +225,7 @@ export function PaidBookCard({
   );
 }
 
-/** schema.org Book for the comprehensive edition: the paperback offer carries the Amazon URL; Kindle has none until live. */
+/** schema.org Book for the comprehensive edition: each offer carries its own Amazon URL (paperback, Kindle) once live. */
 export function paidBookJsonLd() {
   const url = amazonBuyUrl();
   const kindleUrl = kindleBuyUrl();

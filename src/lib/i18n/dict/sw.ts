@@ -139,11 +139,12 @@ const sw: Dict = {
   "home.bookLang": "Kwa Kiingereza",
   "home.bookCoverAlt": "Jalada la The Super-Cube® Leadership Model, la Dkt. Craig R. Muller",
   "home.paidEyebrow": "Mpya · Toleo kamili",
-  "home.paidBody": "Kurasa 312 kuhusu utafiti na ushahidi wa modeli ya Super-Cube®, kila uso kwa kina, na jinsi ya kukuza viongozi katika kila ngazi. Sasa inapatikana kwa jalada laini; toleo la Kindle linakuja hivi karibuni.",
+  "home.paidBody": "Kurasa 312 kuhusu utafiti na ushahidi wa modeli ya Super-Cube®, kila uso kwa kina, na jinsi ya kukuza viongozi katika kila ngazi. Sasa inapatikana kwa jalada laini na kwenye Kindle.",
   "home.paidMore": "Kuhusu toleo kamili",
   "home.paidSoon": "Inakuja hivi karibuni kwenye Amazon",
   "home.paidBuy": "Nunua jalada laini kwenye Amazon",
   "home.paidKindleSoon": "Toleo la Kindle linakuja hivi karibuni",
+  "home.paidKindleBuy": "Nunua kitabu pepe cha Kindle kwenye Amazon",
   "home.paidCoverAlt": "Jalada la Leadership Is Learnable, la Dkt. Craig R. Muller",
 
   "cta.tryFree": "Anza tathmini ya bure",

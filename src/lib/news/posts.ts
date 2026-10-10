@@ -1,4 +1,4 @@
-import { AMAZON_URL_TBD, BOOK, PAID_BOOK, PAID_BOOK_DETAILS } from "@/lib/book";
+import { AMAZON_URL_TBD, BOOK, KINDLE_URL_TBD, PAID_BOOK, PAID_BOOK_DETAILS } from "@/lib/book";
 import type { NewsPost } from "./types";
 import { BOOK as FREE_BOOK } from "@/lib/book";
 
@@ -271,7 +271,7 @@ Schools can run the same pathway with a whole grade, using cohort codes for teac
 
 /*
  * Leadership Is Learnable, the paperback launch (DRAFT for Craig's review, 10 Oct 2026: the paperback is live on
- * Amazon, ASIN 1048361616; the Kindle e-book is still in review, so "Kindle edition coming soon"). Facts only from the
+ * Amazon, ASIN 1048361616; the Kindle e-book followed the same day, ASIN B0HMLR6QRP, KINDLE_URL_TBD). Facts only from the
  * book and its store listing: 132-person survey, ten director interviews, the six faces, the 12-week Imana Foods and
  * Kerry Foods intervention (+32.2 percentage points overall; Principles +45.1, Emotional +39.5, Spiritual +24.6),
  * the SDG chapter (official icons used with UN permission), the DBA at UKZN (thesis 2020, degree 2021). No
@@ -281,9 +281,9 @@ Schools can run the same pathway with a whole grade, using cohort codes for teac
  */
 const LEADERSHIP_IS_LEARNABLE_BODY = `*By Dr Craig R. Muller, author of the Super-Cube® Leadership Model*
 
-Leadership is not a gift handed to a lucky few. It is a set of skills that can be learnt, practised and measured. That belief has shaped most of my working life, and today I am proud to say that the book which sets out the evidence for it is **now available in paperback on Amazon**: **${PAID_BOOK.title}: ${PAID_BOOK.subtitle}**, published by ${PAID_BOOK.imprint}.
+Leadership is not a gift handed to a lucky few. It is a set of skills that can be learnt, practised and measured. That belief has shaped most of my working life, and today I am proud to say that the book which sets out the evidence for it is **now available in paperback on Amazon**, and as a Kindle e-book: **${PAID_BOOK.title}: ${PAID_BOOK.subtitle}**, published by ${PAID_BOOK.imprint}.
 
-**[Buy the paperback on Amazon](${AMAZON_URL_TBD})** · $${PAID_BOOK_DETAILS.paperbackPrice.usd} (R${PAID_BOOK_DETAILS.paperbackPrice.zar} in South Africa) · Kindle edition coming soon
+**[Buy the paperback on Amazon](${AMAZON_URL_TBD})** · $${PAID_BOOK_DETAILS.paperbackPrice.usd} (R${PAID_BOOK_DETAILS.paperbackPrice.zar} in South Africa) · **[Buy the Kindle e-book on Amazon](${KINDLE_URL_TBD})** · $${PAID_BOOK_DETAILS.ebookPrice.usd}
 
 ![${PAID_BOOK.title} by ${PAID_BOOK.author}: the white-covered paperback with the six-colour Super-Cube® hexagon on the cover](/news/leadership-is-learnable-cover-wide.jpg)
 
@@ -321,7 +321,7 @@ I wrote it for leaders at every level and for the people who develop them: manag
 ## Get your copy
 
 - **Paperback**: $${PAID_BOOK_DETAILS.paperbackPrice.usd} on Amazon (R${PAID_BOOK_DETAILS.paperbackPrice.zar} in South Africa), ${PAID_BOOK_DETAILS.pages} pages in full colour, 6 × 9 in, ISBN ${PAID_BOOK.paperback.isbn}.
-- **Kindle e-book**: coming soon ($${PAID_BOOK_DETAILS.ebookPrice.usd}, ISBN ${PAID_BOOK.kindle.isbn}). We will share the link here when it is live.
+- **Kindle e-book**: $${PAID_BOOK_DETAILS.ebookPrice.usd} on Amazon, ISBN ${PAID_BOOK.kindle.isbn}: [buy the Kindle e-book](${KINDLE_URL_TBD}).
 
 Prices may differ between Amazon stores.
 
@@ -339,30 +339,36 @@ export const codeNewsPosts: NewsPost[] = [
     slug: "leadership-is-learnable-new-book",
     title: "Leadership Is Learnable: the Super-Cube® book is now available in paperback on Amazon",
     excerpt:
-      "Dr Craig R. Muller's comprehensive Super-Cube® book is now in paperback on Amazon: the research, the evidence and how to develop leaders. $17.99 (R299 in SA).",
+      "Dr Craig R. Muller's comprehensive Super-Cube® book is now on Amazon in paperback and Kindle: the research, the evidence and how to develop leaders. Paperback $17.99 (R299 in SA), Kindle $8.99.",
     body: LEADERSHIP_IS_LEARNABLE_BODY,
     tag: "Out now · Leadership Is Learnable",
     status: "published",
     // Feature image (10 Oct 2026, Craig): the LinkedIn launch design, re-rendered for each crop.
-    coverImage: "/news/leadership-is-learnable-paperback-square.jpg",
+    coverImage: "/news/leadership-is-learnable-kindle-square.jpg",
     coverWide: "/news/leadership-is-learnable-cover-wide.jpg",
     heroImage: "/news/leadership-is-learnable-hero.jpg",
     heroWide: "/news/leadership-is-learnable-hero-wide.jpg",
     featureHero: {
-      wide: "/news/leadership-is-learnable-paperback-hero.jpg",
-      square: "/news/leadership-is-learnable-paperback-square.jpg",
-      card: "/news/leadership-is-learnable-paperback-wide.jpg",
-      alt: "Leadership Is Learnable by Dr Craig R. Muller, out now in paperback on Amazon: the white-covered paperback, +32.2 percentage points in 12 weeks with an accredited Super-Cube® intervention, paperback $17.99 or R299 in South Africa, Kindle coming soon, start free at super-cube.me/book",
+      wide: "/news/leadership-is-learnable-kindle-hero.jpg",
+      square: "/news/leadership-is-learnable-kindle-square.jpg",
+      card: "/news/leadership-is-learnable-kindle-wide.jpg",
+      alt: "Leadership Is Learnable by Dr Craig R. Muller, out now on Amazon in paperback and Kindle: the white-covered paperback, +32.2 percentage points in 12 weeks with an accredited Super-Cube® intervention, paperback $17.99 or R299 in South Africa, Kindle e-book $8.99, start free at super-cube.me/book",
     },
     coverAlt:
-      "Leadership Is Learnable by Dr Craig R. Muller, out now in paperback on Amazon: the white-covered paperback, +32.2 percentage points in 12 weeks, paperback $17.99 or R299 in South Africa, Kindle coming soon",
-    shareImage: "/images/og/news/leadership-is-learnable-paperback.jpg",
+      "Leadership Is Learnable by Dr Craig R. Muller, out now on Amazon in paperback and Kindle: the white-covered paperback, +32.2 percentage points in 12 weeks, paperback $17.99 or R299 in South Africa, Kindle e-book $8.99",
+    shareImage: "/images/og/news/leadership-is-learnable-kindle.jpg",
     cta: {
       label: "Buy the paperback on Amazon",
       href: AMAZON_URL_TBD,
       external: true,
       insights: "cta-amazon",
-      note: `$${PAID_BOOK_DETAILS.paperbackPrice.usd} · R${PAID_BOOK_DETAILS.paperbackPrice.zar} in South Africa · Kindle edition coming soon`,
+      note: `Paperback $${PAID_BOOK_DETAILS.paperbackPrice.usd} · R${PAID_BOOK_DETAILS.paperbackPrice.zar} in South Africa · Kindle $${PAID_BOOK_DETAILS.ebookPrice.usd}`,
+      secondary: {
+        label: "Buy the Kindle e-book",
+        href: KINDLE_URL_TBD,
+        insights: "cta-amazon-kindle",
+        ariaLabel: "Buy the Kindle e-book on Amazon: Leadership Is Learnable (opens Amazon)",
+      },
       ariaLabel: "Buy the paperback on Amazon: Leadership Is Learnable (opens Amazon)",
     },
     bookCard: "paid",

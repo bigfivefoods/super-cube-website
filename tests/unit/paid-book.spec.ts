@@ -10,7 +10,7 @@ import { isMinorBand } from "../../src/lib/lms/server/share-links";
 
 /**
  * Leadership Is Learnable, the comprehensive edition (the paid book): /book, the home card,
- * /about, /media, /research. The paperback is live on Amazon (AMAZON_URL_TBD); Kindle is coming soon (KINDLE_URL_TBD).
+ * /about, /media, /research. The paperback (AMAZON_URL_TBD) and the Kindle e-book (KINDLE_URL_TBD) are live on Amazon.
  */
 
 const ROOT = path.resolve(__dirname, "../..");
@@ -32,11 +32,11 @@ test("Amazon buttons: hidden while AMAZON_URL_TBD is empty or a search URL, show
   expect(amazonBuyUrl("https://www.amazon.com/s?k=9781048361612")).toBeNull();
   expect(amazonBuyUrl("https://example.com/dp/B000")).toBeNull();
   expect(amazonBuyUrl("https://www.amazon.com/dp/1048361611")).toBe("https://www.amazon.com/dp/1048361611");
-  // The paperback is live (ASIN 1048361616); the Kindle e-book is still in review.
+  // The paperback is live (ASIN 1048361616); so is the Kindle e-book (ASIN B0HMLR6QRP, 10 Oct 2026).
   expect(AMAZON_URL_TBD).toBe("https://www.amazon.com/dp/1048361616");
   expect(amazonBuyUrl()).toBe("https://www.amazon.com/dp/1048361616");
-  expect(KINDLE_URL_TBD).toBe("");
-  expect(kindleBuyUrl()).toBeNull();
+  expect(KINDLE_URL_TBD).toBe("https://www.amazon.com/dp/B0HMLR6QRP");
+  expect(kindleBuyUrl()).toBe("https://www.amazon.com/dp/B0HMLR6QRP");
 });
 
 test("cover is a 2:3 optimised JPEG", () => {
@@ -67,7 +67,7 @@ test("author bio: from the book, with Pietermaritzburg, the degrees and Georgia 
 });
 
 test("home card strings are in all seven dictionaries", () => {
-  const keys = ["home.paidEyebrow", "home.paidBody", "home.paidMore", "home.paidSoon", "home.paidBuy", "home.paidKindleSoon", "home.paidCoverAlt"] as const;
+  const keys = ["home.paidEyebrow", "home.paidBody", "home.paidMore", "home.paidSoon", "home.paidBuy", "home.paidKindleSoon", "home.paidKindleBuy", "home.paidCoverAlt"] as const;
   for (const [lang, dict] of Object.entries(DICTS)) {
     for (const k of keys) {
       expect(dict[k], `${lang} ${k}`).toBeTruthy();
