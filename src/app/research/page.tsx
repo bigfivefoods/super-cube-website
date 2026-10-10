@@ -171,7 +171,7 @@ export default function ResearchPage() {
             <PaidBookCard
               testId="research-paid-book"
               eyebrow="Book · 2026"
-              body="The research in full, for a general reader: the survey of 132 people, the interviews with ten directors, each of the six faces in depth, the 12-week intervention results and how to build a programme. 312 pages, paperback and Kindle, 31 October 2026."
+              body="The research in full, for a general reader: the survey of 132 people, the interviews with ten directors, each of the six faces in depth, the 12-week intervention results and how to build a programme. 312 pages, out now in paperback; Kindle edition coming soon."
             />
           </div>
         </div>

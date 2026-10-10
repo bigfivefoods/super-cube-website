@@ -1,12 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PAID_BOOK, PAID_BOOK_DETAILS, amazonBuyUrl } from "@/lib/book";
+import { PAID_BOOK, PAID_BOOK_DETAILS, amazonBuyUrl, kindleBuyUrl } from "@/lib/book";
 import { absoluteUrl } from "@/lib/seo";
 
 /**
- * Leadership Is Learnable, the comprehensive edition (the paid book). The "Buy on Amazon" button only
- * appears once amazonBuyUrl() returns a real product URL (src/lib/book.ts); until then the site shows
- * "Coming soon on Amazon".
+ * Leadership Is Learnable, the comprehensive edition (the paid book). The "Buy the paperback on Amazon" button
+ * shows while amazonBuyUrl() returns a real product URL (src/lib/book.ts; otherwise "Coming soon on Amazon").
+ * The Kindle edition reads kindleBuyUrl() and shows "Kindle edition coming soon" until its listing is live.
  */
 
 const D = PAID_BOOK_DETAILS;
@@ -15,14 +15,17 @@ export const PAID_BOOK_FACTS: { k: string; v: string }[] = [
   { k: "Pages", v: `${D.pages}` },
   { k: "Format", v: D.format },
   { k: "Paperback", v: `R${D.paperbackPrice.zar} · $${D.paperbackPrice.usd} · ISBN ${PAID_BOOK.paperback.isbn}` },
-  { k: "eBook (Kindle)", v: `R${D.ebookPrice.zar} · $${D.ebookPrice.usd} · ISBN ${PAID_BOOK.kindle.isbn}` },
-  { k: "Published", v: `${D.publishedLabel} · ${PAID_BOOK.imprint}` },
+  {
+    k: "eBook (Kindle)",
+    v: `${kindleBuyUrl() ? "" : "Coming soon · "}$${D.ebookPrice.usd} · ISBN ${PAID_BOOK.kindle.isbn}`,
+  },
+  { k: amazonBuyUrl() ? "Paperback published" : "Published", v: `${D.publishedLabel} · ${PAID_BOOK.imprint}` },
 ];
 
 export function AmazonButton({
   className = "",
   soonLabel = "Coming soon on Amazon",
-  buyLabel = "Buy on Amazon",
+  buyLabel = "Buy the paperback on Amazon",
   dark = false,
 }: {
   className?: string;
@@ -52,6 +55,41 @@ export function AmazonButton({
       data-testid="paid-book-amazon"
       data-insights="cta-amazon"
       aria-label={`${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
+    >
+      {buyLabel}
+    </a>
+  );
+}
+
+/** The Kindle edition: a link once kindleBuyUrl() is live, otherwise "Kindle edition coming soon" (only while the paperback is live). */
+export function KindleNote({
+  className = "",
+  soonLabel = "Kindle edition coming soon",
+  buyLabel = "Kindle edition on Amazon",
+}: {
+  className?: string;
+  soonLabel?: string;
+  buyLabel?: string;
+}) {
+  if (!amazonBuyUrl()) return null;
+  const url = kindleBuyUrl();
+  const base =
+    "inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight sm:w-auto sm:px-6";
+  if (!url) {
+    return (
+      <span className={`${base} cursor-default border border-dashed border-line-strong text-slate ${className}`} data-testid="paid-book-kindle-soon">
+        {soonLabel}
+      </span>
+    );
+  }
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${base} border border-line-strong text-ink hover:bg-surface ${className}`}
+      data-testid="paid-book-kindle"
+      data-insights="cta-amazon"
     >
       {buyLabel}
     </a>
@@ -113,7 +151,10 @@ export function PaidBookSection() {
           </dl>
           <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
             <AmazonButton />
-            <p className="text-sm text-muted">Paperback and Kindle · English · by {PAID_BOOK.author}</p>
+            <KindleNote />
+            <p className="text-sm text-muted">
+              {amazonBuyUrl() ? "Paperback out now" : "Paperback and Kindle"} · English · by {PAID_BOOK.author}
+            </p>
           </div>
         </div>
       </div>
@@ -124,10 +165,11 @@ export function PaidBookSection() {
 /** Compact card: home page, /about, /research. Strings can be translated by the caller. */
 export function PaidBookCard({
   eyebrow = `New · ${D.edition}`,
-  body = `${D.pages} pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Paperback and Kindle, ${D.publishedLabel}.`,
+  body = `${D.pages} pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback; Kindle edition coming soon.`,
   moreLabel = "About the book",
   soonLabel,
   buyLabel,
+  kindleSoonLabel,
   coverAlt,
   hrefLang,
   testId = "paid-book-card",
@@ -137,6 +179,7 @@ export function PaidBookCard({
   moreLabel?: string;
   soonLabel?: string;
   buyLabel?: string;
+  kindleSoonLabel?: string;
   coverAlt?: string;
   hrefLang?: string;
   testId?: string;
@@ -166,6 +209,7 @@ export function PaidBookCard({
         <p className="mt-1 text-sm leading-relaxed text-slate">{body}</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
           <AmazonButton soonLabel={soonLabel} buyLabel={buyLabel} />
+          <KindleNote soonLabel={kindleSoonLabel} />
           <Link
             href={`/book#${D.anchor}`}
             hrefLang={hrefLang}
@@ -179,14 +223,15 @@ export function PaidBookCard({
   );
 }
 
-/** schema.org Book for the comprehensive edition (no Amazon URL until it is live). */
+/** schema.org Book for the comprehensive edition: the paperback offer carries the Amazon URL; Kindle has none until live. */
 export function paidBookJsonLd() {
   const url = amazonBuyUrl();
-  const offer = (price: string, priceCurrency: string) => ({
+  const kindleUrl = kindleBuyUrl();
+  const offer = (price: string, priceCurrency: string, link: string | null) => ({
     "@type": "Offer",
     price,
     priceCurrency,
-    ...(url ? { url, availability: "https://schema.org/InStock" } : {}),
+    ...(link ? { url: link, availability: "https://schema.org/InStock" } : {}),
   });
   return {
     "@context": "https://schema.org",
@@ -207,14 +252,13 @@ export function paidBookJsonLd() {
         isbn: PAID_BOOK.paperback.isbn.replace(/-/g, ""),
         numberOfPages: D.pages,
         datePublished: D.published,
-        offers: [offer(D.paperbackPrice.zar.toFixed(2), "ZAR"), offer(D.paperbackPrice.usd.toFixed(2), "USD")],
+        offers: [offer(D.paperbackPrice.usd.toFixed(2), "USD", url), offer(D.paperbackPrice.zar.toFixed(2), "ZAR", null)],
       },
       {
         "@type": "Book",
         bookFormat: "https://schema.org/EBook",
         isbn: PAID_BOOK.kindle.isbn.replace(/-/g, ""),
-        datePublished: D.published,
-        offers: [offer(D.ebookPrice.zar.toFixed(2), "ZAR"), offer(D.ebookPrice.usd.toFixed(2), "USD")],
+        offers: [offer(D.ebookPrice.usd.toFixed(2), "USD", kindleUrl)],
       },
     ],
   };
