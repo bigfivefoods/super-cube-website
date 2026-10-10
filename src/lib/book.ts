@@ -28,8 +28,8 @@ export const PAID_BOOK_DETAILS = {
   pages: 312,
   format: "Paperback · 6 × 9 in · full colour",
   /** Publication date (ISO) and its label. */
-  published: "2026-10-31",
-  publishedLabel: "31 October 2026",
+  published: "2026-10-07",
+  publishedLabel: "October 2026",
   paperbackPrice: { zar: 299, usd: 17.99 },
   ebookPrice: { zar: 149, usd: 8.99 },
   cover: { src: "/images/book/leadership-is-learnable-cover.jpg", width: 1000, height: 1500 },
@@ -38,15 +38,20 @@ export const PAID_BOOK_DETAILS = {
 } as const;
 
 /**
- * The Amazon "Buy" link, or null while the book is not live. Every buy button on the site calls this, so the
- * one switch is AMAZON_URL_TBD: while it is empty or still the Amazon *search* placeholder, buttons stay hidden
- * and the site shows "Coming soon on Amazon". Set AMAZON_URL_TBD to the real product URL (…/dp/…) to show them.
+ * The Amazon "Buy" link for the paperback, or null while it is not live. Every paperback buy button on the site
+ * calls this, so the one switch is AMAZON_URL_TBD: while it is empty or an Amazon *search* placeholder, buttons
+ * stay hidden and the site shows "Coming soon on Amazon".
  */
 export function amazonBuyUrl(url: string = AMAZON_URL_TBD): string | null {
   const u = (url || "").trim();
   if (!/^https:\/\/(www\.)?amazon\.[a-z.]+\//i.test(u) && !/^https:\/\/amzn\.(to|eu)\//i.test(u)) return null;
   if (/amazon\.[a-z.]+\/s(\/|\?)/i.test(u)) return null; // search placeholder, not a product page
   return u;
+}
+
+/** The Kindle "Buy" link, or null while the e-book is in review (the site shows "Kindle edition coming soon"). */
+export function kindleBuyUrl(url: string = KINDLE_URL_TBD): string | null {
+  return amazonBuyUrl(url);
 }
 
 /** How to cite the comprehensive edition (APA style). */
@@ -77,11 +82,14 @@ export const BOOK_CHAPTERS: readonly { n?: number; title: string; note: string }
  * The paid book, Leadership Is Learnable (white cover, Big Five Group), by Dr Craig R. Muller.
  * The free book above stays the free starting point. Used by the /news launch post (src/lib/news/posts.ts).
  *
- * AMAZON_URL_TBD is a PLACEHOLDER: the book is going live on Amazon KDP and the product URL is not known yet.
- * Until then it points at an Amazon search for the paperback ISBN. When the listing is live, replace this one
- * value with the real Amazon product URL; every Amazon link on the site reads it from here.
+ * AMAZON_URL_TBD is the Amazon product URL of the PAPERBACK (ASIN 1048361616), live since October 2026; every
+ * paperback Amazon link on the site reads it from here (the name is kept so older notes still match).
+ *
+ * KINDLE_URL_TBD stays empty while the Kindle e-book is in review: the site shows "Kindle edition coming soon".
+ * When the Kindle listing is live, set it to the Kindle product URL (…/dp/…).
  */
-export const AMAZON_URL_TBD = "https://www.amazon.com/s?k=9781048361612";
+export const AMAZON_URL_TBD = "https://www.amazon.com/dp/1048361616";
+export const KINDLE_URL_TBD = "";
 
 export const PAID_BOOK = {
   title: "Leadership Is Learnable",
