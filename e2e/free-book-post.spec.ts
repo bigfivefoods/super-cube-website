@@ -28,7 +28,8 @@ test("free book post: hero size, share card, Download free link, paperback and K
   const amazon = await body.locator('a[href*="amazon."]').evaluateAll((as) => as.map((a) => a.getAttribute("href")));
   expect(amazon.sort()).toEqual(["https://www.amazon.com/dp/1048361616", "https://www.amazon.com/dp/B0HMLR6QRP"]);
   await expect(body.locator('a[href="/news/leadership-is-learnable-new-book"]')).toHaveCount(1);
-  await expect(body).not.toContainText(/R299|R149|\$17\.99|\$8\.99|Buy /);
+  // Prices only in the one "Now out" line (no e-book rand price, no stale "coming soon" wording)
+  await expect(body).not.toContainText(/R149|coming soon on Amazon|share the news here/i);
   await expect(page.locator("main")).not.toContainText(/kwaden|®®|24\.7|empirically validated/i);
   const pdf = await request.get("/super-cube-leadership-book.pdf");
   expect(pdf.status()).toBe(200);
