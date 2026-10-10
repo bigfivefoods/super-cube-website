@@ -2,8 +2,8 @@ import { expect, test } from "@playwright/test";
 
 /* The free Super-Cube® book post (8 Oct 2026, before the Leadership Is Learnable launch): landing-size hero,
  * share card with the Super-Cube® mark, a "Download free" link to the same PDF as /book, and only a teaser for the
- * comprehensive edition (no Amazon link, price or buy button). */
-test("free book post: hero size, share card, Download free link, no Amazon link", async ({ page, request }) => {
+ * comprehensive edition (since the launch, one line linking the paperback and Kindle on Amazon and the launch post). */
+test("free book post: hero size, share card, Download free link, paperback and Kindle links", async ({ page, request }) => {
   const path = "/news/free-super-cube-leadership-book";
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
@@ -22,10 +22,12 @@ test("free book post: hero size, share card, Download free link, no Amazon link"
   const body = page.locator(".news-body");
   const download = body.getByRole("link", { name: /^Download free/ }).first();
   await expect(download).toHaveAttribute("href", "/super-cube-leadership-book.pdf");
-  for (const t of ["32.2 percentage points", "Principles +45.1", "Emotional +39.5", "Spiritual +24.6", "132 people", "Coming soon"]) {
+  for (const t of ["32.2 percentage points", "Principles +45.1", "Emotional +39.5", "Spiritual +24.6", "132 people", "Now out: the comprehensive edition", "$17.99", "R299 in South Africa", "$8.99"]) {
     await expect(body).toContainText(t);
   }
-  await expect(body.locator('a[href*="amazon."]')).toHaveCount(0);
+  const amazon = await body.locator('a[href*="amazon."]').evaluateAll((as) => as.map((a) => a.getAttribute("href")));
+  expect(amazon.sort()).toEqual(["https://www.amazon.com/dp/1048361616", "https://www.amazon.com/dp/B0HMLR6QRP"]);
+  await expect(body.locator('a[href="/news/leadership-is-learnable-new-book"]')).toHaveCount(1);
   await expect(body).not.toContainText(/R299|R149|\$17\.99|\$8\.99|Buy /);
   await expect(page.locator("main")).not.toContainText(/kwaden|®®|24\.7|empirically validated/i);
   const pdf = await request.get("/super-cube-leadership-book.pdf");

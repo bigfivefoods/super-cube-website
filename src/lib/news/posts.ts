@@ -15,8 +15,9 @@ import { BOOK as FREE_BOOK } from "@/lib/book";
  * foreword by Dr Housainou Taal, 36 practices, six self-assessment pages, the 30-day plan, the new Global Goals
  * chapter, the DBA thesis (UKZN, 2020; degree 2021: 18-item survey of 132 people, then interviews), the 12-week
  * Imana Foods and Kerry Foods intervention (+32.2 percentage points overall, Principles +45.1, Emotional +39.5, Spiritual +24.6)
- * and the Grade 12 field snapshot (school and learners not named). The comprehensive edition is only a teaser:
- * no Amazon link, price or buy button until its own launch post. Matches the bigfivegroup.africa update.
+ * and the Grade 12 field snapshot (school and learners not named). The comprehensive edition was a teaser until it
+ * launched; since 10 Oct 2026 one line links the paperback and Kindle on Amazon and the launch post. Matches the
+ * bigfivegroup.africa update.
  */
 const FREE_BOOK_BODY = `*By Dr Craig R. Muller, author of the Super-Cube® Leadership Model*
 
@@ -47,9 +48,9 @@ The Super-Cube® grew out of my Doctor of Business Administration at the Univers
 
 When 33 Grade 12 learners at a leading high school in South Africa answered a leadership questionnaire after a brief Super-Cube® leadership intervention, 94% said leadership is important and 88% said they would like to develop their leadership using a scientific approach. Not one had a leadership model they actually used ([field snapshot](/news/grade-12-boarders-leadership-field-snapshot); self-reported answers, not before-and-after results). The wish to grow is there; the missing piece is a model. A free book is the simplest way I know to put one in people's hands.
 
-## Coming soon: the comprehensive edition
+## Now out: the comprehensive edition
 
-This free book is the short introduction. *Leadership Is Learnable*, the comprehensive edition, goes much further: the full research and evidence behind the model, each face in depth, and how to develop leaders at every level. It is coming soon on Amazon, in paperback and as an e-book, and we will share the news here when it is out.
+This free book is the short introduction. *Leadership Is Learnable*, the comprehensive edition, goes much further: the full research and evidence behind the model, each face in depth, and how to develop leaders at every level. It is now out on Amazon in [paperback](${AMAZON_URL_TBD}) ($${PAID_BOOK_DETAILS.paperbackPrice.usd}, R${PAID_BOOK_DETAILS.paperbackPrice.zar} in South Africa) and on [Kindle](${KINDLE_URL_TBD}) ($${PAID_BOOK_DETAILS.ebookPrice.usd}): [read the launch post](/news/leadership-is-learnable-new-book).
 
 ## Download it, then pass it on
 
@@ -325,7 +326,7 @@ I wrote it for leaders at every level and for the people who develop them: manag
 
 Prices may differ between Amazon stores.
 
-[Buy the paperback on Amazon](${AMAZON_URL_TBD}) · [Download the free edition](${BOOK.page}) · [Start your free baseline](/learn/start)
+[Buy the paperback on Amazon](${AMAZON_URL_TBD}) · [Buy the Kindle e-book on Amazon](${KINDLE_URL_TBD}) · [Download the free edition](${BOOK.page}) · [Start your free baseline](/learn/start)
 
 ## Start free, then go deeper
 
