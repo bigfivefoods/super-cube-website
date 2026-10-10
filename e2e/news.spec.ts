@@ -200,7 +200,8 @@ test("Leadership Is Learnable post: feature-image hero, Amazon paperback, Kindle
   const path = "/news/leadership-is-learnable-new-book";
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto(path);
-  // Feature-image hero (10 Oct 2026, Craig): the LinkedIn launch design shows whole and full-bleed, the copy underneath.
+  // Feature-image hero (10 Oct 2026, Craig): the LinkedIn launch design shows whole at a moderate size inside the page
+  // container (not full-bleed, at most 56rem wide), the copy underneath.
   const header = page.locator("header[data-feature-hero]");
   const img = header.locator("img[data-feature-hero-image]");
   await expect(img).toBeVisible();
@@ -209,7 +210,9 @@ test("Leadership Is Learnable post: feature-image hero, Amazon paperback, Kindle
     const r = i.getBoundingClientRect();
     return { w: r.width, h: r.height, nw: i.naturalWidth, nh: i.naturalHeight, bottom: r.bottom, src: i.currentSrc };
   });
-  expect(m.w).toBeGreaterThanOrEqual(1279);
+  expect(m.w).toBeGreaterThan(600);
+  expect(m.w).toBeLessThanOrEqual(896);
+  expect(m.h).toBeLessThanOrEqual(480);
   expect(m.w / m.h).toBeCloseTo(m.nw / m.nh, 1);
   expect(m.src).toContain("leadership-is-learnable-paperback-hero");
   expect((await header.locator("h1").boundingBox())!.y).toBeGreaterThanOrEqual(m.bottom - 1);
@@ -244,8 +247,40 @@ test("Leadership Is Learnable post on phones: the square feature image, whole, a
   await expect(img).toBeVisible();
   await img.evaluate((i: HTMLImageElement) => (i.complete ? null : new Promise((r) => i.addEventListener("load", r, { once: true }))));
   const m = await img.evaluate((i: HTMLImageElement) => ({ w: i.getBoundingClientRect().width, h: i.getBoundingClientRect().height, src: i.currentSrc }));
-  expect(m.w).toBeGreaterThanOrEqual(389);
+  // Inside the page padding on phones too (not edge to edge), square and whole.
+  expect(m.w).toBeGreaterThanOrEqual(340);
+  expect(m.w).toBeLessThan(390);
   expect(Math.abs(m.w - m.h)).toBeLessThan(2);
   expect(m.src).toContain("leadership-is-learnable-paperback-square");
   await expect(page.getByTestId("news-cta")).toHaveAttribute("href", "https://www.amazon.com/dp/1048361616");
+});
+
+test("Leadership Is Learnable post: comfortable reading measure and a normal-size book card", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/news/leadership-is-learnable-new-book");
+  const p = (await page.locator(".news-body p").first().boundingBox())!;
+  expect(p.width).toBeLessThanOrEqual(770);
+  const card = (await page.getByTestId("news-paid-book").boundingBox())!;
+  expect(card.width).toBeLessThanOrEqual(770);
+  // Same headline size as the other news posts
+  const size = await page.locator("h1").evaluate((e) => getComputedStyle(e).fontSize);
+  await page.goto(POST);
+  expect(await page.locator("h1").evaluate((e) => getComputedStyle(e).fontSize)).toBe(size);
+});
+
+test("home: the free book and the comprehensive edition are two cards of the same size", async ({ page }) => {
+  for (const [w, h] of [[1440, 900], [390, 844]]) {
+    await page.setViewportSize({ width: w, height: h });
+    await page.goto("/");
+    const free = (await page.getByTestId("home-book").locator(".sc-card").first().boundingBox())!;
+    const paid = (await page.getByTestId("home-paid-book").boundingBox())!;
+    expect(Math.abs(free.width - paid.width)).toBeLessThanOrEqual(1);
+    expect(Math.abs(free.height - paid.height)).toBeLessThanOrEqual(1);
+    if (w >= 1024) expect(Math.abs(free.y - paid.y)).toBeLessThanOrEqual(1);
+    const covers = await page.getByTestId("home-book").locator(".sc-card img").evaluateAll((is) => is.map((i) => Math.round(i.getBoundingClientRect().width)));
+    expect(covers.length).toBe(2);
+    expect(covers[0]).toBe(covers[1]);
+    await expect(page.getByTestId("home-paid-book").getByTestId("paid-book-amazon")).toHaveText("Buy the paperback on Amazon");
+    await expect(page.getByTestId("home-paid-book").getByTestId("paid-book-kindle-soon")).toHaveText("Kindle edition coming soon");
+  }
 });

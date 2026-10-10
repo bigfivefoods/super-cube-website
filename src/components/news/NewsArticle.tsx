@@ -77,8 +77,9 @@ export function NewsArticle({ post }: { post: NewsPost }) {
     <article data-news-post={post.slug}>
       {feature ? (
         /*
-         * Feature-image hero: the designed image (with its own words) shows whole and full-bleed under the
-         * header and breadcrumbs, then the hero copy follows underneath, full width.
+         * Feature-image hero: the designed image (with its own words) shows whole, at a moderate size inside the
+         * page container (not full-bleed), under the header and breadcrumbs; the hero copy follows underneath at the
+         * normal news sizes.
          */
         <header
           className="page-hero relative isolate flex w-full flex-col overflow-hidden !pb-0"
@@ -86,7 +87,11 @@ export function NewsArticle({ post }: { post: NewsPost }) {
           style={{ paddingTop: "calc(var(--hero-pad-top) + 2.5rem)", backgroundColor: "#0b0b0e" }}
           data-feature-hero
         >
-          <FeaturePicture {...feature} />
+          <div className="container-site w-full">
+            <div className="max-w-[56rem] overflow-hidden rounded-2xl ring-1 ring-white/10">
+              <FeaturePicture {...feature} />
+            </div>
+          </div>
           <div className="container-site relative z-[1] w-full pb-12 pt-8 sm:pb-16 sm:pt-10">
             <div className="min-w-0 max-w-3xl">{heroCopy}</div>
           </div>
@@ -110,7 +115,9 @@ export function NewsArticle({ post }: { post: NewsPost }) {
       )}
 
       <div className="section-pad bg-paper">
-        <div className="container-site max-w-3xl">
+        <div className="container-site">
+          {/* A feature-image post keeps a comfortable reading measure (.container-site's own max-width beats max-w-3xl). */}
+          <div className={feature ? "max-w-3xl" : undefined}>
           <div className="spectrum-rule mb-8 max-w-16 rounded-full" aria-hidden />
           {!coverInBody && (
             <figure className="mb-8 overflow-hidden rounded-2xl border border-line bg-surface" data-news-cover>
@@ -134,6 +141,7 @@ export function NewsArticle({ post }: { post: NewsPost }) {
           <div className="mt-12 border-t border-line pt-8">
             <ShareButtons {...share} position="bottom" label="Found this useful? Share it" />
           </div>
+          </div>
         </div>
       </div>
     </article>
@@ -142,14 +150,14 @@ export function NewsArticle({ post }: { post: NewsPost }) {
 
 /** The feature image, uncropped: landscape from 640px, square on phones (one <picture>, one download). */
 function FeaturePicture({ wide, square, alt }: NonNullable<NewsPost["featureHero"]>) {
-  const common = { alt, sizes: "100vw", quality: 80 } as const;
+  const common = { alt, sizes: "(min-width: 960px) 896px, 100vw", quality: 80 } as const;
   const {
     props: { srcSet: mobile, ...rest },
   } = getImageProps({ ...common, src: square, width: 1440, height: 1440, priority: true });
   const desktop = getImageProps({ ...common, src: wide, width: 2400, height: 1260, priority: true }).props.srcSet;
   return (
     <picture>
-      <source media="(min-width: 640px)" srcSet={desktop} sizes="100vw" width={2400} height={1260} />
+      <source media="(min-width: 640px)" srcSet={desktop} sizes="(min-width: 960px) 896px, 100vw" width={2400} height={1260} />
       {/* eslint-disable-next-line jsx-a11y/alt-text -- alt is in rest */}
       <img {...rest} srcSet={mobile} className="block h-auto w-full" data-feature-hero-image />
     </picture>
