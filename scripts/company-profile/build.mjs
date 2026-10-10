@@ -274,7 +274,7 @@ function build(L, img) {
               <p class="small">${esc(PAID_BOOK.subtitle)}</p>
               <p class="small">${esc(PAID_BOOK.imprint)} · ${esc(PAID_BOOK_DETAILS.publishedLabel)} · ${PAID_BOOK_DETAILS.pages} pp · 6 × 9 in, full colour</p>
               <p class="small">Paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} / $${PAID_BOOK_DETAILS.paperbackPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.paperback.isbn}</span><br>Kindle ${kindleBuyUrl() ? "" : "(coming soon) "}$${PAID_BOOK_DETAILS.ebookPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.kindle.isbn}</span></p>
-              <p class="small"><b>${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy the paperback on Amazon") : "Coming soon on Amazon"}</b> · ${link(`${SITE}/book`, "super-cube.me/book")}</p>
+              <p class="small"><b>${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy the paperback on Amazon") : "Coming soon on Amazon"}</b>${kindleBuyUrl() ? ` · <b>${link(kindleBuyUrl(), "Buy the Kindle e-book on Amazon")}</b>` : ""} · ${link(`${SITE}/book`, "super-cube.me/book")}</p>
             </div>
           </div>
         </div>

@@ -141,11 +141,12 @@ const ar: Dict = {
   "home.bookLang": "باللغة الإنجليزية",
   "home.bookCoverAlt": "غلاف كتاب ⁦The Super-Cube® Leadership Model⁩ للدكتور كريغ ر. مولر",
   "home.paidEyebrow": "جديد · الطبعة الكاملة",
-  "home.paidBody": "312 صفحة عن البحث والأدلة وراء نموذج ⁦Super-Cube®⁩، وكل وجه بعمق، وكيفية تطوير القادة على كل المستويات. متوفر الآن بغلاف ورقي؛ نسخة ⁦Kindle⁩ قريبًا.",
+  "home.paidBody": "312 صفحة عن البحث والأدلة وراء نموذج ⁦Super-Cube®⁩، وكل وجه بعمق، وكيفية تطوير القادة على كل المستويات. متوفر الآن بغلاف ورقي وعلى ⁦Kindle⁩.",
   "home.paidMore": "عن الطبعة الكاملة",
   "home.paidSoon": "قريبًا على ⁦Amazon⁩",
   "home.paidBuy": "اشترِ النسخة الورقية على ⁦Amazon⁩",
   "home.paidKindleSoon": "نسخة ⁦Kindle⁩ قريبًا",
+  "home.paidKindleBuy": "اشترِ الكتاب الإلكتروني ⁦Kindle⁩ على ⁦Amazon⁩",
   "home.paidCoverAlt": "غلاف كتاب ⁦Leadership Is Learnable⁩ للدكتور كريغ ر. مولر",
 
   "cta.tryFree": "ابدأ التقييم المجاني",

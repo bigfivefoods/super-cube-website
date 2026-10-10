@@ -64,6 +64,20 @@ export function NewsArticle({ post }: { post: NewsPost }) {
               {post.cta.label}
             </Button>
           )}
+          {post.cta.secondary && (
+            <a
+              href={post.cta.secondary.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={post.cta.secondary.ariaLabel}
+              data-insights={post.cta.secondary.insights}
+              data-testid="news-cta-secondary"
+              className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold tracking-tight text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto sm:px-6"
+            >
+              {post.cta.secondary.label}
+              <ExternalIcon />
+            </a>
+          )}
           {post.cta.note && <p className="text-sm text-white/75">{post.cta.note}</p>}
         </div>
       )}

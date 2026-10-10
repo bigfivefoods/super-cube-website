@@ -419,7 +419,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 </>
               }
             />
-            {/* The comprehensive edition (paid): paperback on Amazon (AMAZON_URL_TBD); Kindle coming soon (KINDLE_URL_TBD). */}
+            {/* The comprehensive edition (paid): paperback (AMAZON_URL_TBD) and Kindle (KINDLE_URL_TBD) on Amazon. */}
             <BookPairCard
               testId="home-paid-book"
               cover={{ src: PAID_BOOK_DETAILS.cover.src, width: PAID_BOOK_DETAILS.cover.width, height: PAID_BOOK_DETAILS.cover.height, alt: translate(dict, "home.paidCoverAlt") }}
@@ -440,7 +440,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               actions={
                 <>
                   <AmazonButton soonLabel={translate(dict, "home.paidSoon")} buyLabel={translate(dict, "home.paidBuy")} />
-                  <KindleNote soonLabel={translate(dict, "home.paidKindleSoon")} />
+                  <KindleNote soonLabel={translate(dict, "home.paidKindleSoon")} buyLabel={translate(dict, "home.paidKindleBuy")} />
                   <Button href={`${BOOK.page}#${PAID_BOOK_DETAILS.anchor}`} hrefLang={en} variant="ghost">
                     {translate(dict, "home.paidMore")} <span aria-hidden className="rtl:-scale-x-100">→</span>
                   </Button>

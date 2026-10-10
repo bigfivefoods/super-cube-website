@@ -129,11 +129,12 @@ const af: Dict = {
   "home.bookLang": "In Engels",
   "home.bookCoverAlt": "Voorblad van The Super-Cube® Leadership Model deur Dr. Craig R. Muller",
   "home.paidEyebrow": "Nuut · Volledige uitgawe",
-  "home.paidBody": "312 bladsye oor die navorsing en bewyse agter die Super-Cube®-model, elke gesig in diepte, en hoe om leiers op elke vlak te ontwikkel. Nou beskikbaar as sagteband; Kindle-uitgawe binnekort.",
+  "home.paidBody": "312 bladsye oor die navorsing en bewyse agter die Super-Cube®-model, elke gesig in diepte, en hoe om leiers op elke vlak te ontwikkel. Nou beskikbaar as sagteband en op Kindle.",
   "home.paidMore": "Oor die volledige uitgawe",
   "home.paidSoon": "Binnekort op Amazon",
   "home.paidBuy": "Koop die sagteband op Amazon",
   "home.paidKindleSoon": "Kindle-uitgawe binnekort",
+  "home.paidKindleBuy": "Koop die Kindle-e-boek op Amazon",
   "home.paidCoverAlt": "Voorblad van Leadership Is Learnable deur Dr. Craig R. Muller",
 
   "cta.tryFree": "Begin gratis basislyn",

@@ -49,7 +49,7 @@ export function amazonBuyUrl(url: string = AMAZON_URL_TBD): string | null {
   return u;
 }
 
-/** The Kindle "Buy" link, or null while the e-book is in review (the site shows "Kindle edition coming soon"). */
+/** The Kindle "Buy" link (KINDLE_URL_TBD), or null if it is emptied (the site then shows "Kindle edition coming soon"). */
 export function kindleBuyUrl(url: string = KINDLE_URL_TBD): string | null {
   return amazonBuyUrl(url);
 }
@@ -85,11 +85,11 @@ export const BOOK_CHAPTERS: readonly { n?: number; title: string; note: string }
  * AMAZON_URL_TBD is the Amazon product URL of the PAPERBACK (ASIN 1048361616), live since October 2026; every
  * paperback Amazon link on the site reads it from here (the name is kept so older notes still match).
  *
- * KINDLE_URL_TBD stays empty while the Kindle e-book is in review: the site shows "Kindle edition coming soon".
- * When the Kindle listing is live, set it to the Kindle product URL (…/dp/…).
+ * KINDLE_URL_TBD is the Amazon product URL of the KINDLE e-book (ASIN B0HMLR6QRP), live since 10 Oct 2026: every
+ * "Buy the Kindle e-book on Amazon" button reads it. Empty it to go back to "Kindle edition coming soon".
  */
 export const AMAZON_URL_TBD = "https://www.amazon.com/dp/1048361616";
-export const KINDLE_URL_TBD = "";
+export const KINDLE_URL_TBD = "https://www.amazon.com/dp/B0HMLR6QRP";
 
 export const PAID_BOOK = {
   title: "Leadership Is Learnable",

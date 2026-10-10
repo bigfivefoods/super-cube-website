@@ -131,7 +131,7 @@ export default function BookPage() {
                 <a href="#comprehensive-edition" className="font-semibold text-ink underline underline-offset-2">
                   <em>Leadership Is Learnable</em>
                 </a>
-                , is out now in paperback on Amazon, with the Kindle edition coming soon.
+                , is out now on Amazon in paperback and as a Kindle e-book.
               </p>
             </div>
             <dl className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
@@ -203,7 +203,7 @@ export default function BookPage() {
         </div>
       </section>
 
-      {/* The comprehensive edition (paid): paperback on Amazon (AMAZON_URL_TBD); Kindle coming soon (KINDLE_URL_TBD). */}
+      {/* The comprehensive edition (paid): paperback (AMAZON_URL_TBD) and Kindle (KINDLE_URL_TBD) on Amazon. */}
       <PaidBookSection />
 
       {/* Download CTA */}

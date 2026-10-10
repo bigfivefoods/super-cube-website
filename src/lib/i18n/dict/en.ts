@@ -137,11 +137,12 @@ const en = {
   "home.bookLang": "In English",
   "home.bookCoverAlt": "Cover of The Super-Cube® Leadership Model by Dr Craig R. Muller",
   "home.paidEyebrow": "New · Comprehensive edition",
-  "home.paidBody": "312 pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback; Kindle edition coming soon.",
+  "home.paidBody": "312 pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback and Kindle.",
   "home.paidMore": "About the comprehensive edition",
   "home.paidSoon": "Coming soon on Amazon",
   "home.paidBuy": "Buy the paperback on Amazon",
   "home.paidKindleSoon": "Kindle edition coming soon",
+  "home.paidKindleBuy": "Buy the Kindle e-book on Amazon",
   "home.paidCoverAlt": "Cover of Leadership Is Learnable by Dr Craig R. Muller",
 
   // CTAs & common

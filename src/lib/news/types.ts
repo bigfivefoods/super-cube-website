@@ -51,6 +51,8 @@ export type NewsPost = {
     external?: boolean;
     /** A whitelisted `data-insights` slug for click tracking (e.g. `cta-amazon`). */
     insights?: string;
+    /** A second, outlined outside link beside it (e.g. the Kindle e-book on Amazon). */
+    secondary?: { label: string; href: string; insights?: string; ariaLabel?: string };
   };
   /** Optional book card after the body: "paid" shows Leadership Is Learnable with its Amazon button. */
   bookCard?: "paid";
