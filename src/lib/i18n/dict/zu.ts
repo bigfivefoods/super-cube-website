@@ -131,10 +131,11 @@ const zu: Dict = {
   "home.bookLang": "NgesiNgisi",
   "home.bookCoverAlt": "Ikhava ye-The Super-Cube® Leadership Model kaDkt Craig R. Muller",
   "home.paidEyebrow": "Okusha · Uhlelo oluphelele",
-  "home.paidBody": "Amakhasi angu-312 ngocwaningo nobufakazi obusekela imodeli ye-Super-Cube®, uhlangothi ngalunye ngokujulile, nokuthi ungabathuthukisa kanjani abaholi kuwo wonke amazinga. Iphepha neKindle, 31 Okthoba 2026.",
+  "home.paidBody": "Amakhasi angu-312 ngocwaningo nobufakazi obusekela imodeli ye-Super-Cube®, uhlangothi ngalunye ngokujulile, nokuthi ungabathuthukisa kanjani abaholi kuwo wonke amazinga. Seliyatholakala njengephepha; uhlelo lweKindle luzofika maduze.",
   "home.paidMore": "Mayelana nohlelo oluphelele",
   "home.paidSoon": "Kuzofika maduze ku-Amazon",
-  "home.paidBuy": "Thenga ku-Amazon",
+  "home.paidBuy": "Thenga incwadi yephepha ku-Amazon",
+  "home.paidKindleSoon": "Uhlelo lweKindle luzofika maduze",
   "home.paidCoverAlt": "Ikhava ye-Leadership Is Learnable kaDkt Craig R. Muller",
 
   "cta.tryFree": "Qala isisekelo samahhala",

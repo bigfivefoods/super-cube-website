@@ -140,10 +140,11 @@ const pt: Dict = {
   "home.bookLang": "Em inglês",
   "home.bookCoverAlt": "Capa de The Super-Cube® Leadership Model, do Dr. Craig R. Muller",
   "home.paidEyebrow": "Novo · Edição completa",
-  "home.paidBody": "312 páginas sobre a investigação e as evidências por trás do modelo Super-Cube®, cada face em profundidade e como desenvolver líderes em todos os níveis. Brochura e Kindle, 31 de outubro de 2026.",
+  "home.paidBody": "312 páginas sobre a investigação e as evidências por trás do modelo Super-Cube®, cada face em profundidade e como desenvolver líderes em todos os níveis. Já disponível em brochura; edição Kindle em breve.",
   "home.paidMore": "Sobre a edição completa",
   "home.paidSoon": "Em breve na Amazon",
-  "home.paidBuy": "Comprar na Amazon",
+  "home.paidBuy": "Comprar a brochura na Amazon",
+  "home.paidKindleSoon": "Edição Kindle em breve",
   "home.paidCoverAlt": "Capa de Leadership Is Learnable, do Dr. Craig R. Muller",
 
   "cta.tryFree": "Avaliação inicial grátis",
