@@ -29,9 +29,10 @@ export type NewsPost = {
   /**
    * Optional feature-image hero, for a designed image that carries its own words (e.g. a launch graphic): shown
    * whole and full-bleed at the top of the post, with the hero copy underneath instead of on top of it.
-   * `wide` is 2400×1260 (from 640px), `square` is 1440×1440 (phones).
+   * `wide` is 2400×1260 (from 640px), `square` is 1440×1440 (phones); `card` (1600×1000) fills the wide /news
+   * featured frame (the square cover is used on the square cards).
    */
-  featureHero?: { wide: string; square: string; alt: string };
+  featureHero?: { wide: string; square: string; card?: string; alt: string };
   /** Alt text for the cover ("" when decorative). */
   coverAlt: string;
   /** 1200×630 share card (Open Graph / X). Falls back to the generated share image. */

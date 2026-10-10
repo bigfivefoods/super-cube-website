@@ -351,6 +351,7 @@ export const codeNewsPosts: NewsPost[] = [
     featureHero: {
       wide: "/news/leadership-is-learnable-paperback-hero.jpg",
       square: "/news/leadership-is-learnable-paperback-square.jpg",
+      card: "/news/leadership-is-learnable-paperback-wide.jpg",
       alt: "Leadership Is Learnable by Dr Craig R. Muller, out now in paperback on Amazon: the white-covered paperback, +32.2 percentage points in 12 weeks with an accredited Super-Cube® intervention, paperback $17.99 or R299 in South Africa, Kindle coming soon, start free at super-cube.me/book",
     },
     coverAlt:

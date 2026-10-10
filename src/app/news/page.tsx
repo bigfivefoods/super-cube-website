@@ -72,7 +72,7 @@ export default async function NewsPage() {
               >
                 <div className="relative aspect-square overflow-hidden bg-paper md:aspect-auto md:min-h-[24rem]">
                   <NewsImage
-                    src={featured.coverImage}
+                    src={featured.featureHero?.card ?? featured.coverImage}
                     alt=""
                     priority
                     sizes="(max-width: 768px) 100vw, 560px"
