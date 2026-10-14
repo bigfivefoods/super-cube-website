@@ -55,12 +55,14 @@ test("every resolved arc has all eight steps and a facilitator guide", () => {
   }
 });
 
-test("no invented statistics: the only figure is the Imana Foods and Kerry Foods Emotional gain, in percentage points", () => {
+test("no invented statistics: the only figure is the Imana Foods and Kerry Foods Emotional gain, labelled %", () => {
   const text = JSON.stringify(FACE_CONTENT);
-  expect(text.match(/[0-9.]+\s?%/g) ?? []).toEqual([]);
-  const gains = text.match(/\+[0-9.]+ percentage points/g) ?? [];
-  expect(gains.length).toBeGreaterThan(0);
-  expect(gains.every((m) => m === "+39.5 percentage points")).toBe(true);
+  const percents = text.match(/[0-9.]+\s?%/g) ?? [];
+  expect(percents.length).toBeGreaterThan(0);
+  expect(percents.every((m) => m.replace(/\s/g, "") === "39.5%")).toBe(true);
+  expect(text).toContain("+39.5%");
+  expect(text).not.toContain("percentage points");
+  expect(text).not.toContain("24.7");
   expect(text).toContain("Imana Foods and Kerry Foods");
   expect(text).not.toContain("UKZN doctoral study");
 });

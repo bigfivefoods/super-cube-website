@@ -139,7 +139,7 @@ export function PaidBookSection() {
             </p>
             <p>
               It also reports the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and
-              Kerry Foods, where average assessment scores rose by 32.2 percentage points across the six faces, and is
+              Kerry Foods, where average assessment scores rose by 32.2% across the six faces, and is
               candid about what those results can and cannot show.
             </p>
           </div>

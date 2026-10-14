@@ -22,7 +22,7 @@ test("free book post: hero size, share card, Download free link, paperback and K
   const body = page.locator(".news-body");
   const download = body.getByRole("link", { name: /^Download free/ }).first();
   await expect(download).toHaveAttribute("href", "/super-cube-leadership-book.pdf");
-  for (const t of ["32.2 percentage points", "Principles +45.1", "Emotional +39.5", "Spiritual +24.6", "132 people", "Now out: the comprehensive edition", "$17.99", "R299 in South Africa", "$8.99"]) {
+  for (const t of ["32.2%", "Principles +45.1%", "Emotional +39.5%", "Spiritual +24.6%", "132 people", "Now out: the comprehensive edition", "$17.99", "R299 in South Africa", "$8.99"]) {
     await expect(body).toContainText(t);
   }
   const amazon = await body.locator('a[href*="amazon."]').evaluateAll((as) => as.map((a) => a.getAttribute("href")));
