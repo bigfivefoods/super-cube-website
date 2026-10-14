@@ -95,7 +95,7 @@ export default function SampleReportPage() {
               The measured result is different: in the 12-week Super-Cube®
               leadership intervention with Imana Foods and Kerry Foods, the
               average Emotional score rose by{" "}
-              <strong className="text-ink">39.5 percentage points</strong>.{" "}
+              <strong className="text-ink">+39.5%</strong>.{" "}
               <Link href="/impact" className="font-semibold text-ink underline underline-offset-2">
                 See the results
               </Link>

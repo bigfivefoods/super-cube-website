@@ -1,6 +1,6 @@
 import { constructs, type ConstructId } from "@/lib/content";
 
-/** Pre → post gains from Super-Cube® interventions (percentage points / % improvement). */
+/** Pre → post gains from Super-Cube® interventions, labelled as %. */
 export const interventionGains: {
   constructId: ConstructId | "overall";
   label: string;

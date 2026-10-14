@@ -170,7 +170,7 @@ const en: HomeStrings = {
   researchEmotional: "Emotional gain",
   researchOverall: "Overall growth across all six faces",
   researchNote:
-    "Average pre- and post-course scores of leaders at Imana Foods and Kerry Foods (South African and international FMCG); gains in percentage points, not from the doctoral study. Source: Leadership Is Learnable (2026), Chapter 18.",
+    "Average pre- and post-course scores of leaders at Imana Foods and Kerry Foods (South African and international FMCG); gains in %, not from the doctoral study. Source: Leadership Is Learnable (2026), Chapter 18.",
   readResearch: "Read the research and theory",
   readCaseStudy: "Read the FMCG case study",
   aboutCraig: "About Dr Craig Muller",
@@ -282,7 +282,7 @@ const fr: Draft = {
   researchEmotional: "Gain, face émotionnelle",
   researchOverall: "Croissance globale sur les six faces",
   researchNote:
-    "Scores moyens avant et après la formation, chez des dirigeants d’Imana Foods et de Kerry Foods (FMCG, Afrique du Sud et international) ; gains en points de pourcentage, non issus de l’étude doctorale. Source" + NB + ": Leadership Is Learnable (2026), chapitre 18.",
+    "Scores moyens avant et après la formation, chez des dirigeants d’Imana Foods et de Kerry Foods (FMCG, Afrique du Sud et international) ; gains en %, non issus de l’étude doctorale. Source" + NB + ": Leadership Is Learnable (2026), chapitre 18.",
   readResearch: "Lire la recherche et la théorie",
   readCaseStudy: "Lire l’étude de cas FMCG",
   aboutCraig: "À propos du Dr Craig Muller",
@@ -393,7 +393,7 @@ const pt: Draft = {
   researchEmotional: "Ganho, face emocional",
   researchOverall: "Crescimento global nas seis faces",
   researchNote:
-    "Pontuações médias antes e depois do curso, com líderes da Imana Foods e da Kerry Foods (FMCG, África do Sul e internacional); ganhos em pontos percentuais, não do estudo de doutoramento. Fonte: Leadership Is Learnable (2026), capítulo 18.",
+    "Pontuações médias antes e depois do curso, com líderes da Imana Foods e da Kerry Foods (FMCG, África do Sul e internacional); ganhos em %, não do estudo de doutoramento. Fonte: Leadership Is Learnable (2026), capítulo 18.",
   readResearch: "Ler a investigação e a teoria",
   readCaseStudy: "Ler o estudo de caso FMCG",
   aboutCraig: "Sobre o Dr. Craig Muller",
@@ -502,7 +502,7 @@ const sw: Draft = {
   researchEmotional: "Ongezeko, upande wa hisia",
   researchOverall: "Ukuaji wa jumla katika pande zote sita",
   researchNote:
-    "Wastani wa alama kabla na baada ya kozi, kwa viongozi wa Imana Foods na Kerry Foods (FMCG, Afrika Kusini na kimataifa); ongezeko kwa pointi za asilimia, si kutoka kwenye utafiti wa udaktari. Chanzo: Leadership Is Learnable (2026), Sura ya 18.",
+    "Wastani wa alama kabla na baada ya kozi, kwa viongozi wa Imana Foods na Kerry Foods (FMCG, Afrika Kusini na kimataifa); ongezeko kwa %, si kutoka kwenye utafiti wa udaktari. Chanzo: Leadership Is Learnable (2026), Sura ya 18.",
   readResearch: "Soma utafiti na nadharia",
   readCaseStudy: "Soma uchunguzi kifani wa FMCG",
   aboutCraig: "Kuhusu Dkt. Craig Muller",
@@ -608,7 +608,7 @@ const ar: Draft = {
   researchEmotional: "المكسب في الوجه العاطفي",
   researchOverall: "النمو الإجمالي عبر الأوجه الستة كلها",
   researchNote:
-    `متوسط الدرجات قبل الدورة وبعدها لقادة في شركتي Imana Foods وKerry Foods (السلع الاستهلاكية سريعة التداول FMCG، جنوب أفريقيا وخارجها)؛ المكاسب بالنقاط المئوية، وليست من دراسة الدكتوراه. المصدر: كتاب Leadership Is Learnable (2026)، الفصل 18.`,
+    `متوسط الدرجات قبل الدورة وبعدها لقادة في شركتي Imana Foods وKerry Foods (السلع الاستهلاكية سريعة التداول FMCG، جنوب أفريقيا وخارجها)؛ المكاسب بـ %، وليست من دراسة الدكتوراه. المصدر: كتاب Leadership Is Learnable (2026)، الفصل 18.`,
   readResearch: "اقرأ البحث والنظرية",
   readCaseStudy: "اقرأ دراسة حالة قطاع السلع الاستهلاكية (FMCG)",
   aboutCraig: "عن الدكتور كريغ مولر",
@@ -716,7 +716,7 @@ const zu: Draft = {
   researchEmotional: "Inzuzo, uhlangothi lwemizwa",
   researchOverall: "Ukukhula okuphelele kuzo zonke izinhlangothi eziyisithupha",
   researchNote:
-    "Amaphuzu amaphakathi ngaphambi nangemva kwesifundo, abaholi base-Imana Foods nase-Kerry Foods (i-FMCG, eNingizimu Afrika nakwamanye amazwe); inzuzo ngamaphuzu amaphesenti, hhayi ocwaningweni lobudokotela. Umthombo: Leadership Is Learnable (2026), Isahluko 18.",
+    "Amaphuzu amaphakathi ngaphambi nangemva kwesifundo, abaholi base-Imana Foods nase-Kerry Foods (i-FMCG, eNingizimu Afrika nakwamanye amazwe); inzuzo ngo-%, hhayi ocwaningweni lobudokotela. Umthombo: Leadership Is Learnable (2026), Isahluko 18.",
   readResearch: "Funda ucwaningo nethiyori",
   readCaseStudy: "Funda ucwaningo lwesimo lwe-FMCG",
   aboutCraig: "Mayelana noDkt Craig Muller",
@@ -825,7 +825,7 @@ const af: Draft = {
   researchEmotional: "Groei, emosionele vlak",
   researchOverall: "Algehele groei oor al ses vlakke",
   researchNote:
-    "Gemiddelde voor- en ná-kursustellings van leiers by Imana Foods en Kerry Foods (FMCG, Suid-Afrika en internasionaal); groei in persentasiepunte, nie uit die doktorale studie nie. Bron: Leadership Is Learnable (2026), hoofstuk 18.",
+    "Gemiddelde voor- en ná-kursustellings van leiers by Imana Foods en Kerry Foods (FMCG, Suid-Afrika en internasionaal); groei in %, nie uit die doktorale studie nie. Bron: Leadership Is Learnable (2026), hoofstuk 18.",
   readResearch: "Lees die navorsing en teorie",
   readCaseStudy: "Lees die FMCG-gevallestudie",
   aboutCraig: "Oor dr. Craig Muller",
