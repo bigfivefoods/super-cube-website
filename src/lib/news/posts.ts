@@ -229,9 +229,9 @@ That's no criticism of the learners or their school. Young people mostly learn l
 
 The motivation is already there. **94%** said leadership is important. And **88%** would like to develop their leadership using a scientific approach. As the report puts it, 88% "want to develop their leadership skills".
 
-![Bar chart of survey answers from 33 Grade 12 boarders at a leading South African high school: 0% had a leadership model they actually used (none named a leadership approach they use); 88% would like to develop their leadership using a scientific approach; 94% believe leadership is important.](/news/grade-12-leadership-snapshot-chart.png)
+![Bar chart of survey answers from 33 Grade 12 boarders at a leading high school in South Africa: 0% had a leadership model they actually used (none named a leadership approach they use); 88% would like to develop their leadership using a scientific approach; 94% believe leadership is important.](/news/grade-12-leadership-snapshot-chart.png)
 
-*Source: Leadership results, Grade 12 boarders, a leading South African high school, August 2024 (Dr Craig Muller). Survey answers as reported (n = 33). 0%: asked which scientific leadership approach they use, none answered yes and the open answers named none in use.*
+*Source: Leadership results, Grade 12 boarders, a leading high school in South Africa, August 2024 (Dr Craig Muller). Survey answers as reported (n = 33). 0%: asked which scientific leadership approach they use, none answered yes and the open answers named none in use.*
 
 ## Strong values, fewer tools
 

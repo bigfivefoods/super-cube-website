@@ -38,7 +38,7 @@ npx cap open android
 
 1. Xcode → Signing & Capabilities → Team
 2. Bundle ID: `me.supercube.learn`
-3. Display name: Super-Cube Learn
+3. Display name: Super-Cube® Learn
 4. Privacy: describe auth, notifications if used
 5. Archive → Distribute → TestFlight
 6. App Store screenshots: 6.7" + 6.1" iPhone; marketing text from `site` in content.ts
@@ -53,7 +53,7 @@ npx cap open android
 
 ## Store listing copy (draft)
 
-**Title:** Super-Cube Learn  
+**Title:** Super-Cube® Learn  
 **Subtitle:** Human-centric leadership pathway  
 **Description:**  
 Super-Cube® Learn is a structured leadership development app: orient, baseline across six faces, deliberate practice, re-measure, and download your growth report. Built from doctoral research in African business networks.

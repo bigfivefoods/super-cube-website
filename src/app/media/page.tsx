@@ -6,7 +6,7 @@ import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { publications, site } from "@/lib/content";
 import { AUTHOR_BIO } from "@/lib/author";
 import { PAID_BOOK, PAID_BOOK_CITATION, PAID_BOOK_DETAILS } from "@/lib/book";
-import { AmazonButton } from "@/components/book/PaidBook";
+import { AmazonButton, KindleNote } from "@/components/book/PaidBook";
 
 export const metadata: Metadata = pageMeta({
   path: "/media",
@@ -246,6 +246,7 @@ export default function MediaKitPage() {
                   Download cover (JPG)
                 </a>
                 <AmazonButton />
+                <KindleNote />
               </div>
               <p className="mt-4 text-xs font-semibold text-ink">How to cite</p>
               <p className="mt-1 rounded-xl border border-line bg-elevated p-3 font-mono text-[0.6875rem] leading-relaxed text-slate">

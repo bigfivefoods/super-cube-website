@@ -46,6 +46,8 @@ const nextConfig: NextConfig = {
       ...((TRANSLATED_PATHS as readonly string[]).includes("/")
         ? []
         : [{ source: `/:locale(${PREFIXED_LOCALES.join("|")})`, destination: "/", permanent: false }]),
+      // /why is the short nav URL; the canonical page is /why-leadership (one permanent hop).
+      { source: "/why", destination: "/why-leadership", permanent: true },
       // The JCM paper's file was renamed (no case-company name in the URL); old links keep working.
       {
         source: "/research/jcm-2022-kwaden-leadership-skills-model.pdf",

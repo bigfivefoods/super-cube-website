@@ -113,6 +113,11 @@ const zu: Dict = {
   "footer.social": "Izinkundla zokuxhumana",
   "footer.legal": "Okomthetho",
   "footer.rights": "Wonke amalungelo agodliwe.",
+  "footer.account": "I-akhawunti",
+  "footer.paia": "PAIA",
+  "footer.accessibility": "Ukufinyeleleka",
+  "footer.operatedBy": "I-Big Five Group iqhutshwa yinkampani",
+  "footer.countries": "iNingizimu Afrika · eKenya",
   "footer.partOf": "Ingxenye ye-Big Five Learn, uphiko lwe-Big Five Group oluthi Fundisa",
   "footer.companyProfile": "Iphrofayela yenkampani (PDF)",
   // Company profile download (home hero)

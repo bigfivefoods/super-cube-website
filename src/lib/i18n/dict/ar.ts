@@ -123,6 +123,11 @@ const ar: Dict = {
   "footer.socialResearchGate": "د. Craig Muller على ResearchGate",
   "footer.legal": "الشؤون القانونية",
   "footer.rights": "جميع الحقوق محفوظة.",
+  "footer.account": "الحساب",
+  "footer.paia": "PAIA",
+  "footer.accessibility": "إمكانية الوصول",
+  "footer.operatedBy": "تُدار Big Five Group من قِبل",
+  "footer.countries": "جنوب أفريقيا · كينيا",
   "footer.partOf": "جزء من Big Five Learn، قسم التعليم في Big Five Group",
   "footer.companyProfile": "ملف الشركة (PDF)",
   // Company profile download (home hero)

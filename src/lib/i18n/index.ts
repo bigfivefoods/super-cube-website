@@ -30,6 +30,7 @@ export const mainNavI18n: Record<string, I18nKey> = {
 
 export const moreLinkI18n: Record<string, I18nKey> = {
   "/why": "nav.why",
+  "/why-leadership": "nav.why",
   "/leadership-challenges": "nav.leadershipChallenges",
   "/how": "nav.how",
   "/research": "nav.research",

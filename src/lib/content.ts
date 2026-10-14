@@ -84,7 +84,7 @@ export const exploreNavGroups = [
     title: "Understand",
     description: "Why it matters and the research behind it",
     links: [
-      { href: "/why", label: "Why leadership" },
+      { href: "/why-leadership", label: "Why leadership" },
       { href: "/leadership-challenges", label: "Leadership challenges" },
       { href: "/research", label: "Research" },
       { href: "/impact", label: "Impact" },
@@ -139,7 +139,7 @@ export const footerColumns = [
   {
     title: "Understand",
     links: [
-      { href: "/why", label: "Why leadership" },
+      { href: "/why-leadership", label: "Why leadership" },
       { href: "/leadership-challenges", label: "Leadership challenges" },
       { href: "/research", label: "Research" },
       { href: "/impact", label: "Impact" },
@@ -175,7 +175,7 @@ export const footerColumns = [
 /** Story strip (Why → How → What) — footer / homepage narrative only */
 export const primaryNav = [
   {
-    href: "/why",
+    href: "/why-leadership",
     label: "Why",
     blurb: "Why leadership matters for the UN SDGs",
   },

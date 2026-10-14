@@ -4,7 +4,7 @@
 insert into public.programmes (id, name, age_label, age_min, age_max, tagline, description, sort_order) values
   ('kids', 'Super-Cube® Kids', 'Ages 5–12', 5, 12,
    'Growing character, curiosity, and kindness.',
-   'A guided Super-Cube journey for younger learners—simple language, stories, play-based practice, and parent/teacher support.',
+   'A guided Super-Cube® journey for younger learners—simple language, stories, play-based practice, and parent/teacher support.',
    1),
   ('adolescents', 'Super-Cube® Adolescents', 'Ages 13–21', 13, 21,
    'Identity, influence, and wise decisions.',
@@ -12,7 +12,7 @@ insert into public.programmes (id, name, age_label, age_min, age_max, tagline, d
    2),
   ('adults', 'Super-Cube® Adults', 'Ages 22+', 22, 99,
    'Human-centric leadership for work and life.',
-   'The full professional Super-Cube pathway with assessment, courses, and personal report.',
+   'The full professional Super-Cube® pathway with assessment, courses, and personal report.',
    3)
 on conflict (id) do update set
   name = excluded.name,

@@ -43,7 +43,7 @@ const understandLinks: FooterLink[] = [
   { href: "/the-model", label: "The model" },
   { href: "/constructs", label: "Six faces" },
   { href: "/how", label: "How it works" },
-  { href: "/why", label: "Why leadership" },
+  { href: "/why-leadership", label: "Why leadership" },
   { href: "/leadership-challenges", label: "Leadership challenges" },
   { href: "/about", label: "About" },
   { href: "/faq", label: "FAQ" },
@@ -110,8 +110,8 @@ const resourceGroups: FooterGroup[] = [
     ],
   },
   {
-    label: "Sign in",
-    key: "nav.signIn",
+    label: "Account",
+    key: "footer.account",
     links: [
       { href: "/login", label: "Sign in" },
       { href: "/signup", label: "Create account", key: "footer.createAccount" },
@@ -131,7 +131,19 @@ const resourceGroups: FooterGroup[] = [
 const legalLinks = [
   { href: "/privacy", key: "footer.privacy" },
   { href: "/terms", key: "footer.terms" },
-] as const satisfies readonly { href: string; key: I18nKey }[];
+  // PAIA manual and accessibility statement are the Group's (same legal entity), on bigfivegroup.africa.
+  { href: "https://bigfivegroup.africa/paia", key: "footer.paia", external: true },
+  { href: "https://bigfivegroup.africa/accessibility", key: "footer.accessibility", external: true },
+] as const satisfies readonly { href: string; key: I18nKey; external?: boolean }[];
+
+/** Legal entity, as in the bigfivegroup.africa footer (app/lib/contact.ts there). */
+const LEGAL_ENTITY = "Big Five Foods (Pty) Ltd";
+const LEGAL_ENTITY_LINE = "Big Five Foods (Pty) Ltd · Reg. 2025/108507/07 · VAT 4280321847";
+const REGISTERED_ADDRESS = "21A Old Howick Road, Pietermaritzburg, KwaZulu-Natal, South Africa";
+const PHONE_DISPLAY = "+27 (0) 82 581 4215";
+const PHONE_TEL = "+27825814215";
+const WHATSAPP_URL =
+  "https://wa.me/27825814215?text=Hello%20Super-Cube%C2%AE%2C%20I%27d%20like%20to%20enquire%20about%3A%20";
 
 const socialLinks = [
   {
@@ -178,6 +190,14 @@ function MailIcon() {
     <svg viewBox="0 0 24 24" aria-hidden className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="2" y="4" width="20" height="16" rx="2" />
       <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+    </svg>
+  );
+}
+
+function PhoneIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z" />
     </svg>
   );
 }
@@ -349,10 +369,20 @@ export function Footer() {
                   <MailIcon />
                   <span className="break-all">{site.email}</span>
                 </a>
-                <Link {...to("/contact")} prefetch={false} className="flex items-center gap-2 hover:text-black dark:hover:text-ink">
+                <a href={`tel:${PHONE_TEL}`} className="flex items-center gap-2 hover:text-black dark:hover:text-ink">
+                  <PhoneIcon />
+                  <span dir="ltr">{PHONE_DISPLAY}</span>
+                </a>
+                <a
+                  href={WHATSAPP_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 hover:text-black dark:hover:text-ink"
+                >
                   <MessageIcon />
-                  {t("footer.contactUs")}
-                </Link>
+                  WhatsApp
+                </a>
+                <p className="pt-1 text-xs">{t("footer.countries")}</p>
               </div>
               <div className="mt-8">
                 <p className="text-sm font-semibold text-black dark:text-ink mb-3">{t("footer.newsletter")}</p>
@@ -395,24 +425,24 @@ export function Footer() {
           <div className="mt-10 pt-6 border-t border-black/[0.06] dark:border-line flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-xs text-[#6b7280] dark:text-slate">
             <div className="space-y-1">
               <p>
-                © <CurrentYear /> {t("footer.copyright")}. {t("footer.rights")}
+                © <CurrentYear /> <span dir="ltr">{LEGAL_ENTITY}</span>. {t("footer.rights")}
               </p>
               <p>
-                <a
-                  href="https://bigfivegroup.africa"
-                  className="underline underline-offset-2 hover:text-black dark:hover:text-ink"
-                >
-                  {t("footer.partOf")}
-                </a>
+                {t("footer.operatedBy")} <span dir="ltr">{LEGAL_ENTITY_LINE}</span> · {REGISTERED_ADDRESS}
               </p>
-              <p>{t("footer.journals")}</p>
             </div>
             <nav className="flex flex-wrap items-center gap-x-5 gap-y-2" aria-label={t("footer.legal")}>
-              {legalLinks.map((l) => (
-                <Link key={l.href} {...to(l.href)} prefetch={false} className="underline underline-offset-2 hover:text-black dark:hover:text-ink">
-                  {t(l.key)}
-                </Link>
-              ))}
+              {legalLinks.map((l) =>
+                "external" in l ? (
+                  <a key={l.href} href={l.href} className="underline underline-offset-2 hover:text-black dark:hover:text-ink">
+                    {t(l.key)}
+                  </a>
+                ) : (
+                  <Link key={l.href} {...to(l.href)} prefetch={false} className="underline underline-offset-2 hover:text-black dark:hover:text-ink">
+                    {t(l.key)}
+                  </Link>
+                ),
+              )}
             </nav>
           </div>
         </div>
