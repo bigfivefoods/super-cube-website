@@ -35,7 +35,7 @@ The LMS stays a **Next.js** app (App Router). Native shells do **not** reimpleme
 **Android / Chrome / Edge**
 
 1. Open `https://www.super-cube.me/learn` (HTTPS required).
-2. Tap **Install Super-Cube Learn** (banner) or browser menu → **Install app**.
+2. Tap **Install Super-Cube® Learn** (banner) or browser menu → **Install app**.
 
 **iPhone / iPad**
 

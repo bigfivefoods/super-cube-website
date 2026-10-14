@@ -121,6 +121,11 @@ const sw: Dict = {
   "footer.socialResearchGate": "Dkt. Craig Muller kwenye ResearchGate",
   "footer.legal": "Kisheria",
   "footer.rights": "Haki zote zimehifadhiwa.",
+  "footer.account": "Akaunti",
+  "footer.paia": "PAIA",
+  "footer.accessibility": "Ufikivu",
+  "footer.operatedBy": "Big Five Group inaendeshwa na",
+  "footer.countries": "Afrika Kusini · Kenya",
   "footer.partOf": "Sehemu ya Big Five Learn, kitengo cha Elimisha cha Big Five Group",
   "footer.companyProfile": "Wasifu wa kampuni (PDF)",
   // Company profile download (home hero)

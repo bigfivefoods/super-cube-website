@@ -119,6 +119,11 @@ const en = {
   "footer.social": "Social media",
   "footer.legal": "Legal",
   "footer.rights": "All rights reserved.",
+  "footer.account": "Account",
+  "footer.paia": "PAIA",
+  "footer.accessibility": "Accessibility",
+  "footer.operatedBy": "Big Five Group is operated by",
+  "footer.countries": "South Africa · Kenya",
   "footer.partOf": "Part of Big Five Learn, the Educate division of the Big Five Group",
   "footer.companyProfile": "Company profile (PDF)",
   // Company profile download (home hero)

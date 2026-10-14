@@ -223,8 +223,7 @@ function LoginShell({ children }: { children: React.ReactNode }) {
                 priority
               />
               <span className="text-[0.95rem] font-semibold tracking-tight">
-                Super-Cube
-                <span className="text-white/65">®</span>
+                Super-Cube<span className="text-white/65">®</span>
               </span>
             </Link>
 

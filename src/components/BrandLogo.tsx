@@ -39,10 +39,7 @@ export function BrandLogo({
             variant === "white" ? "text-white" : "text-ink"
           }`}
         >
-          Super-Cube
-          <span className={variant === "white" ? "text-white/50" : "text-muted"}>
-            ®
-          </span>
+          Super-Cube<span className={variant === "white" ? "text-white/50" : "text-muted"}>®</span>
         </span>
       )}
     </Link>

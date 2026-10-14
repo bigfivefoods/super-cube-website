@@ -74,7 +74,7 @@ export default function SchoolsPage() {
           { value: "88%", label: "would like to develop their leadership using a scientific approach" },
           { value: "94%", label: "believe leadership is important" },
         ]}
-        source="Field snapshot: survey answers from 33 Grade 12 boarders at a leading South African high school, August 2024 (Dr Craig Muller). Self-reported answers, not assessment scores or before-and-after results. 0%: asked which leadership approach they use, none named one."
+        source="Field snapshot: survey answers from 33 Grade 12 boarders at a leading high school in South Africa, August 2024 (Dr Craig Muller). Self-reported answers, not assessment scores or before-and-after results. 0%: asked which leadership approach they use, none named one."
         href="/news/grade-12-boarders-leadership-field-snapshot"
         linkLabel="Read the field snapshot"
         image="/news/grade-12-leadership-snapshot-cover.jpg"

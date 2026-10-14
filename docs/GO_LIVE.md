@@ -30,7 +30,7 @@
 | `NEXT_PUBLIC_PILOT_CALENDAR_URL` | optional Cal.com / Calendly booking link |
 | `CONTACT_WEBHOOK` | optional Zapier/Make URL |
 | `RESEND_API_KEY` | optional Resend for welcome emails |
-| `EMAIL_FROM` | e.g. `Super-Cube Learn <onboarding@yourdomain>` |
+| `EMAIL_FROM` | e.g. `Super-Cube® Learn <onboarding@yourdomain>` |
 | `NEXT_PUBLIC_SENTRY_DSN` | optional browser Sentry |
 
 Redeploy after saving env.

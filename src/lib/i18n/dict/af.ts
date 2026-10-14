@@ -111,6 +111,11 @@ const af: Dict = {
   "footer.social": "Sosiale media",
   "footer.legal": "Regsake",
   "footer.rights": "Alle regte voorbehou.",
+  "footer.account": "Rekening",
+  "footer.paia": "PAIA",
+  "footer.accessibility": "Toeganklikheid",
+  "footer.operatedBy": "Big Five Group word bedryf deur",
+  "footer.countries": "Suid-Afrika · Kenia",
   "footer.partOf": "Deel van Big Five Learn, die Opvoed-afdeling van die Big Five Group",
   "footer.companyProfile": "Maatskappyprofiel (PDF)",
   // Company profile download (home hero)
