@@ -24,8 +24,8 @@ test.describe("Super-Cube smoke", () => {
     await expect(pdf).toBeVisible();
     await expect(pdf).toHaveAttribute("href", "/super-cube-company-profile.pdf");
     await expect(pdf).toHaveAttribute("download", "");
-    await expect(pdf).toHaveAccessibleName(/^Download company profile \(PDF, 15 pages, [\d.]+ MB\)$/);
-    await expect(pdf).toContainText("15 pages · PDF");
+    await expect(pdf).toHaveAccessibleName(/^Download company profile \(PDF, 16 pages, [\d.]+ MB\)$/);
+    await expect(pdf).toContainText("16 pages · PDF");
     // Secondary sits straight after the primary CTA.
     const order = await hero.locator("a").evaluateAll((els) => els.map((e) => e.getAttribute("href")));
     expect(order.indexOf("/super-cube-company-profile.pdf")).toBe(order.indexOf("/learn/start") + 1);

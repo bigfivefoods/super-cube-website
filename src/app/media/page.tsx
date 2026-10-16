@@ -75,7 +75,7 @@ export default function MediaKitPage() {
             <div className="sc-card p-5">
               <SectionHeading title="Company profile" />
               <p className="mt-3 text-sm leading-relaxed text-slate">
-                A 15-page Super-Cube® company profile for schools, companies,
+                A 16-page Super-Cube® company profile for schools, companies,
                 and partners—the six-face model, the research, programmes,
                 Super-Cube® Learn, pilots, seat packs, and pricing. A4 PDF.
               </p>
