@@ -30,6 +30,17 @@ const outPdf = path.resolve(root, arg("--out", "public/super-cube-company-profil
 const outHtml = arg("--html", null);
 
 const SITE = "https://www.super-cube.me";
+// Company details: identical to the bigfivegroup.africa footer (Big Five Group is operated by Big Five Foods (Pty) Ltd).
+const LEGAL = {
+  entity: "Big Five Foods (Pty) Ltd",
+  line: "Reg. 2025/108507/07 · VAT 4280321847",
+  address: "21A Old Howick Road, Pietermaritzburg, KwaZulu-Natal, South Africa",
+  phone: "+27 (0) 82 581 4215",
+  tel: "tel:+27825814215",
+  whatsapp: "https://wa.me/27825814215?text=Hello%20Super-Cube%C2%AE%2C%20I%27d%20like%20to%20enquire%20about%3A%20",
+  countries: "South Africa · Kenya",
+};
+const BOOK_LAUNCH = "South African launch 31 October 2026";
 const META = {
   title: "Super-Cube® Company Profile",
   author: "Big Five Learn · Big Five Group™",
@@ -78,6 +89,7 @@ async function prepImages(dir) {
   await jpeg("origami", "images/hero/leadership-hero.jpg", { width: 1400, quality: 80 });
   await jpeg("craig", "images/people/craig-muller.webp", { width: 600, quality: 82 });
   await jpeg("bookCover", "images/book/leadership-is-learnable-cover.jpg", { width: 300, quality: 82 });
+  await jpeg("bookCoverLarge", "images/book/leadership-is-learnable-cover.jpg", { width: 700, quality: 84 });
   for (let g = 1; g <= 17; g++) {
     const id = String(g).padStart(2, "0");
     await jpeg(`sdg${id}`, `images/sdgs/goal-${id}.jpg`, { width: 180, quality: 80 });
@@ -136,7 +148,7 @@ function modelDiagram(constructs, order) {
 
 /** Before/after radar, same face order and style as the site's growth report. */
 function radar(constructs, faces) {
-  const cx = 200, cy = 182, R = 146;
+  const cx = 200, cy = 196, R = 140;
   const by = Object.fromEntries(constructs.map((c) => [c.id, c]));
   const ang = (i) => ((90 - i * 60) * Math.PI) / 180;
   const p = (i, v) => [cx + (R * v) / 100 * Math.cos(ang(i)), cy - (R * v) / 100 * Math.sin(ang(i))];
@@ -148,7 +160,7 @@ function radar(constructs, faces) {
   faces.forEach((f, i) => {
     const [x, y] = p(i, 100);
     spokes += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" stroke="${by[f.id].color}" stroke-opacity=".35"/>`;
-    const [lx, ly] = p(i, 112);
+    const [lx, ly] = p(i, 120);
     const anchor = Math.abs(lx - cx) < 4 ? "middle" : lx > cx ? "start" : "end";
     const dy = ly < cy - 20 ? -4 : ly > cy + 20 ? 8 : 0;
     labels += `<text x="${lx.toFixed(1)}" y="${(ly + dy).toFixed(1)}" text-anchor="${anchor}" class="rad-label" fill="${by[f.id].color}">${esc(by[f.id].name)}<tspan x="${lx.toFixed(1)}" dy="11" class="rad-num">${f.pre} → ${f.post}</tspan></text>`;
@@ -157,7 +169,7 @@ function radar(constructs, faces) {
     dotsA += `<circle cx="${ax.toFixed(1)}" cy="${ay.toFixed(1)}" r="3.2" fill="${by[f.id].color}"/>`;
   });
   const poly = (k) => faces.map((f, i) => p(i, f[k]).map((n) => n.toFixed(1)).join(",")).join(" ");
-  return `<svg viewBox="0 0 400 362" class="radar-svg" role="img" aria-label="Example growth radar: before and after scores on the six faces.">
+  return `<svg viewBox="0 0 400 398" class="radar-svg" role="img" aria-label="Example growth radar: before and after scores on the six faces.">
     ${grid}${spokes}
     <polygon points="${poly("post")}" fill="#2563eb" fill-opacity=".10" stroke="#0a0a0a" stroke-width="1.6"/>
     <polygon points="${poly("pre")}" fill="none" stroke="#6b6b6b" stroke-width="1.3" stroke-dasharray="4 3"/>
@@ -272,9 +284,8 @@ function build(L, img) {
             <div>
               <p class="lt">${esc(PAID_BOOK.title)}</p>
               <p class="small">${esc(PAID_BOOK.subtitle)}</p>
-              <p class="small">${esc(PAID_BOOK.imprint)} · ${esc(PAID_BOOK_DETAILS.publishedLabel)} · ${PAID_BOOK_DETAILS.pages} pp · 6 × 9 in, full colour</p>
-              <p class="small">Paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} / $${PAID_BOOK_DETAILS.paperbackPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.paperback.isbn}</span><br>Kindle ${kindleBuyUrl() ? "" : "(coming soon) "}$${PAID_BOOK_DETAILS.ebookPrice.usd} · <span class="nw">ISBN ${PAID_BOOK.kindle.isbn}</span></p>
-              <p class="small"><b>${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy the paperback on Amazon") : "Coming soon on Amazon"}</b>${kindleBuyUrl() ? ` · <b>${link(kindleBuyUrl(), "Buy the Kindle e-book on Amazon")}</b>` : ""} · ${link(`${SITE}/book`, "super-cube.me/book")}</p>
+              <p class="small"><b class="nw">Paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar}</b> · <b class="nw">Kindle R${PAID_BOOK_DETAILS.ebookPrice.zar}</b><br>${esc(BOOK_LAUNCH)}</p>
+              <p class="small">Details and Amazon links on page 8, or at ${link(`${SITE}/book`, "super-cube.me/book")}.</p>
             </div>
           </div>
         </div>
@@ -370,6 +381,44 @@ function build(L, img) {
       <div class="pubs">${publications.map((p) => `<p><span class="badge">${esc(p.badge)}</span> ${esc(p.authors)} (${p.year}). <b>${esc(p.title)}</b>. <i>${esc(p.journal)}</i>. ${link(p.doi, esc(p.doi.replace("https://", "")))}</p>`).join("")}<p><span class="badge">Book</span> ${esc(PAID_BOOK_CITATION)}</p></div>
     </div>`));
 
+  // 8 · The book
+  const { BOOK_CHAPTERS } = L.book;
+  const chapterRow = (c) => `<li><span class="cn">${c.n ?? "·"}</span><div><p class="lt">${esc(c.title)}</p><p class="small">${esc(c.note)}</p></div></li>`;
+  const half = Math.ceil(BOOK_CHAPTERS.length / 2);
+  pages.push(page(`
+    <div class="pad">
+      ${eyebrow("The book")}
+      <h2>Leadership Is Learnable.</h2>
+      <p class="lede">${esc(PAID_BOOK.subtitle)}. By ${esc(PAID_BOOK.author)}, ${esc(PAID_BOOK.imprint)}. The whole Super-Cube® model, the research behind it and a practical action plan, in one book.</p>
+      <div class="bookhero">
+        <figure class="bookcover"><img src="${img.bookCoverLarge}" alt="Cover of ${esc(PAID_BOOK.title)} by ${esc(PAID_BOOK.author)}"></figure>
+        <div class="bookbuy">
+          <article class="card buy">
+            <p class="k">Paperback</p>
+            <p class="tv">R${PAID_BOOK_DETAILS.paperbackPrice.zar} <span>· $${PAID_BOOK_DETAILS.paperbackPrice.usd}</span></p>
+            <p class="small">${PAID_BOOK_DETAILS.pages} pages · 6 × 9 in · full colour<br><span class="nw">ISBN ${PAID_BOOK.paperback.isbn}</span></p>
+            <p class="cta">${amazonBuyUrl() ? link(amazonBuyUrl(), "Buy the paperback on Amazon") : "Coming soon on Amazon"}</p>
+            <p class="url">${esc((amazonBuyUrl() || "").replace("https://", ""))}</p>
+          </article>
+          <article class="card buy">
+            <p class="k">Kindle e-book</p>
+            <p class="tv">R${PAID_BOOK_DETAILS.ebookPrice.zar} <span>· $${PAID_BOOK_DETAILS.ebookPrice.usd}</span></p>
+            <p class="small">Read on any Kindle device or app<br><span class="nw">ISBN ${PAID_BOOK.kindle.isbn}</span></p>
+            <p class="cta">${kindleBuyUrl() ? link(kindleBuyUrl(), "Buy the Kindle e-book on Amazon") : "Kindle edition coming soon"}</p>
+            <p class="url">${esc((kindleBuyUrl() || "").replace("https://", ""))}</p>
+          </article>
+          <p class="launch"><b>${esc(BOOK_LAUNCH)}:</b> R${PAID_BOOK_DETAILS.paperbackPrice.zar} in print and R${PAID_BOOK_DETAILS.ebookPrice.zar} as an <span class="nw">e-book</span>. Published ${esc(PAID_BOOK_DETAILS.publishedLabel)} on Amazon.</p>
+          <p class="small">A free starting point also exists: <b>The Super-Cube® Leadership Model</b>, free to download at ${link(`${SITE}/book`, "super-cube.me/book")}.</p>
+        </div>
+      </div>
+      <h3 class="h3 mt">What is inside</h3>
+      <div class="chapters">
+        <ol>${BOOK_CHAPTERS.slice(0, half).map(chapterRow).join("")}</ol>
+        <ol>${BOOK_CHAPTERS.slice(half).map(chapterRow).join("")}</ol>
+      </div>
+      <p class="note">Read the book, then measure your own six faces with the free ${link(`${SITE}/learn/start`, "10-minute baseline")}.</p>
+    </div>`));
+
   // 8 · What we offer
   pages.push(page(`
     <div class="pad">
@@ -424,6 +473,10 @@ function build(L, img) {
             </div>
           </article>`).join("")}
       </div>
+      <div class="card choose">
+        <p class="k">Not sure where to start?</p>
+        <p>Begin with the free six-face baseline (R0, about 10 minutes), then pick the programme for the learner’s age. Schools and organisations can buy seat packs from R${seatPackListPrice(SEAT_PACKS[0], "ZAR")} (pricing on page 14).</p>
+      </div>
     </div>`));
 
   // 10 · Learning platform
@@ -452,11 +505,17 @@ function build(L, img) {
           <p class="note">Example only: the illustrative composite from the site’s sample report (overall 52 → 68), not a real learner or a research result.</p>
         </div>
         <div class="stack">
-          <div class="card"><p class="k">Verifiable certificate</p><p>Completion certificates carry an ID like <b>SC-YYYYMMDD-HEX</b>. Anyone can check it at ${link(`${SITE}/verify`, "super-cube.me/verify")}.</p></div>
+          <div class="card"><p class="k">Verifiable certificate</p><p>Completion certificates carry an ID like <b>SC-YYYYMMDD-HEX</b>. Anyone can check it on the public verify page, <span class="nw">super-cube.me/verify/&lt;ID&gt;</span>.</p></div>
           <div class="card"><p class="k">Private by design</p><p>Journals stay private. Coaches see scores and completion only when learners consent—never journal text. Learners can turn sharing off at any time.</p></div>
           <div class="card"><p class="k">Continuous face tracking</p><p>Beyond one-off assessments: daily or weekly face pulses show patterns between assessments, and micro-practices adapt to each learner’s growth priorities.</p></div>
           <div class="card"><p class="k">Certification ladder</p><p><b>1 · Learner</b> completes the pathway.<br><b>2 · Practitioner</b> keeps a 30-day deliberate-practice streak.<br><b>3 · Facilitator</b> runs a cohort with the 8-week calendar, roster and consented heat map.</p></div>
         </div>
+      </div>
+      <div class="feat4">
+        <div><p class="k">Baseline</p><p class="lt">28-question instrument</p><p class="small">One consistent six-face questionnaire, scored on the server, for every programme.</p></div>
+        <div><p class="k">Mastery</p><p class="lt">Spaced review</p><p class="small">Skill mastery tracking, with reviews at day 3, 7 and 21 and weakest faces first.</p></div>
+        <div><p class="k">Motivation</p><p class="lt">Streaks, levels, badges</p><p class="small">Points, levels, a weekly goal, streak freezes and badges that reward practice, not speed.</p></div>
+        <div><p class="k">Any device</p><p class="lt">Install as an app</p><p class="small">Works on phone, tablet and laptop, and installs to the home screen.</p></div>
       </div>
     </div>`));
 
@@ -494,6 +553,15 @@ function build(L, img) {
         <li><span>3</span><p class="lt">Post-assessment</p><p class="small">Re-measure at the end of the term or programme.</p></li>
         <li><span>4</span><p class="lt">Report</p><p class="small">A cohort report of the change; each learner gets a growth report and certificate.</p></li>
       </ol>
+      <div class="card snapshot">
+        <p class="k">Field snapshot · schools</p>
+        <div class="snap">
+          <div><p class="big">0%</p><p class="small">had a leadership model they actually used</p></div>
+          <div><p class="big">88%</p><p class="small">would like to develop their leadership using a scientific approach</p></div>
+          <div><p class="big">94%</p><p class="small">believe leadership is important</p></div>
+        </div>
+        <p class="note">Survey of 33 Grade 12 boarders at a leading high school in South Africa (August 2024). Self-reported answers, not assessment scores or before-and-after results.</p>
+      </div>
       <div class="card tools">
         <p class="k">Coach and cohort dashboards</p>
         <p>Cohort codes and roster · consented face heat map · before-and-after impact by face with 95% confidence intervals and effect sizes · CSV export and an ROI pack (PDF) · verify URLs for every certificate. Consented scores only—never journals.</p>
@@ -523,7 +591,7 @@ function build(L, img) {
             <li>Facilitator kit with the 8-week rhythm and session notes.</li>
             <li>Draft consent language to adapt under your POPIA counsel.</li>
           </ul>
-          <p>${link(`${SITE}/pilot-pack`, "super-cube.me/pilot-pack")} · ${link(`${SITE}/facilitator`, "super-cube.me/facilitator")}</p>
+          <p class="stackl">${link(`${SITE}/pilot-pack`, "super-cube.me/pilot-pack")}<br>${link(`${SITE}/facilitator`, "super-cube.me/facilitator")}</p>
         </div>
       </div>
       <div class="quote-row">
@@ -560,6 +628,11 @@ function build(L, img) {
           <tbody>${SEAT_PACKS.map((s) => `<tr><td><b>${esc(s.label)}</b></td><td>${esc(s.blurb)}</td><td class="r">R${seatPackListPrice(s, "ZAR")}</td><td class="r">$${seatPackListPrice(s, "USD")}</td></tr>`).join("")}</tbody>
         </table>
       </div>
+      <div class="card bookprice">
+        <img src="${img.bookCover}" alt="Cover of ${esc(PAID_BOOK.title)}">
+        <div><p class="k">The book</p><p class="lt">${esc(PAID_BOOK.title)} · paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} · Kindle R${PAID_BOOK_DETAILS.ebookPrice.zar}</p>
+        <p class="small">${esc(BOOK_LAUNCH)}. Buy on Amazon: ${link(amazonBuyUrl(), "paperback")} · ${link(kindleBuyUrl(), "Kindle e-book")}. Details on page 8.</p></div>
+      </div>
       <p class="note">Prices as listed on ${link(`${SITE}/pricing`, "super-cube.me/pricing")}. For a grade, a whole school, facilitation or custom reporting, we’ll send a quote. Payments are processed securely by Paystack.</p>
     </div>`));
 
@@ -578,6 +651,11 @@ function build(L, img) {
           return `<article class="card" style="border-top:3px solid ${g.color}"><p class="k" style="color:${g.color}">Goal ${g.id} · ${esc(g.short)}</p><p class="small">${esc(c.superCubeHelp)}</p></article>`;
         }).join("")}
       </div>
+      <div class="card sdgbook">
+        <p class="k">In the book · Chapter 11</p>
+        <p class="lt">Leaders for the Global Goals</p>
+        <p class="small">Why the world’s to-do list needs leaders, and why we must build them. <i>Leadership Is Learnable</i>: paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar}, Kindle R${PAID_BOOK_DETAILS.ebookPrice.zar} (page 8).</p>
+      </div>
       <p class="note">Official UN SDG icons and titles · challenges framed for leadership development · Super-Cube® does not claim UN endorsement. Full goal-by-goal view: ${link(`${SITE}/leadership-challenges`, "super-cube.me/leadership-challenges")}</p>
     </div>`));
 
@@ -590,6 +668,8 @@ function build(L, img) {
       <div class="contact">
         <div><p class="k">Email</p><p class="cv">${link("mailto:hello@super-cube.me", "hello@super-cube.me")}</p></div>
         <div><p class="k">Website</p><p class="cv">${link(SITE, "www.super-cube.me")}</p></div>
+        <div><p class="k">Phone</p><p class="cv">${link(LEGAL.tel, `<span class="nw">${LEGAL.phone}</span>`)}</p></div>
+        <div><p class="k">WhatsApp</p><p class="cv">${link(LEGAL.whatsapp, "Message us")}</p></div>
       </div>
       <ul class="links">
         <li>${link(`${SITE}/learn/start`, "Start free baseline")}<span>super-cube.me/learn/start</span></li>
@@ -600,11 +680,14 @@ function build(L, img) {
         <li>${link(`${SITE}/contact`, "Contact us")}<span>super-cube.me/contact</span></li>
         <li>${link("https://za.linkedin.com/in/craigmuller", "Dr Craig Muller on LinkedIn")}<span>linkedin.com/in/craigmuller</span></li>
         <li>${link(site.researchGateUrl, "Dr Craig Muller on ResearchGate")}<span>researchgate.net/profile/Craig-Muller</span></li>
+        <li>${link(`${SITE}/book`, "Leadership Is Learnable")}<span>paperback R${PAID_BOOK_DETAILS.paperbackPrice.zar} · Kindle R${PAID_BOOK_DETAILS.ebookPrice.zar} · super-cube.me/book</span></li>
+        <li>${link(`${SITE}/news`, "News and insights")}<span>super-cube.me/news</span></li>
       </ul>
       <div class="credit">
         <p class="motto">Feed. Educate. Empower.</p>
         <p>Super-Cube® is part of ${link("https://bigfivegroup.africa/leadership", "Big Five Learn")}, the Educate pillar of ${link("https://bigfivegroup.africa", "Big Five Group™")}.</p>
-        <p class="small">© ${new Date().getFullYear()} Super-Cube® Leadership Model. All rights reserved. Gains are from the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods and are not live programme data.</p>
+        <p class="small">© ${new Date().getFullYear()} ${LEGAL.entity}. All rights reserved. Big Five Group is operated by ${LEGAL.entity} · ${LEGAL.line} · ${LEGAL.address}.</p>
+        <p class="small">Gains quoted in this profile are from the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods and are not live programme data.</p>
       </div>
     </div>`, { dark: true, cls: "backpage", footer: false }));
 
@@ -652,13 +735,13 @@ p + p { margin-top: 2mm; }
 .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; }
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4mm; margin-top: 5mm; }
 .split { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 7mm; margin-top: 7mm; align-items: start; }
-.split.even { grid-template-columns: 1fr 1fr; gap: 5mm; }
+.split.even { grid-template-columns: 1fr 1fr; gap: 5mm; align-items: stretch; }
 .photo { border-radius: 3.5mm; overflow: hidden; background: #f4f4f4; }
 .photo img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .photo.tall { height: 72mm; }
 .photo.contain { background: #fff; }
 .photo.contain img { object-fit: contain; }
-.photo.short { height: 34mm; margin: -4.5mm -5mm 4mm; border-radius: 3.5mm 3.5mm 0 0; }
+.photo.short { height: 24mm; margin: -4.5mm -5mm 4mm; border-radius: 3.5mm 3.5mm 0 0; }
 .chips { display: flex; gap: 2mm; flex-wrap: wrap; margin-top: 4mm; }
 .chips span { border: 0.6px solid rgba(0,0,0,.14); border-radius: 99px; padding: 1mm 3mm; font-size: 7.6pt; font-weight: 600; }
 
@@ -668,12 +751,12 @@ p + p { margin-top: 2mm; }
 .cover-fade { position: absolute; left: 0; right: 0; top: 110mm; height: 62mm; background: linear-gradient(180deg, rgba(10,10,10,0), #0a0a0a 92%); }
 .cover-logo { position: absolute; top: 15mm; left: 17mm; width: 52mm; }
 .cover-text { position: absolute; left: 17mm; right: 17mm; bottom: 20mm; }
-.cover .eyebrow { color: rgba(255,255,255,.6); }
+.cover .eyebrow { color: rgba(255,255,255,.72); }
 .cover .lede { color: rgba(255,255,255,.75); font-size: 11.5pt; max-width: 150mm; margin-top: 6mm; }
 .cover-faces { display: flex; flex-wrap: wrap; gap: 2mm 5mm; margin-top: 9mm; font-size: 8.4pt; font-weight: 600; }
 .cover-faces span { display: inline-flex; align-items: center; gap: 1.8mm; }
 .cover-faces i { width: 2.6mm; height: 2.6mm; border-radius: 50%; display: inline-block; }
-.cover-by { margin-top: 9mm; padding-top: 4mm; border-top: 0.6px solid rgba(255,255,255,.18); font-size: 8pt; color: rgba(255,255,255,.65); }
+.cover-by { margin-top: 9mm; padding-top: 4mm; border-top: 0.6px solid rgba(255,255,255,.18); font-size: 8pt; color: rgba(255,255,255,.75); }
 
 /* who we are */
 .pillars { margin-top: 7mm; }
@@ -802,7 +885,7 @@ p + p { margin-top: 2mm; }
 .progs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4mm; margin-top: 6mm; }
 .prog { border: 0.6px solid rgba(0,0,0,.1); border-radius: 3.5mm; overflow: hidden; display: flex; flex-direction: column; break-inside: avoid; }
 .pband { padding: 5mm 4.5mm 4.5mm; min-height: 27mm; }
-.pdesc { min-height: 58mm; }
+.pdesc { min-height: 50mm; }
 .pdesc p { font-size: 8pt; line-height: 1.45; color: #4a4a4a; }
 .pdesc p + p { margin-top: 2mm; }
 .pband .age { font-size: 6.8pt; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; }
@@ -818,13 +901,13 @@ p + p { margin-top: 2mm; }
 .price span { font-size: 8pt; font-weight: 500; color: #6b6b6b; letter-spacing: 0; }
 
 /* journey */
-.journey { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 3mm; margin-top: 6mm; }
+.journey { list-style: none; display: grid; grid-template-columns: repeat(5, 1fr); gap: 3mm; margin-top: 5mm; }
 .journey li { border-top: 2px solid #0a0a0a; padding-top: 2.5mm; }
 .journey span { font-size: 7pt; font-weight: 700; color: #6b6b6b; letter-spacing: .1em; }
 .journey .lt { margin-top: 1mm; font-size: 9pt; }
 .journey .small { font-size: 7.4pt; margin-top: 1mm; }
-.radar-svg { width: 100%; height: 74mm; display: block; margin: 2mm 0; flex: none; }
-.rad-label { font: 700 12px Inter, sans-serif; }
+.radar-svg { width: 100%; height: 68mm; display: block; margin: 2mm 0; flex: none; }
+.rad-label { font: 700 13px Inter, sans-serif; }
 .rad-num { font-weight: 500; fill: #4a4a4a; }
 .legend { font-size: 7.4pt; color: #4a4a4a; display: flex; align-items: center; gap: 2mm; }
 .lg-b, .lg-a { display: inline-block; width: 6mm; height: 0; border-top: 1.3px dashed #6b6b6b; }
@@ -853,7 +936,7 @@ p + p { margin-top: 2mm; }
 .wk { font-size: 6.8pt; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #2563eb; }
 .weeks .lt { margin-top: 1mm; font-size: 9pt; }
 .weeks .small { font-size: 7.6pt; margin-top: 1mm; }
-.quote-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm 8mm; margin-top: 8mm; }
+.quote-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm 8mm; margin-top: 8mm; align-items: start; }
 blockquote { border-left: 2px solid #0a0a0a; padding-left: 3.5mm; }
 blockquote p { font-size: 10pt; line-height: 1.4; font-weight: 600; letter-spacing: -0.01em; }
 cite { display: block; font-style: normal; font-size: 7.4pt; color: #6b6b6b; margin-top: 2mm; font-weight: 600; }
@@ -886,23 +969,120 @@ td.r { font-weight: 600; }
 
 /* back */
 .backpage { background: #0a0a0a; color: #fff; }
-.back { padding: 24mm 17mm 0; }
-.back-logo { width: 58mm; margin-bottom: 18mm; }
+.back { padding: 20mm 17mm 0; }
+.back-logo { width: 58mm; margin-bottom: 12mm; }
 .back h2 { font-size: 28pt; max-width: 150mm; }
 .back .lede { color: rgba(255,255,255,.72); }
-.contact { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; margin-top: 12mm; padding: 6mm 0; border-top: 0.6px solid rgba(255,255,255,.18); border-bottom: 0.6px solid rgba(255,255,255,.18); }
-.back .k { color: rgba(255,255,255,.55); }
+.contact { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm 6mm; margin-top: 9mm; padding: 6mm 0; border-top: 0.6px solid rgba(255,255,255,.18); border-bottom: 0.6px solid rgba(255,255,255,.18); }
+.back .k { color: rgba(255,255,255,.66); }
 .cv { font-size: 16pt; font-weight: 600; letter-spacing: -0.02em; }
 .cv a { border-bottom-color: rgba(255,255,255,.35); }
 .links { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; margin-top: 8mm; }
 .links li { padding: 2.4mm 0; border-bottom: 0.6px solid rgba(255,255,255,.1); font-size: 9pt; font-weight: 600; display: flex; flex-direction: column; }
 .links a { border: 0; }
-.links span { font-size: 7.4pt; font-weight: 400; color: rgba(255,255,255,.55); }
+.links span { font-size: 7.4pt; font-weight: 400; color: rgba(255,255,255,.68); }
 .credit { position: absolute; left: 17mm; right: 17mm; bottom: 16mm; }
 .credit .motto { font-size: 13pt; margin-bottom: 2mm; }
 .credit p { color: rgba(255,255,255,.75); font-size: 9pt; }
-.credit .small { color: rgba(255,255,255,.5); font-size: 7.2pt; margin-top: 3mm; }
+.credit .small { color: rgba(255,255,255,.66); font-size: 7.2pt; margin-top: 2mm; }
+
+/* v2 additions */
+.bk { grid-template-columns: 24mm 1fr; }
+.bookhero { display: grid; grid-template-columns: 50mm minmax(0, 1fr); gap: 9mm; margin-top: 7mm; align-items: start; }
+.bookcover img { width: 100%; height: auto; display: block; border-radius: 1.2mm; box-shadow: 0 4mm 9mm -3mm rgba(0,0,0,.4); border: 0.4px solid rgba(0,0,0,.12); }
+.bookbuy { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4mm; align-content: start; }
+.bookbuy .launch, .bookbuy > .small { grid-column: 1 / -1; }
+.bookbuy .launch { background: #fafafa; border-radius: 3mm; padding: 3mm 4mm; font-size: 8.4pt; line-height: 1.45; color: #333; margin-top: 0; }
+.buy .tv { font-family: "Inter Display", "Inter", sans-serif; font-size: 20pt; font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+.buy .tv span { font-size: 9pt; font-weight: 500; color: #6b6b6b; letter-spacing: 0; }
+.buy .cta { min-height: 9mm; margin-top: 3mm; font-size: 8.4pt; font-weight: 700; }
+.buy .url { font-size: 7pt; color: #6b6b6b; margin-top: .6mm; word-break: break-all; }
+.chapters { display: grid; grid-template-columns: 1fr 1fr; gap: 0 8mm; }
+.chapters ol { list-style: none; }
+.chapters li { display: grid; grid-template-columns: 7mm 1fr; gap: 2mm; padding: 1.7mm 0; border-top: 0.6px solid rgba(0,0,0,.08); }
+.chapters .cn { font-size: 7.4pt; font-weight: 700; color: #6b6b6b; padding-top: .3mm; }
+.chapters .lt { font-size: 8.6pt; }
+.chapters .small { font-size: 7.4pt; line-height: 1.35; }
+.feat4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 3mm; margin-top: 4mm; }
+.feat4 > div { background: #fafafa; border-radius: 3mm; padding: 3.5mm; }
+.feat4 .lt { font-size: 8.8pt; }
+.feat4 .small { font-size: 7.4pt; margin-top: .8mm; }
+.levels5 .ls { min-height: 2.95em; }
+.teaser .k { min-height: 7.4mm; }
+.stackl { line-height: 1.7; }
+.choose { margin-top: 5mm; }
+.choose p:last-child { font-size: 8.8pt; color: #333; }
+.bookprice { display: flex; gap: 4mm; align-items: center; margin-top: 4mm; padding: 3.5mm 5mm; }
+.bookprice img { width: 13mm; height: auto; border-radius: .8mm; box-shadow: 0 1.2mm 3mm -1mm rgba(0,0,0,.35); }
+.bookprice .small { margin-top: .6mm; }
+.sdgbook { margin-top: 5mm; }
+.sdgbook .small { margin-top: .6mm; font-size: 8.4pt; }
+.snapshot { margin-top: 4mm; }
+.snapshot + .tools { margin-top: 4mm; }
+.chapters p + p { margin-top: 0; }
+.buy .cta a { white-space: normal; }
+.launch .nw { white-space: nowrap; }
+.snap { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; margin-top: 1mm; }
+.snap .big { font-size: 18pt; }
+.snap .small { margin-top: .6mm; font-size: 7.6pt; }
+.snapshot .note { margin-top: 2.5mm; }
+.progs.mini .pband, .pband { display: flex; flex-direction: column; justify-content: flex-start; }
+.progs.mini .pband { min-height: 25mm; }
+.sdg-cards .k { min-height: 8.5mm; }
 `;
+
+
+/** Layout QA (node build.mjs --qa): runs in the page and reports overflow, overlap and footer-clearance problems per page. */
+function layoutQa() {
+  const mm = 96 / 25.4, issues = [];
+  const rect = (e) => e.getBoundingClientRect();
+  document.querySelectorAll(".page").forEach((pg, pi) => {
+    const n = pi + 1, pr = rect(pg), foot = pg.querySelector(".foot");
+    const footTop = foot ? rect(foot).top : pr.bottom - 6 * mm;
+    const leaves = [...pg.querySelectorAll("h1,h2,h3,p,li,dt,dd,figure,img,svg,table,blockquote,.card,.face,.prog,cite,span.badge,.bar")].filter((e) => !e.closest(".foot") && !e.closest(".spectrum") && !e.closest(".cover-img") && !e.closest(".cover-fade"));
+    let maxBottom = 0;
+    for (const e of leaves) {
+      const r = rect(e);
+      if (r.width === 0 || r.height === 0) continue;
+      if (!e.closest(".credit") && !pg.classList.contains("cover")) maxBottom = Math.max(maxBottom, r.bottom);
+      if (r.right > pr.right - 12 * mm + 1 || r.left < pr.left + 12 * mm - 1) issues.push(`p${n}: outside side margin: <${e.tagName.toLowerCase()}> "${(e.textContent || e.alt || "").trim().slice(0, 40)}" (${((r.left - pr.left) / mm).toFixed(1)}–${((r.right - pr.left) / mm).toFixed(1)} mm)`);
+      if (e.scrollWidth > e.clientWidth + 1 && getComputedStyle(e).display !== "inline" && e.tagName !== "svg" && e.tagName !== "SVG") issues.push(`p${n}: text overflows horizontally: "${(e.textContent || "").trim().slice(0, 40)}"`);
+    }
+    // containers whose children spill out
+    pg.querySelectorAll(".card,.face,.prog,.teaser,.bars,.hero-num,li").forEach((c) => {
+      const cr = rect(c);
+      c.querySelectorAll("p,h3,li,img,svg,span").forEach((k) => {
+        const kr = rect(k);
+        if (kr.width && kr.height && (kr.bottom > cr.bottom + 1.5 || kr.right > cr.right + 1.5) && !k.closest(".track") && getComputedStyle(c).overflow !== "hidden") issues.push(`p${n}: child spills out of its box: "${(k.textContent || "").trim().slice(0, 40)}"`);
+      });
+    });
+    if (!pg.classList.contains("cover") && !pg.classList.contains("backpage") && maxBottom > footTop - 7 * mm) issues.push(`p${n}: content ends ${((footTop - maxBottom) / mm).toFixed(1)} mm above the footer rule (needs >= 7 mm)`);
+    if (pg.classList.contains("backpage")) {
+      const cr = pg.querySelector(".credit"), last = pg.querySelector(".links");
+      if (cr && last && rect(last).bottom > rect(cr).top - 6 * mm) issues.push(`p${n}: link list is ${((rect(cr).top - rect(last).bottom) / mm).toFixed(1)} mm from the credit block (needs >= 6 mm)`);
+    }
+    // sibling overlap: elements in the same parent must not intersect
+    pg.querySelectorAll("*").forEach((par) => {
+      if (par.closest(".cover-img")) return;
+      const kids = [...par.children].filter((k) => { const cs = getComputedStyle(k); return cs.position !== "absolute" && cs.display !== "inline" && rect(k).width > 0 && rect(k).height > 0 && !["BR", "STYLE"].includes(k.tagName); });
+      for (let i = 0; i < kids.length; i++) for (let j = i + 1; j < kids.length; j++) {
+        const a = rect(kids[i]), b = rect(kids[j]);
+        const ox = Math.min(a.right, b.right) - Math.max(a.left, b.left), oy = Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top);
+        if (ox > 1.5 && oy > 1.5) issues.push(`p${n}: overlap between <${kids[i].tagName.toLowerCase()}.${kids[i].className}> and <${kids[j].tagName.toLowerCase()}.${kids[j].className}> (${ox.toFixed(0)}×${oy.toFixed(0)} px)`);
+      }
+    });
+    // absolutely positioned blocks vs flow content on cover/back
+    if (pg.classList.contains("cover")) {
+      const t = rect(pg.querySelector(".cover-text")), l = rect(pg.querySelector(".cover-logo"));
+      if (t.top < l.bottom + 10 * mm) issues.push(`p${n}: cover text too close to the logo`);
+    }
+  });
+  // headings that end a page (orphan headings): a heading whose next block starts on another page is impossible here (fixed pages) but check heading-to-content gap
+  document.querySelectorAll(".page h2,.page h3").forEach((h) => {
+    const nx = h.nextElementSibling; if (!nx) { const pr = h.closest(".pad,.back,.card,article,div"); return; }
+  });
+  return issues;
+}
 
 async function main() {
   const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "sc-profile-"));
@@ -928,6 +1108,10 @@ async function main() {
   const pg = await browser.newPage();
   await pg.goto(pathToFileURL(htmlFile).href, { waitUntil: "load" });
   await pg.evaluate(() => document.fonts.ready);
+  if (process.argv.includes("--qa")) {
+    const issues = await pg.evaluate(`(${layoutQa.toString()})()`);
+    console.log(issues.length ? `QA: ${issues.length} layout issue(s)\n  ` + issues.join("\n  ") : "QA: 0 layout issues");
+  }
   const pdf = await pg.pdf({ format: "A4", printBackground: true, preferCSSPageSize: true, tagged: true, outline: true });
   await browser.close();
   await fs.mkdir(path.dirname(outPdf), { recursive: true });
