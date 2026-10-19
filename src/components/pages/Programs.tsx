@@ -126,7 +126,7 @@ export function ProgramsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = 
             {bookCovers.map((book) => (
               <a
                 key={book.id}
-                href={`/constructs#${book.id}`}
+                href={L(`/constructs#${book.id}`)}
                 className="card-lift group block overflow-hidden rounded-xl border border-line bg-elevated"
               >
                 <div className="relative aspect-[3/4] w-full bg-cream-dark">

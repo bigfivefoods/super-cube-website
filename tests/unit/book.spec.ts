@@ -80,11 +80,11 @@ test("/book: download links, share card, chapters, sitemap and breadcrumbs", () 
   expect(read("src/lib/hero-media.ts")).toMatch(/darkHeroPaths = \[[\s\S]*"\/book"/);
 });
 
-test("home section and footer link to the book; the PDF and /book are marked English", () => {
+test("home section and footer link to the book; the PDF is marked English, /book stays in the page language", () => {
   const home = read("src/components/home/HomeLanding.tsx");
   expect(home).toContain('data-testid="home-book"');
   expect(home).toMatch(/href=\{BOOK\.href\}\s+hrefLang=\{en\}\s+download/);
-  expect(home).toMatch(/href=\{BOOK\.page\} hrefLang=\{en\}/);
+  expect(home).toMatch(/href=\{L\(BOOK\.page\)\} hrefLang=\{hl\(BOOK\.page\)\}/);
   // The new section sits below the hero, never inside it.
   expect(home.indexOf('data-testid="home-book"')).toBeGreaterThan(home.indexOf("{/* What it is */}"));
   const footer = read("src/components/Footer.tsx");

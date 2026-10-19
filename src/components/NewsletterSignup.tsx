@@ -24,7 +24,7 @@ export function NewsletterSignup({
   className?: string;
 }) {
   const id = useId();
-  const { t } = useLocale();
+  const { t, L } = useLocale();
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
   const footer = variant === "footer";
@@ -142,7 +142,7 @@ export function NewsletterSignup({
           />
           <label htmlFor={`${id}-consent`} className="text-xs leading-snug text-[#525252] dark:text-slate">
             {t("nl.consentShort")}{" "}
-            <Link href="/privacy" className="inline-flex min-h-6 items-center text-black underline underline-offset-2 dark:text-ink">
+            <Link href={L("/privacy")} className="inline-flex min-h-6 items-center text-black underline underline-offset-2 dark:text-ink">
               {t("footer.privacy")}
             </Link>
           </label>
@@ -213,7 +213,7 @@ export function NewsletterSignup({
         />
         <label htmlFor={`${id}-consent`} className="text-xs leading-relaxed text-slate">
           {t("nl.consentLong")}{" "}
-          <Link href="/privacy" className="font-semibold text-ink underline underline-offset-2">
+          <Link href={L("/privacy")} className="font-semibold text-ink underline underline-offset-2">
             {t("nl.privacyNotice")}
           </Link>
           {t("nl.consentEnd")}

@@ -16,7 +16,7 @@ import {
   type ProgrammeId,
 } from "@/lib/programmes";
 import { EnglishOnly } from "@/components/EnglishOnly";
-import { DEFAULT_LOCALE, isEnglishOnlyHref, type Locale } from "@/lib/i18n/config";
+import { DEFAULT_LOCALE, isEnglishOnlyHref, localizedPath, type Locale } from "@/lib/i18n/config";
 import { around, fill } from "@/lib/i18n/pages/format";
 import type { PricingStrings } from "@/lib/i18n/pages/pricing";
 
@@ -26,6 +26,7 @@ import type { PricingStrings } from "@/lib/i18n/pages/pricing";
  */
 export function PricingView({ s, locale = DEFAULT_LOCALE }: { s: PricingStrings; locale?: Locale }) {
   const hl = (href: string) => (isEnglishOnlyHref(locale, href) ? "en" : undefined);
+  const L = (href: string) => localizedPath(locale, href);
   const price = { zar: COURSE_PRICE_ZAR, usd: COURSE_PRICE_USD };
   const [tipBefore, tipAfter] = around(s.tip, "signin");
   const [payBefore, payAfter] = around(s.paymentsNote, "paystack");
@@ -91,7 +92,7 @@ export function PricingView({ s, locale = DEFAULT_LOCALE }: { s: PricingStrings;
                   {s.alreadyPaid}
                 </p>
                 <Link
-                  href="/learn"
+                  href={L("/learn")}
                   hrefLang={hl("/learn")}
                   className="mt-2 inline-flex gap-1 text-sm font-semibold text-ink underline-offset-2 hover:underline"
                 >
@@ -243,13 +244,13 @@ export function PricingView({ s, locale = DEFAULT_LOCALE }: { s: PricingStrings;
                 {tipAfter}
               </p>
               <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                <Button href="/learn/coach" hrefLang={hl("/learn/coach")} variant="ghost">
+                <Button href={L("/learn/coach")} hrefLang={hl("/learn/coach")} variant="ghost">
                   {s.coachTools}
                 </Button>
-                <Button href="/facilitator" hrefLang={hl("/facilitator")} variant="ghost">
+                <Button href={L("/facilitator")} hrefLang={hl("/facilitator")} variant="ghost">
                   {s.facilitatorKit}
                 </Button>
-                <Button href="/signup" hrefLang={hl("/signup")} variant="ghost">
+                <Button href={L("/signup")} hrefLang={hl("/signup")} variant="ghost">
                   {s.createCoach}
                 </Button>
                 <a
@@ -272,10 +273,10 @@ export function PricingView({ s, locale = DEFAULT_LOCALE }: { s: PricingStrings;
                 {payAfter}
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Button href="/learn" hrefLang={hl("/learn")} variant="ghost">
+                <Button href={L("/learn")} hrefLang={hl("/learn")} variant="ghost">
                   {s.learnDashboard} <span aria-hidden className="rtl:-scale-x-100">→</span>
                 </Button>
-                <Button href="/learn/start" hrefLang={hl("/learn/start")} variant="primary">
+                <Button href={L("/learn/start")} hrefLang={hl("/learn/start")} variant="primary">
                   {s.startBaseline}
                 </Button>
               </div>
