@@ -62,7 +62,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
   // Links stay on this language where the page is translated; others go to English (hrefLang="en").
   const L = (href: string) => localizedPath(locale, href);
   const hl = (href: string) => (isEnglishOnlyHref(locale, href) ? "en" : undefined);
-  /** The free book (PDF and /book) is English: hrefLang/lang "en" on translated pages. */
+  /** The free book PDF and book titles are English: hrefLang/lang "en" on translated pages (the /book page itself is translated). */
   const en = locale === DEFAULT_LOCALE ? undefined : "en";
   const steps = s.steps.map((x, i) => ({ n: String(i + 1), ...x }));
   const paths = [
@@ -131,7 +131,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
             </p>
             <div className="mt-6 flex w-full max-w-md flex-col gap-2.5 sm:mt-8 sm:max-w-none sm:flex-row sm:flex-wrap sm:gap-3">
               <Button
-                href="/learn/start"
+                href={L("/learn/start")}
                 hrefLang={hl("/learn/start")}
                 variant="primary"
                 className="w-full !bg-white !text-ink hover:!bg-white/90 sm:w-auto"
@@ -153,7 +153,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 </span>
               </Button>
               <Button
-                href="/sample-report"
+                href={L("/sample-report")}
                 hrefLang={hl("/sample-report")}
                 variant="light"
                 className="w-full border-white/35 sm:w-auto"
@@ -315,10 +315,10 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                   {fill(s.groupsBody, { pack: formatSeatPackPrice(smallestPack), seats: smallestPack.seats })}
                 </p>
                 <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
-                  <Button href="/organisations" hrefLang={hl("/organisations")} variant="ghost">
+                  <Button href={L("/organisations")} hrefLang={hl("/organisations")} variant="ghost">
                     {s.forOrganisations}
                   </Button>
-                  <Button href="/schools" hrefLang={hl("/schools")} variant="ghost">
+                  <Button href={L("/schools")} hrefLang={hl("/schools")} variant="ghost">
                     {s.forSchools}
                   </Button>
                 </div>
@@ -365,7 +365,8 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               </p>
               <p className="mt-3 text-sm">
                 <Link
-                  href="/news/twelve-weeks-six-faces-fmcg-leadership"
+                  href={L("/news/twelve-weeks-six-faces-fmcg-leadership")}
+                  hrefLang={hl("/news/twelve-weeks-six-faces-fmcg-leadership")}
                   className="inline-flex min-h-6 items-center gap-1 font-semibold text-ink underline underline-offset-2"
                   data-testid="home-case-study-link"
                 >
@@ -374,10 +375,10 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               </p>
             </div>
             <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
-              <Button href="/research" hrefLang={hl("/research")} variant="ghost">
+              <Button href={L("/research")} hrefLang={hl("/research")} variant="ghost">
                 {s.readResearch} <span aria-hidden className="rtl:-scale-x-100">→</span>
               </Button>
-              <Button href="/about" hrefLang={hl("/about")} variant="ghost">
+              <Button href={L("/about")} hrefLang={hl("/about")} variant="ghost">
                 {s.aboutCraig}
               </Button>
             </div>
@@ -421,7 +422,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                       {translate(dict, "home.bookMeta", { pages: BOOK.pages })}
                     </span>
                   </Button>
-                  <Button href={BOOK.page} hrefLang={en} variant="ghost">
+                  <Button href={L(BOOK.page)} hrefLang={hl(BOOK.page)} variant="ghost">
                     {translate(dict, "home.bookMore")} <span aria-hidden className="rtl:-scale-x-100">→</span>
                   </Button>
                   {locale !== DEFAULT_LOCALE && (
@@ -452,7 +453,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
                 <>
                   <AmazonButton soonLabel={translate(dict, "home.paidSoon")} buyLabel={translate(dict, "home.paidBuy")} />
                   <KindleNote soonLabel={translate(dict, "home.paidKindleSoon")} buyLabel={translate(dict, "home.paidKindleBuy")} />
-                  <Button href={`${BOOK.page}#${PAID_BOOK_DETAILS.anchor}`} hrefLang={en} variant="ghost">
+                  <Button href={L(`${BOOK.page}#${PAID_BOOK_DETAILS.anchor}`)} hrefLang={hl(BOOK.page)} variant="ghost">
                     {translate(dict, "home.paidMore")} <span aria-hidden className="rtl:-scale-x-100">→</span>
                   </Button>
                 </>
@@ -482,14 +483,14 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
             </p>
             <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
               <Link
-                href="/learn/start"
+                href={L("/learn/start")}
                 hrefLang={hl("/learn/start")}
                 className="inline-flex min-h-11 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-black hover:bg-white/90"
               >
                 {s.startBaseline}
               </Link>
               <Link
-                href={booking}
+                href={booking.startsWith("/") ? L(booking) : booking}
                 className="inline-flex min-h-11 items-center justify-center rounded-full border border-white/35 px-6 text-sm font-semibold text-white hover:bg-white/10"
               >
                 {s.bookCall}

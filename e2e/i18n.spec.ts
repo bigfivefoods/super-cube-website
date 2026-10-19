@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
+import { isTranslatedPath } from "../src/lib/i18n/config";
 
 /**
  * Languages (the bigfivegroup.africa approach): English unprefixed; French, Arabic (RTL),
@@ -149,4 +150,27 @@ test.describe("languages", () => {
       for (const p of TRANSLATED) expect(xml).toContain(`/${l}${p}<`);
     }
   });
+});
+
+// In-content links on translated pages go to the visitor's language wherever that page is translated.
+test.describe("translated pages keep in-content and header nav links in the same language", () => {
+  const LOCALES = ["fr", "ar", "pt", "sw", "zu", "af"] as const;
+  const PAGES = ["", "/programs", "/pricing", "/news", "/sample-report", "/about", "/the-model", "/book"];
+  for (const loc of LOCALES) {
+    test(`/${loc}: no main-content or header nav link to an English URL that has a /${loc} version`, async ({ request }) => {
+      const bad: string[] = [];
+      for (const p of PAGES) {
+        const html = await (await request.get(`/${loc}${p}`)).text();
+        const main = /<main[\s\S]*?<\/main>/.exec(html)?.[0] ?? "";
+        const header = /<header[\s\S]*?<\/header>/.exec(html)?.[0] ?? "";
+        expect(header, `/${loc}${p || "/"} has a <header>`).toContain("<nav");
+        for (const m of (main + header).matchAll(/<a\b[^>]*\bhref="(\/[^"]*)"[^>]*>/g)) {
+          const href = m[1].replace(/&amp;/g, "&");
+          if (/^\/(fr|ar|pt|sw|zu|af)(\/|$|[?#])/.test(href) || /\.(pdf|xml)$/.test(href.split(/[?#]/)[0]) || / download/.test(m[0])) continue;
+          if (isTranslatedPath(href.split(/[?#]/)[0] || "/")) bad.push(`/${loc}${p || "/"} → ${href}`);
+        }
+      }
+      expect(bad).toEqual([]);
+    });
+  }
 });

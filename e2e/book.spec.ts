@@ -59,17 +59,22 @@ test("home: Free book section below the hero; hero unchanged", async ({ page }) 
   await expect(footerBook).toHaveAttribute("href", "/book");
 });
 
-test("translated home: book strings translated, links marked English", async ({ page }) => {
+test("translated home: book strings translated, PDF marked English, book page in French", async ({ page }) => {
   await page.goto("/fr");
   const section = page.getByTestId("home-book");
   const dl = section.getByRole("link", { name: /^Télécharger le livre gratuit/ });
   await expect(dl).toHaveAttribute("href", PDF);
   await expect(dl).toHaveAttribute("hreflang", "en");
   await expect(dl).toHaveAttribute("download", "");
-  await expect(section.getByRole("link", { name: /À propos du livre/ })).toHaveAttribute("hreflang", "en");
+  // /book has a French version, so in-content links stay in French (like the footer).
+  const about = section.getByRole("link", { name: /À propos du livre/ });
+  await expect(about).toHaveAttribute("href", "/fr/book");
+  await expect(about).not.toHaveAttribute("hreflang", /.+/);
+  const paidMore = page.getByTestId("home-paid-book").getByRole("link", { name: /À propos de l’édition complète/ });
+  await expect(paidMore).toHaveAttribute("href", /^\/fr\/book#/);
   const footerBook = page.locator("footer.site-footer").getByRole("link", { name: "Livre gratuit", exact: true });
-  await expect(footerBook).toHaveAttribute("href", "/book");
-  await expect(footerBook).toHaveAttribute("hreflang", "en");
+  await expect(footerBook).toHaveAttribute("href", "/fr/book");
+  await expect(footerBook).not.toHaveAttribute("hreflang", /.+/);
 });
 
 test("sitemap lists /book", async ({ request }) => {
