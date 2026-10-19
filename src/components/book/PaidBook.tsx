@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
 import Image from "next/image";
 import Link from "next/link";
 import { PAID_BOOK, PAID_BOOK_DETAILS, amazonBuyUrl, kindleBuyUrl } from "@/lib/book";
@@ -112,7 +114,8 @@ function Cover({ sizes, className = "" }: { sizes: string; className?: string })
 }
 
 /** Full section for /book. */
-export function PaidBookSection() {
+export function PaidBookSection({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = pageI18n(locale);
   return (
     <section
       id={D.anchor}
@@ -125,29 +128,24 @@ export function PaidBookSection() {
           <Cover sizes="(min-width: 1024px) 360px, (min-width: 768px) 30vw, 288px" />
         </div>
         <div className="min-w-0">
-          <p className="eyebrow">Go deeper · {D.edition}</p>
+          <p className="eyebrow">{t("Go deeper ·")}{" "}{t(D.edition)}</p>
           <h2 id="paid-book-title" className="heading-lg mt-3 text-ink">
-            {PAID_BOOK.title}
+            {t(PAID_BOOK.title)}
           </h2>
-          <p className="mt-2 text-base font-semibold tracking-tight text-slate sm:text-lg">{PAID_BOOK.subtitle}</p>
+          <p className="mt-2 text-base font-semibold tracking-tight text-slate sm:text-lg">{t(PAID_BOOK.subtitle)}</p>
           <div className="mt-5 space-y-4 text-base leading-relaxed text-slate sm:text-[1.0625rem]">
             <p>
-              The free book is the front door. <em>{PAID_BOOK.title}</em> is the house behind it: the doctoral research
-              behind the Super-Cube® model (a survey of 132 people in an African FMCG business network and interviews
-              with ten of its directors), a full chapter on each of the six faces, and a step-by-step guide for boards, HR
-              directors and facilitators to building a leadership programme.
+              {t("The free book is the front door.")}{" "}<em>{t(PAID_BOOK.title)}</em>{" "}{t("is the house behind it: the doctoral research behind the Super-Cube® model (a survey of 132 people in an African FMCG business network and interviews with ten of its directors), a full chapter on each of the six faces, and a step-by-step guide for boards, HR directors and facilitators to building a leadership programme.")}
             </p>
             <p>
-              It also reports the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and
-              Kerry Foods, where average assessment scores rose by 32.2% across the six faces, and is
-              candid about what those results can and cannot show.
+              {t("It also reports the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods, where average assessment scores rose by 32.2% across the six faces, and is candid about what those results can and cannot show.")}
             </p>
           </div>
           <dl className="mt-6 grid gap-3 sm:grid-cols-2">
             {PAID_BOOK_FACTS.map((x) => (
               <div key={x.k} className="rounded-xl border border-line bg-paper p-3">
-                <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{x.k}</dt>
-                <dd className="mt-1 text-sm font-semibold text-ink">{x.v}</dd>
+                <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{t(x.k)}</dt>
+                <dd className="mt-1 text-sm font-semibold text-ink">{t(x.v)}</dd>
               </div>
             ))}
           </dl>
@@ -155,7 +153,7 @@ export function PaidBookSection() {
             <AmazonButton />
             <KindleNote />
             <p className="text-sm text-muted">
-              {amazonBuyUrl() ? (kindleBuyUrl() ? "Paperback and Kindle out now" : "Paperback out now") : "Paperback and Kindle"} · English · by {PAID_BOOK.author}
+              {amazonBuyUrl() ? (kindleBuyUrl() ? t("Paperback and Kindle out now") : t("Paperback out now")) : t("Paperback and Kindle")}{" "}{t("· English · by")}{" "}{t(PAID_BOOK.author)}
             </p>
           </div>
         </div>
@@ -165,7 +163,7 @@ export function PaidBookSection() {
 }
 
 /** Compact card: home page, /about, /research. Strings can be translated by the caller. */
-export function PaidBookCard({
+export function PaidBookCard({ locale = DEFAULT_LOCALE,
   eyebrow = `New · ${D.edition}`,
   body = `${D.pages} pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback and Kindle.`,
   moreLabel = "About the book",
@@ -175,7 +173,7 @@ export function PaidBookCard({
   coverAlt,
   hrefLang,
   testId = "paid-book-card",
-}: {
+}: { locale?: Locale;
   eyebrow?: string;
   body?: string;
   moreLabel?: string;
@@ -186,6 +184,7 @@ export function PaidBookCard({
   hrefLang?: string;
   testId?: string;
 }) {
+  const { t, L } = pageI18n(locale);
   return (
     <div
       className="sc-card grid items-center gap-5 p-5 sm:grid-cols-[minmax(0,6.5rem)_minmax(0,1fr)] sm:p-6"
@@ -196,28 +195,28 @@ export function PaidBookCard({
           src={D.cover.src}
           width={D.cover.width}
           height={D.cover.height}
-          alt={coverAlt ?? `Cover of ${PAID_BOOK.title} by ${PAID_BOOK.author}`}
+          alt={t(coverAlt) ?? `Cover of ${PAID_BOOK.title} by ${PAID_BOOK.author}`}
           sizes="112px"
           className="h-auto w-full rounded-sm shadow-[0_12px_28px_-12px_rgba(0,0,0,0.45)] ring-1 ring-black/10 dark:ring-white/10"
         />
       </div>
       <div className="min-w-0">
-        <p className="eyebrow">{eyebrow}</p>
+        <p className="eyebrow">{t(eyebrow)}</p>
         <p className="mt-2 text-lg font-semibold tracking-tight text-ink">
           <bdi lang="en" dir="ltr">
             {PAID_BOOK.title}
           </bdi>
         </p>
-        <p className="mt-1 text-sm leading-relaxed text-slate">{body}</p>
+        <p className="mt-1 text-sm leading-relaxed text-slate">{t(body)}</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-          <AmazonButton soonLabel={soonLabel} buyLabel={buyLabel} />
-          <KindleNote soonLabel={kindleSoonLabel} />
+          <AmazonButton soonLabel={t(soonLabel)} buyLabel={t(buyLabel)} />
+          <KindleNote soonLabel={t(kindleSoonLabel)} />
           <Link
-            href={`/book#${D.anchor}`}
+            href={L(`/book#${D.anchor}`)}
             hrefLang={hrefLang}
             className="inline-flex min-h-11 items-center justify-center gap-1 rounded-full px-3 text-sm font-semibold text-ink underline underline-offset-2"
           >
-            {moreLabel} <span aria-hidden className="rtl:-scale-x-100">→</span>
+            {t(moreLabel)} <span aria-hidden className="rtl:-scale-x-100">→</span>
           </Link>
         </div>
       </div>

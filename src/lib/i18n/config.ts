@@ -63,7 +63,34 @@ export function dirOf(locale: Locale): "rtl" | "ltr" {
  * English paths that have translated versions. Keep in sync with src/app/[locale]/… and the
  * redirect in next.config.ts (TRANSLATED_SEGMENTS).
  */
-export const TRANSLATED_PATHS = ["/", "/pricing", "/faq"] as const;
+export const TRANSLATED_PATHS = [
+  "/",
+  "/pricing",
+  "/faq",
+  // Inner pages (src/app/[locale]/<page>, strings in src/lib/i18n/messages)
+  "/about",
+  "/book",
+  "/the-model",
+  "/constructs",
+  "/what",
+  "/how",
+  "/why-leadership",
+  "/leadership-challenges",
+  "/research",
+  "/organisations",
+  "/schools",
+  "/speaking",
+  "/sample-report",
+  "/impact",
+  "/practices",
+  "/facilitator",
+  "/media",
+  "/contact",
+  "/certify",
+  "/community",
+  "/team",
+  "/pilot-pack",
+] as const;
 export type TranslatedPath = (typeof TRANSLATED_PATHS)[number];
 
 /** Cookie that remembers the visitor's language choice (set by the switcher; never by browser language). */

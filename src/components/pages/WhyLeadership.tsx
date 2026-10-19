@@ -1,0 +1,434 @@
+import Image from "next/image";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
+import Link from "next/link";
+import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
+import { constructs } from "@/lib/content";
+import {
+  leadershipForSdgs,
+  sdgGoals,
+  sdgHeadlineStats,
+  sdgPressurePoints,
+  sdgSources,
+} from "@/lib/sdgs";
+
+import type { PageMetaInput } from "@/lib/seo";
+import { faceInkStyle } from "@/lib/contrast";
+
+/** English page metadata (title and description are translated per language by localePageMeta). */
+export const META = {
+  title: "Why leadership matters for the UN SDGs",
+  description:
+    "Why human-centric leadership is essential to the UN Sustainable Development Goals—and how Super-Cube® develops leaders who can deliver.",
+  path: "/why-leadership",
+  image: "/images/hero/hero-sdg.jpg",
+  keywords: [
+    "leadership SDGs",
+    "sustainable development leadership",
+    "SDG 4 leadership education",
+  ],
+} satisfies PageMetaInput;
+
+function goalById(id: number) {
+  return sdgGoals.find((g) => g.id === id)!;
+}
+
+export function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = pageI18n(locale);
+  return (
+    <>
+      <PageHero t={t}
+        theme="sdg"
+        eyebrow={t("Why · Super-Cube®")}
+        title={t("The world has goals. It needs leaders who can deliver them.")}
+        description={t("The UN Sustainable Development Goals (SDGs) are humanity’s shared agenda for people, planet, and prosperity. Progress is off track—not only for lack of money or technology, but for lack of human-centric leadership at every level.")}
+        visual={
+          <figure className="mx-auto w-full max-w-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-elevated/95 p-4 shadow-xl sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-[22rem]">
+            <div className="relative mx-auto aspect-[1280/811] w-full">
+              <Image
+                src="/images/sdgs/sdg-logo.png"
+                alt="United Nations Sustainable Development Goals"
+                fill
+                className="object-contain object-center"
+                sizes="(max-width: 1024px) 19rem, 22rem"
+                priority
+              />
+            </div>
+            <figcaption className="pt-3 text-center lg:text-right">
+              <p className="text-[0.7rem] font-semibold tracking-tight text-ink">
+                2030 Agenda · 17 Goals
+              </p>
+              <p className="mt-0.5 text-[0.65rem] leading-snug text-muted">
+                One shared plan for people, planet, and prosperity.
+              </p>
+            </figcaption>
+          </figure>
+        }
+      >
+        <Button href="#sdgs" variant="primary">
+          {t("Explore the 17 SDGs")}
+        </Button>
+        <Button href={L("/learn")} variant="ghost">
+          {t("Start developing leadership")}
+        </Button>
+      </PageHero>
+
+      {/* Opening argument */}
+      <section className="section-pad border-b border-line bg-bg">
+        <div className="container-site grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+          <div>
+            <SectionHeading
+              eyebrow={t("The leadership case")}
+              title={t("Development is a leadership challenge.")}
+              description={t("Policies, capital, and innovation matter—but they do not implement themselves. Leaders set direction, build trust, make hard trade-offs, and sustain coalitions when conditions are messy.")}
+            />
+          </div>
+          <div className="prose-site space-y-4 text-slate">
+            <p>
+              {t("From classrooms to boardrooms, ministries to markets, leadership determines whether ambition becomes action. Super-Cube® starts with the individual—because systems change when people with agency, principles, and skill show up consistently.")}
+            </p>
+            <p>
+              {t("The 2030 Agenda asks for more than technical competence. It asks for leaders who can hold complexity (Choices), earn trust (Principles), think in systems (Mental), mobilise people (Emotional), sustain energy (Physical), and serve a purpose larger than themselves (Spiritual).")}
+            </p>
+            <p className="text-sm text-muted">
+              {t("Below: the latest global picture on SDG progress, the 17 Goals, and why leadership capacity is central to closing the gap.")}{" "}
+              <Link
+                href={L("/leadership-challenges")}
+                className="font-medium text-ink underline-offset-2 hover:underline"
+              >
+                {t("See leadership challenges →")}
+              </Link>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Headline stats */}
+      <section className="section-pad border-b border-line bg-surface">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Latest global picture")}
+            title={t("The SDGs are not on track.")}
+            description={t("Figures drawn from the UN Sustainable Development Goals Reports (2024 and 2025). They describe global trends—not a verdict on any single country.")}
+          />
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {sdgHeadlineStats.map((stat) => (
+              <article
+                key={stat.label}
+                className="flex h-full flex-col sc-card p-5 sm:p-6"
+              >
+                <p className="text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+                  {t(stat.value)}
+                </p>
+                <p className="mt-2 text-sm font-semibold text-ink">
+                  {t(stat.label)}
+                </p>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
+                  {t(stat.detail)}
+                </p>
+                <p className="mt-4 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                  {t(stat.source)}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            {sdgPressurePoints.map((p) => (
+              <article
+                key={p.title}
+                className="sc-card p-5 sm:p-6"
+              >
+                <h3 className="text-base font-semibold tracking-tight text-ink">
+                  {t(p.title)}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate">
+                  {t(p.body)}
+                </p>
+                <p className="mt-3 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                  {t(p.source)}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 17 SDGs visual grid */}
+      <section
+        id="sdgs"
+        className="section-pad scroll-mt-20 border-b border-line bg-elevated"
+      >
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("The 17 Sustainable Development Goals")}
+            title={t("One agenda. Seventeen faces of progress.")}
+            description={t("Adopted by UN Member States in 2015, the SDGs are a shared blueprint to end poverty, protect the planet, and ensure peace and prosperity by 2030. Each goal below uses its official UN colour.")}
+          />
+
+          <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-6">
+            {sdgGoals.map((goal) => (
+              <article
+                key={goal.id}
+                className="group flex flex-col overflow-hidden sc-card shadow-[0_1px_0_rgba(0,0,0,0.03)] transition hover:shadow-md"
+              >
+                {/* Official UN SDG icon */}
+                <div className="relative aspect-square w-full overflow-hidden bg-elevated">
+                  <Image
+                    src={goal.icon}
+                    alt={`SDG ${goal.id}: ${goal.short}`}
+                    fill
+                    className="object-cover object-center transition duration-300 group-hover:scale-[1.03]"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1280px) 25vw, 180px"
+                  />
+                </div>
+                <div
+                  className="flex flex-1 flex-col border-t border-line p-3 sm:p-3.5"
+                  style={{ background: goal.soft }}
+                >
+                  <p
+                    className="text-[0.65rem] font-bold uppercase tracking-[0.1em] face-ink"
+                    style={faceInkStyle(goal.color, goal.soft)}
+                  >
+                    {t("Goal")}{" "}{t(goal.id)}
+                  </p>
+                  <p className="mt-1 text-sm font-semibold leading-snug tracking-tight text-ink">
+                    {t(goal.short)}
+                  </p>
+                  <p className="mt-1.5 text-[0.7rem] leading-snug text-slate sm:text-xs">
+                    {t(goal.title)}
+                  </p>
+                  <p
+                    className="mt-2 text-[0.65rem] font-semibold uppercase tracking-[0.08em] face-ink"
+                    style={faceInkStyle(goal.color, goal.soft)}
+                  >
+                    {t(goal.focus)}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <p className="mt-8 text-center text-xs text-muted">
+            {t("Official UN SDG icons, colours, and titles · 2030 Agenda")}
+          </p>
+        </div>
+      </section>
+
+      {/* Why leadership for SDGs */}
+      <section className="section-pad border-b border-line bg-surface">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Leadership × the SDGs")}
+            title={t("Why leadership is decisive for the Goals.")}
+            description={t("The SDGs will not be achieved by reports alone. They require leaders who can choose wisely, govern fairly, think systemically, mobilise people, sustain effort, and stay anchored in purpose.")}
+          />
+
+          <div className="mt-10 space-y-4">
+            {[
+              {
+                n: "01",
+                title: "The goals are multi-stakeholder",
+                body: "No single ministry, company, or NGO can deliver an SDG alone. Leadership is the skill of aligning diverse actors around shared outcomes—without erasing local context.",
+              },
+              {
+                n: "02",
+                title: "Trade-offs are the work",
+                body: "Energy transition, food security, jobs, and equity often pull in different directions. Leaders must hold complexity, make values-explicit choices, and communicate them with integrity.",
+              },
+              {
+                n: "03",
+                title: "Trust is infrastructure",
+                body: "Where institutions are weak or trust is thin, capital and cooperation stall. Principled, emotionally intelligent leadership rebuilds the social infrastructure SDG delivery depends on.",
+              },
+              {
+                n: "04",
+                title: "Long horizons need resilient people",
+                body: "2030 is near; many goals need decades of follow-through. Physical and spiritual leadership—energy, meaning, and purpose—keep teams and communities in the work.",
+              },
+            ].map((item) => (
+              <article
+                key={item.n}
+                className="grid gap-3 sc-card p-5 sm:grid-cols-[4rem_1fr] sm:gap-6 sm:p-6"
+              >
+                <p className="font-display text-2xl text-muted">{t(item.n)}</p>
+                <div>
+                  <h3 className="text-base font-semibold tracking-tight text-ink sm:text-lg">
+                    {t(item.title)}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-slate">
+                    {t(item.body)}
+                  </p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Super-Cube mapping */}
+      <section className="section-pad border-b border-line bg-bg">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Super-Cube® for sustainable development")}
+            title={t("Six faces of leadership for a 17-goal world.")}
+            description={t("Human-centric leadership development is not a side programme to the SDGs—it is enabling infrastructure. Each Super-Cube® construct strengthens capabilities the Goals require.")}
+          />
+
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {leadershipForSdgs.map((row) => {
+              const construct = constructs.find(
+                (c) => c.id === row.constructId,
+              )!;
+              return (
+                <article
+                  key={row.constructId}
+                  className="flex flex-col sc-card p-5 sm:p-6"
+                  style={{ boxShadow: `inset 3px 0 0 ${construct.color}` }}
+                >
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className="rounded-full px-2.5 py-0.5 text-[0.65rem] font-bold uppercase tracking-wider text-white"
+                      style={{ background: construct.color }}
+                    >
+                      {t(construct.name)}
+                    </span>
+                    <span className="text-xs font-medium text-muted">
+                      {t(row.sdgHook)}
+                    </span>
+                  </div>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-slate">
+                    {t(row.body)}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-1.5">
+                    {row.sdgs.map((id) => {
+                      const g = goalById(id);
+                      return (
+                        <span
+                          key={id}
+                          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.65rem] font-semibold text-white"
+                          style={{ background: g.color }}
+                          title={t(g.short)}
+                        >
+                          <span className="opacity-90">{t(id)}</span>
+                          <span className="hidden sm:inline">{t(g.short)}</span>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="mt-10 flex flex-wrap gap-3">
+            <Button href={L("/constructs")} variant="primary">
+              {t("Explore the six constructs")}
+            </Button>
+            <Button href={L("/learn")} variant="ghost">
+              {t("Enter the learning pathway")}
+            </Button>
+            <Button href={L("/programs")} variant="ghost">
+              {t("View programmes")}
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* The enabling goal: the author's proposal in Leadership Is Learnable, Chapter 15 (not a UN goal). */}
+      <section className="section-pad border-b border-line bg-paper" data-testid="enabling-goal">
+        <div className="container-site max-w-4xl">
+          <SectionHeading
+            eyebrow={t("From the book · Leadership Is Learnable, Chapter 15")}
+            title={t("An enabling goal: leadership skills for all.")}
+            description={t("In Leadership Is Learnable (2026), Dr Craig R. Muller proposes an enabling goal: build leadership skills for everyone, at every level, so that people can lead the progress all seventeen Goals require.")}
+          />
+          <p className="mt-6 rounded-xl border border-line bg-elevated p-4 text-sm font-semibold leading-relaxed text-ink">
+            {t("A proposal by the author. It is not one of the United Nations’ 17 Goals and has not been adopted by the UN.")}
+          </p>
+          <div className="prose-site mt-6 space-y-4">
+            <p>
+              {t("It does not compete with the seventeen: it sits underneath them, the way a foundation sits under a house. The Goals describe what must be achieved; leadership skills describe the capacity of people to achieve it.")}
+            </p>
+            <p>
+              {t("The SDG framework already points this way. Target 4.4 calls for more youth and adults with relevant skills for employment, decent jobs and entrepreneurship; target 4.7 for learners to gain the knowledge and skills needed to promote sustainable development; and target 16.7 for responsive, inclusive, participatory and representative decision-making at all levels.")}
+            </p>
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Button href={L("/book#comprehensive-edition")} variant="ghost">
+              {t("About the book")}
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Closing call */}
+      <section className="section-pad bg-surface">
+        <div className="container-site max-w-3xl text-center">
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.16em] text-muted">
+            {t("From goals to practice")}
+          </p>
+          <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
+            {t("Leadership is how the world keeps its promises.")}
+          </h2>
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate">
+            {t("The SDGs define")}{" "}<em>{t("what")}</em>{" "}{t("we must achieve. Super-Cube® develops the human capability for")}{" "}<em>{t("how")}</em>{t("—starting with you at the centre, then radiating through teams, organisations, and networks.")}
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Button href={L("/pricing")} variant="primary">
+              {t("Start a programme")}
+            </Button>
+            <Button href={L("/contact")} variant="ghost">
+              {t("Talk to us")}
+            </Button>
+          </div>
+        </div>
+      </section>
+
+      {/* Sources */}
+      <section className="border-t border-line bg-elevated py-10">
+        <div className="container-site">
+          <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
+            {t("Sources")}
+          </h2>
+          <ul className="mt-4 space-y-2 text-sm text-slate">
+            {sdgSources.map((s) => (
+              <li key={s.href}>
+                <a
+                  href={L(s.href)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-medium text-ink underline-offset-2 hover:underline"
+                >
+                  {t(s.label)}
+                </a>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-4 max-w-3xl text-xs leading-relaxed text-muted">
+            {t("Statistics are summarised from official UN publications for educational framing on this site. Always consult the latest UN SDG reports for full methodologies, country data, and updates. Super-Cube® does not claim UN endorsement.")}
+          </p>
+          <p className="mt-3 text-xs text-muted">
+            {t("Also see")}{" "}
+            <Link
+              href={L("/research")}
+              className="text-ink underline-offset-2 hover:underline"
+            >
+              {t("Super-Cube® research")}
+            </Link>{" "}
+            {t("and")}{" "}
+            <Link
+              href={L("/the-model")}
+              className="text-ink underline-offset-2 hover:underline"
+            >
+              {t("the model")}
+            </Link>
+            .
+          </p>
+        </div>
+      </section>
+
+      <CTABanner t={t} L={L} />
+    </>
+  );
+}
