@@ -1,147 +1,151 @@
-"use client";
-
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import { getProgramme } from "@/lib/programmes";
+import { notFound } from "next/navigation";
+import { cache } from "react";
+import { ShareCertificate } from "@/components/verify/ShareCertificate";
+import { credentialName, formatIssuedDate, linkedInAddToProfileUrl, verifyUrl, DEFAULT_ORIGIN } from "@/lib/lms/certificate";
+import { lookupCertificate } from "@/lib/lms/server/certificate-lookup";
+import { normaliseCertId, VERIFY_ISSUER } from "@/lib/lms/verify";
+import { pageMeta } from "@/lib/seo";
 
-type CertRow = {
-  id: string;
-  learner_name: string;
-  programme_id: string | null;
-  pre_overall: number | null;
-  post_overall: number | null;
-  growth: number | null;
-  issued_at: string;
-  org_code: string | null;
-};
+export const dynamic = "force-dynamic";
 
-type VerifyStatus = "loading" | "found" | "not_found" | "revoked" | "invalid" | "unavailable";
+const lookup = cache((id: string) => lookupCertificate(id));
 
-export default function VerifyCertificatePage() {
-  const params = useParams();
-  const id = decodeURIComponent(String(params.id || ""))
-    .trim()
-    .toUpperCase();
-  const [status, setStatus] = useState<VerifyStatus>("loading");
-  const [cert, setCert] = useState<CertRow | null>(null);
+type Props = { params: Promise<{ id: string }> };
 
-  useEffect(() => {
-    if (!id) {
-      setStatus("invalid");
-      return;
-    }
-    // Always ask the server: the ID format alone proves nothing.
-    void fetch(`/api/certificates/register?id=${encodeURIComponent(id)}`, { cache: "no-store" })
-      .then(async (r) => {
-        const j = (await r.json().catch(() => ({}))) as {
-          status?: VerifyStatus;
-          certificate?: CertRow;
-        };
-        const st = j.status ?? (r.status === 503 ? "unavailable" : "not_found");
-        setStatus(st);
-        setCert(st === "found" ? (j.certificate ?? null) : null);
-      })
-      .catch(() => setStatus("unavailable"));
-  }, [id]);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const id = normaliseCertId((await params).id);
+  return pageMeta({
+    title: `Certificate check ${id}`,
+    description: "Check that a Super-Cube® leadership certificate is genuine and still valid.",
+    path: `/verify/${encodeURIComponent(id)}`,
+    // Holder names stay out of search results; the link still works for anyone who has it.
+    noIndex: true,
+  });
+}
 
-  const programme = cert?.programme_id
-    ? getProgramme(cert.programme_id as "kids" | "adolescents" | "adults")
-    : null;
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="grid gap-1 border-t border-line py-3 first:border-t-0 sm:grid-cols-[10rem_1fr] sm:gap-4">
+      <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{label}</dt>
+      <dd className="text-[0.9375rem] font-medium text-ink">{children}</dd>
+    </div>
+  );
+}
+
+export default async function VerifyCertificatePage({ params }: Props) {
+  const id = normaliseCertId((await params).id);
+  const result = await lookup(id);
+
+  if (result.status === "invalid" || result.status === "not_found") notFound();
+
+  const url = verifyUrl(id, DEFAULT_ORIGIN);
 
   return (
-    <main className="mx-auto max-w-lg px-4 pb-16 pt-28 sm:pb-20 lg:pt-32">
-      <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-        Certificate verification
-      </p>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-ink">
-        Super-Cube® completion ID
-      </h1>
-      <p className="mt-4 break-all rounded-xl border border-line bg-surface px-4 py-3 font-mono text-sm font-semibold text-ink">
-        {id || "—"}
-      </p>
+    <section className="section-pad bg-surface pt-28 lg:pt-32">
+      <div className="container-site max-w-2xl">
+        <p className="eyebrow">Certificate check</p>
+        <h1 className="heading-lg mt-2.5 text-ink">Super-Cube® certificate</h1>
 
-      <div aria-live="polite" data-testid="verify-status" data-status={status}>
-        {status === "loading" && (
-          <p className="mt-6 text-sm text-muted">Checking the Super-Cube® registry…</p>
-        )}
-
-        {status === "found" && cert && (
-          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-950">
-            <p className="font-semibold">Verified: issued by Super-Cube®</p>
-            <p className="mt-2">
-              <strong>{cert.learner_name}</strong>
-              {programme ? ` · ${programme.name}` : ""}
-            </p>
-            {cert.post_overall != null && (
-              <p className="mt-1 tabular-nums">
-                Overall score: {cert.pre_overall ?? "—"} to {cert.post_overall}
-                {cert.growth != null
-                  ? ` (${cert.growth > 0 ? "+" : ""}${cert.growth} pts)`
-                  : ""}
-              </p>
-            )}
-            <p className="mt-1 text-emerald-900/80">
-              Issued{" "}
-              {new Date(cert.issued_at).toLocaleDateString("en-ZA", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                timeZone: "Africa/Johannesburg",
-              })}
-              {cert.org_code ? ` · Cohort ${cert.org_code}` : ""}
-            </p>
-          </div>
-        )}
-
-        {(status === "not_found" || status === "invalid") && (
-          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-950">
-            <p className="font-semibold">Certificate not found</p>
-            <p className="mt-1.5 leading-relaxed">
-              There is no Super-Cube® certificate with this ID. Check it was typed
-              exactly as printed (for example SC-20261004-1A2B3C4D5E). A certificate
-              that is not in the registry should not be accepted.
-            </p>
-          </div>
-        )}
-
-        {status === "revoked" && (
-          <div className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-4 text-sm text-red-950">
-            <p className="font-semibold">Certificate revoked</p>
-            <p className="mt-1.5">This certificate was withdrawn and is no longer valid.</p>
-          </div>
-        )}
-
-        {status === "unavailable" && (
-          <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-950">
+        {result.status === "unavailable" && (
+          <div
+            data-testid="verify-status"
+            data-status="unavailable"
+            className="mt-8 rounded-2xl border border-amber-300 bg-amber-50 px-5 py-4 text-sm text-amber-950"
+          >
             <p className="font-semibold">Registry unavailable</p>
-            <p className="mt-1.5">
-              We could not reach the certificate registry just now, so this ID is
-              not verified. Please try again later.
+            <p className="mt-1.5 leading-relaxed">
+              We could not reach the Super-Cube® certificate registry just now, so ID{" "}
+              <span className="font-mono">{id}</span> is not verified. Please try again later.
             </p>
           </div>
         )}
-      </div>
 
-      <ul className="mt-8 space-y-2 text-sm text-slate">
-        <li>· Certificates are developmental, not clinical credentials.</li>
-        <li>· The registry shows only the name, programme and scores on the certificate. Journals are never shared.</li>
-      </ul>
+        {(result.status === "found" || result.status === "revoked") && (
+          <>
+            <div
+              data-testid="verify-status"
+              data-status={result.status}
+              className={`mt-8 flex items-start gap-3 rounded-2xl border px-5 py-4 ${
+                result.status === "found"
+                  ? "border-emerald-300 bg-emerald-50 text-emerald-950"
+                  : "border-red-300 bg-red-50 text-red-950"
+              }`}
+            >
+              <span aria-hidden className="mt-0.5 text-lg leading-none">
+                {result.status === "found" ? "✓" : "✕"}
+              </span>
+              <div>
+                <p className="font-semibold">
+                  {result.status === "found" ? "Valid certificate" : "Certificate revoked"}
+                </p>
+                <p className="mt-1 text-sm leading-relaxed">
+                  {result.status === "found"
+                    ? `This certificate is in the Super-Cube® registry and was issued by ${VERIFY_ISSUER}.`
+                    : "This certificate was withdrawn by the issuer and is no longer valid."}
+                </p>
+              </div>
+            </div>
 
-      <div className="mt-10 flex flex-wrap gap-3">
-        <Link
-          href="/"
-          className="rounded-full sc-btn-primary px-5 py-2.5 text-sm font-semibold "
-        >
-          Super-Cube® home
-        </Link>
-        <Link
-          href="/learn"
-          className="rounded-full border border-line-strong bg-elevated px-5 py-2.5 text-sm font-semibold text-ink"
-        >
-          Open Learn
-        </Link>
+            <dl className="sc-card mt-6 px-5 py-2 sm:px-6">
+              <Row label="Holder">{result.certificate.holderName}</Row>
+              <Row label="Programme">{credentialName(result.certificate.programmeId)}</Row>
+              <Row label="Issued">{formatIssuedDate(result.certificate.issuedAt)}</Row>
+              <Row label="Status">
+                {result.status === "found" ? (
+                  <span className="text-emerald-800">Valid</span>
+                ) : (
+                  <span className="text-red-800">
+                    Revoked
+                    {result.certificate.revokedAt ? ` on ${formatIssuedDate(result.certificate.revokedAt)}` : ""}
+                  </span>
+                )}
+              </Row>
+              <Row label="Issuer">{VERIFY_ISSUER}</Row>
+              <Row label="Certificate ID">
+                <span className="break-all font-mono text-sm">{id}</span>
+              </Row>
+            </dl>
+
+            {result.status === "found" && (
+              <div className="mt-6 flex flex-wrap gap-3">
+                <a
+                  href={linkedInAddToProfileUrl(
+                    {
+                      id,
+                      programmeId: result.certificate.programmeId,
+                      issuedAt: result.certificate.issuedAt,
+                      siteOrigin: DEFAULT_ORIGIN,
+                    },
+                    VERIFY_ISSUER,
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="sc-btn sc-btn-primary inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold tracking-tight sm:w-auto sm:px-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+                >
+                  Add to LinkedIn<span className="sr-only"> profile (opens in a new tab)</span>
+                </a>
+                <ShareCertificate url={url} title={`Super-Cube® certificate ${id}`} />
+              </div>
+            )}
+          </>
+        )}
+
+        <ul className="mt-10 space-y-2 text-sm leading-relaxed text-slate">
+          <li>· Super-Cube® certificates are developmental, not clinical credentials.</li>
+          <li>· This check shows only what is printed on the certificate. Scores, journals and contact details are never shown.</li>
+        </ul>
+
+        <div className="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
+          <Link href="/verify" className="underline underline-offset-4 text-ink">
+            Check another certificate
+          </Link>
+          <Link href="/certify" className="underline underline-offset-4 text-ink">
+            About Super-Cube® certification
+          </Link>
+        </div>
       </div>
-    </main>
+    </section>
   );
 }
