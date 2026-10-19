@@ -21,7 +21,7 @@ export default async function VerifySearchPage({ searchParams }: Props) {
   const error = submitted != null ? (id ? "That is not a Super-Cube® certificate ID. Check it was typed exactly as printed." : "Enter the certificate ID.") : null;
 
   return (
-    <section className="section-pad bg-surface pt-28 lg:pt-32">
+    <section className="bg-surface pb-16 pt-32 sm:pb-20 lg:pt-36">
       <div className="container-site max-w-2xl">
         <p className="eyebrow">Certificate check</p>
         <h1 className="heading-lg mt-2.5 text-ink">Check a Super-Cube® certificate</h1>

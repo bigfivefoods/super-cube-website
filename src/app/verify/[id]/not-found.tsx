@@ -3,7 +3,7 @@ import Link from "next/link";
 /** Unknown or malformed certificate IDs: a real 404 that says nothing about other certificates. */
 export default function CertificateNotFound() {
   return (
-    <section className="section-pad bg-surface pt-28 lg:pt-32">
+    <section className="bg-surface pb-16 pt-32 sm:pb-20 lg:pt-36">
       <div className="container-site max-w-2xl">
         <p className="eyebrow">Certificate check</p>
         <h1 className="heading-lg mt-2.5 text-ink">Certificate not found</h1>
