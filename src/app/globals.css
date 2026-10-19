@@ -1195,6 +1195,37 @@ a.sc-card:hover,
   transform: translateY(-2px);
 }
 
+/* /leadership-challenges SDG cards: one short class per repeated element instead of the same long
+   utility list 17–80 times (smaller HTML and RSC payload on phones; identical styles). */
+.lc-card {
+  @apply overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_1px_0_rgba(0,0,0,0.03)] dark:shadow-none;
+  /* Below-the-fold cards skip layout and paint until they near the viewport. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 30rem;
+}
+.lc-card-grid {
+  @apply grid gap-0 md:grid-cols-[minmax(0,11rem)_1fr];
+}
+.lc-goal {
+  @apply relative flex flex-col items-center justify-center gap-3 border-b border-line p-5 md:border-b-0 md:border-r;
+}
+.lc-icon {
+  @apply relative aspect-square w-full max-w-[7.5rem] overflow-hidden rounded-xl border border-line bg-elevated;
+}
+.lc-label {
+  @apply text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted;
+}
+.lc-text {
+  @apply mt-1.5 text-sm leading-relaxed text-slate;
+}
+/* Footer links (every page). */
+.ft-link {
+  @apply block text-sm text-[#6b7280] hover:text-black dark:text-slate dark:hover:text-ink transition-colors leading-snug;
+}
+.lc-chip {
+  @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold text-white;
+}
+
 }
 
 /* Thin six-colour brand rule */

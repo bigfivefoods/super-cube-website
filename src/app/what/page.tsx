@@ -456,9 +456,9 @@ export default function WhatPage() {
                     <Image
                       src={b.logo.src}
                       alt={b.logo.alt}
-                      fill
-                      className="object-contain"
-                      sizes="56px"
+                      width={56}
+                      height={56}
+                      className="h-full w-full object-contain"
                     />
                   </div>
                   <div className="min-w-0">
@@ -593,9 +593,9 @@ export default function WhatPage() {
                         <Image
                           src="/images/sdgs/sdg-logo.png"
                           alt=""
-                          fill
-                          className="object-contain"
-                          sizes="20px"
+                          width={20}
+                          height={20}
+                          className="h-full w-full object-contain"
                         />
                       </span>
                       <p className="text-[0.6rem] font-bold uppercase tracking-[0.12em] text-muted">

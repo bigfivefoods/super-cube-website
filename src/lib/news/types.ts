@@ -8,6 +8,11 @@ export type NewsPost = {
   id: string;
   slug: string;
   title: string;
+  /**
+   * Optional short <title> for search results, used as is (no " | Super-Cube®" suffix), so a long
+   * headline isn't cut off mid-brand. Keep it under 60 characters with "Super-Cube®" intact.
+   */
+  seoTitle?: string;
   /** Standfirst: one or two sentences under the headline, on cards and in the feed. */
   excerpt: string;
   /** Simple markdown: ## headings, paragraphs, - lists, **bold**, *italic*, [links](/x), ![alt](/img.jpg). */
