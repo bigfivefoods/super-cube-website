@@ -1,21 +1,31 @@
 import { getImageProps } from "next/image";
 import { BrandText } from "@/components/news/BrandText";
+import { EnglishOnly } from "@/components/EnglishOnly";
 import { HeroPicture } from "@/components/news/HeroPicture";
 import { NewsBody } from "@/components/news/NewsBody";
 import { NewsImage } from "@/components/news/NewsImage";
 import { ShareButtons } from "@/components/news/ShareButtons";
 import { PaidBookCard } from "@/components/book/PaidBook";
 import { Button } from "@/components/ui";
+import { DEFAULT_LOCALE, localizedPath, type Locale } from "@/lib/i18n/config";
+import { fill } from "@/lib/i18n/pages/format";
+import { pageI18n } from "@/lib/i18n/pages/t";
 import { NEWS_HERO } from "@/lib/news/hero";
-import { clampDescription, formatNewsDate, newsUrl, readingMinutes, stripMarks } from "@/lib/news/seo";
+import { clampDescription, formatNewsDate, readingMinutes, stripMarks } from "@/lib/news/seo";
+import { absoluteUrl } from "@/lib/seo";
 import type { NewsPost } from "@/lib/news/types";
 
 /**
  * A news post: full-width hero (the same size as the landing hero), share row, body,
  * closing share row. Used by /news/[slug] and the admin preview.
  */
-export function NewsArticle({ post }: { post: NewsPost }) {
-  const share = { url: newsUrl(post.slug), title: stripMarks(post.title), summary: clampDescription(post.excerpt) };
+export function NewsArticle({ post, locale = DEFAULT_LOCALE }: { post: NewsPost; locale?: Locale }) {
+  const { t } = pageI18n(locale);
+  const title = t(post.title);
+  const excerpt = t(post.excerpt);
+  const body = t(post.body);
+  const bodyTranslated = locale === DEFAULT_LOCALE || body !== post.body;
+  const share = { url: absoluteUrl(localizedPath(locale, `/news/${post.slug}`)), title: stripMarks(title), summary: clampDescription(excerpt) };
   // The hero is always calm artwork (never the cover, which may carry charts or screenshots).
   const hero = post.heroImage ? { square: post.heroImage, wide: post.heroWide } : NEWS_HERO;
   // Admin posts don't repeat their cover in the body, so show it once at the top of the article.
@@ -25,17 +35,17 @@ export function NewsArticle({ post }: { post: NewsPost }) {
   // Hero copy (eyebrow, headline, standfirst, date, call to action, share row): over the calm hero art, or under a feature image.
   const heroCopy = (
     <>
-      <p className="eyebrow eyebrow--on-dark">{post.tag}</p>
+      <p className="eyebrow eyebrow--on-dark">{t(post.tag)}</p>
       <h1 className="page-hero__title heading-lg mt-3 text-white sm:mt-4">
-        <BrandText text={post.title} />
+        <BrandText text={title} />
       </h1>
       <p className="page-hero__lede mt-4 text-[0.9375rem] leading-relaxed tracking-tight text-white/85 sm:mt-5 sm:text-base md:text-lg lg:text-xl">
-        {post.excerpt}
+        {excerpt}
       </p>
       <p className="mt-4 text-sm text-white/75">
-        <time dateTime={post.publishedAt}>{formatNewsDate(post.publishedAt)}</time>
+        <time dateTime={post.publishedAt}>{formatNewsDate(post.publishedAt, locale)}</time>
         <span aria-hidden> · </span>
-        {minutes} min read
+        {fill(t("{n} min read"), { n: minutes })}
       </p>
       {post.cta && (
         <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4" data-news-cta>
@@ -44,12 +54,12 @@ export function NewsArticle({ post }: { post: NewsPost }) {
               href={post.cta.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={post.cta.ariaLabel}
+              aria-label={post.cta.ariaLabel ? t(post.cta.ariaLabel) : undefined}
               data-insights={post.cta.insights}
               data-testid="news-cta"
               className="sc-btn sc-btn-primary inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full !bg-white px-5 py-2.5 text-sm font-semibold tracking-tight !text-ink hover:!bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:!outline-white sm:w-auto sm:px-6"
             >
-              {post.cta.label}
+              {t(post.cta.label)}
               <ExternalIcon />
             </a>
           ) : (
@@ -57,11 +67,11 @@ export function NewsArticle({ post }: { post: NewsPost }) {
               href={post.cta.href}
               download={post.cta.download}
               variant="primary"
-              ariaLabel={post.cta.ariaLabel}
+              ariaLabel={post.cta.ariaLabel ? t(post.cta.ariaLabel) : undefined}
               className="w-full !bg-white !text-ink hover:!bg-white/90 focus-visible:!outline-white sm:w-auto"
             >
               {post.cta.download && <DownloadIcon />}
-              {post.cta.label}
+              {t(post.cta.label)}
             </Button>
           )}
           {post.cta.secondary && (
@@ -69,16 +79,16 @@ export function NewsArticle({ post }: { post: NewsPost }) {
               href={post.cta.secondary.href}
               target="_blank"
               rel="noopener noreferrer"
-              aria-label={post.cta.secondary.ariaLabel}
+              aria-label={post.cta.secondary.ariaLabel ? t(post.cta.secondary.ariaLabel) : undefined}
               data-insights={post.cta.secondary.insights}
               data-testid="news-cta-secondary"
               className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/40 px-5 py-2.5 text-sm font-semibold tracking-tight text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:w-auto sm:px-6"
             >
-              {post.cta.secondary.label}
+              {t(post.cta.secondary.label)}
               <ExternalIcon />
             </a>
           )}
-          {post.cta.note && <p className="text-sm text-white/75">{post.cta.note}</p>}
+          {post.cta.note && <p className="text-sm text-white/75">{t(post.cta.note)}</p>}
         </div>
       )}
       <div className="mt-6">
@@ -103,7 +113,7 @@ export function NewsArticle({ post }: { post: NewsPost }) {
         >
           <div className="container-site w-full">
             <div className="max-w-[56rem] overflow-hidden rounded-2xl ring-1 ring-white/10">
-              <FeaturePicture {...feature} />
+              <FeaturePicture {...feature} alt={t(feature.alt)} />
             </div>
           </div>
           <div className="container-site relative z-[1] w-full pb-12 pt-8 sm:pb-16 sm:pt-10">
@@ -137,7 +147,7 @@ export function NewsArticle({ post }: { post: NewsPost }) {
             <figure className="mb-8 overflow-hidden rounded-2xl border border-line bg-surface" data-news-cover>
               <NewsImage
                 src={post.coverWide || post.coverImage}
-                alt={post.coverAlt}
+                alt={t(post.coverAlt)}
                 fill={false}
                 width={post.coverWide ? 1600 : 1440}
                 height={post.coverWide ? 1000 : 1440}
@@ -146,14 +156,20 @@ export function NewsArticle({ post }: { post: NewsPost }) {
               />
             </figure>
           )}
-          <NewsBody body={post.body} />
+          {bodyTranslated ? (
+            <NewsBody body={body} />
+          ) : (
+            <EnglishOnly note={t("This article is in English.")} inline>
+              <NewsBody body={post.body} />
+            </EnglishOnly>
+          )}
           {post.bookCard === "paid" && (
             <div className="mt-10" data-news-book-card>
-              <PaidBookCard testId="news-paid-book" eyebrow="Out now in paperback · Amazon" />
+              <PaidBookCard locale={locale} testId="news-paid-book" eyebrow="Out now in paperback · Amazon" />
             </div>
           )}
           <div className="mt-12 border-t border-line pt-8">
-            <ShareButtons {...share} position="bottom" label="Found this useful? Share it" />
+            <ShareButtons {...share} position="bottom" label={t("Found this useful? Share it")} />
           </div>
           </div>
         </div>

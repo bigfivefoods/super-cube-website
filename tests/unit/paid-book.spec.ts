@@ -47,8 +47,8 @@ test("cover is a 2:3 optimised JPEG", () => {
 });
 
 test("pages use the gated button and schema.org Book without a hard-coded Amazon link", () => {
-  expect(read("src/app/book/page.tsx")).toContain("<PaidBookSection />");
-  expect(read("src/app/book/page.tsx")).toContain("paidBookJsonLd()");
+  expect(read("src/components/pages/Book.tsx")).toContain("<PaidBookSection");
+  expect(read("src/components/pages/Book.tsx")).toContain("paidBookJsonLd()");
   expect(read("src/components/home/HomeLanding.tsx")).toContain('testId="home-paid-book"');
   for (const rel of ["src/components/book/PaidBook.tsx", "src/app/about/page.tsx", "src/app/media/page.tsx"]) {
     expect(read(rel), rel).not.toMatch(/amazon\.(com|co\.za)/);
@@ -61,9 +61,9 @@ test("author bio: from the book, with Pietermaritzburg, the degrees and Georgia 
     expect(bio).toContain(s);
   }
   expect(bio).not.toContain("Super-Cube®®");
-  expect(read("src/app/about/page.tsx")).toContain("AUTHOR_BIO.map");
-  expect(read("src/app/media/page.tsx")).toContain("AUTHOR_BIO.map");
-  expect(read("src/app/speaking/page.tsx")).toContain("Author of Leadership Is Learnable (2026)");
+  expect(read("src/components/pages/About.tsx")).toContain("AUTHOR_BIO.map");
+  expect(read("src/components/pages/Media.tsx")).toContain("AUTHOR_BIO.map");
+  expect(read("src/components/pages/Speaking.tsx")).toContain("Author of Leadership Is Learnable (2026)");
 });
 
 test("home card strings are in all seven dictionaries", () => {

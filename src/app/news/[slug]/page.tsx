@@ -1,15 +1,9 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { Breadcrumbs } from "@/components/Breadcrumbs";
-import { NewsletterSignup } from "@/components/NewsletterSignup";
-import { NewsArticle } from "@/components/news/NewsArticle";
-import { NewsCard } from "@/components/news/NewsCard";
+import { NewsPostView } from "@/components/pages/NewsPost";
 import { site } from "@/lib/content";
 import {
   NEWS_FEED_PATH,
   clampDescription,
-  newsArticleJsonLd,
   newsShareImage,
   newsTitleTag,
   newsUrl,
@@ -63,50 +57,5 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function NewsPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPublishedNews(slug);
-  if (!post) notFound();
-
-  const others = (await listPublishedNews()).filter((p) => p.slug !== post.slug).slice(0, 3);
-  const json = JSON.stringify(newsArticleJsonLd(post)).replace(/</g, "\\u003c");
-
-  return (
-    <>
-      {/* Home › News › <title>: the layout's copy steps aside for post pages (it can't know the title). */}
-      <Breadcrumbs leafLabel={post.title} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: json }} />
-      <NewsArticle post={post} />
-
-      <section className="section-pad border-t border-line bg-surface" aria-label="Newsletter">
-        <div className="container-site max-w-2xl">
-          <NewsletterSignup
-            source={`news/${post.slug}`.slice(0, 40)}
-            title="Get Super-Cube® News by email"
-            description="New posts and programme updates, straight to your inbox. You can unsubscribe from any email."
-          />
-        </div>
-      </section>
-
-      {others.length > 0 && (
-        <section className="section-pad border-t border-line bg-paper" aria-labelledby="more-news">
-          <div className="container-site">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-              <h2 id="more-news" className="heading-md text-ink">
-                More news
-              </h2>
-              <Link href="/news" className="inline-flex min-h-11 items-center text-sm font-semibold text-ink hover:underline">
-                All news →
-              </Link>
-            </div>
-            <ul role="list" className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {others.map((p) => (
-                <li key={p.slug}>
-                  <NewsCard post={p} />
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      )}
-    </>
-  );
+  return <NewsPostView slug={slug} />;
 }

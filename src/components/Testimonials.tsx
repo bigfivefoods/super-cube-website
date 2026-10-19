@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
 import { constructs } from "@/lib/content";
 import {
   featuredTestimonials,
@@ -46,33 +48,39 @@ function QuoteCard({
 }
 
 /** Full grid — use on How / About / dedicated stories */
-export function TestimonialsSection({
+export function TestimonialsSection({ locale = DEFAULT_LOCALE,
   title = "Voices from the programme",
   description = "Feedback from leaders in South African FMCG businesses who experienced Super-Cube® development.",
   compact = false,
   limit,
-}: {
+}: { locale?: Locale;
   title?: string;
   description?: string;
   compact?: boolean;
   limit?: number;
 }) {
+  const { t, L } = pageI18n(locale);
   const list = limit ? testimonials.slice(0, limit) : testimonials;
   return (
     <section className="section-pad border-b border-line bg-surface">
       <div className="container-site">
         <div className="max-w-2xl">
           <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-            Case voices
+            {t("Case voices")}
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-            {title}
+            {t(title)}
           </h2>
           <p className="mt-3 text-sm leading-relaxed text-slate sm:text-base">
-            {description}
+            {t(description)}
           </p>
+          {locale !== DEFAULT_LOCALE && (
+            <p className="mt-3 text-xs text-muted">{t("The quotes are shown in their original English.")}</p>
+          )}
         </div>
         <div
+          lang={locale === DEFAULT_LOCALE ? undefined : "en"}
+          dir={locale === DEFAULT_LOCALE ? undefined : "ltr"}
           className={`mt-8 grid gap-4 ${
             compact
               ? "sm:grid-cols-2 lg:grid-cols-3"
@@ -94,25 +102,32 @@ export function TestimonialsSection({
 }
 
 /** Compact home / conversion strip */
-export function TestimonialsStrip() {
+export function TestimonialsStrip({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = pageI18n(locale);
   return (
     <section className="border-y border-line bg-bg py-10 sm:py-14 md:py-16">
       <div className="container-site">
         <div className="mb-6 flex flex-col gap-2 sm:mb-8 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
           <div className="min-w-0">
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">
-              What leaders say
+              {t("What leaders say")}
             </p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight text-ink sm:text-2xl">
-              Named voices from real programmes
+              {t("Named voices from real programmes")}
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-slate sm:text-right">
-            Leaders at Imana Foods and Kerry Foods—developmental feedback, not
-            paid endorsements.
+            {t("Leaders at Imana Foods and Kerry Foods—developmental feedback, not paid endorsements.")}
           </p>
         </div>
-        <div className="grid gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3">
+        {locale !== DEFAULT_LOCALE && (
+          <p className="-mt-3 mb-4 text-xs text-muted">{t("The quotes are shown in their original English.")}</p>
+        )}
+        <div
+          lang={locale === DEFAULT_LOCALE ? undefined : "en"}
+          dir={locale === DEFAULT_LOCALE ? undefined : "ltr"}
+          className="grid gap-3 sm:grid-cols-2 sm:gap-4 md:grid-cols-3"
+        >
           {featuredTestimonials.map((t, i) => (
             <QuoteCard
               key={t.id}

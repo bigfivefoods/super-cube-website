@@ -63,8 +63,48 @@ export function dirOf(locale: Locale): "rtl" | "ltr" {
  * English paths that have translated versions. Keep in sync with src/app/[locale]/… and the
  * redirect in next.config.ts (TRANSLATED_SEGMENTS).
  */
-export const TRANSLATED_PATHS = ["/", "/pricing", "/faq"] as const;
+export const TRANSLATED_PATHS = [
+  "/",
+  "/pricing",
+  "/faq",
+  // Inner pages (src/app/[locale]/<page>, strings in src/lib/i18n/messages)
+  "/about",
+  "/book",
+  "/the-model",
+  "/constructs",
+  "/what",
+  "/how",
+  "/why-leadership",
+  "/leadership-challenges",
+  "/research",
+  "/organisations",
+  "/schools",
+  "/speaking",
+  "/sample-report",
+  "/impact",
+  "/practices",
+  "/facilitator",
+  "/media",
+  "/contact",
+  "/certify",
+  "/community",
+  "/team",
+  "/pilot-pack",
+  "/programs",
+  "/privacy",
+  "/terms",
+  "/insights",
+  "/news",
+  "/verify",
+] as const;
 export type TranslatedPath = (typeof TRANSLATED_PATHS)[number];
+
+/**
+ * Child URLs of a translated section (insight essays, news posts, one certificate check).
+ * The first segment is already in TRANSLATED_PATHS, so the language redirect allows them;
+ * this list is what marks each child as its own translated URL for links, hreflang and the sitemap.
+ */
+export const TRANSLATED_PREFIXES = ["/insights/", "/news/", "/verify/"] as const;
 
 /** Cookie that remembers the visitor's language choice (set by the switcher; never by browser language). */
 export const LOCALE_COOKIE = "sc-locale";
@@ -93,8 +133,11 @@ export function stripLocale(pathname: string | null | undefined): string {
   return rest === "" ? "/" : rest;
 }
 
-export function isTranslatedPath(path: string): path is TranslatedPath {
-  return (TRANSLATED_PATHS as readonly string[]).includes(path);
+/** A translated page, including a child of a translated section (/insights/…, /news/…, /verify/…). */
+export function isTranslatedPath(path: string): boolean {
+  const base = (path.split(/[?#]/)[0] || "/") as string;
+  if ((TRANSLATED_PATHS as readonly string[]).includes(base)) return true;
+  return TRANSLATED_PREFIXES.some((prefix) => base.startsWith(prefix));
 }
 
 /**
@@ -111,7 +154,7 @@ export function localizedPath(locale: Locale, path: string): string {
 }
 
 /** hreflang alternates for a translated English path (every language, x-default → English). */
-export function hreflangAlternates(path: TranslatedPath): Record<string, string> {
+export function hreflangAlternates(path: string): Record<string, string> {
   const out: Record<string, string> = {};
   for (const l of LOCALES) out[LOCALE_HTML_LANG[l]] = localizedPath(l, path);
   out["x-default"] = path;

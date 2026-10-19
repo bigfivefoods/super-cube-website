@@ -3,6 +3,8 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { heroThemes, type HeroTheme } from "@/lib/hero-media";
 
+const same = (s: string) => s;
+
 export function Eyebrow({ children }: { children: ReactNode }) {
   return <p className="eyebrow">{children}</p>;
 }
@@ -98,6 +100,7 @@ export function Button({
 }
 
 export function PageHero({
+  t = same,
   eyebrow,
   title,
   description,
@@ -108,6 +111,8 @@ export function PageHero({
   imageAlt,
   full,
 }: {
+  /** Translator for the built-in hero photo alt text (translated inner pages pass their t). */
+  t?: (s: string) => string;
   eyebrow: string;
   title: string;
   description: string;
@@ -170,7 +175,7 @@ export function PageHero({
         <>
           <Image
             src={mediaSrc}
-            alt={mediaAlt}
+            alt={t(mediaAlt)}
             fill
             priority
             className={`object-cover ${objectPos}`}
@@ -207,17 +212,17 @@ export function PageHero({
           <div className="grid w-full items-center gap-6 sm:gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] md:gap-10 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-12 xl:gap-16">
             <div className="page-hero__copy order-2 min-w-0 md:order-1">
               <p className={`eyebrow ${eyebrowCls}`}>
-                {eyebrow}
+                {t(eyebrow)}
               </p>
               <h1
                 className={`page-hero__title heading-xl mt-3 sm:mt-4 ${titleCls}`}
               >
-                {title}
+                {t(title)}
               </h1>
               <p
                 className={`page-hero__lede mt-4 max-w-xl text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:max-w-2xl md:text-lg lg:text-xl ${ledeCls}`}
               >
-                {description}
+                {t(description)}
               </p>
               {children && <div className={actionsClass}>{children}</div>}
             </div>
@@ -227,16 +232,16 @@ export function PageHero({
           </div>
         ) : (
           <div className="page-hero__copy min-w-0 max-w-2xl md:max-w-[38rem] lg:max-w-[42rem]">
-            <p className={`eyebrow ${eyebrowCls}`}>{eyebrow}</p>
+            <p className={`eyebrow ${eyebrowCls}`}>{t(eyebrow)}</p>
             <h1
               className={`page-hero__title heading-xl mt-3 sm:mt-4 ${titleCls}`}
             >
-              {title}
+              {t(title)}
             </h1>
             <p
               className={`page-hero__lede mt-4 text-[0.9375rem] leading-relaxed tracking-tight sm:mt-5 sm:text-base md:text-lg lg:text-xl ${ledeCls}`}
             >
-              {description}
+              {t(description)}
             </p>
             {children && <div className={actionsClass}>{children}</div>}
           </div>
@@ -246,35 +251,41 @@ export function PageHero({
   );
 }
 
-export function CTABanner() {
+/**
+ * t / L: the page's translator and link localiser on translated pages (this file is also imported by
+ * client components, so it never imports the server-only catalogues itself).
+ */
+export function CTABanner({
+  t = same,
+  L = same,
+}: { t?: (s: string) => string; L?: (href: string) => string } = {}) {
   return (
     <section className="section-pad pt-0 pb-[max(2rem,env(safe-area-inset-bottom))]">
       <div className="container-site">
         <div className="relative overflow-hidden rounded-xl bg-void px-5 py-9 text-void-fg sm:rounded-2xl sm:px-8 sm:py-12 md:px-12 md:py-16 lg:px-16 lg:py-20 dark:bg-elevated dark:ring-1 dark:ring-white/10">
           <div className="relative grid items-center gap-6 sm:gap-8 md:grid-cols-[1.5fr_auto] md:gap-10">
             <div className="min-w-0">
-              <p className="eyebrow eyebrow--on-dark">Next step</p>
+              <p className="eyebrow eyebrow--on-dark">{t("Next step")}</p>
               <h2 className="heading-md mt-3 text-void-fg sm:mt-4 md:text-[2rem]">
-                Measure growth in your first 10 minutes.
+                {t("Measure growth in your first 10 minutes.")}
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-void-fg/60 sm:mt-4 sm:text-[0.975rem]">
-                Free baseline on this device—or book a school/company pilot with
-                facilitator calendar, consented roster, and verify certificates.
+                {t("Free baseline on this device—or book a school/company pilot with facilitator calendar, consented roster, and verify certificates.")}
               </p>
             </div>
             <div className="flex w-full flex-col gap-2.5 sm:flex-row sm:gap-3 md:w-auto md:flex-col">
               <Link
-                href="/learn/start"
+                href={L("/learn/start")}
                 className="inline-flex min-h-11 w-full items-center justify-center rounded-full bg-white px-6 py-2.5 text-sm font-semibold text-black transition hover:bg-white/90 touch-manipulation sm:w-auto dark:bg-white dark:text-black"
               >
-                Start free baseline
+                {t("Start free baseline")}
               </Link>
               <Button
-                href="/pricing#pilot"
+                href={L("/pricing#pilot")}
                 variant="light"
                 className="w-full sm:w-auto"
               >
-                Book a pilot
+                {t("Book a pilot")}
               </Button>
             </div>
           </div>

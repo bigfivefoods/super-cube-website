@@ -45,8 +45,9 @@ export function newsTitleTag(post: Pick<NewsPost, "title" | "seoTitle">): string
 }
 
 /** "7 October 2026" in South African time. */
-export function formatNewsDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-ZA", {
+export function formatNewsDate(iso: string, locale = "en"): string {
+  const tag = locale === "en" ? "en-ZA" : locale === "pt" ? "pt-PT" : locale === "sw" ? "sw-KE" : locale === "ar" ? "ar" : locale === "zu" ? "zu-ZA" : locale === "af" ? "af-ZA" : locale === "fr" ? "fr-FR" : locale;
+  return new Date(iso).toLocaleDateString(tag, {
     timeZone: "Africa/Johannesburg",
     day: "numeric",
     month: "long",

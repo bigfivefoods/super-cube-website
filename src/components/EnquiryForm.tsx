@@ -2,6 +2,7 @@
 
 import { useId, useState, type FormEvent } from "react";
 import { track } from "@/lib/analytics";
+import { ENQUIRY_FORM_EN, type EnquiryFormStrings } from "./enquiry-strings";
 
 export type EnquiryField = {
   name: string;
@@ -11,7 +12,13 @@ export type EnquiryField = {
   options?: string[];
   placeholder?: string;
   autoComplete?: string;
+  /** Label shown on a translated page (`label` stays English: it heads the line in the enquiry email). */
+  displayLabel?: string;
+  /** Option texts shown on a translated page (the submitted values stay `options`). */
+  optionLabels?: string[];
 };
+
+
 
 const inputCls =
   "mt-1.5 w-full rounded-lg border border-line-strong bg-surface px-4 py-3 text-sm text-ink outline-none transition focus:border-ink focus:bg-elevated focus:ring-1 focus:ring-ink";
@@ -26,7 +33,8 @@ export function EnquiryForm({
   source,
   fields,
   submitLabel,
-  thanks = "Thank you. We’ll be in touch within two working days.",
+  strings: str = ENQUIRY_FORM_EN,
+  thanks = str.thanks,
   className = "",
 }: {
   intent: string;
@@ -34,6 +42,7 @@ export function EnquiryForm({
   fields: EnquiryField[];
   submitLabel: string;
   thanks?: string;
+  strings?: EnquiryFormStrings;
   className?: string;
 }) {
   const id = useId();
@@ -73,12 +82,12 @@ export function EnquiryForm({
       });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(j.error || "Could not send. Please try again.");
+        throw new Error(j.error || str.sendError);
       }
       setSent(true);
       track("contact_submit", { intent });
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : str.genericError);
     } finally {
       setBusy(false);
     }
@@ -87,7 +96,7 @@ export function EnquiryForm({
   if (sent) {
     return (
       <div className={`sc-card p-6 ${className}`} role="status">
-        <p className="text-lg font-semibold tracking-tight text-ink">Request received.</p>
+        <p className="text-lg font-semibold tracking-tight text-ink">{str.received}</p>
         <p className="mt-2 text-sm text-slate">{thanks}</p>
       </div>
     );
@@ -105,8 +114,8 @@ export function EnquiryForm({
         return (
           <div key={f.name} className={wide ? "sm:col-span-2" : ""}>
             <label htmlFor={fid} className="text-sm font-medium text-ink">
-              {f.label}
-              {f.required ? "" : <span className="font-normal text-muted"> (optional)</span>}
+              {f.displayLabel ?? f.label}
+              {f.required ? "" : <span className="font-normal text-muted"> {str.optional}</span>}
             </label>
             {f.type === "textarea" ? (
               <textarea
@@ -120,11 +129,11 @@ export function EnquiryForm({
             ) : f.type === "select" ? (
               <select id={fid} name={f.name} required={f.required} className={inputCls} defaultValue="">
                 <option value="" disabled>
-                  Choose…
+                  {str.choose}
                 </option>
-                {f.options?.map((o) => (
+                {f.options?.map((o, i) => (
                   <option key={o} value={o}>
-                    {o}
+                    {f.optionLabels?.[i] ?? o}
                   </option>
                 ))}
               </select>
@@ -155,11 +164,10 @@ export function EnquiryForm({
           disabled={busy}
           className="sc-btn-primary inline-flex min-h-11 w-full items-center justify-center rounded-full px-6 text-sm font-semibold tracking-tight disabled:opacity-60 sm:w-auto"
         >
-          {busy ? "Sending…" : submitLabel}
+          {busy ? str.sending : submitLabel}
         </button>
         <p className="mt-3 text-xs leading-relaxed text-slate">
-          We use your details only to reply to this request. See our privacy
-          notice.
+          {str.privacy}
         </p>
         {error && (
           <p className="mt-2 text-sm font-medium text-red-700" role="alert">

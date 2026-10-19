@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
 import Link from "next/link";
 import {
   interventionGainScaleMax,
@@ -5,18 +7,19 @@ import {
   overallInterventionGain,
 } from "@/lib/impact";
 
-export function ImpactResults({
+export function ImpactResults({ locale = DEFAULT_LOCALE,
   eyebrow = "Intervention outcomes",
   title = "Measurable growth across every face.",
   description = "Average pre- to post-course gains by face from the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods.",
   light = false,
-}: {
+}: { locale?: Locale;
   eyebrow?: string;
   title?: string;
   description?: string;
   /** Dark background variant */
   light?: boolean;
 }) {
+  const { t, L } = pageI18n(locale);
   const max = interventionGainScaleMax;
 
   return (
@@ -34,21 +37,21 @@ export function ImpactResults({
               light ? "text-cream/50" : "text-muted"
             }`}
           >
-            {eyebrow}
+            {t(eyebrow)}
           </p>
           <h2
             className={`mt-2 text-2xl font-semibold tracking-tight sm:text-3xl ${
               light ? "text-cream" : "text-ink"
             }`}
           >
-            {title}
+            {t(title)}
           </h2>
           <p
             className={`mt-3 text-sm leading-relaxed sm:text-base ${
               light ? "text-cream/60" : "text-slate"
             }`}
           >
-            {description}
+            {t(description)}
           </p>
         </div>
 
@@ -66,12 +69,12 @@ export function ImpactResults({
                 light ? "text-cream/50" : "text-muted"
               }`}
             >
-              Overall growth
+              {t("Overall growth")}
             </p>
             <p
               className={`mt-1 text-sm ${light ? "text-cream/70" : "text-slate"}`}
             >
-              Across all six Super-Cube® faces
+              {t("Across all six Super-Cube® faces")}
             </p>
           </div>
           <p
@@ -79,7 +82,7 @@ export function ImpactResults({
               light ? "text-gold-bright" : "text-ink"
             }`}
           >
-            +{overallInterventionGain}%
+            +{t(overallInterventionGain)}%
           </p>
         </div>
 
@@ -108,7 +111,7 @@ export function ImpactResults({
                       light ? "text-cream" : "text-ink"
                     }`}
                   >
-                    {g.label}
+                    {t(g.label)}
                   </span>
                 </div>
                 <div
@@ -129,7 +132,7 @@ export function ImpactResults({
                     light ? "text-cream" : "text-ink"
                   }`}
                 >
-                  +{g.gainPct}%
+                  +{t(g.gainPct)}%
                 </p>
               </div>
             );
@@ -142,22 +145,16 @@ export function ImpactResults({
           }`}
           data-testid="impact-results-source"
         >
-          +{overallInterventionGain}% overall growth across all
-          six faces, from the 12-week accredited Super-Cube®
-          leadership intervention with leaders at Imana Foods and Kerry Foods
-          (South African and international FMCG): average pre- and
-          post-course scores. Source: Leadership Is Learnable (2026), Chapter 18.
-          Highest gains: Principles +45.1% and Emotional +39.5%. Not live
-          programme data.
+          +{t(overallInterventionGain)}{t("% overall growth across all six faces, from the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods (South African and international FMCG): average pre- and post-course scores. Source: Leadership Is Learnable (2026), Chapter 18. Highest gains: Principles +45.1% and Emotional +39.5%. Not live programme data.")}
         </p>
         <p className="mt-3 text-sm">
           <Link
-            href="/news/twelve-weeks-six-faces-fmcg-leadership"
+            href={L("/news/twelve-weeks-six-faces-fmcg-leadership")}
             className={`inline-flex min-h-6 items-center gap-1 font-semibold underline underline-offset-2 ${
               light ? "text-cream" : "text-ink"
             }`}
           >
-            Read the FMCG case study <span aria-hidden>→</span>
+            {t("Read the FMCG case study")}{" "}<span aria-hidden>→</span>
           </Link>
         </p>
       </div>

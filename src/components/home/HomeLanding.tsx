@@ -18,6 +18,17 @@ import { DICTS } from "@/lib/i18n/dictionaries";
 import { around, fill } from "@/lib/i18n/pages/format";
 import { homeStrings } from "@/lib/i18n/pages/home";
 
+/** Spoken form of the intervention gains (the visible figures stay “+32.2%”). */
+const GAIN_ARIA: Record<Locale, { overall: string; emotional: string }> = {
+  en: { overall: "plus 32.2 percent", emotional: "plus 39.5 percent" },
+  fr: { overall: "plus 32,2 pour cent", emotional: "plus 39,5 pour cent" },
+  pt: { overall: "mais 32,2 por cento", emotional: "mais 39,5 por cento" },
+  sw: { overall: "ongezeko la asilimia 32.2", emotional: "ongezeko la asilimia 39.5" },
+  ar: { overall: "زائد 32.2 بالمئة", emotional: "زائد 39.5 بالمئة" },
+  zu: { overall: "ukukhula ngo-32.2 ekhulwini", emotional: "ukukhula ngo-39.5 ekhulwini" },
+  af: { overall: "plus 32,2 persent", emotional: "plus 39,5 persent" },
+};
+
 /** Document with a download arrow (decorative: the link carries the name). */
 function PdfDownloadIcon() {
   return (
@@ -341,11 +352,11 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
               </p>
               <div className="mt-2 grid grid-cols-2 gap-4">
                 <div data-testid="home-results-overall">
-                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr" aria-label="plus 32.2 percent">+32.2%</p>
+                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr" aria-label={GAIN_ARIA[locale].overall}>+32.2%</p>
                   <p className="mt-0.5 text-sm text-slate">{s.researchOverall}</p>
                 </div>
                 <div data-testid="home-results-emotional">
-                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr" aria-label="plus 39.5 percent">+39.5%</p>
+                  <p className="text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr" aria-label={GAIN_ARIA[locale].emotional}>+39.5%</p>
                   <p className="mt-0.5 text-sm text-slate">{s.researchEmotional}</p>
                 </div>
               </div>
@@ -451,10 +462,7 @@ export function HomeLanding({ locale = DEFAULT_LOCALE }: { locale?: Locale }) {
         </div>
       </section>
 
-      {/* News posts are written in English: on translated home pages they carry the EN note. */}
-      <EnglishOnly note={locale === DEFAULT_LOCALE ? null : translate(dict, "lang.untranslated")}>
-        <LatestNews />
-      </EnglishOnly>
+      <LatestNews locale={locale} />
 
       <EnglishOnly note={locale === DEFAULT_LOCALE ? null : s.testimonialsNote}>
         <TestimonialsStrip />

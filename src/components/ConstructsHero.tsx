@@ -7,7 +7,7 @@ import { faceI18n } from "@/lib/i18n";
 
 /** Localised constructs page hero + sticky face jump nav. */
 export function ConstructsHero() {
-  const { t } = useLocale();
+  const { t, L } = useLocale();
 
   return (
     <>
@@ -17,10 +17,10 @@ export function ConstructsHero() {
         title={t("constructs.title")}
         description={t("constructs.description")}
       >
-        <Button href="/learn/start" variant="primary">
+        <Button href={L("/learn/start")} variant="primary">
           {t("constructs.ctaBaseline")}
         </Button>
-        <Button href="/the-model" variant="ghost">
+        <Button href={L("/the-model")} variant="ghost">
           {t("constructs.ctaModel")}
         </Button>
       </PageHero>

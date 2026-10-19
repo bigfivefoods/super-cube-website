@@ -61,8 +61,33 @@ test.describe("Super-Cube smoke", () => {
   });
 
   test("guided start path", async ({ page }) => {
+    // /learn/start needs a finished profile. Seed one so the test waits for the real
+    // guided path, not the loading title that shows before the client redirects.
+    await page.addInitScript(() => {
+      localStorage.setItem(
+        "supercube_lms_v1",
+        JSON.stringify({
+          profile: {
+            displayName: "Thandi Smoke",
+            ageBand: "35-44",
+            role: "manager",
+            context: "company",
+            programmeId: "adults",
+            profileCompletedAt: "2026-10-01T08:00:00.000Z",
+          },
+        }),
+      );
+    });
     await page.goto(base + "/learn/start");
-    await expect(page.getByText(/first \d+ minutes/i).first()).toBeVisible();
+    await expect(page.getByText("Recommended next")).toBeVisible({ timeout: 15000 });
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Thandi, your first \d+ minutes$/);
+    await expect(page.getByRole("link", { name: "Continue →" })).toBeVisible();
+  });
+
+  test("guided start sends a visitor without a profile to the welcome step", async ({ page }) => {
+    await page.goto(base + "/learn/start");
+    await expect(page).toHaveURL(/\/learn\/welcome/, { timeout: 15000 });
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(/tell us about you/i);
   });
 
   test("insights + practices + facilitator", async ({ page }) => {

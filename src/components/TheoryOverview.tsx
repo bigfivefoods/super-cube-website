@@ -10,7 +10,7 @@ import { theories } from "@/lib/content";
  * so the homepage can stay short and plain.
  */
 export function TheoryOverview() {
-  const { t } = useLocale();
+  const { t, L } = useLocale();
   return (
     <>
       {/* Philosophy → theory → model (moved from the homepage) */}
@@ -87,7 +87,7 @@ export function TheoryOverview() {
               ))}
               <div className="border-t border-line px-4 py-3 sm:px-6">
                 <Link
-                  href="/the-model#theory"
+                  href={L("/the-model#theory")}
                   className="inline-flex min-h-6 items-center text-sm font-semibold text-ink underline-offset-4 hover:underline"
                 >
                   {t("home.ptmTheoryMap")} →
@@ -98,13 +98,13 @@ export function TheoryOverview() {
 
           <div className="mt-6 flex flex-col gap-2.5 sm:mt-8 sm:flex-row sm:flex-wrap">
             <Button
-              href="/the-model"
+              href={L("/the-model")}
               variant="primary"
               className="w-full sm:w-auto"
             >
               {t("cta.exploreModel")}
             </Button>
-            <Button href="/how" variant="ghost" className="w-full sm:w-auto">
+            <Button href={L("/how")} variant="ghost" className="w-full sm:w-auto">
               {t("home.ptmHow")} →
             </Button>
           </div>

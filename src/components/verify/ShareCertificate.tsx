@@ -1,15 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import { useLocale } from "@/components/LocaleProvider";
 
 /** Share / copy the public check link. No scores or personal details go into the URL. */
 export function ShareCertificate({ url, title }: { url: string; title: string }) {
   const [msg, setMsg] = useState<string | null>(null);
+  const { t } = useLocale();
 
   async function copy() {
     try {
       await navigator.clipboard.writeText(url);
-      setMsg("Link copied");
+      setMsg(t("share.copied"));
     } catch {
       setMsg(url);
     }
@@ -33,10 +35,10 @@ export function ShareCertificate({ url, title }: { url: string; title: string })
   return (
     <>
       <button type="button" onClick={share} className={btn}>
-        Share
+        {t("share.short")}
       </button>
       <button type="button" onClick={copy} className={btn}>
-        Copy link
+        {t("share.copy")}
       </button>
       <a
         href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
@@ -44,7 +46,7 @@ export function ShareCertificate({ url, title }: { url: string; title: string })
         rel="noopener noreferrer"
         className={btn}
       >
-        Post on LinkedIn<span className="sr-only"> (opens in a new tab)</span>
+        {t("share.linkedin")}<span className="sr-only"> {t("share.newTab")}</span>
       </a>
       <p role="status" aria-live="polite" className="w-full text-sm text-muted">
         {msg}
