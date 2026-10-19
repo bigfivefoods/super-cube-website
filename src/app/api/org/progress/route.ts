@@ -15,9 +15,7 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   const orgCode = String(body.orgCode || "").trim().toUpperCase();
   if (!orgCode) return NextResponse.json({ error: "orgCode required" }, { status: 400 });
-  if (body.consent !== true) {
-    return NextResponse.json({ ok: false, skipped: true, reason: "no_consent" });
-  }
+  const consent = body.consent === true;
 
   const { data: org } = await ctx.admin
     .from("organisations")
@@ -34,6 +32,35 @@ export async function POST(request: Request) {
     .eq("user_id", ctx.user.id)
     .maybeSingle();
   if (!member) return NextResponse.json({ error: "Join the cohort first" }, { status: 403 });
+
+  if (!consent) {
+    // Sharing turned off: record it and clear the shared figures. Coaches (RLS) and
+    // org_results() stop counting this learner immediately. Nothing is created for
+    // a learner who never shared.
+    const now = new Date().toISOString();
+    const { error } = await ctx.admin
+      .from("org_progress_snapshots")
+      .update({
+        sharing: false,
+        sharing_changed_at: now,
+        pathway_pct: 0,
+        lessons_completed: 0,
+        pre_overall: null,
+        post_overall: null,
+        growth: null,
+        certificate_id: null,
+        face_scores: {},
+        pulse_count: 0,
+        pulse_consistency: 0,
+        last_pulse_at: null,
+        updated_at: now,
+      })
+      .eq("org_id", org.id)
+      .eq("user_id", ctx.user.id)
+      .eq("sharing", true);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ ok: true, sharing: false });
+  }
 
   const programmeId = (getProgramme(String(body.programmeId || ""))?.id ?? "adults") as ProgrammeId;
   const learning = await loadLearning(ctx.admin, ctx.user.id, programmeId);
@@ -75,11 +102,21 @@ export async function POST(request: Request) {
     pulse_window_days: 28,
     client_updated_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
+    sharing: true,
   };
 
+  const { data: prev } = await ctx.admin
+    .from("org_progress_snapshots")
+    .select("sharing")
+    .eq("org_id", org.id)
+    .eq("user_id", ctx.user.id)
+    .maybeSingle();
   const { error } = await ctx.admin
     .from("org_progress_snapshots")
-    .upsert(row, { onConflict: "org_id,user_id" });
+    .upsert(
+      { ...row, ...(prev?.sharing === true ? {} : { sharing_changed_at: row.updated_at }) },
+      { onConflict: "org_id,user_id" },
+    );
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });
 }

@@ -3,14 +3,39 @@ import { deriveFacePattern, getFacePulses } from "@/lib/lms/face-tracking";
 import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 
 /**
+ * Tell the server the learner's CURRENT sharing choice for their cohort.
+ * Off: the server marks the snapshot as not shared and clears its figures.
+ */
+export async function syncCoachConsent(state?: LocalLmsState): Promise<boolean> {
+  const s = state ?? loadLmsState();
+  if (!s.orgCode) return false;
+  if (s.shareProgressWithCoach) return pushCoachProgressIfConsented(s);
+  try {
+    const res = await fetch("/api/org/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ orgCode: s.orgCode, consent: false }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Push consented non-journal progress (incl. face scores + pulse meta) to the org coach API.
- * No-op without org code + shareProgressWithCoach consent.
+ * Without consent it syncs the "not shared" state instead (so a withdrawal reaches the
+ * server even if it was made before this existed). No-op without an org code.
  */
 export async function pushCoachProgressIfConsented(
   state?: LocalLmsState
 ): Promise<boolean> {
   const s = state ?? loadLmsState();
-  if (!s.shareProgressWithCoach || !s.orgCode) return false;
+  if (!s.orgCode) return false;
+  if (!s.shareProgressWithCoach) {
+    void syncCoachConsent(s);
+    return false;
+  }
 
   const pre = s.attempts.find((a) => a.phase === "pre");
   const post = s.attempts.find((a) => a.phase === "post");

@@ -108,6 +108,13 @@ export const LEARN_SECONDARY_LINKS: {
   { href: "/pricing", label: "Plans & pricing", group: "account" },
 ];
 
+/** Shown under Account only to org admins/owners (see useOrgAdmin). */
+export const ORG_RESULTS_LINK: { href: string; label: string; group: SecondaryGroup } = {
+  href: "/learn/org/results",
+  label: "Organisation results",
+  group: "account",
+};
+
 export const SECONDARY_GROUP_LABELS: Record<SecondaryGroup, string> = {
   learning: "Learning",
   journaling: "Journaling",

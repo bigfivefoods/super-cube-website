@@ -4,8 +4,10 @@
 -- via private.is_org_admin(), which reads auth.uid() from the caller's JWT).
 --
 -- Privacy
---  * Only learners who consented to share progress with their cohort count
---    (they have an org_progress_snapshots row for this org; see /api/org/progress).
+--  * Only learners who CURRENTLY share progress with their cohort count
+--    (org_progress_snapshots.sharing = true for this org; see
+--    20261019105000_org_sharing_consent.sql and /api/org/progress).
+--    Turning sharing off removes a learner from every figure at once.
 --  * Scores come from the server-scored, immutable lms_attempts (28-question
 --    baseline = phase 'pre', after-test = phase 'post'), paired per learner.
 --  * Any score group with fewer than 3 paired learners is suppressed (only n is returned).
@@ -39,7 +41,8 @@ begin
   consented as (
     select l.user_id, l.joined_at, s.programme_id as snap_programme
     from learners l
-    join public.org_progress_snapshots s on s.org_id = p_org and s.user_id = l.user_id
+    join public.org_progress_snapshots s
+      on s.org_id = p_org and s.user_id = l.user_id and s.sharing
   ),
   pre as (
     select distinct on (a.user_id) a.user_id, a.programme_id, a.overall, a.construct_scores

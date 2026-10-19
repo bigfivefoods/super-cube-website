@@ -69,3 +69,28 @@ test("org_results() checks org admin, revokes anon and returns no identifiers", 
   const body = sql.slice(sql.indexOf("select jsonb_build_object("));
   expect(body).not.toMatch(/'user_id'|display_name|email|learner_name/);
 });
+
+test("org_results() counts only learners who currently share, and staff RLS follows the same flag", () => {
+  const sql = readFileSync(path.join(ROOT, "supabase/migrations/20261019110000_org_results.sql"), "utf8");
+  expect(sql).toMatch(/s\.org_id = p_org and s\.user_id = l\.user_id and s\.sharing/);
+  const consent = readFileSync(path.join(ROOT, "supabase/migrations/20261019105000_org_sharing_consent.sql"), "utf8");
+  expect(consent).toMatch(/add column if not exists sharing boolean not null default true/);
+  expect(consent).toMatch(/using \(user_id = auth\.uid\(\) or \(sharing and private\.is_org_staff\(org_id\)\)\)/);
+  const api = readFileSync(path.join(ROOT, "src/app/api/org/progress/route.ts"), "utf8");
+  expect(api).toContain("sharing: false");
+  expect(api).not.toContain('reason: "no_consent"');
+});
+
+test("a later 'stop sharing' wins a cloud merge over an older 'share'", async () => {
+  const { mergeShareConsent } = await import("@/lib/lms/sync");
+  type S = Parameters<typeof mergeShareConsent>[0];
+  const on = { shareProgressWithCoach: true, shareProgressChangedAt: "2026-10-01T08:00:00Z" } as S;
+  const off = { shareProgressWithCoach: false, shareProgressChangedAt: "2026-10-18T08:00:00Z" } as S;
+  expect(mergeShareConsent(on, off).shareProgressWithCoach).toBe(false);
+  expect(mergeShareConsent(off, on).shareProgressWithCoach).toBe(false);
+  expect(mergeShareConsent({ ...on, shareProgressChangedAt: "2026-10-19T08:00:00Z" } as S, off).shareProgressWithCoach).toBe(true);
+  // legacy states without a timestamp keep the old rule
+  expect(mergeShareConsent({ shareProgressWithCoach: true } as S, { shareProgressWithCoach: false } as S).shareProgressWithCoach).toBe(true);
+  // an explicit, timestamped "off" beats a legacy "on"
+  expect(mergeShareConsent({ shareProgressWithCoach: true } as S, off).shareProgressWithCoach).toBe(false);
+});

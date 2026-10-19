@@ -135,6 +135,8 @@ export interface LocalLmsState {
   sessionWins?: SessionWin[];
   /** Consent to share non-journal progress with cohort coaches */
   shareProgressWithCoach?: boolean;
+  /** When shareProgressWithCoach last changed (so a later "off" wins a cloud merge) */
+  shareProgressChangedAt?: string;
   /** Onboarding welcome completed / seen */
   onboardingSeenAt?: string;
   /** In-progress assessment draft (save/resume) */
@@ -487,6 +489,7 @@ export function setCertificateMeta(
 export function setShareProgressConsent(enabled: boolean): LocalLmsState {
   const state = loadLmsState();
   state.shareProgressWithCoach = enabled;
+  state.shareProgressChangedAt = new Date().toISOString();
   saveLmsState(state);
   return state;
 }

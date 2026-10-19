@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useOrgAdmin } from "@/lib/lms/use-org-admin";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState, type ReactNode } from "react";
 import { LearnCourseNav } from "@/components/learn/LearnCourseNav";
@@ -10,6 +11,7 @@ import {
   isLearnNavActive,
   LEARN_JOURNAL_PRACTICE,
   LEARN_SECONDARY_LINKS,
+  ORG_RESULTS_LINK,
   SECONDARY_GROUP_LABELS,
   type LearnNavItem,
   type SecondaryGroup,
@@ -53,6 +55,7 @@ export function LearnShell({
   const [learnOpen, setLearnOpen] = useState(onCourses);
   const [moreOpen, setMoreOpen] = useState(false);
   const uid = useId();
+  const orgAdmin = useOrgAdmin();
   const focus = isFocusPath(pathname);
   // Today already shows the pathway (next-action card + rail); welcome has its own single bar.
   const showPathway = Boolean(journey) && !hideJourneyRail && pathname !== "/learn";
@@ -76,7 +79,10 @@ export function LearnShell({
   ).map((group) => ({
     group,
     label: SECONDARY_GROUP_LABELS[group],
-    links: LEARN_SECONDARY_LINKS.filter((l) => l.group === group),
+    links: [
+      ...LEARN_SECONDARY_LINKS.filter((l) => l.group === group),
+      ...(group === "account" && orgAdmin ? [ORG_RESULTS_LINK] : []),
+    ],
   }));
 
   return (

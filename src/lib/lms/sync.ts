@@ -201,14 +201,30 @@ export function mergeLmsStates(
         : a.certificateEarnedAt || b.certificateEarnedAt,
     facePulses,
     orgCode: newer.orgCode || older.orgCode,
-    shareProgressWithCoach: Boolean(
-      a.shareProgressWithCoach || b.shareProgressWithCoach
-    ),
+    ...mergeShareConsent(a, b),
     microPracticeLog: unionLists(older.microPracticeLog, newer.microPracticeLog),
     ...mergeProgression(a, b, newer),
     certificateId: newer.certificateId || older.certificateId,
     serverEntitlement: keepEntitlement(newer.serverEntitlement, older.serverEntitlement),
   };
+}
+
+/**
+ * Sharing consent: the most recent explicit choice wins, so turning sharing off on
+ * one device is not undone by an older "on" in the cloud. States from before the
+ * timestamp existed fall back to the old rule (either device on).
+ */
+export function mergeShareConsent(
+  a: LocalLmsState,
+  b: LocalLmsState,
+): Pick<LocalLmsState, "shareProgressWithCoach" | "shareProgressChangedAt"> {
+  const ta = a.shareProgressChangedAt ? Date.parse(a.shareProgressChangedAt) : Number.NaN;
+  const tb = b.shareProgressChangedAt ? Date.parse(b.shareProgressChangedAt) : Number.NaN;
+  if (Number.isFinite(ta) || Number.isFinite(tb)) {
+    const pick = !Number.isFinite(tb) || (Number.isFinite(ta) && ta >= tb) ? a : b;
+    return { shareProgressWithCoach: Boolean(pick.shareProgressWithCoach), shareProgressChangedAt: pick.shareProgressChangedAt };
+  }
+  return { shareProgressWithCoach: Boolean(a.shareProgressWithCoach || b.shareProgressWithCoach) };
 }
 
 /** Per-day practice ids from both devices. */
