@@ -28,7 +28,20 @@ export function clampDescription(text: string, max = 158): string {
   const clean = text.replace(/\s+/g, " ").trim();
   if (clean.length <= max) return clean;
   const cut = clean.slice(0, max - 1);
-  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), 80)).replace(/[\s,;:·—–-]+$/, "")}…`;
+  // Cut at the last word break (never inside a word such as "Super-Cube®"), unless that would
+  // leave less than half the budget.
+  return `${cut.slice(0, Math.max(cut.lastIndexOf(" "), Math.floor(max / 2))).replace(/[\s,;:·—–-]+$/, "")}…`;
+}
+
+export const NEWS_TITLE_SUFFIX = " | Super-Cube®";
+
+/**
+ * The <title> of a post page: its short seoTitle as is when it has one, else the headline cut at a
+ * word to 60 characters plus " | Super-Cube®".
+ */
+export function newsTitleTag(post: Pick<NewsPost, "title" | "seoTitle">): string {
+  if (post.seoTitle) return stripMarks(post.seoTitle);
+  return `${clampDescription(stripMarks(post.title), 60)}${NEWS_TITLE_SUFFIX}`;
 }
 
 /** "7 October 2026" in South African time. */

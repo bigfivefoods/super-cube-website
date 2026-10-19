@@ -5,6 +5,7 @@ import {
   useCallback,
   useEffect,
   useRef,
+  useState,
   type FocusEvent,
   type KeyboardEvent,
   type PointerEvent,
@@ -219,6 +220,9 @@ export function ModelMegaMenu({
   }
 
   const [overview, sixFaces, research, assessment] = modelMenuLinks;
+  // The panel starts hidden: its links render on first open, keeping them out of every page's HTML.
+  const [mounted, setMounted] = useState(false);
+  if (open && !mounted) setMounted(true);
 
   return (
     <div
@@ -260,6 +264,7 @@ export function ModelMegaMenu({
         hidden={!open}
         className="mega-panel absolute inset-x-0 top-full border-b border-line bg-paper shadow-[0_28px_56px_-32px_rgba(0,0,0,0.35)]"
       >
+        {mounted && (
         <div className="container-site grid gap-8 py-7 lg:grid-cols-[16.5rem_minmax(0,1fr)] xl:grid-cols-[18rem_minmax(0,1fr)] xl:gap-10">
           <div className="flex flex-col rounded-2xl border border-line bg-surface p-5">
             <MiniCube
@@ -314,6 +319,7 @@ export function ModelMegaMenu({
             </div>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
@@ -334,6 +340,8 @@ export function MobileModelSection({
   // Research and the free baseline already have their own rows in the mobile
   // menu (main list and bottom CTA), so the section keeps to the model itself.
   const [overview, sixFaces] = modelMenuLinks;
+  const [mounted, setMounted] = useState(false);
+  if (expanded && !mounted) setMounted(true);
   return (
     <div>
       <button
@@ -359,6 +367,8 @@ export function MobileModelSection({
         </svg>
       </button>
       <div id="mobile-model" hidden={!expanded} className="pb-5">
+        {mounted && (
+        <>
         <p className="text-[0.875rem] leading-snug text-slate">{t("model.menuBlurb")}</p>
         <p className="eyebrow mt-4">{t("model.facesHeading")}</p>
         <div className="mt-2">
@@ -377,6 +387,8 @@ export function MobileModelSection({
             </Link>
           ))}
         </div>
+        </>
+        )}
       </div>
     </div>
   );

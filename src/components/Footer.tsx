@@ -21,8 +21,7 @@ const sectionTitleClass = "text-sm font-semibold text-black dark:text-ink mb-4";
 const groupLabelClass = "text-xs font-medium text-[#737373] dark:text-muted mb-2";
 
 /** Links keep the site's 24px minimum target (.site-footer a), so list gaps are tightened to match BFG's rhythm. */
-const linkClass =
-  "block text-sm text-[#6b7280] hover:text-black dark:text-slate dark:hover:text-ink transition-colors leading-snug";
+const linkClass = "ft-link"; // globals.css: one short class for ~40 links on every page
 
 /** label: English fallback; key: optional dictionary key (otherwise the nav maps are used). */
 type FooterLink = {

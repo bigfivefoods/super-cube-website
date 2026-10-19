@@ -159,25 +159,23 @@ export function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?:
             {sdgChallenges.map((row) => {
               const goal = goalById(row.id);
               return (
-                <article
-                  key={row.id}
-                  className="overflow-hidden rounded-2xl border border-line bg-surface shadow-[0_1px_0_rgba(0,0,0,0.03)] dark:shadow-none"
-                >
-                  <div className="grid gap-0 md:grid-cols-[minmax(0,11rem)_1fr]">
+                <article key={row.id} className="lc-card">
+                  <div className="lc-card-grid">
                     <div
-                      className="relative flex flex-col items-center justify-center gap-3 border-b border-line p-5 md:border-b-0 md:border-r"
+                      className="lc-goal"
                       style={{
                         borderTopColor: goal.color,
                         boxShadow: `inset 0 3px 0 0 ${goal.color}`,
                       }}
                     >
-                      <div className="relative aspect-square w-full max-w-[7.5rem] overflow-hidden rounded-xl border border-line bg-elevated">
+                      <div className="lc-icon">
+                        {/* Fixed 120px icon: width/height give a 1x/2x srcset instead of every breakpoint. */}
                         <Image
                           src={goal.icon}
                           alt={`SDG ${goal.id}: ${goal.short}`}
-                          fill
-                          className="object-cover object-center"
-                          sizes="120px"
+                          width={120}
+                          height={120}
+                          className="h-full w-full object-cover object-center"
                         />
                       </div>
                       <div className="text-center">
@@ -195,39 +193,39 @@ export function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?:
 
                     <div className="flex flex-col gap-4 p-5 sm:p-6">
                       <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                        <p className="lc-label">
                           {t("Issue")}
                         </p>
-                        <p className="mt-1.5 text-sm leading-relaxed text-slate">
+                        <p className="lc-text">
                           {t(row.issue)}
                         </p>
                       </div>
 
                       {row.sofiLink && (
                         <div className="rounded-xl border border-line bg-elevated px-4 py-3">
-                          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                          <p className="lc-label">
                             {t("SOFI / food systems")}
                           </p>
-                          <p className="mt-1.5 text-sm leading-relaxed text-slate">
+                          <p className="lc-text">
                             {t(row.sofiLink)}
                           </p>
                         </div>
                       )}
 
                       <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                        <p className="lc-label">
                           {t("Leadership need")}
                         </p>
-                        <p className="mt-1.5 text-sm leading-relaxed text-slate">
+                        <p className="lc-text">
                           {t(row.leadershipNeed)}
                         </p>
                       </div>
 
                       <div>
-                        <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
+                        <p className="lc-label">
                           {t("How Super-Cube® helps")}
                         </p>
-                        <p className="mt-1.5 text-sm leading-relaxed text-slate">
+                        <p className="lc-text">
                           {t(row.superCubeHelp)}
                         </p>
                       </div>
@@ -236,7 +234,7 @@ export function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?:
                         {row.faces.map((face) => (
                           <span
                             key={face}
-                            className="inline-flex items-center rounded-full px-2.5 py-0.5 text-[0.65rem] font-semibold text-white"
+                            className="lc-chip"
                             style={{ background: faceColor(face) }}
                           >
                             {faceLabel(face)}

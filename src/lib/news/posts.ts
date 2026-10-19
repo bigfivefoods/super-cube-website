@@ -436,6 +436,8 @@ export const codeNewsPosts: NewsPost[] = [
     id: "code_super_cube_lms_2026",
     slug: "super-cube-lms-accelerating-leadership-development",
     title: "Accelerating leadership development with the new Super-Cube® LMS",
+    // 52 characters: the full headline would be cut before the ® in search results.
+    seoTitle: "Super-Cube® LMS: accelerating leadership development",
     excerpt:
       "The Super-Cube® LMS is live: a free baseline, programmes for Kids, Adolescents and Adults, a re-measure after 21 days and a growth report you can verify.",
     body: LMS_BODY,

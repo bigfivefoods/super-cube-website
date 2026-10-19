@@ -87,6 +87,10 @@ export function Header() {
   const [open, setOpen] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
   const [mobileModelOpen, setMobileModelOpen] = useState(false);
+  // The mobile sheet's links are only rendered once it has been opened (it starts hidden), so every
+  // page's HTML doesn't carry a second copy of the navigation. The footer links the same pages.
+  const [sheetMounted, setSheetMounted] = useState(false);
+  if (open && !sheetMounted) setSheetMounted(true);
   const [scrolled, setScrolled] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
@@ -279,6 +283,7 @@ export function Header() {
         hidden={!open}
         className="mobile-sheet fixed inset-x-0 bottom-0 top-[calc(3.5rem+env(safe-area-inset-top,0px))] overflow-y-auto overscroll-contain bg-paper lg:hidden"
       >
+        {sheetMounted && (
         <nav className="container-site flex min-h-full flex-col pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2" aria-label={t("nav.menu")}>
           <ul className="divide-y divide-line">
             <li>
@@ -349,6 +354,7 @@ export function Header() {
             </div>
           )}
         </nav>
+        )}
       </div>
     </header>
   );

@@ -5,6 +5,7 @@ import {
   NEWS_FEED_PATH,
   clampDescription,
   newsShareImage,
+  newsTitleTag,
   newsUrl,
   stripMarks,
 } from "@/lib/news/seo";
@@ -31,7 +32,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const url = newsUrl(post.slug);
   return {
     // Short <title>; the on-page headline keeps the full title with ®.
-    title: { absolute: `${clampDescription(title, 60)} | Super-Cube®` },
+    title: { absolute: newsTitleTag(post) },
     description,
     alternates: {
       canonical: url,
