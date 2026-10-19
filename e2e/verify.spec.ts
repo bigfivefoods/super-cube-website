@@ -7,7 +7,11 @@ test.describe("public certificate check", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Check a Super-Cube® certificate");
     await page.getByLabel("Certificate ID").fill("not-an-id");
     await page.getByRole("button", { name: "Check certificate" }).click();
-    await expect(page.getByRole("alert")).toContainText("not a Super-Cube® certificate ID");
+    // Scope to the form: Next.js also renders an (empty) role="alert" route announcer.
+    const error = page.locator("form").getByRole("alert");
+    await expect(error).toHaveCount(1);
+    await expect(error).toContainText("not a Super-Cube® certificate ID");
+    await expect(page.getByLabel("Certificate ID")).toHaveAttribute("aria-describedby", /cert-id-error/);
   });
 
   test("a well-formed ID is sent to its own page", async ({ page }) => {
