@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { site } from "@/lib/content";
+import { translateText } from "@/lib/i18n/pages/t";
 import {
   LOCALE_OG,
   hreflangAlternates,
@@ -7,7 +8,6 @@ import {
   localizedPath,
   stripLocale,
   type PrefixedLocale,
-  type TranslatedPath,
 } from "@/lib/i18n/config";
 
 const base = site.url.replace(/\/$/, "");
@@ -39,17 +39,26 @@ export function pageLanguages(url: string): Record<string, string> {
  */
 export function localeMeta(opts: {
   locale: PrefixedLocale;
-  path: TranslatedPath;
+  path: string;
   title: string;
   description: string;
   absoluteTitle?: boolean;
+  /** Share image (defaults to the site card). */
+  image?: string;
+  imageAlt?: string;
+  /** Keep out of search results (private / tokenised pages). */
+  noIndex?: boolean;
 }): Metadata {
   const url = absoluteUrl(localizedPath(opts.locale, opts.path));
   const title = opts.absoluteTitle ? opts.title : `${opts.title} | Super-Cube®`;
+  const image = opts.image ? { url: opts.image, alt: opts.imageAlt ?? opts.title } : { ...SHARE_IMAGE };
   return {
     title: { absolute: title },
     description: opts.description,
     alternates: { canonical: url, languages: pageLanguages(url) },
+    ...(opts.noIndex
+      ? { robots: { index: false, follow: false, googleBot: { index: false, follow: false } } }
+      : {}),
     openGraph: {
       title,
       description: opts.description,
@@ -57,10 +66,29 @@ export function localeMeta(opts: {
       siteName: site.name,
       type: "website",
       locale: LOCALE_OG[opts.locale],
-      images: [{ ...SHARE_IMAGE }],
+      images: [image],
     },
-    twitter: { card: "summary_large_image", title, description: opts.description, images: [SHARE_IMAGE.url] },
+    twitter: { card: "summary_large_image", title, description: opts.description, images: [image.url] },
   };
+}
+
+/** The options of pageMeta (an English page's metadata, kept next to the page as META). */
+export type PageMetaInput = Parameters<typeof pageMeta>[0];
+
+/**
+ * Metadata of a translated inner page in `locale`, from the English page's META: the title and
+ * description go through the page catalogue (src/lib/i18n/messages), the canonical is the
+ * localised URL and the hreflang cluster lists every language.
+ */
+export function localePageMeta(locale: PrefixedLocale, meta: PageMetaInput): Metadata {
+  if (!isTranslatedPath(meta.path)) throw new Error(`${meta.path} is not a translated path`);
+  return localeMeta({
+    locale,
+    path: meta.path,
+    title: translateText(locale, meta.title),
+    description: translateText(locale, meta.description),
+    image: meta.image,
+  });
 }
 
 export function absoluteUrl(path: string) {

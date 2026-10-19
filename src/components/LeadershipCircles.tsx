@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
 /**
  * Expanding leadership circles — soft pastel radial diagram.
  * You at the centre → family → friends → colleagues → society.
@@ -78,13 +80,14 @@ const LABEL_POS: Record<string, number> = {
   society: 150,
 };
 
-export function LeadershipCircles({
+export function LeadershipCircles({ locale = DEFAULT_LOCALE,
   className = "",
   showLegend = true,
-}: {
+}: { locale?: Locale;
   className?: string;
   showLegend?: boolean;
 }) {
+  const { t, L } = pageI18n(locale);
   const size = 420;
   const cx = size / 2;
   const cy = size / 2;
@@ -101,7 +104,7 @@ export function LeadershipCircles({
         <div
           className="relative px-3 pb-3 pt-4 sm:px-5 sm:pb-5 sm:pt-5"
           role="img"
-          aria-label="Soft pastel diagram of leadership circles expanding from you at the centre to family, friends, colleagues, and society"
+          aria-label={t("Soft pastel diagram of leadership circles expanding from you at the centre to family, friends, colleagues, and society")}
         >
           <svg
             viewBox={`0 0 ${size} ${size}`}
@@ -299,7 +302,7 @@ export function LeadershipCircles({
                   >
                     {i + 1}
                   </span>
-                  {ring.label}
+                  {t(ring.label)}
                 </span>
               </div>
             ))}
@@ -309,7 +312,7 @@ export function LeadershipCircles({
         {showLegend && (
           <div className="border-t border-line bg-elevated/70 px-3 py-4 backdrop-blur-sm sm:px-5 sm:py-5 lg:border-l lg:border-t-0">
             <p className="mb-3 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-slate-400 lg:text-left">
-              How leadership radiates
+              {t("How leadership radiates")}
             </p>
             <ol className="grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
               {RINGS.map((ring, i) => (
@@ -330,17 +333,17 @@ export function LeadershipCircles({
                   <div className="min-w-0">
                     <div className="flex flex-wrap items-baseline gap-x-2">
                       <h3 className="text-xs font-bold tracking-tight text-slate-800 sm:text-sm">
-                        {ring.label}
+                        {t(ring.label)}
                       </h3>
                       <p
                         className="face-ink text-[0.55rem] font-semibold uppercase tracking-wider"
                         style={faceInkStyle(ring.accent)}
                       >
-                        {ring.short}
+                        {t(ring.short)}
                       </p>
                     </div>
                     <p className="mt-0.5 text-[0.7rem] leading-snug text-slate-600 sm:text-[0.75rem]">
-                      {ring.description}
+                      {t(ring.description)}
                     </p>
                   </div>
                 </li>

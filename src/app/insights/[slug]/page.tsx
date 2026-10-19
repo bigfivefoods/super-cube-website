@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { pageMeta } from "@/lib/seo";
-import { notFound } from "next/navigation";
+import { InsightArticle } from "@/components/pages/Insights";
 import { getInsight, insightPosts } from "@/lib/insights";
-import { Button } from "@/components/ui";
+import { pageMeta } from "@/lib/seo";
 
 export function generateStaticParams() {
   return insightPosts.map((p) => ({ slug: p.slug }));
@@ -30,48 +28,5 @@ export default async function InsightPostPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const post = getInsight(slug);
-  if (!post) notFound();
-
-  return (
-    <article>
-      <header className="border-b border-line bg-bg">
-        <div className="container-site max-w-3xl pb-12 pt-28 sm:pb-16 lg:pt-32">
-          <p className="eyebrow">Insights</p>
-          <h1 className="heading-lg mt-3 text-ink">{post.title}</h1>
-          <p className="mt-3 text-sm text-muted">
-            {post.date} · {post.readingMinutes} min read ·{" "}
-            {post.tags.join(" · ")}
-          </p>
-          <p className="mt-4 text-lg leading-relaxed text-slate">
-            {post.excerpt}
-          </p>
-        </div>
-      </header>
-      <div className="section-pad bg-surface">
-        <div className="container-site prose-site max-w-3xl space-y-5">
-          {post.body.map((para) => (
-            <p key={para.slice(0, 40)}>{para}</p>
-          ))}
-          <div className="flex flex-wrap gap-2 pt-4">
-            <Button href="/learn/start" variant="primary">
-              Start free baseline
-            </Button>
-            <Button href="/insights" variant="ghost">
-              All insights
-            </Button>
-          </div>
-          <p className="text-sm text-muted">
-            <Link href="/research" className="font-semibold text-ink">
-              Research
-            </Link>{" "}
-            ·{" "}
-            <Link href="/practices" className="font-semibold text-ink">
-              Practice library
-            </Link>
-          </p>
-        </div>
-      </div>
-    </article>
-  );
+  return <InsightArticle slug={slug} />;
 }

@@ -1,0 +1,425 @@
+import Link from "next/link";
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
+import { PaidBookCard } from "@/components/book/PaidBook";
+import { ImpactResults } from "@/components/ImpactResults";
+import { TheoryOverview } from "@/components/TheoryOverview";
+import { Button, CTABanner, PageHero, SectionHeading } from "@/components/ui";
+import {
+  constructs,
+  publications,
+  researchGateUrl,
+  researchHighlights,
+} from "@/lib/content";
+
+import type { PageMetaInput } from "@/lib/seo";
+
+/** English page metadata (title and description are translated per language by localePageMeta). */
+export const META = {
+  title: "Research & validation",
+  description:
+    "Empirical validation of the Super-Cube® Leadership Model—mixed-methods research at UKZN, peer-reviewed SAJEMS and JCM journal articles (2022), confirmatory factor analysis (CFI≈0.86), and qualitative findings from African FMCG networks.",
+  path: "/research",
+  image: "/images/hero/hero-research.jpg",
+  keywords: [
+    "leadership research South Africa",
+    "confirmatory factor analysis leadership",
+    "UKZN DBA leadership model",
+    "SAJEMS Super-Cube®",
+    "Journal of Contemporary Management leadership",
+  ],
+} satisfies PageMetaInput;
+
+export function ResearchView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = pageI18n(locale);
+  return (
+    <>
+      <PageHero t={t}
+        theme="research"
+        eyebrow={t("Research & validation")}
+        title={t("Evidence that the model holds.")}
+        description={t("Super-Cube® was developed and tested through a pragmatic explanatory sequential mixed-methods design—quantitative structure first, qualitative depth second—within an African FMCG business-network, and published in peer-reviewed journals.")}
+      >
+        <Button href="#journal-articles" variant="primary">
+          {t("Download journal articles")}
+        </Button>
+        <Button href={L("/media")} variant="ghost">
+          {t("Media kit & citation")}
+        </Button>
+        <Button href={L("/the-model")} variant="ghost">
+          {t("Return to the model")}
+        </Button>
+      </PageHero>
+
+      <section className="border-b border-line bg-surface">
+        <div className="container-site max-w-3xl py-10 sm:py-12">
+          <SectionHeading
+            eyebrow={t("Open summary")}
+            title={t("Thesis abstract (non-paywalled)")}
+            description={t("Full peer-reviewed articles are free to download below. The DBA thesis abstract summarises the founding study for schools, L&D, and media.")}
+          />
+          <div className="prose-site mt-6 space-y-4 text-slate">
+            <p>
+              <strong className="text-ink">{t("Thesis:")}</strong>{" "}{t("a leadership skills development model (Super-Cube®), a case study of an African FMCG business network (Muller, C. R., December 2020, University of KwaZulu-Natal, Doctor of Business Administration; degree conferred 2021).")}
+            </p>
+            <p>
+              {t("Leadership capacity in emerging-market business networks is constrained by complexity, skills gaps, and imported models that under-weight whole-person development. This research developed and tested a six-construct cubic model—Choices, Principles, Mental, Emotional, Physical, Spiritual—with the individual at the centre.")}
+            </p>
+            <p>
+              {t("Mixed methods: survey (N=132) with confirmatory factor analysis (acceptable fit, CFI≈0.86; scale reliability α≈0.60–0.80) and interviews with ten directors (N=10) for thematic validation. Philosophy of mutual respect (Buber’s I–Thou) informs practice design.")}
+            </p>
+            <p>
+              {t("Implication: leadership is substantially developable; measurement before and after deliberate practice is the product. Super-Cube® Learn operationalises that loop for kids, adolescents, and adults.")}
+            </p>
+            <p>
+              {t("Peer-reviewed outputs (2022) appear in the")}{" "}
+              <em>{t("South African Journal of Economic and Management Sciences")}</em>{" "}
+              {t("(SAJEMS) and the")}{" "}<em>{t("Journal of Contemporary Management")}</em>{" "}
+              {t("(JCM)—see")}{" "}
+              <a href="#journal-articles" className="font-semibold text-ink">
+                {t("Journal articles")}
+              </a>{" "}
+              {t("below for open PDF downloads and DOI links.")}
+            </p>
+            <p>
+              {t("The Theory-level literature map moves from classical trait/behavioural/contingency schools through relational, shared, biological/evolutionary and neuroscientific perspectives, into contemporary topics (identity, culture, globalisation, entrepreneurial leadership), skills-development debates, and higher-order frames—AQAL, I–Thou, and Ubuntu—which collectively underpin the six-dimensional model. See")}{" "}
+              <Link href={L("/the-model#theory")} className="font-semibold text-ink">
+                {t("The Model · Theory map")}
+              </Link>
+              .
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="journal-articles"
+        className="section-pad border-b border-[var(--line)] bg-paper scroll-mt-24"
+      >
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Peer-reviewed")}
+            title={t("Download journal articles")}
+            description={t("Open PDF downloads of the 2022 SAJEMS and JCM publications that formalise Super-Cube® for African FMCG leadership development.")}
+          />
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            {publications.map((pub) => (
+              <article
+                key={pub.id}
+                className="flex flex-col rounded-[var(--radius)] border border-[var(--line)] bg-elevated p-6 shadow-[var(--shadow-sm)]"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-ink px-3 py-1 text-xs font-semibold tracking-wide text-cream">
+                    {t(pub.badge)}
+                  </span>
+                  <span className="text-xs font-medium text-muted">
+                    {t(pub.year)}
+                  </span>
+                </div>
+                <p className="mt-3 text-xs font-semibold uppercase tracking-wide text-muted">
+                  {t(pub.journal)}
+                </p>
+                <h3 className="mt-2 font-display text-lg font-semibold leading-snug text-ink md:text-xl">
+                  {t(pub.title)}
+                </h3>
+                <p className="mt-2 text-sm text-slate">
+                  {t(pub.authors)} · {t(pub.year)}
+                </p>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-slate">
+                  {t(pub.abstract)}
+                </p>
+                <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+                  <a
+                    href={L(pub.pdf)}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
+                  >
+                    {t("Download PDF")}
+                  </a>
+                  <a
+                    href={L(pub.doi)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink hover:border-black/25 hover:bg-black/[0.02] dark:hover:border-white/25 dark:hover:bg-white/[0.04]"
+                  >
+                    {t("View DOI")}
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="mt-8">
+            <PaidBookCard locale={locale}
+              testId="research-paid-book"
+              eyebrow={t("Book · 2026")}
+              body={t("The research in full, for a general reader: the survey of 132 people, the interviews with ten directors, each of the six faces in depth, the 12-week intervention results and how to build a programme. 312 pages, out now in paperback and Kindle.")}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Methodology")}
+            title={t("Pragmatic. Sequential. Practice-oriented.")}
+            description={t("The research prioritised practical utility and real-world applicability—testing whether the six-construct structure fits observed leadership reality.")}
+          />
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {researchHighlights.map((h) => (
+              <article
+                key={h.title}
+                className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-6 shadow-[var(--shadow-sm)]"
+              >
+                <h3 className="heading-md text-[1.35rem] text-ink">
+                  {t(h.title)}
+                </h3>
+                <p className="mt-3 leading-relaxed text-slate">{t(h.body)}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <TheoryOverview />
+
+      <ImpactResults locale={locale}
+        light
+        eyebrow={t("Intervention results · 12-week Super-Cube® intervention")}
+        title={t("+32.2% overall growth across all six faces.")}
+        description={t("Average pre- and post-course scores from the 12-week accredited Super-Cube® leadership intervention with leaders at Imana Foods and Kerry Foods (South African and international FMCG organisations), with the gain for each face in % (source: Leadership Is Learnable, 2026, Chapter 18). These gains come from the intervention, not from the doctoral study, which tested the model’s structure. Not live programme data.")}
+      />
+
+      <section className="section-pad border-y border-[var(--line)] bg-void text-void-fg">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Structural validation")}
+            title={t("Acceptable model fit. Adequate reliability.")}
+            light
+            description={t("Confirmatory factor analysis on survey data from 132 employees assessed overall fit of the Super-Cube® structure.")}
+          />
+          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { k: "2.232", v: "CMIN/DF", d: "Within common SEM thresholds" },
+              { k: "0.86", v: "CFI", d: "Comparative Fit Index" },
+              {
+                k: "0.097",
+                v: "RMSEA",
+                d: "Root mean square error of approx.",
+              },
+              {
+                k: "0.60–0.80",
+                v: "Cronbach’s α",
+                d: "Internal consistency across constructs",
+              },
+            ].map((m) => (
+              <div
+                key={m.v}
+                className="rounded-[var(--radius)] border border-white/10 bg-white/5 p-6"
+              >
+                <p className="font-display text-3xl text-gold-bright md:text-4xl">
+                  {t(m.k)}
+                </p>
+                <p className="mt-2 font-semibold text-cream">{t(m.v)}</p>
+                <p className="mt-1 text-sm text-cream/50">{t(m.d)}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-cream/55">
+            {t("Fit indices collectively suggest acceptable model fit based on established thresholds in structural equation modelling. Reliability coefficients indicate adequate to good internal consistency for the study sample.")}
+          </p>
+        </div>
+      </section>
+
+      <section className="section-pad">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Qualitative findings")}
+            title={t("What the directors emphasised.")}
+            description={t("Face-to-face semi-structured interviews with 10 key decision-makers (Nov 2018–Feb 2019) were analysed using inductive thematic analysis (Braun & Clarke).")}
+          />
+
+          <div className="mt-12 space-y-4">
+            {constructs
+              .slice()
+              .sort(
+                (a, b) =>
+                  parseFloat(b.qualitativeShare || "0") -
+                  parseFloat(a.qualitativeShare || "0"),
+              )
+              .map((c) => {
+                const pct = parseFloat(c.qualitativeShare || "0");
+                return (
+                  <div
+                    key={c.id}
+                    className="grid gap-2 md:grid-cols-[10rem_1fr_3rem] md:items-center"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="h-2.5 w-2.5 rounded-full"
+                        style={{ background: c.color }}
+                      />
+                      <span className="font-semibold text-ink">{t(c.name)}</span>
+                    </div>
+                    <div className="h-3 overflow-hidden rounded-full bg-cream-dark">
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{
+                          width: `${Math.max(pct * 2.8, 4)}%`,
+                          background: c.color,
+                        }}
+                      />
+                    </div>
+                    <span className="text-sm font-semibold text-muted md:text-right">
+                      {t(c.qualitativeShare)}
+                    </span>
+                  </div>
+                );
+              })}
+          </div>
+
+          <div className="prose-site mt-10 max-w-3xl">
+            <p>
+              {t("Mental (31%) and Emotional (29%) together accounted for roughly 60% of construct-related qualitative content—underscoring cognitive and relational demands in practice. Principles (18%), Spiritual (12%), Choices (9%), and Physical (1%) also appeared as meaningful themes.")}
+            </p>
+            <p>
+              {t("Participants expressed unanimous support for multilevel leadership development—from individual to organisational and network levels—with recommendations for inclusive approaches that can extend to suppliers and customers for a broader ripple effect.")}
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad border-t border-[var(--line)] bg-paper">
+        <div className="container-site grid gap-10 lg:grid-cols-2">
+          <div>
+            <SectionHeading eyebrow={t("Limitations")} title={t("Honest about scope.")} />
+            <div className="prose-site mt-6">
+              <p>
+                {t("The model was developed and tested within a single-case study of one African FMCG business-network. Findings are context-specific and should not be over-generalised without further testing.")}
+              </p>
+              <p>
+                {t("Wider industry replication—across organisations, regions, and sectors facing comparable challenges—is recommended to assess robustness and refine the six constructs for broader continental and emerging-market use.")}
+              </p>
+            </div>
+          </div>
+          <div>
+            <SectionHeading
+              eyebrow={t("Significance")}
+              title={t("Africa-centric and practice-ready.")}
+            />
+            <div className="prose-site mt-6">
+              <p>
+                {t("Super-Cube® is one of the first leadership development frameworks built and tested inside an African FMCG business network—bridging Western-dominant theory and local organisational reality.")}
+              </p>
+              <p>
+                {t("By emphasising human-centric constructs and the developable nature of leadership (genes explain roughly 24–30% of who holds leadership roles; about 70–76% is linked to experience, environment and learning), it offers a credible, context-sensitive alternative for organisations building capacity at scale.")}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section-pad">
+        <div className="container-site">
+          <SectionHeading
+            eyebrow={t("Primary sources")}
+            title={t("Where to go deeper.")}
+            description={t("Doctoral thesis plus peer-reviewed journal articles. Download open PDFs or follow DOI links; more work is on ResearchGate.")}
+          />
+          <ul className="mt-8 space-y-4">
+            <li className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5 sm:p-6">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
+                  {t("Thesis")}
+                </span>
+                <span className="text-xs text-muted">2020</span>
+              </div>
+              <p className="mt-2 font-semibold text-ink">
+                {t("A leadership skills development model (Super-Cube®): a case study of an African FMCG business network")}
+              </p>
+              <p className="mt-1 text-sm text-muted">
+                {t("Craig Ross Muller · DBA thesis · University of KwaZulu-Natal · December 2020")}
+              </p>
+              <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+                <a
+                  href={L(researchGateUrl)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
+                >
+                  {t("Available via ResearchGate")}
+                </a>
+              </div>
+            </li>
+            {publications.map((pub) => (
+              <li
+                key={pub.id}
+                className="rounded-[var(--radius)] border border-[var(--line)] bg-paper p-5 sm:p-6"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-ink/90 px-2.5 py-0.5 text-[11px] font-semibold tracking-wide text-cream">
+                    {t(pub.badge)}
+                  </span>
+                  <span className="text-xs text-muted">{t(pub.year)}</span>
+                </div>
+                <p className="mt-2 font-semibold text-ink">{t(pub.title)}</p>
+                <p className="mt-1 text-sm text-muted">
+                  {t(pub.authors)} · {t(pub.journal)} · {t(pub.year)}
+                </p>
+                <div className="mt-4 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
+                  <a
+                    href={L(pub.pdf)}
+                    download
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90"
+                  >
+                    {t("Download PDF")}
+                  </a>
+                  <a
+                    href={L(pub.doi)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong bg-elevated px-5 text-sm font-semibold text-ink hover:border-black/25 hover:bg-black/[0.02] dark:hover:border-white/25 dark:hover:bg-white/[0.04]"
+                  >
+                    {t("View DOI")}
+                  </a>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <a
+            href={L(researchGateUrl)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-8 flex flex-col gap-3 rounded-[var(--radius)] border border-[var(--line)] bg-elevated p-5 shadow-[var(--shadow-sm)] transition-colors hover:border-black/20 dark:hover:border-white/20 sm:flex-row sm:items-center sm:justify-between sm:p-6"
+          >
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+                {t("ResearchGate")}
+              </p>
+              <p className="mt-1 font-display text-lg font-semibold text-ink">
+                {t("View full profile & publications")}
+              </p>
+              <p className="mt-1 max-w-xl text-sm leading-relaxed text-slate">
+                {t("Peer-reviewed Super-Cube® papers and related research by Craig Muller are listed on ResearchGate.")}
+              </p>
+            </div>
+            <span className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full sc-btn-primary px-5 text-sm font-semibold hover:opacity-90">
+              {t("Open ResearchGate")}
+            </span>
+          </a>
+
+          <p className="mt-6 text-sm text-muted">
+            {t("Public summaries of the model are also available via scholarly repositories and reference encyclopaedias such as Grokipedia.")}
+          </p>
+        </div>
+      </section>
+
+      <CTABanner t={t} L={L} />
+    </>
+  );
+}

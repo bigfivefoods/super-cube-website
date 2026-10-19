@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLocale } from "@/components/LocaleProvider";
 import { useId, useState, type FormEvent } from "react";
 import { track } from "@/lib/analytics";
 
@@ -12,8 +13,8 @@ import { track } from "@/lib/analytics";
 export function NewsletterSignup({
   source,
   variant = "card",
-  title = "Get one practical leadership idea a month",
-  description = "Short, useful emails on growing the six faces of leadership. No spam. Unsubscribe any time.",
+  title,
+  description,
   className = "",
 }: {
   source: string;
@@ -23,6 +24,7 @@ export function NewsletterSignup({
   className?: string;
 }) {
   const id = useId();
+  const { t } = useLocale();
   const [state, setState] = useState<"idle" | "sending" | "done">("idle");
   const [error, setError] = useState<string | null>(null);
   const footer = variant === "footer";
@@ -34,7 +36,7 @@ export function NewsletterSignup({
     const data = new FormData(form);
     const consent = data.get("consent") === "on";
     if (!consent) {
-      setError("Please tick the consent box so we may email you.");
+      setError(t("nl.consentError"));
       return;
     }
     setState("sending");
@@ -51,14 +53,14 @@ export function NewsletterSignup({
       });
       if (!res.ok) {
         const j = (await res.json().catch(() => ({}))) as { error?: string };
-        throw new Error(j.error || "Could not sign you up. Please try again.");
+        throw new Error(j.error || t("nl.sendError"));
       }
       setState("done");
       track("notify_opt_in", { source, kind: "newsletter" });
       form.reset();
     } catch (err) {
       setState("idle");
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      setError(err instanceof Error ? err.message : t("nl.genericError"));
     }
   }
 
@@ -70,11 +72,10 @@ export function NewsletterSignup({
     return (
       <div className={wrap} role="status">
         <p className="text-base font-semibold tracking-tight text-ink">
-          Almost done: check your inbox.
+          {t("nl.doneTitle")}
         </p>
         <p className="mt-1.5 text-sm text-slate">
-          If this address isn’t subscribed yet, we’ve sent it a link to confirm.
-          Nothing is sent until you press it. Can’t see it? Check your spam folder.
+          {t("nl.doneBody")}
         </p>
       </div>
     );
@@ -87,7 +88,7 @@ export function NewsletterSignup({
       <form onSubmit={onSubmit} className={`relative space-y-3 ${wrap}`} noValidate>
         <div className="flex flex-col gap-2">
           <label htmlFor={`${id}-email`} className="sr-only">
-            Email address
+            {t("nl.email")}
           </label>
           <div className="relative">
             <svg
@@ -118,7 +119,7 @@ export function NewsletterSignup({
             disabled={state === "sending"}
             className="sc-btn-primary inline-flex w-full shrink-0 items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold disabled:opacity-60"
           >
-            {state === "sending" ? "Subscribing…" : "Subscribe"}
+            {state === "sending" ? t("nl.subscribing") : t("nl.subscribe")}
             <svg viewBox="0 0 24 24" aria-hidden className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M5 12h14M12 5l7 7-7 7" />
             </svg>
@@ -140,9 +141,9 @@ export function NewsletterSignup({
             className="mt-0.5 h-4 w-4 shrink-0 rounded accent-[var(--ink)]"
           />
           <label htmlFor={`${id}-consent`} className="text-xs leading-snug text-[#525252] dark:text-slate">
-            I agree that Super-Cube® may email me. I can unsubscribe at any time.{" "}
+            {t("nl.consentShort")}{" "}
             <Link href="/privacy" className="inline-flex min-h-6 items-center text-black underline underline-offset-2 dark:text-ink">
-              Privacy
+              {t("footer.privacy")}
             </Link>
           </label>
         </div>
@@ -153,7 +154,7 @@ export function NewsletterSignup({
         )}
         <p className="text-xs leading-relaxed text-[#737373] dark:text-muted">
           <Link href="/newsletter/unsubscribe" className="inline-flex min-h-6 items-center text-[#404040] underline underline-offset-2 dark:text-slate">
-            Unsubscribe
+            {t("nl.unsubscribe")}
           </Link>
         </p>
       </form>
@@ -169,14 +170,14 @@ export function NewsletterSignup({
             : "text-lg font-semibold tracking-tight text-ink"
         }
       >
-        {title}
+        {title ?? t("nl.title")}
       </h2>
       <p className={`text-sm leading-relaxed text-slate ${footer ? "mt-3" : "mt-1.5"}`}>
-        {description}
+        {description ?? t("nl.description")}
       </p>
       <div className="mt-4 flex flex-col gap-2.5 sm:flex-row">
         <label htmlFor={`${id}-email`} className="sr-only">
-          Email address
+          {t("nl.email")}
         </label>
         <input
           id={`${id}-email`}
@@ -192,7 +193,7 @@ export function NewsletterSignup({
           disabled={state === "sending"}
           className="sc-btn-primary inline-flex min-h-11 shrink-0 items-center justify-center rounded-full px-5 text-sm font-semibold tracking-tight disabled:opacity-60"
         >
-          {state === "sending" ? "Signing up…" : "Sign up"}
+          {state === "sending" ? t("nl.signingUp") : t("nl.signUp")}
         </button>
       </div>
       {/* Honeypot */}
@@ -211,12 +212,11 @@ export function NewsletterSignup({
           className="h-6 w-6 shrink-0 accent-[var(--ink)]"
         />
         <label htmlFor={`${id}-consent`} className="text-xs leading-relaxed text-slate">
-          I agree that Super-Cube® may email me leadership tips and programme
-          updates. I’ll confirm by email and can unsubscribe at any time. See our{" "}
+          {t("nl.consentLong")}{" "}
           <Link href="/privacy" className="font-semibold text-ink underline underline-offset-2">
-            privacy notice
+            {t("nl.privacyNotice")}
           </Link>
-          .
+          {t("nl.consentEnd")}
         </label>
       </div>
       {error && (

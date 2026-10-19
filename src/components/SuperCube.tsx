@@ -8,7 +8,9 @@ import {
   type CSSProperties,
   type PointerEvent as ReactPointerEvent,
 } from "react";
+import { useLocale } from "@/components/LocaleProvider";
 import { constructs, type ConstructId } from "@/lib/content";
+import { faceI18n, type I18nKey } from "@/lib/i18n";
 
 /**
  * Cube face map:
@@ -76,6 +78,10 @@ export function SuperCube({
   /** Hide the rotate buttons (compact progress views) */
   hideControls?: boolean;
 }) {
+  // Face names, skills and controls follow the page language (the skills lists are "a · b · c").
+  const { t } = useLocale();
+  const faceName = (id: ConstructId) => t(faceI18n[id]);
+  const faceSkills = (id: ConstructId) => t(`skills.${id}` as I18nKey).split(" · ");
   const [rot, setRot] = useState(DEFAULT_ROT);
   const [dragging, setDragging] = useState(false);
   const [autoEnabled, setAutoEnabled] = useState(autoSpin);
@@ -182,9 +188,7 @@ export function SuperCube({
           dragging ? "is-dragging" : ""
         }`}
         role="img"
-        aria-label={`Interactive Super-Cube®. Choices on top, Principles on the bottom, Mental, Emotional, Physical and Spiritual on the sides.${
-          showSkills && !showScores ? " The skills on each face are listed below." : ""
-        } Drag to rotate.`}
+        aria-label={`${t("cube.scene")}${showSkills && !showScores ? ` ${t("cube.sceneSkills")}` : ""} ${t("cube.dragShort")}.`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={endDrag}
@@ -236,7 +240,7 @@ export function SuperCube({
                   } as CSSProperties
                 }
               >
-                <span className="cube-face__name">{c.name}</span>
+                <span className="cube-face__name">{faceName(c.id)}</span>
                 {tier !== null && (
                   <span className="cube-face__pips" aria-hidden>
                     {[1, 2, 3, 4].map((t) => (
@@ -251,7 +255,7 @@ export function SuperCube({
                 )}
                 {showSkills && !showScores && (
                   <ul className="cube-face__skills">
-                    {c.elements.map((skill) => (
+                    {faceSkills(c.id).map((skill) => (
                       <li key={skill}>{skill}</li>
                     ))}
                   </ul>
@@ -264,13 +268,13 @@ export function SuperCube({
 
       {/* Scores drawn on the faces are part of the picture; repeat them as text for screen readers. */}
       {scores && Object.keys(scores).length > 0 && (
-        <ul className="sr-only" aria-label="Super-Cube® face scores out of 100">
+        <ul className="sr-only" aria-label={t("cube.scoresLabel")}>
           {faceLayout.map((face) => {
             const c = byId[face.id];
             const score = scores[face.id];
             return (
               <li key={face.id}>
-                {c.name}: {typeof score === "number" ? `${Math.round(score)} out of 100` : "no score yet"}
+                {faceName(c.id)}: {typeof score === "number" ? t("cube.outOf100", { n: Math.round(score) }) : t("cube.noScore")}
               </li>
             );
           })}
@@ -278,10 +282,10 @@ export function SuperCube({
       )}
 
       {light && (
-        <ul className="sr-only" aria-label="How far each Super-Cube® face is lit, out of 4">
+        <ul className="sr-only" aria-label={t("cube.lightLabel")}>
           {faceLayout.map((face) => (
             <li key={face.id}>
-              {byId[face.id].name}: {light[face.id] ?? 0} of 4
+              {faceName(face.id)}: {t("cube.lightOf4", { n: light[face.id] ?? 0 })}
             </li>
           ))}
         </ul>
@@ -289,12 +293,12 @@ export function SuperCube({
 
       {/* The 3D faces are a picture (role="img"); give screen readers the faces and skills as text. */}
       {showSkills && !showScores && (
-        <ul className="sr-only" aria-label="Super-Cube® faces and the skills each develops">
+        <ul className="sr-only" aria-label={t("cube.skillsLabel")}>
           {faceLayout.map((face) => {
             const c = byId[face.id];
             return (
               <li key={face.id}>
-                {c.name}: {c.elements.join(", ")}
+                {faceName(c.id)}: {faceSkills(c.id).join(", ")}
               </li>
             );
           })}
@@ -304,10 +308,9 @@ export function SuperCube({
       {!hideControls && (
       <div className="flex w-full max-w-full flex-col items-center gap-2 px-0.5 sm:max-w-[20rem]">
         <p className="text-center text-[0.65rem] font-medium uppercase tracking-[0.12em] text-muted sm:text-[0.6875rem] sm:tracking-[0.14em]">
-          <span className="sm:hidden">Drag to rotate</span>
+          <span className="sm:hidden">{t("cube.dragShort")}</span>
           <span className="hidden sm:inline">
-            Drag to rotate · Shift+drag for spin · Choices top · Principles
-            bottom
+            {t("cube.dragLong")}
           </span>
         </p>
 
@@ -316,48 +319,48 @@ export function SuperCube({
             type="button"
             onClick={() => nudge("y", -25)}
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
-            aria-label="Rotate left"
+            aria-label={t("cube.rotateLeft")}
           >
-            <span aria-hidden="true">↺</span> Left
+            <span aria-hidden="true">↺</span> {t("cube.left")}
           </button>
           <button
             type="button"
             onClick={() => nudge("y", 25)}
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
-            aria-label="Rotate right"
+            aria-label={t("cube.rotateRight")}
           >
-            <span aria-hidden="true">↻</span> Right
+            <span aria-hidden="true">↻</span> {t("cube.right")}
           </button>
           <button
             type="button"
             onClick={() => nudge("x", -25)}
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
-            aria-label="Tilt up"
+            aria-label={t("cube.tiltUp")}
           >
-            <span aria-hidden="true">↑</span> Up
+            <span aria-hidden="true">↑</span> {t("cube.up")}
           </button>
           <button
             type="button"
             onClick={() => nudge("x", 25)}
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
-            aria-label="Tilt down"
+            aria-label={t("cube.tiltDown")}
           >
-            <span aria-hidden="true">↓</span> Down
+            <span aria-hidden="true">↓</span> {t("cube.down")}
           </button>
           <button
             type="button"
             onClick={() => nudge("z", 25)}
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
-            aria-label="Roll"
+            aria-label={t("cube.roll")}
           >
-            <span aria-hidden="true">↷</span> Roll
+            <span aria-hidden="true">↷</span> {t("cube.roll")}
           </button>
           <button
             type="button"
             onClick={reset}
             className="cube-ctrl rounded-full border border-line bg-elevated px-2.5 py-1.5 text-[0.7rem] font-semibold text-ink touch-manipulation hover:border-ink/30 sm:px-2.5 sm:text-xs"
           >
-            Reset
+            {t("cube.reset")}
           </button>
           <button
             type="button"
@@ -369,7 +372,7 @@ export function SuperCube({
             }`}
             aria-pressed={autoEnabled}
           >
-            {autoEnabled ? "Auto on" : "Auto off"}
+            {autoEnabled ? t("cube.autoOn") : t("cube.autoOff")}
           </button>
         </div>
       </div>

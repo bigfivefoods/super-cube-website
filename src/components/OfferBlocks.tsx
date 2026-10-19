@@ -1,3 +1,5 @@
+import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
+import { pageI18n } from "@/lib/i18n/pages/t";
 import Link from "next/link";
 import Image from "next/image";
 import { BrandText } from "@/components/news/BrandText";
@@ -6,27 +8,28 @@ import { SectionHeading } from "@/components/ui";
 export type Step = { title: string; body: string };
 
 /** Pre-assessment → programme → post-assessment → report. */
-export function HowItWorks({
+export function HowItWorks({ locale = DEFAULT_LOCALE,
   steps,
   eyebrow = "How it works",
   title = "Four steps, from baseline to proof.",
-}: {
+}: { locale?: Locale;
   steps: Step[];
   eyebrow?: string;
   title?: string;
 }) {
+  const { t, L } = pageI18n(locale);
   return (
     <section className="section-pad border-t border-line bg-surface">
       <div className="container-site">
-        <SectionHeading eyebrow={eyebrow} title={title} />
+        <SectionHeading eyebrow={t(eyebrow)} title={t(title)} />
         <ol className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((s, i) => (
             <li key={s.title} className="sc-card p-5">
               <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink text-sm font-semibold text-bg">
                 {i + 1}
               </span>
-              <h3 className="mt-4 text-base font-semibold tracking-tight text-ink">{s.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate">{s.body}</p>
+              <h3 className="mt-4 text-base font-semibold tracking-tight text-ink">{t(s.title)}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate">{t(s.body)}</p>
             </li>
           ))}
         </ol>
@@ -67,26 +70,27 @@ export function CaseStudyComingSoon({ audience }: { audience: string }) {
 }
 
 /** Two-column offer list. */
-export function OfferList({
+export function OfferList({ locale = DEFAULT_LOCALE,
   eyebrow,
   title,
   description,
   items,
-}: {
+}: { locale?: Locale;
   eyebrow: string;
   title: string;
   description?: string;
   items: { title: string; body: string }[];
 }) {
+  const { t, L } = pageI18n(locale);
   return (
     <section className="section-pad bg-paper">
       <div className="container-site">
-        <SectionHeading eyebrow={eyebrow} title={title} description={description} />
+        <SectionHeading eyebrow={t(eyebrow)} title={t(title)} description={t(description)} />
         <ul className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((it) => (
             <li key={it.title} className="sc-card p-5">
-              <h3 className="text-base font-semibold tracking-tight text-ink">{it.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate">{it.body}</p>
+              <h3 className="text-base font-semibold tracking-tight text-ink">{t(it.title)}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-slate">{t(it.body)}</p>
             </li>
           ))}
         </ul>
@@ -102,7 +106,7 @@ export type CaseStudyStat = { value: string; label: string };
  * up to three figures with a short source line, an optional quote, and a link to the post.
  * Figures must match the post and its source exactly.
  */
-export function CaseStudyFeature({
+export function CaseStudyFeature({ locale = DEFAULT_LOCALE,
   eyebrow,
   title,
   body,
@@ -114,7 +118,7 @@ export function CaseStudyFeature({
   image,
   imageAlt,
   testId,
-}: {
+}: { locale?: Locale;
   eyebrow: string;
   title: string;
   body: string;
@@ -127,48 +131,49 @@ export function CaseStudyFeature({
   imageAlt: string;
   testId?: string;
 }) {
+  const { t, L } = pageI18n(locale);
   return (
     <section className="section-pad border-t border-line" data-testid={testId}>
       <div className="container-site grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-12">
         <div className="relative aspect-square w-full max-w-md overflow-hidden rounded-2xl border border-line bg-void lg:max-w-none">
-          <Image src={image} alt={imageAlt} fill sizes="(max-width: 1024px) 28rem, 40vw" className="object-cover" />
+          <Image src={image} alt={t(imageAlt)} fill sizes="(max-width: 1024px) 28rem, 40vw" className="object-cover" />
         </div>
         <div className="min-w-0">
-          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{eyebrow}</p>
+          <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{t(eyebrow)}</p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-            <BrandText text={title} />
+            <BrandText text={t(title)} />
           </h2>
           <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate sm:text-base">
-            <BrandText text={body} />
+            <BrandText text={t(body)} />
           </p>
           <dl className="mt-6 grid gap-3 sm:grid-cols-3">
             {stats.map((s) => (
               <div key={s.label} className="sc-card p-4">
-                <dt className="sr-only">{s.label}</dt>
+                <dt className="sr-only">{t(s.label)}</dt>
                 <dd>
                   <span className="block text-3xl font-semibold tabular-nums tracking-tight text-ink" dir="ltr">
-                    {s.value}
+                    {t(s.value)}
                   </span>
-                  <span className="mt-1 block text-sm leading-snug text-slate">{s.label}</span>
+                  <span className="mt-1 block text-sm leading-snug text-slate">{t(s.label)}</span>
                 </dd>
               </div>
             ))}
           </dl>
           {quote && (
             <figure className="mt-6 border-l-2 border-line-strong pl-4">
-              <blockquote className="text-base leading-relaxed text-ink">“{quote.text}”</blockquote>
-              <figcaption className="mt-1.5 text-sm text-muted">{quote.cite}</figcaption>
+              <blockquote className="text-base leading-relaxed text-ink">“{t(quote.text)}”</blockquote>
+              <figcaption className="mt-1.5 text-sm text-muted">{t(quote.cite)}</figcaption>
             </figure>
           )}
           <p className="mt-5 max-w-2xl text-xs leading-relaxed text-muted">
-            <BrandText text={source} />
+            <BrandText text={t(source)} />
           </p>
           <p className="mt-5">
             <Link
-              href={href}
+              href={L(href)}
               className="inline-flex min-h-11 items-center gap-1 text-sm font-semibold text-ink underline underline-offset-4"
             >
-              {linkLabel} <span aria-hidden>→</span>
+              {t(linkLabel)} <span aria-hidden>→</span>
             </Link>
           </p>
         </div>

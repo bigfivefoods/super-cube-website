@@ -389,10 +389,7 @@ export function Footer() {
                 <p className="text-sm text-[#6b7280] dark:text-slate leading-relaxed mb-3">
                   {t("footer.newsletterBlurb")}
                 </p>
-                {/* The newsletter form is English-only, as on bigfivegroup.africa */}
-                <div lang="en" dir="ltr">
-                  <NewsletterSignup source="footer" variant="footer" />
-                </div>
+                <NewsletterSignup source="footer" variant="footer" />
               </div>
             </div>
 

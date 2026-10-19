@@ -70,8 +70,8 @@ test("cover (2:3) and share card (1200×630) are optimised JPEGs", () => {
 });
 
 test("/book: download links, share card, chapters, sitemap and breadcrumbs", () => {
-  const page = read("src/app/book/page.tsx");
-  expect(page).toMatch(/href=\{BOOK\.href\}[\s\S]{0,40}\bdownload\b/);
+  const page = read("src/components/pages/Book.tsx");
+  expect(page).toMatch(/href=\{L\(BOOK\.href\)\}[\s\S]{0,40}\bdownload\b/);
   expect(page).toContain("BOOK.share.url");
   expect(page).toContain('"@type": "Book"');
   expect(BOOK_CHAPTERS.filter((c) => c.n).map((c) => c.n)).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);

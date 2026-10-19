@@ -1,5 +1,7 @@
 "use client";
 
+import { useLocale } from "@/components/LocaleProvider";
+
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { shareLinks, shareUrl } from "@/lib/news/share";
 
@@ -108,7 +110,7 @@ export function ShareButtons({
   title,
   summary = "",
   tone = "light",
-  label = "Share this post",
+  label,
   position,
 }: {
   /** Absolute canonical URL of the post (no query string). */
@@ -123,6 +125,7 @@ export function ShareButtons({
   position: "top" | "bottom";
 }) {
   const labelId = useId();
+  const { t } = useLocale();
   const [copied, setCopied] = useState(false);
   const [canNativeShare, setCanNativeShare] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -174,10 +177,10 @@ export function ShareButtons({
           id={labelId}
           className={`text-[0.6875rem] font-semibold uppercase tracking-[0.14em] ${dark ? "text-white/75" : "text-slate"}`}
         >
-          {label}
+          {label ?? t("share.post")}
         </span>
         <span role="status" aria-live="polite" className={`text-[0.6875rem] font-semibold ${dark ? "text-white" : "text-ink"}`}>
-          {copied ? "Link copied" : ""}
+          {copied ? t("share.copied") : ""}
         </span>
       </div>
       <ul role="list" aria-labelledby={labelId} className="flex flex-wrap items-center gap-2">
@@ -187,8 +190,8 @@ export function ShareButtons({
               type="button"
               onClick={onNativeShare}
               className={btn}
-              aria-label="Share using your device"
-              title="Share"
+              aria-label={t("share.native")}
+              title={t("share.short")}
               data-share-network="native"
             >
               <ShareIcon />
@@ -202,8 +205,8 @@ export function ShareButtons({
               target="_blank"
               rel="noopener noreferrer"
               className={btn}
-              aria-label={`Share on ${n.name} (opens in a new tab)`}
-              title={`Share on ${n.name}`}
+              aria-label={t("share.onNewTab", { network: n.name })}
+              title={t("share.on", { network: n.name })}
               data-share-network={n.key}
             >
               <Brand name={n.key} />
@@ -211,7 +214,7 @@ export function ShareButtons({
           </li>
         ))}
         <li>
-          <a href={links.email} className={btn} aria-label="Share by email" title="Share by email" data-share-network="email">
+          <a href={links.email} className={btn} aria-label={t("share.email")} title={t("share.email")} data-share-network="email">
             <MailIcon />
           </a>
         </li>
@@ -220,8 +223,8 @@ export function ShareButtons({
             type="button"
             onClick={onCopy}
             className={btn}
-            aria-label={copied ? "Link copied" : "Copy link"}
-            title="Copy link"
+            aria-label={copied ? t("share.copied") : t("share.copy")}
+            title={t("share.copy")}
             data-share-network="copy"
           >
             {copied ? <CheckIcon /> : <LinkIcon />}

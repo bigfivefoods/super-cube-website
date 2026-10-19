@@ -38,6 +38,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/faq",
     "/privacy",
     "/terms",
+    "/programs",
+    "/verify",
   ];
 
   const entries: MetadataRoute.Sitemap = staticPaths.map((path) => ({
@@ -73,21 +75,49 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   });
   for (const post of news) {
+    const path = `/news/${post.slug}`;
+    const languages = Object.fromEntries(
+      Object.entries(hreflangAlternates(path)).map(([lang, p]) => [lang, `${base}${p}`]),
+    );
     entries.push({
-      url: `${base}/news/${post.slug}`,
+      url: `${base}${path}`,
       lastModified: new Date(post.updatedAt || post.publishedAt),
       changeFrequency: "monthly",
       priority: 0.7,
+      alternates: { languages },
     });
+    for (const locale of PREFIXED_LOCALES) {
+      entries.push({
+        url: `${base}${localizedPath(locale, path)}`,
+        lastModified: new Date(post.updatedAt || post.publishedAt),
+        changeFrequency: "monthly",
+        priority: 0.5,
+        alternates: { languages },
+      });
+    }
   }
 
   for (const post of insightPosts) {
+    const path = `/insights/${post.slug}`;
+    const languages = Object.fromEntries(
+      Object.entries(hreflangAlternates(path)).map(([lang, p]) => [lang, `${base}${p}`]),
+    );
     entries.push({
-      url: `${base}/insights/${post.slug}`,
+      url: `${base}${path}`,
       lastModified: new Date(post.date),
       changeFrequency: "monthly",
       priority: 0.6,
+      alternates: { languages },
     });
+    for (const locale of PREFIXED_LOCALES) {
+      entries.push({
+        url: `${base}${localizedPath(locale, path)}`,
+        lastModified: new Date(post.date),
+        changeFrequency: "monthly",
+        priority: 0.5,
+        alternates: { languages },
+      });
+    }
   }
 
   return entries;

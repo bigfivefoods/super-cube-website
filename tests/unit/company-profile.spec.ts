@@ -33,9 +33,9 @@ test("company profile PDF exists, is A4-sized PDF under 5 MB, with title metadat
 });
 
 test("media kit and pilot pack link to the company profile PDF", () => {
-  for (const rel of ["src/app/media/page.tsx", "src/app/pilot-pack/page.tsx"]) {
+  for (const rel of ["src/components/pages/Media.tsx", "src/components/pages/PilotPack.tsx"]) {
     const src = readFileSync(path.join(ROOT, rel), "utf8");
-    expect(src, rel).toContain('href="/super-cube-company-profile.pdf"');
+    expect(src, rel).toContain('"/super-cube-company-profile.pdf"');
     expect(src, rel).toContain("Download company profile (PDF)");
   }
 });
