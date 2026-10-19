@@ -6,6 +6,7 @@ import { issueCertificate } from "@/lib/lms/cloud";
 import { isMinorProfile } from "@/lib/lms/consent";
 import {
   CERT_AUTHOR,
+  CERT_ISSUER,
   certificateFileBase,
   credentialDetails,
   credentialDetailsText,
@@ -191,6 +192,7 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
                 Overall {cert.preOverall} → {cert.postOverall} · Awarded {formatIssuedDate(cert.issuedAt)}
               </p>
               <p className="mt-3 text-sm italic" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>{CERT_AUTHOR}</p>
+              <p className="mt-1 text-[0.6875rem] text-[#5c5a56]">Issued by {CERT_ISSUER}</p>
               <p className="mt-2 font-mono text-[0.6875rem] font-semibold tracking-wide">{cert.id}</p>
             </div>
 

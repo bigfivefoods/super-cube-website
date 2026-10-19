@@ -7,6 +7,7 @@ import { constructs } from "@/lib/content";
 import { RADAR_ORDER } from "@/components/learn/RadarChart";
 import {
   CERT_AUTHOR,
+  CERT_ISSUER,
   CERT_AUTHOR_ROLE,
   formatIssuedDate,
   programmeName,
@@ -257,6 +258,8 @@ export async function renderCertificateShareImage(cert: CertificateData, scale =
   ctx.fillStyle = "#5C5A56";
   ctx.font = `500 15px ${sans}`;
   ctx.fillText(`${CERT_AUTHOR_ROLE} · Awarded ${formatIssuedDate(cert.issuedAt)}`, left, 506);
+
+  ctx.fillText(`Issued by ${CERT_ISSUER}`, left, 530);
 
   ctx.font = `600 16px ${sans}`;
   ctx.fillStyle = "#141416";

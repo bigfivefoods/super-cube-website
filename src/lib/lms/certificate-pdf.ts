@@ -2,6 +2,7 @@ import { jsPDF } from "jspdf";
 import { constructs } from "@/lib/content";
 import {
   CERT_AUTHOR,
+  CERT_ISSUER,
   CERT_AUTHOR_ROLE,
   certificateFileBase,
   formatIssuedDate,
@@ -108,7 +109,7 @@ export function buildCertificatePdf(cert: CertificatePdfInput): jsPDF {
     title: `${programme} certificate · ${name}`,
     subject: "Super-Cube® certificate of completion",
     author: CERT_AUTHOR,
-    creator: "Super-Cube®",
+    creator: CERT_ISSUER,
     keywords: `Super-Cube®, certificate, ${cert.id}`,
   });
 
@@ -271,7 +272,7 @@ export function buildCertificatePdf(cert: CertificatePdfInput): jsPDF {
   doc.setFontSize(8);
   doc.setTextColor(...MUTED);
   doc.text(pdfSafe(CERT_AUTHOR_ROLE), cx, sigY + 8, { align: "center" });
-  doc.text(`Awarded ${date}`, cx, sigY + 13, { align: "center" });
+  doc.text(`Awarded ${date} · Issued by ${CERT_ISSUER}`, cx, sigY + 13, { align: "center" });
 
   // QR and verification
   const qrSize = 30;

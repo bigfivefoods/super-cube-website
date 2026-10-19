@@ -7,7 +7,8 @@ import qrcode from "qrcode-generator";
 import { getProgramme } from "@/lib/programmes";
 import type { ConstructScore } from "@/lib/lms/scoring";
 
-export const CERT_ISSUER = "Super-Cube®";
+/** Issuing organisation on every certificate surface: PDF, share image, Learn panel, /verify and LinkedIn. */
+export const CERT_ISSUER = "Super-Cube® by Big Five Group";
 export const CERT_AUTHOR = "Dr Craig R. Muller";
 export const CERT_AUTHOR_ROLE = "Author, Super-Cube® Leadership Model";
 export const DEFAULT_ORIGIN = "https://www.super-cube.me";
@@ -101,14 +102,18 @@ export function issuedYearMonth(iso: string): { year: number; month: number } {
 
 /**
  * LinkedIn "Add licence or certification" deep link. organizationName is used
- * because Super-Cube® has no LinkedIn organisation ID configured yet.
+ * because Super-Cube® has no LinkedIn organisation ID configured yet, so LinkedIn
+ * shows the issuer as plain text (CERT_ISSUER, ® included).
  */
-export function linkedInAddToProfileUrl(c: Pick<CertificateData, "id" | "programmeId" | "issuedAt" | "siteOrigin">): string {
+export function linkedInAddToProfileUrl(
+  c: Pick<CertificateData, "id" | "programmeId" | "issuedAt" | "siteOrigin">,
+  issuer: string = CERT_ISSUER,
+): string {
   const { year, month } = issuedYearMonth(c.issuedAt);
   const q = new URLSearchParams({
     startTask: "CERTIFICATION_NAME",
     name: credentialName(c.programmeId),
-    organizationName: CERT_ISSUER,
+    organizationName: issuer,
     issueYear: String(year),
     issueMonth: String(month),
     certUrl: verifyUrl(c.id, c.siteOrigin),
