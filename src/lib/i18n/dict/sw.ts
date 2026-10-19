@@ -164,6 +164,35 @@ const sw: Dict = {
   "face.spiritual": "Roho",
   "face.jump": "Pande",
 
+  "home.ptmEyebrow": "Falsafa · Nadharia · Modeli",
+  "home.ptmTitle": "Kutoka uhusiano wa kibinadamu hadi mchemraba unaoweza kutekelezwa.",
+  "home.ptmDesc":
+    "Super-Cube® imejengwa juu ya falsafa iliyo wazi, nadharia ya ukuaji, na modeli ya pande sita unayoweza kupima na kufundisha.",
+  "home.philosophyTitle": "Falsafa",
+  "home.philosophyBody":
+    "Imejengwa juu ya Mimi–Wewe ya Buber, falsafa ya Kiafrika ya Ubuntu, na mfumo wa AQAL wa Wilber: watu kama wahusika katika uhusiano, si vitu vya kudhibitiwa.",
+  "home.theoryTitle": "Nadharia",
+  "home.theoryBody":
+    "Kujifunza kwa vipimo vitatu vya Illeris (maudhui, motisha, mwingiliano) pamoja na mikondo mikuu ya fasihi ya uongozi. Jeni hueleza takriban robo hadi theluthi tu ya wanaoshikilia nafasi za uongozi; iliyobaki inahusiana na uzoefu, mazingira na kujifunza.",
+  "home.modelTitle": "Modeli",
+  "home.modelBody":
+    "Super-Cube® hufanya falsafa na nadharia hiyo zitekelezwe: wewe katikati, pande sita zinazotegemeana, kipimo cha kabla → baada, na ukuaji wa makusudi.",
+  "home.coreBeliefEyebrow": "Imani kuu",
+  "home.coreBelief": "Uongozi unaweza kujifunzwa kwa kiasi kikubwa.",
+  "home.coreBeliefBody":
+    "Super-Cube® inashikilia kuwa uwezo wa uongozi unaweza kukuzwa kwa kiasi kikubwa kwa mazoezi ya makusudi, uzoefu na uingiliaji uliopangwa, si kufungwa na urithi: jeni hueleza takriban 24–30% ya wanaoshikilia nafasi za uongozi, na takriban 70–76% inahusiana na uzoefu, mazingira na kujifunza. Ukuaji hufuata maudhui, motisha na mwingiliano wa Illeris.",
+  "home.theoryMapLabel": "Ramani ya nadharia (muhtasari)",
+  "home.ptmTheoryMap": "Fungua ramani kamili ya fasihi",
+  "home.ptmHow": "Ukuaji hufanya kazi vipi",
+
+  "constructs.eyebrow": "Pande sita",
+  "constructs.title": "Miundo inayomlenga binadamu. Ujuzi unaoweza kukuzwa.",
+  "constructs.description":
+    "Kila upande wa Super-Cube® ni uwanja kamili wa mazoezi ya uongozi, uliojengwa juu ya nadharia, uliothibitishwa na utafiti, na umeundwa kwa ukuaji wa makusudi. Sogeza kila upande: picha kamili, kisha muhtasari ulio wazi.",
+  "constructs.ctaBaseline": "Anza tathmini ya bure",
+  "constructs.ctaModel": "Modeli inafanya kazi vipi",
+  "constructs.faceOf": "Upande {n} kati ya 06",
+
   "faq.eyebrow": "Msaada",
   "faq.title": "Maswali yanayoulizwa mara kwa mara",
   "faq.lede":
@@ -250,6 +279,8 @@ const sw: Dict = {
   "share.onNewTab": "Shiriki kwenye {network} (hufunguka kwenye kichupo kipya)",
   "share.email": "Shiriki kwa barua pepe",
   "share.copy": "Nakili kiungo",
+  "share.linkedin": "Chapisha kwenye LinkedIn",
+  "share.newTab": "(hufunguka kwenye kichupo kipya)",
   "live.eyebrow": "Matokeo ya programu moja kwa moja",
   "live.loading": "Inapakia matokeo ya moja kwa moja…",
   "live.emptyTitle": "Matokeo ya vikundi vya moja kwa moja yataonekana hapa.",

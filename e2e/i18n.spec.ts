@@ -4,9 +4,9 @@ import AxeBuilder from "@axe-core/playwright";
 /**
  * Languages (the bigfivegroup.africa approach): English unprefixed; French, Arabic (RTL),
  * Portuguese, Kiswahili, isiZulu and Afrikaans under /fr … /af for the translated pages only
- * (home, pricing and FAQ).
+ * (home, pricing, FAQ and the public inner pages).
  */
-const TRANSLATED = ["/pricing", "/faq"];
+const TRANSLATED = ["/pricing", "/faq", "/about", "/book", "/the-model"];
 const LOCALES = ["fr", "ar", "pt", "sw", "zu", "af"] as const;
 
 test.describe("languages", () => {
@@ -61,9 +61,16 @@ test.describe("languages", () => {
   });
 
   test("an English-only page under a language prefix redirects to English", async ({ request }) => {
-    const res = await request.get("/fr/the-model", { maxRedirects: 0 });
+    const res = await request.get("/fr/learn/start", { maxRedirects: 0 });
     expect([307, 308]).toContain(res.status());
-    expect(res.headers()["location"]).toMatch(/\/the-model$/);
+    expect(res.headers()["location"]).toMatch(/\/learn\/start$/);
+  });
+
+  test("translated inner pages stay on their language URL", async ({ request }) => {
+    for (const path of ["/fr/about", "/ar/book", "/af/the-model", "/pt/programs", "/sw/privacy", "/zu/insights"]) {
+      const res = await request.get(path, { maxRedirects: 0 });
+      expect(res.status(), path).toBe(200);
+    }
   });
 
   test("switcher: native names, links to the same page in each language", async ({ page }) => {
@@ -99,11 +106,21 @@ test.describe("languages", () => {
 
   test("choosing a language on an English-only page shows the English-only note", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto("/the-model");
+    await page.goto("/newsletter/unsubscribe");
     await page.locator('[data-language-switcher="menu"] button').filter({ visible: true }).first().click();
     await page.locator('[data-language-switcher="menu"] [data-locale="pt"]').filter({ visible: true }).first().click();
-    await expect(page).toHaveURL(/\/the-model$/);
+    await expect(page).toHaveURL(/\/newsletter\/unsubscribe$/);
     await expect(page.locator('[data-locale-notice="englishOnly"]')).toContainText("disponível apenas em inglês");
+  });
+
+  test("Arabic inner page is RTL with hreflang and translated copy", async ({ page }) => {
+    await page.goto("/ar/about");
+    await expect(page.locator("html")).toHaveAttribute("lang", "ar");
+    await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", /\/ar\/about$/);
+    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(8);
+    await expect(page.locator("h1")).not.toHaveText(/About|Dr Craig/);
+    await expect(page.locator("main")).toContainText("Super-Cube®");
   });
 
   for (const [tag, viewport] of [

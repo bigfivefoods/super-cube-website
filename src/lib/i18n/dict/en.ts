@@ -305,6 +305,8 @@ const en = {
   "share.onNewTab": "Share on {network} (opens in a new tab)",
   "share.email": "Share by email",
   "share.copy": "Copy link",
+  "share.linkedin": "Post on LinkedIn",
+  "share.newTab": "(opens in a new tab)",
 
   // Live cohort results (/impact)
   "live.eyebrow": "Live programme results",

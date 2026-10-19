@@ -289,6 +289,8 @@ const zu: Dict = {
   "share.onNewTab": "Yabelana ku-{network} (kuvuleka kuthebhu entsha)",
   "share.email": "Yabelana nge-imeyili",
   "share.copy": "Kopisha isixhumanisi",
+  "share.linkedin": "Thumela ku-LinkedIn",
+  "share.newTab": "(kuvuleka kuthebhu entsha)",
   "live.eyebrow": "Imiphumela yezinhlelo ebukhoma",
   "live.loading": "Kulayishwa imiphumela ebukhoma…",
   "live.emptyTitle": "Imiphumela ebukhoma yamaqembu izovela lapha.",

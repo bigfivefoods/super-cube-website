@@ -165,6 +165,35 @@ const fr: Dict = {
   "face.spiritual": "Spirituel",
   "face.jump": "Faces",
 
+  "home.ptmEyebrow": "Philosophie · Théorie · Modèle",
+  "home.ptmTitle": "De la relation humaine à un cube que l’on peut pratiquer.",
+  "home.ptmDesc":
+    "Super-Cube® repose sur une philosophie claire, une théorie du développement et un modèle à six faces que l’on peut mesurer et entraîner.",
+  "home.philosophyTitle": "Philosophie",
+  "home.philosophyBody":
+    "Ancré dans le Je–Tu de Buber, la philosophie africaine de l’Ubuntu et le cadre intégral AQAL de Wilber : les personnes comme sujets en relation, jamais comme objets de contrôle.",
+  "home.theoryTitle": "Théorie",
+  "home.theoryBody":
+    "L’apprentissage en trois dimensions d’Illeris (contenu, motivation, interaction) et les grands courants de la littérature sur le leadership. Les gènes n’expliquent qu’environ un quart à un tiers de qui occupe des rôles de leadership ; le reste est lié à l’expérience, à l’environnement et à l’apprentissage.",
+  "home.modelTitle": "Modèle",
+  "home.modelBody":
+    "Super-Cube® rend cette philosophie et cette théorie praticables : vous au centre, six faces interdépendantes, une mesure avant → après, et une progression délibérée.",
+  "home.coreBeliefEyebrow": "Conviction centrale",
+  "home.coreBelief": "Le leadership s’apprend en grande partie.",
+  "home.coreBeliefBody":
+    "Super-Cube® considère que la capacité de leadership est en grande partie développable par la pratique délibérée, l’expérience et une intervention structurée, et non fixée par l’hérédité : les gènes expliquent environ 24 à 30 % de qui occupe des rôles de leadership, et environ 70 à 76 % sont liés à l’expérience, à l’environnement et à l’apprentissage. Le développement suit le contenu, la motivation et l’interaction d’Illeris.",
+  "home.theoryMapLabel": "Carte théorique (résumé)",
+  "home.ptmTheoryMap": "Ouvrir la carte complète de la littérature",
+  "home.ptmHow": "Comment le développement fonctionne",
+
+  "constructs.eyebrow": "Les six faces",
+  "constructs.title": "Des construits centrés sur l’humain. Des compétences que l’on développe.",
+  "constructs.description":
+    "Chaque face du Super-Cube® est un domaine complet de pratique du leadership, fondé sur la théorie, validé par la recherche et conçu pour une progression délibérée. Faites défiler chaque face : une image plein cadre, puis une vue d’ensemble claire.",
+  "constructs.ctaBaseline": "Commencer le bilan initial gratuit",
+  "constructs.ctaModel": "Comment le modèle fonctionne",
+  "constructs.faceOf": "Face {n} sur 06",
+
   "faq.eyebrow": "Aide",
   "faq.title": "Questions fréquentes",
   "faq.lede":
@@ -251,6 +280,8 @@ const fr: Dict = {
   "share.onNewTab": "Partager sur {network} (s’ouvre dans un nouvel onglet)",
   "share.email": "Partager par e-mail",
   "share.copy": "Copier le lien",
+  "share.linkedin": "Publier sur LinkedIn",
+  "share.newTab": "(s’ouvre dans un nouvel onglet)",
   "live.eyebrow": "Résultats des programmes en direct",
   "live.loading": "Chargement des résultats en direct…",
   "live.emptyTitle": "Les résultats des cohortes en direct apparaîtront ici.",

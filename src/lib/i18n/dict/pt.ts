@@ -165,6 +165,35 @@ const pt: Dict = {
   "face.spiritual": "Espiritual",
   "face.jump": "Faces",
 
+  "home.ptmEyebrow": "Filosofia · Teoria · Modelo",
+  "home.ptmTitle": "Da relação humana a um cubo que se pode praticar.",
+  "home.ptmDesc":
+    "O Super-Cube® assenta numa filosofia clara, numa teoria do desenvolvimento e num modelo de seis faces que se pode medir e treinar.",
+  "home.philosophyTitle": "Filosofia",
+  "home.philosophyBody":
+    "Enraizado no Eu–Tu de Buber, na filosofia africana do Ubuntu e no quadro integral AQAL de Wilber: pessoas como sujeitos em relação, nunca objectos de controlo.",
+  "home.theoryTitle": "Teoria",
+  "home.theoryBody":
+    "A aprendizagem tridimensional de Illeris (conteúdo, incentivo, interacção) e as grandes correntes da literatura sobre liderança. Os genes explicam apenas cerca de um quarto a um terço de quem ocupa papéis de liderança; o resto está ligado à experiência, ao ambiente e à aprendizagem.",
+  "home.modelTitle": "Modelo",
+  "home.modelBody":
+    "O Super-Cube® torna essa filosofia e essa teoria praticáveis: você no centro, seis faces interdependentes, medição antes → depois, e crescimento deliberado.",
+  "home.coreBeliefEyebrow": "Crença central",
+  "home.coreBelief": "A liderança é em grande parte aprendível.",
+  "home.coreBeliefBody":
+    "O Super-Cube® sustenta que a capacidade de liderança é em grande parte desenvolvível pela prática deliberada, pela experiência e por uma intervenção estruturada, e não fixada pela hereditariedade: os genes explicam cerca de 24–30% de quem ocupa papéis de liderança, e cerca de 70–76% estão ligados à experiência, ao ambiente e à aprendizagem. O desenvolvimento segue o conteúdo, o incentivo e a interacção de Illeris.",
+  "home.theoryMapLabel": "Mapa teórico (resumo)",
+  "home.ptmTheoryMap": "Abrir o mapa completo da literatura",
+  "home.ptmHow": "Como o desenvolvimento funciona",
+
+  "constructs.eyebrow": "As seis faces",
+  "constructs.title": "Constructos centrados no ser humano. Competências que se desenvolvem.",
+  "constructs.description":
+    "Cada face do Super-Cube® é um domínio completo de prática de liderança, fundamentado na teoria, validado pela investigação e concebido para um crescimento deliberado. Percorra cada face: uma imagem a toda a largura e depois uma visão geral clara.",
+  "constructs.ctaBaseline": "Começar a avaliação inicial grátis",
+  "constructs.ctaModel": "Como o modelo funciona",
+  "constructs.faceOf": "Face {n} de 06",
+
   "faq.eyebrow": "Ajuda",
   "faq.title": "Perguntas frequentes",
   "faq.lede":
@@ -251,6 +280,8 @@ const pt: Dict = {
   "share.onNewTab": "Partilhar no {network} (abre num novo separador)",
   "share.email": "Partilhar por e-mail",
   "share.copy": "Copiar ligação",
+  "share.linkedin": "Publicar no LinkedIn",
+  "share.newTab": "(abre num novo separador)",
   "live.eyebrow": "Resultados dos programas em direto",
   "live.loading": "A carregar resultados em direto…",
   "live.emptyTitle": "Os resultados das turmas em direto vão aparecer aqui.",

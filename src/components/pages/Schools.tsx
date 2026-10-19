@@ -2,6 +2,7 @@ import { EnquiryForm } from "@/components/EnquiryForm";
 import { DEFAULT_LOCALE, type Locale } from "@/lib/i18n/config";
 import { pageI18n } from "@/lib/i18n/pages/t";
 import { enquiryStrings, localizeEnquiryFields } from "@/lib/i18n/pages/enquiry";
+import { fill } from "@/lib/i18n/pages/format";
 import { CaseStudyFeature, HowItWorks, OfferList } from "@/components/OfferBlocks";
 import { Button, PageHero, SectionHeading } from "@/components/ui";
 import { bookingUrl } from "@/lib/booking";
@@ -59,7 +60,10 @@ export function SchoolsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {
           <SectionHeading
             eyebrow={t("Pricing")}
             title={t("Seat packs or a whole-school quote.")}
-            description={`Classroom seat packs start at ${formatSeatPackPrice(SEAT_PACKS[0])} for ${SEAT_PACKS[0].seats} learners. For a grade or whole school, we’ll send you a quote.`}
+            description={fill(
+              t("Classroom seat packs start at {price} for {seats} learners. For a grade or whole school, we’ll send you a quote."),
+              { price: formatSeatPackPrice(SEAT_PACKS[0]), seats: SEAT_PACKS[0].seats },
+            )}
           />
           <div className="flex flex-col gap-2.5 sm:flex-row lg:justify-end">
             <Button href={L("/pricing#pilot")} variant="ghost">{t("See seat packs")}</Button>

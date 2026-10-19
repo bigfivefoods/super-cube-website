@@ -8,7 +8,6 @@ import {
   localizedPath,
   stripLocale,
   type PrefixedLocale,
-  type TranslatedPath,
 } from "@/lib/i18n/config";
 
 const base = site.url.replace(/\/$/, "");
@@ -40,13 +39,15 @@ export function pageLanguages(url: string): Record<string, string> {
  */
 export function localeMeta(opts: {
   locale: PrefixedLocale;
-  path: TranslatedPath;
+  path: string;
   title: string;
   description: string;
   absoluteTitle?: boolean;
   /** Share image (defaults to the site card). */
   image?: string;
   imageAlt?: string;
+  /** Keep out of search results (private / tokenised pages). */
+  noIndex?: boolean;
 }): Metadata {
   const url = absoluteUrl(localizedPath(opts.locale, opts.path));
   const title = opts.absoluteTitle ? opts.title : `${opts.title} | Super-Cube®`;
@@ -55,6 +56,9 @@ export function localeMeta(opts: {
     title: { absolute: title },
     description: opts.description,
     alternates: { canonical: url, languages: pageLanguages(url) },
+    ...(opts.noIndex
+      ? { robots: { index: false, follow: false, googleBot: { index: false, follow: false } } }
+      : {}),
     openGraph: {
       title,
       description: opts.description,
@@ -77,7 +81,7 @@ export type PageMetaInput = Parameters<typeof pageMeta>[0];
  * localised URL and the hreflang cluster lists every language.
  */
 export function localePageMeta(locale: PrefixedLocale, meta: PageMetaInput): Metadata {
-  if (!isTranslatedPath(meta.path)) throw new Error(`${meta.path} is not in TRANSLATED_PATHS`);
+  if (!isTranslatedPath(meta.path)) throw new Error(`${meta.path} is not a translated path`);
   return localeMeta({
     locale,
     path: meta.path,

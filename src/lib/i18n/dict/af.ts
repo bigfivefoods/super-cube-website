@@ -286,6 +286,8 @@ const af: Dict = {
   "share.onNewTab": "Deel op {network} (maak in ’n nuwe oortjie oop)",
   "share.email": "Deel per e-pos",
   "share.copy": "Kopieer skakel",
+  "share.linkedin": "Plaas op LinkedIn",
+  "share.newTab": "(maak in ’n nuwe oortjie oop)",
   "live.eyebrow": "Regstreekse programresultate",
   "live.loading": "Laai regstreekse resultate…",
   "live.emptyTitle": "Regstreekse groepresultate sal hier verskyn.",
