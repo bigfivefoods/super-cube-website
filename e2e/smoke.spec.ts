@@ -106,14 +106,19 @@ test.describe("Super-Cube smoke", () => {
     await page.goto(base + "/");
     const footer = page.locator("footer.site-footer");
     await expect(footer).toHaveCount(1);
-    await expect(footer.getByRole("link", { name: /part of big five learn/i })).toHaveAttribute(
-      "href",
-      "https://bigfivegroup.africa"
-    );
-    await expect(footer.getByRole("link", { name: /supplieradvisor/i })).toHaveAttribute(
-      "href",
-      "https://www.supplieradvisor.com"
-    );
+    // Big Five Group column, legal links and contact match bigfivegroup.africa (#69)
+    for (const [name, href] of [
+      [/^Big Five Group™/, "https://bigfivegroup.africa"],
+      [/^Big Five Learn/, "https://bigfivegroup.africa/leadership"],
+      [/^SupplierAdvisor®/, "https://www.supplieradvisor.com"],
+      [/^PAIA/, "https://bigfivegroup.africa/paia"],
+      [/^Accessibility/, "https://bigfivegroup.africa/accessibility"],
+      [/^WhatsApp/, /^https:\/\/wa\.me\/27825814215/],
+    ] as const) {
+      await expect(footer.getByRole("link", { name }).first(), String(name)).toHaveAttribute("href", href);
+    }
+    await expect(footer.getByRole("link", { name: /\+27 \(0\) 82 581 4215/ })).toHaveAttribute("href", "tel:+27825814215");
+    await expect(footer.getByText(/Big Five Foods \(Pty\) Ltd · Reg\. 2025\/108507\/07 · VAT 4280321847/)).toBeVisible();
     const profile = footer.getByRole("link", { name: "Company profile (PDF)", exact: true });
     await expect(profile).toHaveAttribute("href", "/super-cube-company-profile.pdf");
     await expect(profile).toHaveAttribute("download", "");

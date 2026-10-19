@@ -205,7 +205,7 @@ export function overallImpact(rows: CohortLearner[]): PairedResult | null {
 const r1 = (v: number) => (Number.isFinite(v) ? (Math.round(v * 10) / 10).toFixed(1) : "");
 const r2 = (v: number | null) => (v != null && Number.isFinite(v) ? (Math.round(v * 100) / 100).toFixed(2) : "");
 
-function csvCell(v: string | number): string {
+export function csvCell(v: string | number): string {
   const s = String(v);
   // Neutralise spreadsheet formulas and quote when needed
   const safe = /^[=+\-@\t\r]/.test(s) && !/^-?\d/.test(s) ? `'${s}` : s;

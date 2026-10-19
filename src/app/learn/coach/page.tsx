@@ -18,6 +18,8 @@ import {
   type LocalLmsState,
 } from "@/lib/lms/store";
 import { createClient } from "@/lib/supabase/client";
+import { syncCoachConsent } from "@/lib/lms/push-coach-progress";
+import { useOrgAdmin } from "@/lib/lms/use-org-admin";
 
 /** Current time (kept out of render so the React Compiler purity rule is satisfied). */
 const nowMs = () => Date.now();
@@ -61,6 +63,7 @@ export default function CoachToolsPage() {
 
 function CoachToolsInner() {
   const searchParams = useSearchParams();
+  const orgAdmin = useOrgAdmin();
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [roster, setRoster] = useState<RosterRow[]>([]);
@@ -200,6 +203,19 @@ function CoachToolsInner() {
       title="Coach & facilitator tools"
       subtitle="Share consented growth summaries and view cloud cohort roster when signed in as coach."
     >
+      {orgAdmin && (
+        <div className="learn-card mb-4 flex flex-wrap items-center justify-between gap-3" data-testid="org-results-link">
+          <div className="min-w-0">
+            <p className="learn-card-title">Organisation results</p>
+            <p className="learn-meta mt-0.5">
+              Before and after by Super-Cube® face, completion and engagement for your organisation, with CSV export.
+            </p>
+          </div>
+          <Link href="/learn/org/results" className="learn-btn learn-btn-primary">
+            Open results
+          </Link>
+        </div>
+      )}
       {packBanner && (
         <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-emerald-900/70">
@@ -239,8 +255,9 @@ function CoachToolsInner() {
             className="mt-1"
             checked={Boolean(state?.shareProgressWithCoach)}
             onChange={(e) => {
-              setShareProgressConsent(e.target.checked);
+              const next = setShareProgressConsent(e.target.checked);
               setState(loadLmsState());
+              void syncCoachConsent(next);
             }}
           />
           <span>
