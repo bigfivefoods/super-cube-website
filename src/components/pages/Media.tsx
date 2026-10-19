@@ -229,8 +229,16 @@ export function MediaView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {})
                 >
                   {t("Download cover (JPG)")}
                 </a>
-                <AmazonButton />
-                <KindleNote />
+                <AmazonButton
+                  soonLabel={t("Coming soon on Amazon")}
+                  buyLabel={t("Buy the paperback on Amazon")}
+                  ariaLabel={t("Buy the paperback on Amazon: Leadership Is Learnable (opens Amazon)")}
+                />
+                <KindleNote
+                  soonLabel={t("Kindle edition coming soon")}
+                  buyLabel={t("Buy the Kindle e-book on Amazon")}
+                  ariaLabel={t("Buy the Kindle e-book on Amazon: Leadership Is Learnable (opens Amazon)")}
+                />
               </div>
               <p className="mt-4 text-xs font-semibold text-ink">{t("How to cite")}</p>
               <p className="mt-1 rounded-xl border border-line bg-elevated p-3 font-mono text-[0.6875rem] leading-relaxed text-slate">

@@ -29,11 +29,13 @@ export function AmazonButton({
   className = "",
   soonLabel = "Coming soon on Amazon",
   buyLabel = "Buy the paperback on Amazon",
+  ariaLabel,
   dark = false,
 }: {
   className?: string;
   soonLabel?: string;
   buyLabel?: string;
+  ariaLabel?: string;
   dark?: boolean;
 }) {
   const url = amazonBuyUrl();
@@ -57,7 +59,7 @@ export function AmazonButton({
       className={`${base} sc-btn sc-btn-primary focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink ${className}`}
       data-testid="paid-book-amazon"
       data-insights="cta-amazon"
-      aria-label={`${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
+      aria-label={ariaLabel ?? `${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
     >
       {buyLabel}
     </a>
@@ -69,10 +71,12 @@ export function KindleNote({
   className = "",
   soonLabel = "Kindle edition coming soon",
   buyLabel = "Buy the Kindle e-book on Amazon",
+  ariaLabel,
 }: {
   className?: string;
   soonLabel?: string;
   buyLabel?: string;
+  ariaLabel?: string;
 }) {
   if (!amazonBuyUrl()) return null;
   const url = kindleBuyUrl();
@@ -93,20 +97,20 @@ export function KindleNote({
       className={`${base} border border-line-strong text-ink hover:bg-surface ${className}`}
       data-testid="paid-book-kindle"
       data-insights="cta-amazon-kindle"
-      aria-label={`${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
+      aria-label={ariaLabel ?? `${buyLabel}: ${PAID_BOOK.title} (opens Amazon)`}
     >
       {buyLabel}
     </a>
   );
 }
 
-function Cover({ sizes, className = "" }: { sizes: string; className?: string }) {
+function Cover({ sizes, alt, className = "" }: { sizes: string; alt: string; className?: string }) {
   return (
     <Image
       src={D.cover.src}
       width={D.cover.width}
       height={D.cover.height}
-      alt={`Cover of ${PAID_BOOK.title} by ${PAID_BOOK.author}: a glowing six-colour Super-Cube® on white`}
+      alt={alt}
       sizes={sizes}
       className={`h-auto w-full rounded-md shadow-[0_24px_60px_-20px_rgba(0,0,0,0.45)] ring-1 ring-black/10 dark:ring-white/10 ${className}`}
     />
@@ -125,7 +129,10 @@ export function PaidBookSection({ locale = DEFAULT_LOCALE }: { locale?: Locale }
     >
       <div className="container-site grid items-start gap-10 md:grid-cols-[minmax(0,0.42fr)_minmax(0,1fr)] lg:gap-16">
         <div className="mx-auto w-full max-w-[18rem] md:mx-0 md:max-w-none">
-          <Cover sizes="(min-width: 1024px) 360px, (min-width: 768px) 30vw, 288px" />
+          <Cover
+            sizes="(min-width: 1024px) 360px, (min-width: 768px) 30vw, 288px"
+            alt={t("Cover of Leadership Is Learnable by Dr Craig R. Muller: a glowing six-colour Super-Cube® on white")}
+          />
         </div>
         <div className="min-w-0">
           <p className="eyebrow">{t("Go deeper ·")}{" "}{t(D.edition)}</p>
@@ -150,8 +157,16 @@ export function PaidBookSection({ locale = DEFAULT_LOCALE }: { locale?: Locale }
             ))}
           </dl>
           <div className="mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center">
-            <AmazonButton />
-            <KindleNote />
+            <AmazonButton
+              soonLabel={t("Coming soon on Amazon")}
+              buyLabel={t("Buy the paperback on Amazon")}
+              ariaLabel={t("Buy the paperback on Amazon: Leadership Is Learnable (opens Amazon)")}
+            />
+            <KindleNote
+              soonLabel={t("Kindle edition coming soon")}
+              buyLabel={t("Buy the Kindle e-book on Amazon")}
+              ariaLabel={t("Buy the Kindle e-book on Amazon: Leadership Is Learnable (opens Amazon)")}
+            />
             <p className="text-sm text-muted">
               {amazonBuyUrl() ? (kindleBuyUrl() ? t("Paperback and Kindle out now") : t("Paperback out now")) : t("Paperback and Kindle")}{" "}{t("· English · by")}{" "}{t(PAID_BOOK.author)}
             </p>
@@ -209,8 +224,16 @@ export function PaidBookCard({ locale = DEFAULT_LOCALE,
         </p>
         <p className="mt-1 text-sm leading-relaxed text-slate">{t(body)}</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
-          <AmazonButton soonLabel={t(soonLabel)} buyLabel={t(buyLabel)} />
-          <KindleNote soonLabel={t(kindleSoonLabel)} />
+          <AmazonButton
+            soonLabel={t(soonLabel ?? "Coming soon on Amazon")}
+            buyLabel={t(buyLabel ?? "Buy the paperback on Amazon")}
+            ariaLabel={t("Buy the paperback on Amazon: Leadership Is Learnable (opens Amazon)")}
+          />
+          <KindleNote
+            soonLabel={t(kindleSoonLabel ?? "Kindle edition coming soon")}
+            buyLabel={t("Buy the Kindle e-book on Amazon")}
+            ariaLabel={t("Buy the Kindle e-book on Amazon: Leadership Is Learnable (opens Amazon)")}
+          />
           <Link
             href={L(`/book#${D.anchor}`)}
             hrefLang={hrefLang}
