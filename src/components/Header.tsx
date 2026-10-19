@@ -205,7 +205,7 @@ export function Header() {
           ))}
           {/* News joins the bar from 1280px; below that the bar keeps six items on one line (menu + footer link it). */}
           <Link
-            href="/news"
+            href={L("/news")}
             hrefLang={enLang("/news")}
             className={`${linkCls(linkActive(pathname, "/news"))} max-xl:hidden`}
             aria-current={linkActive(pathname, "/news") ? "page" : undefined}
