@@ -7,8 +7,10 @@
 /** Super-Cube® certificate IDs: SC-YYYYMMDD-<6–12 hex> */
 export const CERT_ID_RE = /^SC-\d{8}-[0-9A-F]{6,12}$/;
 
-/** Issuer shown on the public check (Super-Cube® is a Big Five Group programme). */
-export const VERIFY_ISSUER = "Big Five Group";
+import { CERT_ISSUER } from "@/lib/lms/certificate";
+
+/** Issuer shown on the public check: the same name the certificate prints. */
+export const VERIFY_ISSUER = CERT_ISSUER;
 
 /** Trim, upper-case and drop spaces so a pasted or hand-typed ID still matches. */
 export function normaliseCertId(raw: unknown): string {

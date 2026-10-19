@@ -29,14 +29,14 @@ test("public shape carries no scores, user id or cohort", () => {
   expect(Object.keys(pub).sort()).toEqual(["holderName", "id", "issuedAt", "programmeId", "revokedAt", "revoked"].sort());
 });
 
-test("Add to LinkedIn names Big Five Group as the issuing organisation", () => {
+test("Add to LinkedIn names Super-Cube® by Big Five Group as the issuing organisation", () => {
   const u = new URL(
     linkedInAddToProfileUrl(
       { id: "SC-20261004-1A2B3C4D5E", programmeId: "adults", issuedAt: "2026-10-04T10:00:00Z", siteOrigin: "https://www.super-cube.me" },
       VERIFY_ISSUER,
     ),
   );
-  expect(u.searchParams.get("organizationName")).toBe("Big Five Group");
+  expect(u.searchParams.get("organizationName")).toBe("Super-Cube® by Big Five Group");
   expect(u.searchParams.get("certUrl")).toBe("https://www.super-cube.me/verify/SC-20261004-1A2B3C4D5E");
 });
 

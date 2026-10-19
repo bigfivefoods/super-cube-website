@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { isCertId, normaliseCertId } from "@/lib/lms/verify";
+import { isCertId, normaliseCertId, VERIFY_ISSUER } from "@/lib/lms/verify";
 import { pageMeta } from "@/lib/seo";
 
 export const metadata: Metadata = pageMeta({
@@ -68,7 +68,7 @@ export default async function VerifySearchPage({ searchParams }: Props) {
         </form>
 
         <ul className="mt-8 space-y-2 text-sm leading-relaxed text-slate">
-          <li>· Certificates are issued by Big Five Group for the Super-Cube® leadership programmes.</li>
+          <li>· Certificates are issued by {VERIFY_ISSUER} for its leadership programmes.</li>
           <li>· The check shows only what is printed on the certificate. Scores, journals and contact details are never shown.</li>
           <li>· A certificate that is not in the registry should not be accepted.</li>
         </ul>

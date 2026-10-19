@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { constructs } from "@/lib/content";
 import {
+  CERT_ISSUER,
   credentialDetails,
   credentialName,
   issuedYearMonth,
@@ -30,7 +31,7 @@ test("verify URL and LinkedIn links point at the public verify page", () => {
   const add = new URL(linkedInAddToProfileUrl(cert));
   expect(add.origin + add.pathname).toBe("https://www.linkedin.com/profile/add");
   expect(add.searchParams.get("startTask")).toBe("CERTIFICATION_NAME");
-  expect(add.searchParams.get("organizationName")).toBe("Super-Cube®");
+  expect(add.searchParams.get("organizationName")).toBe("Super-Cube® by Big Five Group");
   expect(add.searchParams.get("certId")).toBe(cert.id);
   expect(add.searchParams.get("certUrl")).toBe(`${origin}/verify/${cert.id}`);
   // Issue month follows SAST, not UTC
@@ -74,4 +75,12 @@ test("certificate PDF is A4 landscape with the verify link and author", () => {
   // A long name still fits on one page
   const long = buildCertificatePdf({ ...cert, learnerName: "Nomvula Charlotte Dlamini-van der Merwe Mthembu", logo: null });
   expect(long.getNumberOfPages()).toBe(1);
+});
+
+test("every certificate surface names Super-Cube® by Big Five Group as the issuer", () => {
+  expect(CERT_ISSUER).toBe("Super-Cube® by Big Five Group");
+  expect(pdfSafe(CERT_ISSUER)).toBe(CERT_ISSUER);
+  expect(credentialDetails(cert).find((d) => d.label === "Issuing organisation")?.value).toBe(CERT_ISSUER);
+  // The LinkedIn deep link carries the ® as UTF-8 (%C2%AE), which LinkedIn renders.
+  expect(linkedInAddToProfileUrl(cert)).toContain("organizationName=Super-Cube%C2%AE+by+Big+Five+Group");
 });
