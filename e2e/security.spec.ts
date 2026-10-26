@@ -56,7 +56,7 @@ test.describe("security headers", () => {
 test.describe("access rules (signed out)", () => {
   test("private Learn pages send visitors to sign in", async ({ page }) => {
     test.skip(!authGate, "needs Supabase configured (EXPECT_AUTH_GATE=1)");
-    for (const path of ["/learn/coach", "/learn/report", "/learn/assessment/post", "/learn/org"]) {
+    for (const path of ["/learn/coach", "/learn/report", "/learn/assessment/post", "/learn/org", "/learn/cohorts"]) {
       await page.goto(path);
       await expect(page, path).toHaveURL(/\/login\?next=/);
     }
@@ -71,6 +71,8 @@ test.describe("access rules (signed out)", () => {
       request.post("/api/org/join", { data: { code: "NOPE" } }),
       request.post("/api/consent/guardian", { data: {} }),
       request.post("/api/account/delete", { data: {} }),
+      request.get("/api/cohorts"),
+      request.post("/api/cohorts", { data: { name: "Closed" } }),
     ];
     for (const res of await Promise.all(calls)) {
       expect([401, 403, 503], res.url()).toContain(res.status());

@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { cache } from "react";
 import { VerifyResult } from "@/components/pages/Verify";
 import { lookupCertificate } from "@/lib/lms/server/certificate-lookup";
+import { lookupOpenBadge } from "@/lib/lms/server/open-badges";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { normaliseCertId } from "@/lib/lms/verify";
 import { pageMeta } from "@/lib/seo";
 
@@ -27,11 +29,13 @@ export default async function VerifyCertificatePage({ params }: Props) {
   const id = normaliseCertId((await params).id);
   const result = await lookup(id);
   if (result.status === "invalid" || result.status === "not_found") notFound();
+  const openBadge = result.status === "unavailable" ? "unavailable" : (await lookupOpenBadge(createAdminClient(), id)).check.state;
   return (
     <VerifyResult
       id={id}
       status={result.status}
       certificate={result.status === "unavailable" ? undefined : result.certificate}
+      openBadge={result.status === "revoked" ? "revoked" : openBadge}
     />
   );
 }

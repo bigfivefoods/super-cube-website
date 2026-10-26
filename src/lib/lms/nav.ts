@@ -106,6 +106,7 @@ export const LEARN_SECONDARY_LINKS: {
   { href: "/learn/feedback", label: "Narrative + cube", group: "journaling" },
   // Account
   { href: "/learn/org", label: "Cohort / coach code", group: "account" },
+  { href: "/learn/cohorts", label: "Live cohorts", group: "account" },
   { href: "/learn/coach", label: "Coach tools", group: "account" },
   { href: "/pricing", label: "Plans & pricing", group: "account" },
 ];
@@ -168,6 +169,7 @@ export function isLearnNavActive(
     return (
       pathname.startsWith("/learn/account") ||
       pathname.startsWith("/learn/org") ||
+      pathname.startsWith("/learn/cohorts") ||
       pathname.startsWith("/learn/coach") ||
       pathname.startsWith("/learn/welcome") ||
       pathname.startsWith("/learn/programmes") ||

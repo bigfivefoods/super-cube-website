@@ -8,6 +8,7 @@ import {
   DEFAULT_ORIGIN,
 } from "@/lib/lms/certificate";
 import { VERIFY_ISSUER, type LookupResult } from "@/lib/lms/verify";
+import type { OpenBadgeState } from "@/lib/lms/open-badges/document";
 import { DEFAULT_LOCALE, localizedPath, type Locale } from "@/lib/i18n/config";
 import { fill } from "@/lib/i18n/pages/format";
 import { pageI18n } from "@/lib/i18n/pages/t";
@@ -121,11 +122,13 @@ export function VerifyResult({
   id,
   status,
   certificate,
+  openBadge = "none",
 }: {
   locale?: Locale;
   id: string;
   status: "found" | "revoked" | "unavailable";
   certificate?: Extract<LookupResult, { status: "found" | "revoked" }>["certificate"];
+  openBadge?: OpenBadgeState;
 }) {
   const { t, L } = pageI18n(locale);
   const url = verifyUrl(id, DEFAULT_ORIGIN);
@@ -198,6 +201,9 @@ export function VerifyResult({
               </Row>
             </dl>
 
+            <OpenBadgeStatus locale={locale} id={id} state={status === "revoked" ? "revoked" : openBadge} />
+            <OpenBadgeDownloads id={id} state={status === "revoked" ? "revoked" : openBadge} locale={locale} />
+
             {status === "found" && (
               <div className="mt-6 flex flex-wrap gap-3">
                 <a
@@ -238,5 +244,48 @@ export function VerifyResult({
         </div>
       </div>
     </section>
+  );
+}
+
+function OpenBadgeStatus({ locale, state }: { locale: Locale; id: string; state: OpenBadgeState }) {
+  const { t } = pageI18n(locale);
+  const copy: Record<OpenBadgeState, string> = {
+    valid: fill(t("This Open Badge 3.0 credential is signed by {issuer} and matches this certificate check."), {
+      issuer: VERIFY_ISSUER,
+    }),
+    revoked: t("This Open Badge was revoked, in line with this certificate check."),
+    unsigned: t("An Open Badge is on file for this certificate, but it is not signed yet."),
+    invalid: t("The Open Badge signature does not match the issuer."),
+    unchecked: t("An Open Badge is on file. This server cannot check the signature until the issuer key is configured."),
+    none: t("No Open Badge has been issued for this certificate yet."),
+    unavailable: t("Open Badge status could not be loaded."),
+  };
+  return (
+    <div className="mt-6 rounded-2xl border border-line bg-elevated px-5 py-4" data-testid="open-badge-status" data-status={state}>
+      <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-muted">{t("Open Badge 3.0")}</p>
+      <p className="mt-1 text-sm leading-relaxed text-ink">{copy[state]}</p>
+    </div>
+  );
+}
+
+function OpenBadgeDownloads({ id, state, locale }: { id: string; state: OpenBadgeState; locale: Locale }) {
+  const { t } = pageI18n(locale);
+  if (state !== "valid" && state !== "revoked" && state !== "unsigned" && state !== "unchecked") return null;
+  const base = `/credentials/${encodeURIComponent(id)}`;
+  return (
+    <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+      <a
+        href={`${base}?download=1`}
+        className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong px-5 text-sm font-semibold text-ink"
+      >
+        {t("Download Open Badge (JSON-LD)")}
+      </a>
+      <a
+        href={`${base}/image`}
+        className="inline-flex min-h-11 items-center justify-center rounded-full border border-line-strong px-5 text-sm font-semibold text-ink"
+      >
+        {t("Download badge image")}
+      </a>
+    </div>
   );
 }

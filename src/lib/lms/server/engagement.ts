@@ -4,6 +4,7 @@ import { dayKeyIn, SA_TIME_ZONE } from "@/lib/datetime";
 import { BADGES, earnedBadges, isBadgeId, type BadgeId, type StreakView } from "@/lib/lms/badges";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { consentCounts, type ConsentGrant } from "@/lib/lms/guardian-gate";
+import { ensureMilestoneCredentials } from "@/lib/lms/server/open-badges";
 import { isMinorLearner } from "@/lib/lms/server/share-links";
 import type { ProgrammeId } from "@/lib/programmes";
 
@@ -116,6 +117,7 @@ export async function awardBadges(
       got.map((badgeId) => ({ user_id: userId, kind: "badge_awarded", ref: badgeId, local_day: dayKeyIn(SA_TIME_ZONE) })),
     );
   }
+  if (got.length) await ensureMilestoneCredentials(admin, userId, undefined, got);
   return got.map((badgeId) => ({ badgeId, name: BADGES[badgeId].name }));
 }
 
@@ -176,6 +178,7 @@ export async function getEngagement(admin: SupabaseClient, userId: string): Prom
       .eq("user_id", userId)
       .is("revoked_at", null),
     minorMayGetPush(admin, userId),
+    ensureMilestoneCredentials(admin, userId),
   ]);
   const s = streak.data as
     | { current_days: number; best_days: number; freezes_available: number; last_day: string | null }

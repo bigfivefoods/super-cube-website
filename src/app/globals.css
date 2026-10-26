@@ -673,6 +673,11 @@ html.dark .learn-btn-primary {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
+.learn-card :is(input, select, textarea):focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
 .learn-choice {
   border-radius: 0.75rem;
   border: 1px solid var(--line);
