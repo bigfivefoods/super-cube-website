@@ -27,6 +27,6 @@ The proof is a W3C Data Integrity `DataIntegrityProof` using `eddsa-jcs-2022` (E
 
 ## Live cohorts
 
-Migration `supabase/migrations/20261026120000_open_badges_and_cohorts.sql` adds cohort, session, attendance and discussion tables. It is additive. Apply it to a Supabase branch and review it before production. Rollback: `supabase/rollback/20261026120000_open_badges_and_cohorts.down.sql`.
+Migration `supabase/migrations/20261026120100_open_badges_and_cohorts.sql` adds cohort, session, attendance and discussion tables. It is additive. Apply it to a Supabase branch and review it before production. Rollback: `supabase/rollback/20261026120100_open_badges_and_cohorts.down.sql`.
 
 A cohort is visible only to its members, its facilitators, and that organisation's admins. Another coach in the same organisation does not see it. Learners see their own attendance, not anyone else's. Join links are https only. Discussion posts can be hidden or the thread locked by a facilitator or an organisation admin.
