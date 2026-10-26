@@ -144,6 +144,10 @@ test.describe("Super-Cube smoke", () => {
     }
     await expect(footer.getByRole("link", { name: /\+27 \(0\) 82 581 4215/ })).toHaveAttribute("href", "tel:+27825814215");
     await expect(footer.getByText(/Big Five Foods \(Pty\) Ltd · Reg\. 2025\/108507\/07 · VAT 4280321847/)).toBeVisible();
+    // The Big Five Group mission lines, same wording as bigfivegroup.africa, above the Super-Cube® tagline.
+    await expect(footer.getByText("One group. One mission. We exist so Africa can prosper — feed, educate and empower.")).toBeVisible();
+    await expect(footer.getByText("Regenerative. Sovereign. On-chain. On-purpose.")).toBeVisible();
+    await expect(footer.getByText("Human-centric leadership, developed from the core outward.")).toBeVisible();
     const profile = footer.getByRole("link", { name: "Company profile (PDF)", exact: true });
     await expect(profile).toHaveAttribute("href", "/super-cube-company-profile.pdf");
     await expect(profile).toHaveAttribute("download", "");

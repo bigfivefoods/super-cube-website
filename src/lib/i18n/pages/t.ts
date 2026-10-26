@@ -1,10 +1,4 @@
 import { DEFAULT_LOCALE, isEnglishOnlyHref, localizedPath, type Locale, type PrefixedLocale } from "../config";
-import fr from "../messages/fr.json";
-import ar from "../messages/ar.json";
-import pt from "../messages/pt.json";
-import sw from "../messages/sw.json";
-import zu from "../messages/zu.json";
-import af from "../messages/af.json";
 
 /**
  * Inner-page translations (server only: Server Components and metadata; never import this from a
@@ -15,10 +9,46 @@ import af from "../messages/af.json";
  * string (whitespace collapsed) to its translation. A string with no entry stays English. Catalogue
  * rules (tests/unit/i18n-messages.spec.ts): every language has the same keys, Super-Cube® keeps
  * its ®, numbers, URLs and {placeholders} survive translation.
+ *
+ * Catalogues load one language at a time, the first time that language is rendered. Importing all
+ * six here (about 1.8 MB of JSON) made the server module parse every language before it could send
+ * a byte, which showed up as a slow response on /leadership-challenges and /why-leadership.
  */
 type Catalogue = Record<string, string>;
 
-export const MESSAGES: Record<PrefixedLocale, Catalogue> = { fr, ar, pt, sw, zu, af };
+const catalogues: Partial<Record<PrefixedLocale, Catalogue>> = {};
+
+function asCatalogue(mod: unknown): Catalogue {
+  const wrapped = mod as { default?: unknown };
+  const body =
+    wrapped && typeof wrapped.default === "object" && wrapped.default && !Array.isArray(wrapped.default)
+      ? wrapped.default
+      : mod;
+  return body as Catalogue;
+}
+
+/** The catalogue for `locale`, parsed on first use (not at module load). */
+function catalogueOf(locale: PrefixedLocale): Catalogue {
+  const hit = catalogues[locale];
+  if (hit) return hit;
+  // One explicit require per language so the bundler can keep each JSON as its own chunk.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const loaded = asCatalogue(
+    locale === "fr"
+      ? require("../messages/fr.json")
+      : locale === "ar"
+        ? require("../messages/ar.json")
+        : locale === "pt"
+          ? require("../messages/pt.json")
+          : locale === "sw"
+            ? require("../messages/sw.json")
+            : locale === "zu"
+              ? require("../messages/zu.json")
+              : require("../messages/af.json"),
+  );
+  catalogues[locale] = loaded;
+  return loaded;
+}
 
 /** A translator: strings are looked up; anything else (numbers, elements, undefined) passes through. */
 export type T = <V>(value: V) => V;
@@ -45,7 +75,7 @@ const translatedValues: Partial<Record<PrefixedLocale, Set<string>>> = {};
 
 /** Is `key` already a translation in `locale`? (A prop translated by the page and again by a component.) */
 function isTranslation(locale: PrefixedLocale, key: string): boolean {
-  const set = (translatedValues[locale] ??= new Set(Object.values(MESSAGES[locale] ?? {}).map(messageKey)));
+  const set = (translatedValues[locale] ??= new Set(Object.values(catalogueOf(locale)).map(messageKey)));
   return set.has(key);
 }
 
@@ -54,7 +84,7 @@ export function translateText(locale: Locale, s: string): string {
   if (locale === DEFAULT_LOCALE) return s;
   const key = messageKey(s);
   if (!key || !/\p{L}/u.test(key)) return s;
-  const hit = MESSAGES[locale as PrefixedLocale]?.[key];
+  const hit = catalogueOf(locale as PrefixedLocale)[key];
   if (hit === undefined) {
     if (!isTranslation(locale as PrefixedLocale, key)) reportMissing(locale, key);
     return s;

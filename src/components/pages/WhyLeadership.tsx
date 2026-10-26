@@ -45,12 +45,13 @@ export function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: Locale
         visual={
           <figure className="mx-auto w-full max-w-[17rem] overflow-hidden rounded-2xl border border-white/15 bg-elevated/95 p-4 shadow-xl sm:max-w-[19rem] lg:mx-0 lg:ml-auto lg:max-w-[22rem]">
             <div className="relative mx-auto aspect-[1280/811] w-full">
+              {/* Fixed box: width/height give a 1x/2x srcset instead of every breakpoint. */}
               <Image
                 src="/images/sdgs/sdg-logo.png"
                 alt="United Nations Sustainable Development Goals"
-                fill
-                className="object-contain object-center"
-                sizes="(max-width: 1024px) 19rem, 22rem"
+                width={480}
+                height={304}
+                className="h-full w-full object-contain object-center"
                 priority
               />
             </div>
@@ -168,40 +169,28 @@ export function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: Locale
 
           <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 md:grid-cols-4 xl:grid-cols-6">
             {sdgGoals.map((goal) => (
-              <article
-                key={goal.id}
-                className="group flex flex-col overflow-hidden sc-card shadow-[0_1px_0_rgba(0,0,0,0.03)] transition hover:shadow-md"
-              >
-                {/* Official UN SDG icon */}
-                <div className="relative aspect-square w-full overflow-hidden bg-elevated">
+              <article key={goal.id} className="group sc-card wl-card">
+                {/* Official UN SDG icon. Fixed 180px: 1x/2x srcset, not every breakpoint. */}
+                <div className="wl-icon">
                   <Image
                     src={goal.icon}
                     alt={`SDG ${goal.id}: ${goal.short}`}
-                    fill
-                    className="object-cover object-center transition duration-300 group-hover:scale-[1.03]"
-                    sizes="(max-width: 640px) 50vw, (max-width: 1280px) 25vw, 180px"
+                    width={180}
+                    height={180}
+                    className="wl-img"
                   />
                 </div>
-                <div
-                  className="flex flex-1 flex-col border-t border-line p-3 sm:p-3.5"
-                  style={{ background: goal.soft }}
-                >
-                  <p
-                    className="text-[0.65rem] font-bold uppercase tracking-[0.1em] face-ink"
-                    style={faceInkStyle(goal.color, goal.soft)}
-                  >
+                <div className="wl-body" style={{ background: goal.soft }}>
+                  <p className="wl-kicker face-ink" style={faceInkStyle(goal.color, goal.soft)}>
                     {t("Goal")}{" "}{t(goal.id)}
                   </p>
-                  <p className="mt-1 text-sm font-semibold leading-snug tracking-tight text-ink">
+                  <p className="wl-name">
                     {t(goal.short)}
                   </p>
-                  <p className="mt-1.5 text-[0.7rem] leading-snug text-slate sm:text-xs">
+                  <p className="wl-title">
                     {t(goal.title)}
                   </p>
-                  <p
-                    className="mt-2 text-[0.65rem] font-semibold uppercase tracking-[0.08em] face-ink"
-                    style={faceInkStyle(goal.color, goal.soft)}
-                  >
+                  <p className="wl-focus face-ink" style={faceInkStyle(goal.color, goal.soft)}>
                     {t(goal.focus)}
                   </p>
                 </div>
@@ -306,7 +295,7 @@ export function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: Locale
                       return (
                         <span
                           key={id}
-                          className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[0.65rem] font-semibold text-white"
+                          className="wl-chip"
                           style={{ background: g.color }}
                           title={t(g.short)}
                         >
