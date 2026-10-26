@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { completionRate, faceRows, funnelRows, orgResultsCsv, overallRow, statsRow, type OrgResultsRaw } from "@/lib/lms/org-results";
+import { mergeShareConsent } from "@/lib/lms/sync";
 
 const ROOT = path.resolve(__dirname, "../..");
 
@@ -81,8 +82,7 @@ test("org_results() counts only learners who currently share, and staff RLS foll
   expect(api).not.toContain('reason: "no_consent"');
 });
 
-test("a later 'stop sharing' wins a cloud merge over an older 'share'", async () => {
-  const { mergeShareConsent } = await import("@/lib/lms/sync");
+test("a later 'stop sharing' wins a cloud merge over an older 'share'", () => {
   type S = Parameters<typeof mergeShareConsent>[0];
   const on = { shareProgressWithCoach: true, shareProgressChangedAt: "2026-10-01T08:00:00Z" } as S;
   const off = { shareProgressWithCoach: false, shareProgressChangedAt: "2026-10-18T08:00:00Z" } as S;
