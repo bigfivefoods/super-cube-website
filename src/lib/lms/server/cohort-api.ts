@@ -34,8 +34,7 @@ export function isUuid(value: string): boolean {
 }
 
 /** Map a Postgres rejection to a response that does not leak SQL. */
-export function dbError(error: { message?: string; code?: string } | null): NextResponse | null {
-  if (!error) return null;
+export function dbError(error: { message?: string; code?: string }): NextResponse {
   const message = error.message ?? "";
   if (error.code === "42501" || /row-level security|permission denied/i.test(message)) {
     return json({ error: "forbidden" }, 403);
@@ -59,8 +58,7 @@ export async function listCohorts(supabase: SupabaseClient, userId: string) {
       .order("start_on", { ascending: true }),
     staffOrgs(supabase, userId),
   ]);
-  const rejected = dbError(error);
-  if (rejected) return rejected;
+  if (error) return dbError(error);
   return json({
     cohorts: (cohorts ?? []).map((row) => {
       const org = embed(row.organisations);
@@ -107,8 +105,7 @@ export async function createCohort(supabase: SupabaseClient, user: User, body: R
     })
     .select("id")
     .single();
-  const rejected = dbError(error);
-  if (rejected || !created) return rejected ?? json({ error: "invalid" }, 400);
+  if (error || !created) return error ? dbError(error) : json({ error: "invalid" }, 400);
 
   const displayName = await ownDisplayName(supabase, user, orgId);
   const member = await supabase.from("cohort_members").insert({
@@ -117,7 +114,7 @@ export async function createCohort(supabase: SupabaseClient, user: User, body: R
     role: "facilitator",
     display_name: displayName,
   });
-  if (member.error) return dbError(member.error) ?? json({ error: "invalid" }, 400);
+  if (member.error) return dbError(member.error);
 
   const schedule = body.schedule;
   if (schedule && typeof schedule === "object") {
@@ -478,7 +475,7 @@ async function insertSessions(supabase: SupabaseClient, userId: string, cohortId
       created_by: userId,
     })),
   );
-  return error ? (dbError(error) ?? json({ error: "invalid" }, 400)) : null;
+  return error ? dbError(error) : null;
 }
 
 async function staffOrgs(supabase: SupabaseClient, userId: string): Promise<Org[]> {

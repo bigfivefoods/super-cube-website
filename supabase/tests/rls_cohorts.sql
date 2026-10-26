@@ -72,6 +72,7 @@ values (
 ) on conflict (id) do nothing;
 
 create temp table results (test text, pass boolean) on commit drop;
+grant all on results to anon, authenticated;
 
 create or replace function pg_temp.as_user(uid text) returns void language plpgsql as $$
 begin
@@ -107,7 +108,8 @@ on conflict do nothing;
 select pg_temp.as_user('00000000-0000-0000-0000-0000000000b1');
 set local role authenticated;
 insert into results select 'learner sees cohort', count(*) = 1 from public.cohorts;
-insert into results select 'learner sees join link row', count(*) = 1 from public.cohort_sessions;
+insert into results select 'learner sees both sessions', count(*) = 2 from public.cohort_sessions;
+insert into results select 'learner sees the join link', count(*) = 1 from public.cohort_sessions where join_url is not null;
 insert into results select 'learner sees only own attendance', count(*) = 1 from public.cohort_attendance;
 insert into results select 'learner sees discussion', count(*) = 1 from public.cohort_posts;
 

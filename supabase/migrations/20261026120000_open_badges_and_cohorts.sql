@@ -40,8 +40,9 @@ alter table public.open_badge_credentials enable row level security;
 revoke all on public.open_badge_credentials from public, anon, authenticated;
 grant select, insert, update, delete on public.open_badge_credentials to service_role;
 
--- One public credential. No user id, no list. Revocation follows the certificate
+-- One credential, no user id and no list. Revocation follows the certificate
 -- or milestone badge as well as this row, so /verify and this lookup agree.
+-- Only the service role may call it. Public checks go through the site routes.
 create or replace function public.open_badge_credential(p_id text)
 returns table (
   id text,
@@ -69,8 +70,8 @@ as $$
   limit 1;
 $$;
 
-revoke all on function public.open_badge_credential(text) from public;
-grant execute on function public.open_badge_credential(text) to anon, authenticated, service_role;
+revoke all on function public.open_badge_credential(text) from public, anon, authenticated;
+grant execute on function public.open_badge_credential(text) to service_role;
 
 -- ---------------------------------------------------------------------------
 -- Cohorts (a scheduled run inside an organisation)
@@ -152,6 +153,15 @@ create index if not exists cohort_members_user_idx on public.cohort_members (use
 create index if not exists cohort_sessions_when_idx on public.cohort_sessions (cohort_id, starts_at);
 create index if not exists cohort_threads_cohort_idx on public.cohort_threads (cohort_id, created_at);
 create index if not exists cohort_posts_thread_idx on public.cohort_posts (thread_id, created_at);
+create index if not exists cohorts_created_by_idx on public.cohorts (created_by);
+create index if not exists cohort_attendance_user_idx on public.cohort_attendance (user_id);
+create index if not exists cohort_attendance_marked_by_idx on public.cohort_attendance (marked_by);
+create index if not exists cohort_posts_author_idx on public.cohort_posts (author_id);
+create index if not exists cohort_posts_hidden_by_idx on public.cohort_posts (hidden_by);
+create index if not exists cohort_sessions_created_by_idx on public.cohort_sessions (created_by);
+create index if not exists cohort_threads_created_by_idx on public.cohort_threads (created_by);
+create index if not exists cohort_threads_session_idx on public.cohort_threads (session_id);
+create index if not exists open_badge_user_idx on public.open_badge_credentials (user_id);
 
 alter table public.cohorts enable row level security;
 alter table public.cohort_members enable row level security;
@@ -187,10 +197,10 @@ as $$
         private.is_org_admin(c.org_id)
         or exists (
           select 1 from public.cohort_members m
-          where m.cohort_id = c.id and m.user_id = auth.uid()
+          where m.cohort_id = c.id and m.user_id = (select auth.uid())
         )
         or (
-          c.created_by = auth.uid()
+          c.created_by = (select auth.uid())
           and private.can_staff_org(c.org_id)
         )
       )
@@ -213,7 +223,7 @@ as $$
         or exists (
           select 1 from public.cohort_members m
           where m.cohort_id = c.id
-            and m.user_id = auth.uid()
+            and m.user_id = (select auth.uid())
             and m.role = 'facilitator'
         )
       )
@@ -333,7 +343,7 @@ create policy "cohorts_select" on public.cohorts
 drop policy if exists "cohorts_insert" on public.cohorts;
 create policy "cohorts_insert" on public.cohorts
   for insert to authenticated
-  with check (created_by = auth.uid() and private.can_staff_org(org_id));
+  with check (created_by = (select auth.uid()) and private.can_staff_org(org_id));
 
 drop policy if exists "cohorts_update" on public.cohorts;
 create policy "cohorts_update" on public.cohorts
@@ -351,12 +361,12 @@ drop policy if exists "cohort_members_insert_creator" on public.cohort_members;
 create policy "cohort_members_insert_creator" on public.cohort_members
   for insert to authenticated
   with check (
-    user_id = auth.uid()
+    user_id = (select auth.uid())
     and role = 'facilitator'
     and exists (
       select 1 from public.cohorts c
       where c.id = cohort_id
-        and c.created_by = auth.uid()
+        and c.created_by = (select auth.uid())
         and private.can_staff_org(c.org_id)
     )
   );
@@ -379,7 +389,7 @@ create policy "cohort_members_insert_staff" on public.cohort_members
 drop policy if exists "cohort_members_delete" on public.cohort_members;
 create policy "cohort_members_delete" on public.cohort_members
   for delete to authenticated
-  using (user_id = auth.uid() or private.can_facilitate_cohort(cohort_id));
+  using (user_id = (select auth.uid()) or private.can_facilitate_cohort(cohort_id));
 
 -- Sessions, including the join link, are part of the cohort.
 drop policy if exists "cohort_sessions_select" on public.cohort_sessions;
@@ -390,7 +400,7 @@ create policy "cohort_sessions_select" on public.cohort_sessions
 drop policy if exists "cohort_sessions_write" on public.cohort_sessions;
 create policy "cohort_sessions_write" on public.cohort_sessions
   for insert to authenticated
-  with check (private.can_facilitate_cohort(cohort_id) and created_by = auth.uid());
+  with check (private.can_facilitate_cohort(cohort_id) and created_by = (select auth.uid()));
 
 drop policy if exists "cohort_sessions_update" on public.cohort_sessions;
 create policy "cohort_sessions_update" on public.cohort_sessions
@@ -409,7 +419,7 @@ create policy "cohort_attendance_select" on public.cohort_attendance
   for select to authenticated
   using (
     (
-      user_id = auth.uid()
+      user_id = (select auth.uid())
       and exists (
         select 1 from public.cohort_sessions s
         where s.id = session_id and private.can_see_cohort(s.cohort_id)
@@ -425,7 +435,7 @@ drop policy if exists "cohort_attendance_write" on public.cohort_attendance;
 create policy "cohort_attendance_write" on public.cohort_attendance
   for insert to authenticated
   with check (
-    marked_by = auth.uid()
+    marked_by = (select auth.uid())
     and exists (
       select 1
       from public.cohort_sessions s
@@ -444,7 +454,7 @@ create policy "cohort_attendance_update" on public.cohort_attendance
     )
   )
   with check (
-    marked_by = auth.uid()
+    marked_by = (select auth.uid())
     and exists (
       select 1 from public.cohort_sessions s
       where s.id = session_id and private.can_facilitate_cohort(s.cohort_id)
@@ -464,7 +474,7 @@ drop policy if exists "cohort_threads_insert" on public.cohort_threads;
 create policy "cohort_threads_insert" on public.cohort_threads
   for insert to authenticated
   with check (
-    created_by = auth.uid()
+    created_by = (select auth.uid())
     and hidden = false
     and locked = false
     and private.can_see_cohort(cohort_id)
@@ -493,7 +503,7 @@ drop policy if exists "cohort_posts_insert" on public.cohort_posts;
 create policy "cohort_posts_insert" on public.cohort_posts
   for insert to authenticated
   with check (
-    author_id = auth.uid()
+    author_id = (select auth.uid())
     and hidden = false
     and exists (
       select 1 from public.cohort_threads t
@@ -508,7 +518,7 @@ drop policy if exists "cohort_posts_update_author" on public.cohort_posts;
 create policy "cohort_posts_update_author" on public.cohort_posts
   for update to authenticated
   using (
-    author_id = auth.uid()
+    author_id = (select auth.uid())
     and hidden = false
     and exists (
       select 1 from public.cohort_threads t
@@ -518,7 +528,7 @@ create policy "cohort_posts_update_author" on public.cohort_posts
         and private.can_see_cohort(t.cohort_id)
     )
   )
-  with check (author_id = auth.uid() and hidden = false);
+  with check (author_id = (select auth.uid()) and hidden = false);
 
 drop policy if exists "cohort_posts_update_moderator" on public.cohort_posts;
 create policy "cohort_posts_update_moderator" on public.cohort_posts

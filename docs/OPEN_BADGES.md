@@ -23,6 +23,8 @@ The issuer id inside every credential is `https://www.super-cube.me/issuer/super
 
 The proof is a W3C Data Integrity `DataIntegrityProof` using `eddsa-jcs-2022` (Ed25519 over JCS, from the Data Integrity EdDSA Cryptosuites). The email is stored only as an Open Badges `sha256$` IdentityHash. The holder name stays on `/verify`, which already shows the name printed on the certificate.
 
+`open_badge_credential(id)` is callable by the service role only. It returns one row and folds in certificate or milestone revocation. Visitors use the site routes above, not the database API.
+
 ## Live cohorts
 
 Migration `supabase/migrations/20261026120000_open_badges_and_cohorts.sql` adds cohort, session, attendance and discussion tables. It is additive. Apply it to a Supabase branch and review it before production. Rollback: `supabase/rollback/20261026120000_open_badges_and_cohorts.down.sql`.
