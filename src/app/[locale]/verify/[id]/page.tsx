@@ -6,6 +6,8 @@ import { isPrefixedLocale } from "@/lib/i18n";
 import { fill } from "@/lib/i18n/pages/format";
 import { translateText } from "@/lib/i18n/pages/t";
 import { lookupCertificate } from "@/lib/lms/server/certificate-lookup";
+import { lookupOpenBadge } from "@/lib/lms/server/open-badges";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { normaliseCertId } from "@/lib/lms/verify";
 import { localeMeta } from "@/lib/seo";
 
@@ -37,12 +39,14 @@ export default async function LocaleVerifyCertificatePage({ params }: Props) {
   const id = normaliseCertId(raw);
   const result = await lookup(id);
   if (result.status === "invalid" || result.status === "not_found") notFound();
+  const openBadge = result.status === "unavailable" ? "unavailable" : (await lookupOpenBadge(createAdminClient(), id)).check.state;
   return (
     <VerifyResult
       locale={locale}
       id={id}
       status={result.status}
       certificate={result.status === "unavailable" ? undefined : result.certificate}
+      openBadge={result.status === "revoked" ? "revoked" : openBadge}
     />
   );
 }

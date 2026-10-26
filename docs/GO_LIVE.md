@@ -32,6 +32,16 @@
 | `RESEND_API_KEY` | optional Resend for welcome emails |
 | `EMAIL_FROM` | e.g. `Super-Cube® Learn <onboarding@yourdomain>` |
 | `NEXT_PUBLIC_SENTRY_DSN` | optional browser Sentry |
+| `OB3_SIGNING_PRIVATE_KEY` | server only. Ed25519 PKCS#8 PEM (newlines as `\n`). Signs Open Badges. Do not commit it. |
+| `OB3_SIGNING_PUBLIC_KEY` | optional SPKI PEM. Needed only on a deploy that verifies badges and does not hold the private key. |
+
+Generate the signing key locally and paste the PEM into Vercel. Do not put it in git:
+
+```bash
+node -e "const {generateKeyPairSync}=require('crypto'); const {privateKey,publicKey}=generateKeyPairSync('ed25519'); console.log(privateKey.export({type:'pkcs8',format:'pem'})); console.log(publicKey.export({type:'spki',format:'pem'}));"
+```
+
+Without `OB3_SIGNING_PRIVATE_KEY`, certificates still issue and `/verify` still works. Open Badges are stored unsigned until the key is set. See `docs/OPEN_BADGES.md`.
 
 Redeploy after saving env.
 

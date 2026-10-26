@@ -106,6 +106,7 @@ export function EngagementPanel() {
       <ul className="mt-2 grid grid-cols-2 gap-2 lg:grid-cols-3" data-testid="badges">
         {BADGE_IDS.map((id) => {
           const at = earned.get(id);
+          const credentialId = view?.badges.find((badge) => badge.badgeId === id)?.id;
           return (
             <li
               key={id}
@@ -129,6 +130,14 @@ export function EngagementPanel() {
                 <span className="block text-[0.75rem] leading-snug text-slate">
                   {at ? `Earned ${formatDateZA(at)}` : BADGES[id].criteria}
                 </span>
+                {at && credentialId && (
+                  <Link
+                    href={`/badges/${encodeURIComponent(credentialId)}`}
+                    className="mt-1 inline-block text-[0.75rem] font-semibold text-ink underline underline-offset-2"
+                  >
+                    Open Badge
+                  </Link>
+                )}
               </span>
             </li>
           );

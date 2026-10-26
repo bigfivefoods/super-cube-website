@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { requireUser } from "@/lib/lms/server/context";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { loadLearning } from "@/lib/lms/server/learning";
+import { ensureCertificateCredential } from "@/lib/lms/server/open-badges";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 
 function newCertificateId(now = new Date()): string {
@@ -34,7 +35,16 @@ export async function POST(request: Request) {
     .eq("programme_id", programmeId)
     .eq("revoked", false)
     .maybeSingle();
-  if (existing) return NextResponse.json({ ok: true, certificate: existing, existing: true });
+  if (existing) {
+    const openBadge = await ensureCertificateCredential(ctx.admin, {
+      certificateId: existing.id,
+      programmeId,
+      issuedAt: existing.issued_at,
+      email: ctx.user.email,
+      userId: ctx.user.id,
+    });
+    return NextResponse.json({ ok: true, certificate: existing, existing: true, openBadge });
+  }
 
   const ent = await getServerEntitlement(ctx.admin, ctx.user.id);
   if (!isEntitled(ent)) return NextResponse.json({ error: "payment_required" }, { status: 402 });
@@ -78,7 +88,16 @@ export async function POST(request: Request) {
       .insert(row)
       .select("id, learner_name, programme_id, pre_overall, post_overall, growth, issued_at")
       .single();
-    if (!error) return NextResponse.json({ ok: true, certificate: data });
+    if (!error) {
+      const openBadge = await ensureCertificateCredential(ctx.admin, {
+        certificateId: data.id,
+        programmeId,
+        issuedAt: data.issued_at,
+        email: ctx.user.email,
+        userId: ctx.user.id,
+      });
+      return NextResponse.json({ ok: true, certificate: data, openBadge });
+    }
     if (!/duplicate key/i.test(error.message)) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }

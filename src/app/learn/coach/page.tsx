@@ -203,6 +203,17 @@ function CoachToolsInner() {
       title="Coach & facilitator tools"
       subtitle="Share consented growth summaries and view cloud cohort roster when signed in as coach."
     >
+      <div className="learn-card mb-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="min-w-0">
+          <p className="learn-card-title">Live cohorts</p>
+          <p className="learn-meta mt-0.5">
+            Schedule facilitator-led Super-Cube® sessions, take attendance and keep the discussion inside the cohort.
+          </p>
+        </div>
+        <Link href="/learn/cohorts" className="learn-btn learn-btn-primary">
+          Open cohorts
+        </Link>
+      </div>
       {orgAdmin && (
         <div className="learn-card mb-4 flex flex-wrap items-center justify-between gap-3" data-testid="org-results-link">
           <div className="min-w-0">

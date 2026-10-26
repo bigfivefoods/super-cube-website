@@ -209,6 +209,12 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
                 <a className="learn-btn learn-btn-ghost" href={verifyUrl(cert.id)} target="_blank" rel="noopener">
                   Open verify page
                 </a>
+                <a className="learn-btn learn-btn-ghost" href={`/credentials/${encodeURIComponent(cert.id)}?download=1`}>
+                  Download Open Badge (JSON-LD)
+                </a>
+                <a className="learn-btn learn-btn-ghost" href={`/credentials/${encodeURIComponent(cert.id)}/image`}>
+                  Download badge image
+                </a>
               </div>
 
               {!minor && (

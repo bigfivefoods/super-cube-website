@@ -171,6 +171,7 @@ export async function revokeCertificateAction(_prev: ActionState, form: FormData
     .eq("id", id)
     .eq("revoked", false);
   if (error) return { error: error.message };
+  await ctx.db.from("open_badge_credentials").update({ revoked: true }).eq("certificate_id", id);
   await audit(ctx.db, ctx.email, "certificate.revoke", "certificate", id, { reason });
   return done(`Certificate ${id} revoked.`);
 }
@@ -184,6 +185,9 @@ export async function reinstateCertificateAction(form: FormData) {
     .from("certificates")
     .update({ revoked: false, revoked_at: null, revoked_reason: null })
     .eq("id", id);
-  if (!error) await audit(ctx.db, ctx.email, "certificate.reinstate", "certificate", id);
+  if (!error) {
+    await ctx.db.from("open_badge_credentials").update({ revoked: false }).eq("certificate_id", id);
+    await audit(ctx.db, ctx.email, "certificate.reinstate", "certificate", id);
+  }
   revalidatePath("/admin");
 }
