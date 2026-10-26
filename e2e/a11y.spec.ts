@@ -149,8 +149,8 @@ test.describe("keyboard and screen reader", () => {
     });
     await page.goto("/learn/assessment/pre");
     const first = page.locator("fieldset").first();
-    await expect(first.getByText("Strongly disagree")).toBeVisible();
-    await expect(first.getByText("Strongly agree")).toBeVisible();
+    await expect(first.getByText("Strongly disagree", { exact: true })).toBeVisible();
+    await expect(first.getByText("Strongly agree", { exact: true })).toBeVisible();
     const btn = first.getByRole("button", { name: /^3\b/ });
     await btn.focus();
     const outline = await btn.evaluate((el) => getComputedStyle(el).outlineStyle + " " + getComputedStyle(el).boxShadow);
