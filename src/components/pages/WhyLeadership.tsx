@@ -33,8 +33,8 @@ function goalById(id: number) {
   return sdgGoals.find((g) => g.id === id)!;
 }
 
-export function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

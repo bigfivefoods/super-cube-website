@@ -80,14 +80,14 @@ const LABEL_POS: Record<string, number> = {
   society: 150,
 };
 
-export function LeadershipCircles({ locale = DEFAULT_LOCALE,
+export async function LeadershipCircles({ locale = DEFAULT_LOCALE,
   className = "",
   showLegend = true,
 }: { locale?: Locale;
   className?: string;
   showLegend?: boolean;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   const size = 420;
   const cx = size / 2;
   const cy = size / 2;

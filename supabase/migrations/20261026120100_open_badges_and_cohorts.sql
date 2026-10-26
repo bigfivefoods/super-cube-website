@@ -1,6 +1,6 @@
 -- Open Badges 3.0 credentials and facilitator-led cohorts.
 -- Additive. Does not change certificates, organisations, teams or the public verify function.
--- Rollback: supabase/rollback/20261026120000_open_badges_and_cohorts.down.sql
+-- Rollback: supabase/rollback/20261026120100_open_badges_and_cohorts.down.sql
 --
 -- Credentials are written by the server (service role) and read one id at a time,
 -- the same door as verify_certificate(). Cohorts are visible only to their

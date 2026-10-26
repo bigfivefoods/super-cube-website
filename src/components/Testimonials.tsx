@@ -48,7 +48,7 @@ function QuoteCard({
 }
 
 /** Full grid — use on How / About / dedicated stories */
-export function TestimonialsSection({ locale = DEFAULT_LOCALE,
+export async function TestimonialsSection({ locale = DEFAULT_LOCALE,
   title = "Voices from the programme",
   description = "Feedback from leaders in South African FMCG businesses who experienced Super-Cube® development.",
   compact = false,
@@ -59,7 +59,7 @@ export function TestimonialsSection({ locale = DEFAULT_LOCALE,
   compact?: boolean;
   limit?: number;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   const list = limit ? testimonials.slice(0, limit) : testimonials;
   return (
     <section className="section-pad border-b border-line bg-surface">
@@ -102,8 +102,8 @@ export function TestimonialsSection({ locale = DEFAULT_LOCALE,
 }
 
 /** Compact home / conversion strip */
-export function TestimonialsStrip({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function TestimonialsStrip({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <section className="border-y border-line bg-bg py-10 sm:py-14 md:py-16">
       <div className="container-site">

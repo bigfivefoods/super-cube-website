@@ -118,8 +118,8 @@ function Cover({ sizes, alt, className = "" }: { sizes: string; alt: string; cla
 }
 
 /** Full section for /book. */
-export function PaidBookSection({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function PaidBookSection({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <section
       id={D.anchor}
@@ -178,7 +178,7 @@ export function PaidBookSection({ locale = DEFAULT_LOCALE }: { locale?: Locale }
 }
 
 /** Compact card: home page, /about, /research. Strings can be translated by the caller. */
-export function PaidBookCard({ locale = DEFAULT_LOCALE,
+export async function PaidBookCard({ locale = DEFAULT_LOCALE,
   eyebrow = `New · ${D.edition}`,
   body = `${D.pages} pages on the research and evidence behind the Super-Cube® model, each face in depth, and how to develop leaders at every level. Out now in paperback and Kindle.`,
   moreLabel = "About the book",
@@ -199,7 +199,7 @@ export function PaidBookCard({ locale = DEFAULT_LOCALE,
   hrefLang?: string;
   testId?: string;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <div
       className="sc-card grid items-center gap-5 p-5 sm:grid-cols-[minmax(0,6.5rem)_minmax(0,1fr)] sm:p-6"

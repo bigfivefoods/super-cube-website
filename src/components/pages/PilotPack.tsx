@@ -23,8 +23,8 @@ export const META = {
   ],
 } satisfies PageMetaInput;
 
-export function PilotPackView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function PilotPackView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

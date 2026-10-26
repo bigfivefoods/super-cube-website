@@ -13,8 +13,8 @@ import { getPublishedNews, listPublishedNews } from "@/lib/news/store";
 export async function NewsPostView({ slug, locale = DEFAULT_LOCALE }: { slug: string; locale?: Locale }) {
   const post = await getPublishedNews(slug);
   if (!post) notFound();
-  const { t, L } = pageI18n(locale);
-  const others = (await listPublishedNews()).filter((p) => p.slug !== post.slug).slice(0, 3);
+  const [{ t, L }, published] = await Promise.all([pageI18n(locale), listPublishedNews()]);
+  const others = published.filter((p) => p.slug !== post.slug).slice(0, 3);
   const json = JSON.stringify(newsArticleJsonLd(post)).replace(/</g, "\\u003c");
 
   return (

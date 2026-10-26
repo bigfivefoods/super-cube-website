@@ -17,8 +17,8 @@ export const META = {
     "Super-Cube® for schools: an age-adapted leadership pathway for learners aged 5–21, with pre- and post-assessment and progress for teachers. Request a quote or book a call.",
 } satisfies PageMetaInput;
 
-export function SchoolsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function SchoolsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   const booking = bookingUrl();
   return (
     <>

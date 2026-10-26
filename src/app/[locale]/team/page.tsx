@@ -19,7 +19,7 @@ export default async function LocaleTeamPage({ params }: Props) {
   if (!isPrefixedLocale(locale)) notFound();
   return (
     <TeamCubeView
-      s={translateDeep(locale, TEAM_STRINGS)}
+      s={await translateDeep(locale, TEAM_STRINGS)}
       impactHref={localizedPath(locale, "/impact")}
       coachHref={localizedPath(locale, "/learn/coach")}
     />

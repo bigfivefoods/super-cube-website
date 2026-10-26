@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!isPrefixedLocale(locale)) return {};
   const post = await getPublishedNews(slug);
   if (!post) return { title: "Post not found", robots: { index: false, follow: true } };
-  const title = stripMarks(translateText(locale, post.title));
-  const description = clampDescription(translateText(locale, post.excerpt));
+  const title = stripMarks(await translateText(locale, post.title));
+  const description = clampDescription(await translateText(locale, post.excerpt));
   const path = `/news/${post.slug}`;
   const share = newsShareImage(post);
   const meta = localeMeta({
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     absoluteTitle: false,
     image: share.url,
-    imageAlt: translateText(locale, share.alt),
+    imageAlt: await translateText(locale, share.alt),
   });
   return {
     ...meta,

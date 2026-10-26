@@ -91,8 +91,8 @@ const overviews: Record<ConstructId, string> = {
     "Purpose is the quiet force that keeps effort meaningful. Spiritual leadership connects daily work to contribution beyond self—conviction, example, and a why strong enough to outlast a quarter.",
 };
 
-export function ConstructsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function ConstructsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <ConstructsHero />

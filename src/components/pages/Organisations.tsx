@@ -17,8 +17,8 @@ export const META = {
     "Develop and measure your leaders with Super-Cube®: pre-assessment, a six-face programme, post-assessment and a cohort report. Request a quote or book a call.",
 } satisfies PageMetaInput;
 
-export function OrganisationsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function OrganisationsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   const booking = bookingUrl();
   return (
     <>

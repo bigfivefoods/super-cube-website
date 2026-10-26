@@ -54,8 +54,8 @@ test.describe("footer group mission", () => {
     }
   });
 
-  test("a translated page string loads from that language only", () => {
-    expect(translateText("en", "Start free")).toBe("Start free");
-    expect(translateText("fr", "Start free")).toBe("Commencer gratuitement");
+  test("a translated page string loads from that language only", async () => {
+    expect(await translateText("en", "Start free")).toBe("Start free");
+    expect(await translateText("fr", "Start free")).toBe("Commencer gratuitement");
   });
 });

@@ -37,8 +37,8 @@ const SAMPLE = {
     "Likert multi-item scales per face → 0–100. Cronbach’s α in founding research ~0.60–0.80. Developmental self-report, not clinical or hiring assessment.",
 };
 
-export function SampleReportView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function SampleReportView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

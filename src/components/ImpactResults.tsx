@@ -7,7 +7,7 @@ import {
   overallInterventionGain,
 } from "@/lib/impact";
 
-export function ImpactResults({ locale = DEFAULT_LOCALE,
+export async function ImpactResults({ locale = DEFAULT_LOCALE,
   eyebrow = "Intervention outcomes",
   title = "Measurable growth across every face.",
   description = "Average pre- to post-course gains by face from the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods.",
@@ -19,7 +19,7 @@ export function ImpactResults({ locale = DEFAULT_LOCALE,
   /** Dark background variant */
   light?: boolean;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   const max = interventionGainScaleMax;
 
   return (

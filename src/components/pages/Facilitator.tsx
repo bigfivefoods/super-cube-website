@@ -13,8 +13,8 @@ export const META = {
     "8-week Super-Cube® cohort calendar, safeguarding notes, and coach tools for schools and companies.",
 } satisfies PageMetaInput;
 
-export function FacilitatorView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function FacilitatorView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

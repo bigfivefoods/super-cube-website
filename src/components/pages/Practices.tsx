@@ -14,8 +14,8 @@ export const META = {
     "Relational leadership exercises and continuous face tracking grounded in Buber and Super-Cube® whole-person development.",
 } satisfies PageMetaInput;
 
-export function PracticesView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function PracticesView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

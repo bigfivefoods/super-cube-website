@@ -13,8 +13,8 @@ export const META = {
   description: "Essays on learnable leadership, Super-Cube® constructs, I–Thou practice, and SDG-linked development.",
 } satisfies PageMetaInput;
 
-export function InsightsIndex({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function InsightsIndex({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero
@@ -62,10 +62,10 @@ export function InsightsIndex({ locale = DEFAULT_LOCALE }: { locale?: Locale } =
   );
 }
 
-export function InsightArticle({ slug, locale = DEFAULT_LOCALE }: { slug: string; locale?: Locale }) {
+export async function InsightArticle({ slug, locale = DEFAULT_LOCALE }: { slug: string; locale?: Locale }) {
   const post = getInsight(slug);
   if (!post) notFound();
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <article>
       <header className="border-b border-line bg-bg">

@@ -42,8 +42,8 @@ function faceColor(id: string) {
   return constructs.find((c) => c.id === id)?.color ?? "#666";
 }
 
-export function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

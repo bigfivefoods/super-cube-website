@@ -7,7 +7,7 @@ import type { NewsPost } from "@/lib/news/types";
 import { NewsImage } from "./NewsImage";
 
 /** Card with a square cover: the /news grid and the homepage "Latest" strip. */
-export function NewsCard({
+export async function NewsCard({
   post,
   headingLevel = "h3",
   locale = DEFAULT_LOCALE,
@@ -17,7 +17,7 @@ export function NewsCard({
   locale?: Locale;
 }) {
   const H = headingLevel;
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <article className="group relative flex h-full flex-col overflow-hidden sc-card sc-card--link has-[a:focus-visible]:outline has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-ink" data-news-card={post.slug}>
       <div className="relative aspect-square overflow-hidden bg-surface">
