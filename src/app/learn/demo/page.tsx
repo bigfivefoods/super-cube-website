@@ -7,12 +7,14 @@ import { LearnShell } from "@/components/learn/LearnShell";
 import { track } from "@/lib/analytics";
 import { unlockDemo } from "@/lib/lms/store";
 import { programmes, type ProgrammeId } from "@/lib/programmes";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 /**
  * Free sample path: sample sessions only (no subscription is created).
  */
 export default function LearnDemoPage() {
   const router = useRouter();
+  const { locale, L } = useLmsT();
   const [busy, setBusy] = useState<ProgrammeId | null>(null);
 
   function start(programmeId: ProgrammeId) {
@@ -25,10 +27,10 @@ export default function LearnDemoPage() {
       void fetch("/api/email/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ programmeId, mode: "demo" }),
+        body: JSON.stringify({ programmeId, mode: "demo", locale }),
       }).catch(() => {});
     }
-    router.push(`/learn/onboarding?mode=demo&programme=${programmeId}`);
+    router.push(L(`/learn/onboarding?mode=demo&programme=${programmeId}`));
   }
 
   return (

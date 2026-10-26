@@ -62,9 +62,9 @@ test.describe("languages", () => {
   });
 
   test("an English-only page under a language prefix redirects to English", async ({ request }) => {
-    const res = await request.get("/fr/learn/start", { maxRedirects: 0 });
+    const res = await request.get("/fr/login", { maxRedirects: 0 });
     expect([307, 308]).toContain(res.status());
-    expect(res.headers()["location"]).toMatch(/\/learn\/start$/);
+    expect(res.headers()["location"]).toMatch(/\/login$/);
   });
 
   test("translated inner pages stay on their language URL", async ({ request }) => {

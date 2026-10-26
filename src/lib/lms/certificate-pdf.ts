@@ -15,6 +15,8 @@ import {
   type CertificateData,
 } from "@/lib/lms/certificate";
 import { drawPdfRadar, drawPdfRadarLegend, hexToRgb } from "@/lib/lms/pdf-radar";
+import { isPrefixedLocale, type Locale } from "@/lib/i18n/config";
+import { lmsText } from "@/lib/i18n/lms/text";
 
 /**
  * jsPDF's built-in fonts only cover WinAnsi. Characters outside it (e.g. the
@@ -35,7 +37,11 @@ export function pdfSafe(text: string): string {
 /** Raster logo for the header (PNG bytes plus pixel size). Optional: a vector mark is drawn without it. */
 export type CertificateLogo = { data: Uint8Array; width: number; height: number };
 
-export type CertificatePdfInput = CertificateData & { logo?: CertificateLogo | null };
+export type CertificatePdfInput = CertificateData & {
+  logo?: CertificateLogo | null;
+  /** Latin languages are drawn in the PDF. Arabic stays English (WinAnsi has no Arabic). */
+  locale?: Locale;
+};
 
 const INK: [number, number, number] = [20, 20, 22];
 const MUTED: [number, number, number] = [92, 90, 86];
@@ -95,6 +101,8 @@ function spaced(doc: jsPDF, text: string, x: number, y: number, charSpace: numbe
  * resolve at /verify/{id}.
  */
 export function buildCertificatePdf(cert: CertificatePdfInput): jsPDF {
+  const latin = !!cert.locale && cert.locale !== "en" && cert.locale !== "ar" && isPrefixedLocale(cert.locale);
+  const tx = (s: string) => pdfSafe(latin ? lmsText(cert.locale as Locale, s) : s);
   const doc = new jsPDF({ unit: "mm", format: "a4", orientation: "landscape", compress: true });
   const w = doc.internal.pageSize.getWidth();
   const h = doc.internal.pageSize.getHeight();
@@ -160,12 +168,12 @@ export function buildCertificatePdf(cert: CertificatePdfInput): jsPDF {
   doc.setFont("helvetica", "bold");
   doc.setFontSize(10.5);
   doc.setTextColor(...MUTED);
-  spaced(doc, "CERTIFICATE OF COMPLETION", cx, 53, 1.4);
+  spaced(doc, tx("CERTIFICATE OF COMPLETION"), cx, 53, 1.4);
 
   doc.setFont("times", "italic");
   doc.setFontSize(13);
   doc.setTextColor(...MUTED);
-  doc.text("This certifies that", cx, 64, { align: "center" });
+  doc.text(tx("This certifies that"), cx, 64, { align: "center" });
 
   // Learner name: large serif, shrunk to fit long names
   doc.setFont("times", "bold");
@@ -184,8 +192,8 @@ export function buildCertificatePdf(cert: CertificatePdfInput): jsPDF {
   doc.setFont("helvetica", "normal");
   doc.setFontSize(12);
   doc.setTextColor(...INK);
-  const lead = "has completed the ";
-  const tail = " programme";
+  const lead = tx("has completed the ");
+  const tail = tx(" programme");
   doc.setFont("helvetica", "normal");
   const wLead = doc.getTextWidth(lead);
   const wTail = doc.getTextWidth(tail);

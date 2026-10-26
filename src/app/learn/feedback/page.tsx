@@ -12,9 +12,11 @@ import { NewsletterSignup } from "@/components/NewsletterSignup";
 import { isMinorProfile } from "@/lib/lms/consent";
 import { getProfile } from "@/lib/lms/profile";
 import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 /** Post-baseline narrative + score-lit cube */
 export default function AssessmentFeedbackPage() {
+  const { t, L } = useLmsT();
   const [state, setState] = useState<LocalLmsState | null>(null);
 
   useEffect(() => {
@@ -24,8 +26,8 @@ export default function AssessmentFeedbackPage() {
 
   const pre = state?.attempts.find((a) => a.phase === "pre");
   const narrative = useMemo(
-    () => (pre ? buildAssessmentNarrative(pre.result, pre.programmeId) : null),
-    [pre],
+    () => (pre ? buildAssessmentNarrative(pre.result, pre.programmeId, t) : null),
+    [pre, t],
   );
 
   const scoreMap = useMemo(() => {
@@ -52,10 +54,10 @@ export default function AssessmentFeedbackPage() {
         subtitle={programmeCopy("feedback.locked.subtitle", learnerProgrammeId(state))}
       >
         <Link
-          href="/learn/assessment/pre"
+          href={L("/learn/assessment/pre")}
           className="learn-btn learn-btn-primary"
         >
-          Start baseline
+          {t("Start baseline")}
         </Link>
       </LearnShell>
     );
@@ -79,14 +81,14 @@ export default function AssessmentFeedbackPage() {
             {narrative.weekFocus}
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
-            <Link href="/learn" className="learn-btn learn-btn-primary">
-              Open weekly plan
+            <Link href={L("/learn")} className="learn-btn learn-btn-primary">
+              {t("Open weekly plan")}
             </Link>
-            <Link href="/learn/practice" className="learn-btn learn-btn-ghost">
-              Today’s micro-practice
+            <Link href={L("/learn/practice")} className="learn-btn learn-btn-ghost">
+              {t("Today’s micro-practice")}
             </Link>
-            <Link href="/learn/progress#full-report" className="learn-btn learn-btn-ghost">
-              Full report
+            <Link href={L("/learn/progress#full-report")} className="learn-btn learn-btn-ghost">
+              {t("Full report")}
             </Link>
           </div>
         </div>

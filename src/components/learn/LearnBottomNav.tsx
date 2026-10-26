@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import {
@@ -34,11 +35,12 @@ function processTint(
 /** Mobile bottom nav — pill dock, 5 dual-process destinations. */
 export function LearnBottomNav() {
   const pathname = usePathname();
+  const { t, L } = useLmsT();
 
   return (
     <nav
       className="fixed inset-x-0 bottom-0 z-40 px-3 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 lg:hidden"
-      aria-label="Learn app navigation"
+      aria-label={t("Learn app navigation")}
     >
       <ul className="mx-auto flex max-w-md items-stretch justify-between rounded-2xl border border-line bg-elevated/95 px-1.5 py-1.5 shadow-[0_12px_40px_-12px_rgba(10,10,10,0.35)] backdrop-blur-xl">
         {LEARN_PRIMARY_NAV.map((tab) => {
@@ -48,7 +50,7 @@ export function LearnBottomNav() {
           return (
             <li key={tab.id} className="flex-1">
               <Link
-                href={tab.href}
+                href={L(tab.href)}
                 className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
                   active
                     ? "bg-void text-void-fg"
@@ -59,7 +61,7 @@ export function LearnBottomNav() {
                 aria-current={active ? "page" : undefined}
               >
                 <Icon active={active} />
-                {tab.label}
+                {t(tab.label)}
               </Link>
             </li>
           );

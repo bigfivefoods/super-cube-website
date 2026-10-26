@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { downloadGrowthReportPdf } from "@/lib/lms/report-pdf";
 import type { LocalAttempt, LocalLmsState } from "@/lib/lms/store";
 
@@ -15,6 +16,7 @@ export function DownloadReportButton({
   post?: LocalAttempt | null;
   className?: string;
 }) {
+  const { locale } = useLmsT();
   const [busy, setBusy] = useState(false);
   const [lastFile, setLastFile] = useState<string | null>(null);
 
@@ -23,7 +25,7 @@ export function DownloadReportButton({
     try {
       // Defer so UI can show busy state
       await new Promise((r) => setTimeout(r, 20));
-      const name = downloadGrowthReportPdf({ state, pre, post });
+      const name = downloadGrowthReportPdf({ state, pre, post, locale });
       setLastFile(name);
     } catch (e) {
       console.error(e);

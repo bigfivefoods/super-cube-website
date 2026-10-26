@@ -68,7 +68,7 @@ export function PricingView({ s, locale = DEFAULT_LOCALE }: { s: PricingStrings;
       void fetch("/api/email/welcome", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ programmeId, mode: "demo" }),
+        body: JSON.stringify({ programmeId, mode: "demo", locale }),
       }).catch(() => {});
     }
     router.push(`/learn/onboarding?mode=demo&programme=${programmeId}`);

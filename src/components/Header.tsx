@@ -237,7 +237,7 @@ export function Header() {
           )}
           {showStartCta && (
             <Link
-              href="/learn/start"
+              href={L("/learn/start")}
               hrefLang={enLang("/learn/start")}
               className={`inline-flex min-h-9 items-center whitespace-nowrap rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight transition ${
                 onDark ? "bg-white text-black hover:bg-white/90" : "sc-btn-primary"
@@ -345,7 +345,7 @@ export function Header() {
           {showStartCta && (
             <div className="mt-auto pt-8">
               <Link
-                href="/learn/start"
+                href={L("/learn/start")}
                 hrefLang={enLang("/learn/start")}
                 className="sc-btn-primary flex min-h-12 items-center justify-center rounded-full px-5 text-base font-semibold tracking-tight"
               >

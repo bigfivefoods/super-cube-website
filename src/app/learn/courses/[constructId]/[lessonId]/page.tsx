@@ -29,6 +29,7 @@ import {
   saveMasteryRecord,
 } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 const TYPE_LABEL: Record<string, string> = {
   content: "Session",
@@ -42,6 +43,7 @@ export default function LessonPlayerPage() {
   const constructId = params.constructId as ConstructId;
   const lessonId = params.lessonId as string;
   const state = useLmsState();
+  const { td } = useLmsT();
   const [winBanner, setWinBanner] = useState<string | null>(null);
   const [syncNote, setSyncNote] = useState<string | null>(null);
   const [masteryPrompt, setMasteryPrompt] = useState<MasteryPrompt | null>(null);
@@ -53,12 +55,13 @@ export default function LessonPlayerPage() {
   // The learner's programme first; otherwise the programme named in the lesson id
   const data = useMemo(() => {
     const own = getLesson(courseId(programmeId, constructId), lessonId);
-    if (own) return own;
-    const prefix = lessonId.split("-")[0] as ProgrammeId;
-    return (["kids", "adolescents", "adults"] as ProgrammeId[]).includes(prefix)
-      ? getLesson(courseId(prefix, constructId), lessonId)
-      : undefined;
-  }, [programmeId, constructId, lessonId]);
+    const raw = own
+      ? own
+      : (["kids", "adolescents", "adults"] as ProgrammeId[]).includes(lessonId.split("-")[0] as ProgrammeId)
+        ? getLesson(courseId(lessonId.split("-")[0] as ProgrammeId, constructId), lessonId)
+        : undefined;
+    return raw ? td(raw) : undefined;
+  }, [programmeId, constructId, lessonId, td]);
 
   const construct = constructs.find((c) => c.id === constructId);
 

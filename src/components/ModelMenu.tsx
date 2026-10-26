@@ -134,7 +134,7 @@ export function ModelMegaMenu({
   buttonClassName: string;
   active: boolean;
 }) {
-  const { t } = useLocale();
+  const { t, L } = useLocale();
   const hrefLang = useEnLang();
   const wrapRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -291,8 +291,8 @@ export function ModelMegaMenu({
               ))}
             </ul>
             <Link
-              href={assessment.href}
-              hrefLang={hrefLang}
+              href={L(assessment.href)}
+              hrefLang={undefined}
               onClick={close}
               className="sc-btn-primary mt-auto inline-flex min-h-10 items-center justify-center gap-2 rounded-full px-4 text-[0.8125rem] font-semibold tracking-tight"
             >

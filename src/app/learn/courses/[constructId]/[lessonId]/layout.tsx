@@ -3,16 +3,16 @@ import { notFound } from "next/navigation";
 import { constructs, type ConstructId } from "@/lib/content";
 import { getLesson } from "@/lib/lms/curriculum";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
-import { pageMeta } from "@/lib/seo";
+import { learnMetadata } from "@/lib/i18n/lms/meta";
 
 const PROGRAMMES: ProgrammeId[] = ["kids", "adolescents", "adults"];
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ constructId: string; lessonId: string }>;
+  params: Promise<{ constructId: string; lessonId: string; locale?: string }>;
 }): Promise<Metadata> {
-  const { constructId, lessonId } = await params;
+  const { constructId, lessonId, locale } = await params;
   const construct = constructs.find((x) => x.id === constructId);
   const prefix = lessonId.split("-")[0] as ProgrammeId;
   const programmeId = PROGRAMMES.includes(prefix) ? prefix : "adults";
@@ -21,7 +21,7 @@ export async function generateMetadata({
     : undefined;
   const name = construct?.name ?? "Course";
   const title = data ? `${data.lesson.title} · ${name}` : `${name} session`;
-  return pageMeta({
+  return learnMetadata(locale, {
     title,
     description:
       data?.lesson.outcome ||

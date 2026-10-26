@@ -28,7 +28,7 @@ export function FaqContent() {
         title={t("faq.title")}
         description={t("faq.lede")}
       >
-        <Button href="/learn/start" hrefLang={enLang} variant="primary">
+        <Button href={L("/learn/start")} variant="primary">
           {t("faq.ctaStart")}
         </Button>
         <Button href={L("/contact")} hrefLang={L("/contact") === "/contact" ? enLang : undefined} variant="ghost">

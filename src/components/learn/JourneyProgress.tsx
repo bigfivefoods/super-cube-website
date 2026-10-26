@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { useMemo } from "react";
 import {
   getJourney,
@@ -71,31 +72,32 @@ function StepDot({
 /** Compact rail shown on every LMS page — where am I? */
 export function JourneyRail({ journey, hideCta = false }: { journey: JourneySnapshot; hideCta?: boolean }) {
   const pathname = usePathname();
+  const { t, L } = useLmsT();
   const pathStep = journeyStepFromPath(pathname);
 
   return (
     <div className="rounded-2xl border border-line bg-elevated p-3 shadow-[0_1px_0_rgba(0,0,0,0.02)] sm:p-3.5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="min-w-0">
-          <p className="learn-eyebrow">Your pathway</p>
+          <p className="learn-eyebrow">{t("Your pathway")}</p>
           <p className="mt-0.5 text-[0.8125rem] font-semibold tracking-tight text-ink">
-            Step {journey.current.n} of {journey.total}
+            {t("Step {n} of {total}").replace("{n}", String(journey.current.n)).replace("{total}", String(journey.total))}
             <span className="font-medium text-slate">
               {" "}
-              · {journey.current.short}
+              · {t(journey.current.short)}
             </span>
           </p>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-[0.7rem] font-semibold tabular-nums text-muted">
-            {journey.doneCount}/{journey.total} done
+            {journey.doneCount}/{journey.total} {t("done")}
           </span>
           {!hideCta && (
             <Link
-              href={journey.current.href}
+              href={L(journey.current.href)}
               className="learn-btn learn-btn-primary !min-h-8 !px-3 !py-1 !text-[0.75rem]"
             >
-              {journey.current.cta} →
+              {t(journey.current.cta)} →
             </Link>
           )}
         </div>
@@ -128,7 +130,7 @@ export function JourneyRail({ journey, hideCta = false }: { journey: JourneySnap
                         : "text-muted"
                   }`}
                 >
-                  {step.short}
+                  {t(step.short)}
                 </span>
               </div>
               {i < journey.steps.length - 1 && (
@@ -152,6 +154,7 @@ export function JourneyRail({ journey, hideCta = false }: { journey: JourneySnap
 /** Full vertical timeline for the dashboard */
 export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
   const pathname = usePathname();
+  const { t, L } = useLmsT();
   const pathStep = journeyStepFromPath(pathname);
 
   return (
@@ -200,20 +203,20 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="learn-eyebrow">
-                    Step {step.n}
+                    {t("Step {n}").replace("{n}", String(step.n))}
                     {current && (
                       <span className="ml-1.5 rounded-full sc-btn-primary px-1.5 py-0.5 text-[0.55rem] font-bold tracking-wider ">
-                        YOU ARE HERE
+                        {t("YOU ARE HERE")}
                       </span>
                     )}
                     {done && !current && (
                       <span className="ml-1.5 text-[0.6rem] font-semibold tracking-wider text-ink/50">
-                        COMPLETE
+                        {t("COMPLETE")}
                       </span>
                     )}
                   </p>
                   <h3 className="mt-1 text-[0.9375rem] font-semibold tracking-tight text-ink sm:text-base">
-                    {step.title}
+                    {t(step.title)}
                   </h3>
                 </div>
                 {!locked && (
@@ -224,16 +227,16 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
                         : "bg-black/[0.04] text-ink"
                     }`}
                   >
-                    {step.cta}
+                    {t(step.cta)}
                     {current ? " →" : ""}
                   </span>
                 )}
               </div>
-              <p className="learn-body mt-1.5">{step.description}</p>
+              <p className="learn-body mt-1.5">{t(step.description)}</p>
               <p className="mt-2 text-[0.8125rem] font-medium leading-snug text-ink/80">
-                {step.promise}
+                {t(step.promise)}
               </p>
-              <p className="learn-meta mt-2">{step.detail}</p>
+              <p className="learn-meta mt-2">{t(step.detail)}</p>
             </div>
           </div>
         );
@@ -243,7 +246,7 @@ export function JourneyTimeline({ journey }: { journey: JourneySnapshot }) {
             {locked ? (
               body
             ) : (
-              <Link href={step.href} className="block">
+              <Link href={L(step.href)} className="block">
                 {body}
               </Link>
             )}

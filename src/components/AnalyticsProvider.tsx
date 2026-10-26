@@ -2,6 +2,7 @@
 
 import { usePathname, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
+import { stripLocale } from "@/lib/i18n/config";
 import { track } from "@/lib/analytics";
 
 function AnalyticsInner() {
@@ -14,16 +15,17 @@ function AnalyticsInner() {
       query: searchParams?.toString() || undefined,
     });
 
+    const path = stripLocale(pathname);
     // Funnel-ish auto tags for key LMS paths
-    if (pathname.startsWith("/learn/assessment/orientation")) {
+    if (path.startsWith("/learn/assessment/orientation")) {
       track("orient_start");
-    } else if (pathname.startsWith("/learn/assessment/pre")) {
+    } else if (path.startsWith("/learn/assessment/pre")) {
       track("pre_start");
-    } else if (pathname.startsWith("/learn/assessment/post")) {
+    } else if (path.startsWith("/learn/assessment/post")) {
       track("post_start");
-    } else if (pathname.startsWith("/learn/report")) {
+    } else if (path.startsWith("/learn/report")) {
       track("report_view");
-    } else if (pathname.match(/^\/learn\/courses\/[^/]+\/[^/]+/)) {
+    } else if (path.match(/^\/learn\/courses\/[^/]+\/[^/]+/)) {
       track("lesson_open", { path: pathname });
     } else if (pathname === "/login") {
       track("login_view");
