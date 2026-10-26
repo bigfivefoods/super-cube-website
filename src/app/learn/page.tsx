@@ -10,7 +10,6 @@ import { constructs } from "@/lib/content";
 import { track } from "@/lib/analytics";
 import { formatDateZA, SA_TIME_ZONE } from "@/lib/datetime";
 import { getTodayPulse } from "@/lib/lms/face-tracking";
-import { stepLabel } from "@/lib/lms/journey";
 import { liveStreak } from "@/lib/lms/badges";
 import { getDashboardAction, processLabel } from "@/lib/lms/next-action";
 import { LEARN_PROCESS_ACCENT } from "@/lib/lms/nav";
@@ -22,6 +21,7 @@ import { progression } from "@/lib/lms/progression";
 import { GoalRing } from "@/components/learn/progress/GoalRing";
 import { SessionReviewCard } from "@/components/learn/progress/SessionReviewCard";
 import { weeklyGoal } from "@/lib/lms/progression";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 function greeting(now = new Date()): string {
   const hour = Number(
@@ -49,6 +49,7 @@ function readReviewsDone(): Record<string, string> {
 export default function LearnDashboardPage() {
   const state = useLmsState();
   const journey = useJourney();
+  const { t, L } = useLmsT();
   const [reviewsDone, setReviewsDone] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -91,19 +92,20 @@ export default function LearnDashboardPage() {
             ? `Due since ${formatDateZA(review.due)}`
             : `Due ${formatDateZA(review.due)}`
           : "Days 3, 7 and 21";
+  const step = t("Step {n} of {total}").replace("{n}", String(journey.current.n)).replace("{total}", String(journey.total));
   const eyebrow =
     action.process === "journaling"
-      ? `${processLabel(action.process)} · today`
-      : `${processLabel(action.process)} · ${stepLabel(journey.current.n)}`;
+      ? `${t(processLabel(action.process))} · ${t("today")}`
+      : `${t(processLabel(action.process))} · ${step}`;
 
   return (
     <LearnShell>
       <header className="mb-4 sm:mb-5">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-slate">
-          Today · {formatDateZA(new Date())}
+          {t("Today")} · {formatDateZA(new Date())}
         </p>
         <h1 className="mt-1 text-[1.5rem] font-semibold tracking-tight text-ink sm:text-[1.75rem]">
-          {complete ? "Pathway complete" : `${greeting()}${firstName ? `, ${firstName}` : ""}`}
+          {complete ? t("Pathway complete") : `${t(greeting())}${firstName ? `, ${firstName}` : ""}`}
         </h1>
         {journey.programmeName && (
           <p className="mt-1 text-[0.9375rem] text-slate">
@@ -121,22 +123,24 @@ export default function LearnDashboardPage() {
       >
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-white/70">{eyebrow}</p>
         <h2 id="next-action-h" className="mt-1.5 text-xl font-semibold tracking-tight sm:text-2xl">
-          {action.title}
+          {t(action.title)}
         </h2>
-        <p className="mt-2 max-w-prose text-[0.9375rem] leading-relaxed text-white/80">{action.detail}</p>
+        <p className="mt-2 max-w-prose text-[0.9375rem] leading-relaxed text-white/80">{t(action.detail)}</p>
         <Link
-          href={action.href}
+          href={L(action.href)}
           onClick={() => track("continue_click", { kind: action.kind, process: action.process, surface: "today_next_action" })}
           className="mt-5 inline-flex min-h-12 w-full items-center justify-center rounded-full bg-white px-6 text-[0.9375rem] font-semibold text-ink transition hover:bg-white/90 sm:w-auto"
         >
-          {action.cta.replace(/\s*→$/, "")} <span aria-hidden className="ml-1.5">→</span>
+          {t(action.cta).replace(/\s*→$/, "")} <span aria-hidden className="ml-1.5">→</span>
         </Link>
         <div className="mt-5">
           <div className="h-1.5 overflow-hidden rounded-full bg-white/15" aria-hidden>
             <div className="h-full rounded-full bg-white" style={{ width: `${Math.max(journey.pct, 4)}%` }} />
           </div>
           <p className="mt-2 text-[0.75rem] text-white/70">
-            {journey.doneCount} of {journey.total} pathway steps done
+            {t("{done} of {total} pathway steps done")
+              .replace("{done}", String(journey.doneCount))
+              .replace("{total}", String(journey.total))}
           </p>
         </div>
       </section>
@@ -144,12 +148,12 @@ export default function LearnDashboardPage() {
       {/* ── At a glance ── */}
       <dl className="mt-3 grid grid-cols-3 gap-2 sm:mt-4 sm:gap-3">
         <div className="rounded-2xl border border-line bg-elevated p-3 sm:p-4">
-          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Streak</dt>
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Streak")}</dt>
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink sm:text-xl">
-            {streak} {streak === 1 ? "day" : "days"}
+            {streak} {streak === 1 ? t("day") : t("days")}
             {(best > streak || freezes > 0) && (
               <span className="mt-0.5 block text-[0.7rem] font-normal text-slate">
-                {best > streak ? `Best ${best}` : ""}
+                {best > streak ? `${t("Best")} ${best}` : ""}
                 {best > streak && freezes > 0 ? " · " : ""}
                 {freezes > 0 ? `❄ ${freezes} freeze${freezes === 1 ? "" : "s"}` : ""}
               </span>
@@ -157,7 +161,7 @@ export default function LearnDashboardPage() {
           </dd>
         </div>
         <div className="rounded-2xl border border-line bg-elevated p-3 sm:p-4">
-          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Sessions</dt>
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Sessions")}</dt>
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink sm:text-xl">
             {journey.totalLessons ? (
               <>
@@ -165,20 +169,20 @@ export default function LearnDashboardPage() {
                 <span className="text-sm font-medium text-slate">/{journey.totalLessons}</span>
               </>
             ) : (
-              <span className="text-[0.9375rem] text-slate">After step 1</span>
+              <span className="text-[0.9375rem] text-slate">{t("After step 1")}</span>
             )}
           </dd>
         </div>
         <div className="rounded-2xl border border-line bg-elevated p-3 sm:p-4">
-          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Journal</dt>
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Journal")}</dt>
           <dd className="mt-1 text-[0.9375rem] font-semibold text-ink">
             {!journalUnlocked ? (
-              <span className="text-slate">After orientation</span>
+              <span className="text-slate">{t("After orientation")}</span>
             ) : pulseToday ? (
-              "Done today"
+              t("Done today")
             ) : (
-              <Link href="/learn/pulse" className="underline underline-offset-2">
-                Check in
+              <Link href={L("/learn/pulse")} className="underline underline-offset-2">
+                {t("Check in")}
               </Link>
             )}
           </dd>
@@ -196,7 +200,7 @@ export default function LearnDashboardPage() {
       </div>
 
       {/* ── Shortcuts ── */}
-      <h2 className="mt-6 text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-slate">Go to</h2>
+      <h2 className="mt-6 text-[0.8125rem] font-semibold uppercase tracking-[0.12em] text-slate">{t("Go to")}</h2>
       <div className="mt-2 grid gap-2.5 sm:grid-cols-2">
         <LearnNavTile
           href="/learn/courses"
@@ -223,8 +227,8 @@ export default function LearnDashboardPage() {
           />
         ) : (
           <div className="rounded-2xl border border-dashed border-line bg-elevated p-4" data-testid="rewards-locked">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Not yet earned</p>
-            <p className="mt-1 text-[0.9375rem] font-semibold text-ink">Growth report and certificate</p>
+            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Not yet earned")}</p>
+            <p className="mt-1 text-[0.9375rem] font-semibold text-ink">{t("Growth report and certificate")}</p>
             <p className="mt-1 text-[0.8125rem] leading-snug text-slate">
               Offered when the server has recorded your sessions and after-test. A score kept only on this device does not unlock them.
             </p>
@@ -240,9 +244,10 @@ export default function LearnDashboardPage() {
 function TodayProgress({ state }: { state: ReturnType<typeof useLmsState> }) {
   const v = progression(state);
   const g = weeklyGoal(state);
+  const { t, L } = useLmsT();
   return (
     <Link
-      href="/learn/progress"
+      href={L("/learn/progress")}
       className="flex items-center gap-4 rounded-2xl border border-line bg-elevated p-4 transition hover:border-black/15 sm:p-5"
       data-testid="today-progress"
     >

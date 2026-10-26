@@ -4,6 +4,7 @@ import type { AssessmentItem } from "@/lib/lms/assessment-items";
 import { buildInstrumentItems, honestyItem, type InstrumentVersion } from "@/lib/lms/instruments";
 import { attentionItem, itemOrder, qualityFlags, type QualityFlag } from "@/lib/lms/integrity";
 import { scoreAttempt } from "@/lib/lms/scoring";
+import { isLocale, type Locale } from "@/lib/i18n/config";
 import type { ProgrammeId } from "@/lib/programmes";
 
 export type AttemptMetaInput = {
@@ -14,6 +15,8 @@ export type AttemptMetaInput = {
   honesty?: unknown;
   /** Requested instrument version; the route decides which version is allowed */
   instrument?: unknown;
+  /** Language of the questionnaire the learner was reading. Stored in meta; scoring ignores it. */
+  locale?: unknown;
 };
 
 export type ParsedAttempt = {
@@ -25,6 +28,7 @@ export type ParsedAttempt = {
   seed: number | null;
   durationMs: number | null;
   flags: QualityFlag[];
+  locale: Locale | null;
 };
 
 /** Validate answers (every item answered in range, no extras needed) and work out quality flags. */
@@ -59,6 +63,8 @@ export function parseAttempt(
     const hNum = Number(hRaw);
     honestyValue = hRaw == null || hRaw === "" ? null : Number.isInteger(hNum) && hNum >= 1 && hNum <= 5 ? hNum : null;
   }
+  const localeRaw = typeof meta.locale === "string" ? meta.locale : null;
+  const locale = isLocale(localeRaw) ? localeRaw : null;
   const seedNum = Number(meta.seed);
   const seed = Number.isInteger(seedNum) && seedNum >= 0 && seedNum < 2 ** 31 ? seedNum : null;
   const durNum = Number(meta.durationMs);
@@ -76,7 +82,7 @@ export function parseAttempt(
     const n = items.length + (attentionValue == null ? 0 : 1);
     if (durationMs < n * 1500) flags.push("too_fast");
   }
-  return { ok: true, value: { items, responses, attentionValue, honestyValue, version, seed, durationMs, flags } };
+  return { ok: true, value: { items, responses, attentionValue, honestyValue, version, seed, durationMs, flags, locale } };
 }
 
 /**
@@ -94,7 +100,7 @@ export async function recordAttempt(
     createdAt?: string;
   },
 ) {
-  const { items, responses, attentionValue, honestyValue, version, seed, durationMs, flags } = opts.parsed;
+  const { items, responses, attentionValue, honestyValue, version, seed, durationMs, flags, locale } = opts.parsed;
   const result = scoreAttempt(items, responses);
   const instrumentId = items[0]?.instrumentId ?? `super_cube_${opts.programmeId}_v1`;
   const att = attentionItem(opts.programmeId, version);
@@ -107,6 +113,7 @@ export async function recordAttempt(
     attention: attentionValue,
     item_order: order,
     ...(version === "v2" ? { instrument_version: "v2", honesty: honestyValue } : {}),
+    ...(locale ? { locale } : {}),
   };
   const insert: Record<string, unknown> = {
     user_id: opts.userId,

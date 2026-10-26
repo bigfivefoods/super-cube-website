@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import type { ReactNode } from "react";
 
 /**
@@ -243,30 +244,31 @@ export function LearnNavTile({
   status?: string;
   accent?: string;
 }) {
+  const { t, L } = useLmsT();
   return (
     <Link
-      href={href}
+      href={href.startsWith("/learn") ? L(href) : href}
       className="group flex flex-col rounded-2xl border border-line bg-elevated p-4 transition hover:border-black/15 dark:hover:border-white/20 hover:shadow-[0_12px_32px_-20px_rgba(10,10,10,0.35)]"
       style={accent ? { boxShadow: `inset 3px 0 0 ${accent}` } : undefined}
     >
       <div className="flex items-start justify-between gap-2">
         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
-          {kicker}
+          {t(kicker)}
         </p>
         {status && (
           <span className="rounded-full bg-cream-dark px-2 py-0.5 text-[0.65rem] font-semibold text-ink">
-            {status}
+            {t(status)}
           </span>
         )}
       </div>
       <p className="mt-1.5 text-[0.975rem] font-semibold tracking-tight text-ink">
-        {title}
+        {t(title)}
       </p>
       <p className="mt-1 flex-1 text-[0.75rem] leading-relaxed text-slate">
-        {detail}
+        {t(detail)}
       </p>
       <p className="mt-3 text-[0.75rem] font-semibold text-ink opacity-70 transition group-hover:opacity-100">
-        Open →
+        {t("Open →")}
       </p>
     </Link>
   );

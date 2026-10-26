@@ -1,3 +1,4 @@
+import { stripLocale } from "@/lib/i18n/config";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { evaluatePostGate } from "@/lib/lms/gates";
 import {
@@ -331,6 +332,7 @@ export function getJourney(state: LocalLmsState): JourneySnapshot {
 
 /** Which journey step a pathname belongs to (for highlighting). */
 export function journeyStepFromPath(pathname: string): JourneyStepId | null {
+  pathname = stripLocale(pathname);
   if (pathname.startsWith("/learn/programmes")) return "programme";
   if (pathname.startsWith("/learn/assessment/orientation")) return "orient";
   if (pathname.startsWith("/learn/assessment/pre")) return "baseline";

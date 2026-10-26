@@ -12,7 +12,7 @@ const HIDDEN_PREFIXES = ["/learn", "/login", "/signup", "/auth"];
  * Hidden on Learn product routes and after user dismisses for the session.
  */
 export function MobileStickyCta() {
-  const { t, locale, basePath: pathname } = useLocale();
+  const { t, L, basePath: pathname } = useLocale();
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
 
@@ -45,8 +45,7 @@ export function MobileStickyCta() {
       <div className="container-site pointer-events-auto">
         <div className="mb-1 flex items-center gap-2 rounded-2xl border border-line bg-paper/95 p-2 shadow-lg backdrop-blur-md supports-[backdrop-filter]:bg-paper/90 dark:bg-elevated/95">
           <Link
-            href="/learn/start"
-            hrefLang={locale === "en" ? undefined : "en"}
+            href={L("/learn/start")}
             onClick={() => track("sticky_cta_click", { path: pathname })}
             className="sc-btn-primary flex min-h-11 flex-1 items-center justify-center rounded-xl px-3 text-sm font-semibold touch-manipulation"
           >

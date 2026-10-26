@@ -4,8 +4,8 @@ import { PREFIXED_LOCALES, isPrefixedLocale } from "@/lib/i18n";
 
 /**
  * /fr, /ar, /pt, /sw, /zu and /af: translated versions of the pages in TRANSLATED_PATHS only
- * (src/lib/i18n/config.ts), as on bigfivegroup.africa. Prerendered per locale; any other first
- * segment is a 404, and /<locale>/<other page> redirects to the English page (next.config.ts).
+ * (src/lib/i18n/config.ts) and the Learn app (/fr/learn, /ar/learn, …). Prerendered per locale;
+ * any other first segment is a 404, and /<locale>/<other page> redirects to English (next.config.ts).
  * <html lang/dir> is set by the root layout (LocaleHtml) from the URL.
  */
 export const dynamicParams = false;

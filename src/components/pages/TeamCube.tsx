@@ -14,10 +14,13 @@ import { Button, PageHero, SectionHeading } from "@/components/ui";
 export function TeamCubeView({
   s = TEAM_STRINGS,
   impactHref = "/impact",
+  coachHref = "/learn/coach",
 }: {
   s?: TeamStrings;
   /** /impact in the page's language */
   impactHref?: string;
+  /** /learn/coach in the page's language */
+  coachHref?: string;
 }) {
   const [scores, setScores] = useState<Record<ConstructId, number>>(
     () =>
@@ -40,7 +43,7 @@ export function TeamCubeView({
         title={s.title}
         description={s.description}
       >
-        <Button href="/learn/coach" variant="primary">
+        <Button href={coachHref} variant="primary">
           {s.coachExport}
         </Button>
         <Button href={impactHref} variant="ghost">

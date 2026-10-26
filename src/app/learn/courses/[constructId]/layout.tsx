@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { constructs } from "@/lib/content";
-import { pageMeta } from "@/lib/seo";
+import { learnMetadata } from "@/lib/i18n/lms/meta";
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ constructId: string }>;
+  params: Promise<{ constructId: string; locale?: string }>;
 }): Promise<Metadata> {
-  const { constructId } = await params;
+  const { constructId, locale } = await params;
   const c = constructs.find((x) => x.id === constructId);
   const name = c?.name ?? "Construct";
-  return pageMeta({
+  return learnMetadata(locale, {
     title: `${name} course`,
     description: c
       ? `Super-Cube® ${name} course: ${c.tagline.toLowerCase()}. Sessions, practice labs and a quick check.`

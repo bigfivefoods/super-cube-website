@@ -1,3 +1,5 @@
+import { stripLocale } from "@/lib/i18n/config";
+
 /**
  * Super-Cube® Learn primary navigation — dual-process model.
  *
@@ -137,6 +139,7 @@ export function isLearnNavActive(
   pathname: string,
   item: Pick<LearnNavItem, "href" | "exact" | "id">
 ): boolean {
+  pathname = stripLocale(pathname);
   if (item.id === "today") {
     return pathname === "/learn" || pathname === "/learn/" || TODAY_PATHS.some((r) => r.test(pathname));
   }

@@ -34,11 +34,13 @@ import { submitAttempt, syncFromServer, toLocalAttempt } from "@/lib/lms/cloud";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
 import { evaluatePostGate, type PostGate } from "@/lib/lms/gates";
 import { attentionItem, isStraightLining, itemsForFace, newSeed } from "@/lib/lms/integrity";
-import { programmeCopy } from "@/lib/lms/programme-copy";
+import { programmeTemplate } from "@/lib/lms/programme-copy";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 export default function AssessmentRunnerPage() {
   const params = useParams();
   const router = useRouter();
+  const { t, L, td, fill, locale } = useLmsT();
   const raw = String(params.phase || "pre");
   const phase = (raw === "post" ? "post" : raw === "mid" ? "mid" : "pre") as
     "pre" | "post" | "mid";
@@ -97,16 +99,22 @@ export default function AssessmentRunnerPage() {
       ? "v2"
       : "v1";
   const items = useMemo(() => buildInstrumentItems(programmeId, version), [programmeId, version]);
+  // Display copy only. Scoring uses `items` (English bank, stable ids).
+  const displayItems = useMemo(() => td(items), [items, td]);
   const honesty = version === "v2" ? honestyItem(programmeId) : null;
 
   const constructIds = constructs.map((c) => c.id);
   const currentConstruct = constructIds[step];
   const attention = useMemo(() => attentionItem(programmeId, version), [programmeId, version]);
+  const displayAttention = useMemo(
+    () => ({ ...attention, prompt: t(attention.prompt) }),
+    [attention, t],
+  );
   // Item order is randomised within each face (stable for this attempt via its seed)
   const stepItems = useMemo(
-    () => (seed == null ? [] : itemsForFace(items, constructIds, currentConstruct, seed, attention)),
+    () => (seed == null ? [] : itemsForFace(displayItems, constructIds, currentConstruct, seed, displayAttention)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [items, currentConstruct, seed, attention],
+    [displayItems, currentConstruct, seed, displayAttention],
   );
   const totalItems = items.length + 1 + (honesty ? 1 : 0); // + the attention (and v2 honesty) check
   const constructMeta = constructs.find((c) => c.id === currentConstruct);
@@ -166,15 +174,15 @@ export default function AssessmentRunnerPage() {
       markFirstRunStep("pre");
       track("pre_complete", { overall });
       setState(loadLmsState());
-      router.push("/learn/feedback");
+      router.push(L("/learn/feedback"));
     } else if (phase === "mid") {
       track("mid_complete", { overall });
       setState(loadLmsState());
-      router.push("/learn/feedback?mode=mid");
+      router.push(L("/learn/feedback?mode=mid"));
     } else {
       track("post_complete", { overall });
       setState(next);
-      router.push("/learn/report");
+      router.push(L("/learn/report"));
     }
   }
 
@@ -194,6 +202,7 @@ export default function AssessmentRunnerPage() {
       seed: seed ?? undefined,
       durationMs,
       instrument: version,
+      locale,
       ...(honesty ? { honesty: responses[honesty.id] } : {}),
     };
     setBusy(true);
@@ -237,7 +246,7 @@ export default function AssessmentRunnerPage() {
         ...next.attempts.filter(
           (a) => phase === "mid" || !(a.phase === phase && a.programmeId === programmeId),
         ),
-        { phase, programmeId, responses, result, completedAt: new Date().toISOString(), seed: meta.seed, durationMs },
+        { phase, programmeId, responses, result, completedAt: new Date().toISOString(), seed: meta.seed, durationMs, locale },
       ];
       saveLmsState(next);
       finish(next, result.overall);
@@ -249,7 +258,7 @@ export default function AssessmentRunnerPage() {
   if (!state) {
     return (
       <LearnShell title="Assessment">
-        <p className="learn-meta">Loading…</p>
+        <p className="learn-meta">{t("Loading…")}</p>
       </LearnShell>
     );
   }
@@ -265,8 +274,8 @@ export default function AssessmentRunnerPage() {
             measured honestly against it. Retaking it is not possible.
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Link href="/learn/feedback" className="learn-btn learn-btn-primary">See your baseline narrative</Link>
-            <Link href="/learn/courses" className="learn-btn learn-btn-ghost">Continue sessions</Link>
+            <Link href={L("/learn/feedback")} className="learn-btn learn-btn-primary">{t("See your baseline narrative")}</Link>
+            <Link href={L("/learn/courses")} className="learn-btn learn-btn-ghost">{t("Continue sessions")}</Link>
           </div>
         </div>
       </LearnShell>
@@ -281,7 +290,7 @@ export default function AssessmentRunnerPage() {
             Your after-test was recorded on {formatDateTimeZA(existingPost.completedAt)}.
             Each programme has one after-test, so your report stays comparable.
           </p>
-          <Link href="/learn/report" className="learn-btn learn-btn-primary mt-3">View your report</Link>
+          <Link href={L("/learn/report")} className="learn-btn learn-btn-primary mt-3">{t("View your report")}</Link>
         </div>
       </LearnShell>
     );
@@ -311,7 +320,7 @@ export default function AssessmentRunnerPage() {
             <p className="learn-meta mt-2">Sign in so the server can verify your progress for a certificate.</p>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
-            <Link href="/learn/courses" className="learn-btn learn-btn-primary">Continue sessions</Link>
+            <Link href={L("/learn/courses")} className="learn-btn learn-btn-primary">{t("Continue sessions")}</Link>
             {existingPre && gate?.daysRemaining ? (
               <AddToCalendar preCompletedAt={existingPre.completedAt} programmeName={programme?.name ?? "Super-Cube®"} />
             ) : null}
@@ -333,14 +342,14 @@ export default function AssessmentRunnerPage() {
       }
       subtitle={
         phase === "pre"
-          ? programmeCopy("assessment.pre.subtitle", programmeId, {
-                programme: programme?.name ?? "Programme",
+          ? fill(programmeTemplate("assessment.pre.subtitle", programmeId), {
+                programme: t(programme?.name ?? "Programme"),
                 n: items.length,
-                checks: honesty ? "two quick checks" : "one quick check",
+                checks: t(honesty ? "two quick checks" : "one quick check"),
               })
           : phase === "mid"
-            ? programmeCopy("assessment.mid.subtitle", programmeId, { programme: programme?.name ?? "Programme" })
-            : programmeCopy("assessment.post.subtitle", programmeId, { programme: programme?.name ?? "Programme" })
+            ? fill(programmeTemplate("assessment.mid.subtitle", programmeId), { programme: t(programme?.name ?? "Programme") })
+            : fill(programmeTemplate("assessment.post.subtitle", programmeId), { programme: t(programme?.name ?? "Programme") })
       }
     >
       {fromOrientation && phase === "pre" && state?.orientation && (
@@ -366,7 +375,7 @@ export default function AssessmentRunnerPage() {
             onClick={saveDraft}
             className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
           >
-            Save & resume later
+            {t("Save & resume later")}
           </button>
         </div>
         <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-black/[0.06]">
@@ -401,7 +410,7 @@ export default function AssessmentRunnerPage() {
                 : "border border-line bg-elevated text-slate hover:text-ink"
             }`}
           >
-            {c.name}
+            {t(c.name)}
           </button>
         ))}
       </div>
@@ -413,8 +422,8 @@ export default function AssessmentRunnerPage() {
             style={{ background: constructMeta?.color }}
           />
           <div>
-            <h2 className="learn-card-title">{constructMeta?.name}</h2>
-            <p className="learn-meta mt-0.5">{constructMeta ? faceTagline(constructMeta.id, programmeId) : null}</p>
+            <h2 className="learn-card-title">{constructMeta ? t(constructMeta.name) : null}</h2>
+            <p className="learn-meta mt-0.5">{constructMeta ? t(faceTagline(constructMeta.id, programmeId)) : null}</p>
           </div>
         </div>
 
@@ -438,7 +447,7 @@ export default function AssessmentRunnerPage() {
                 prompt={item.prompt}
                 value={responses[item.id]}
                 onChange={(v) => setValue(item.id, v)}
-                labels={scaleLabelsFor(item)}
+                labels={scaleLabelsFor(item).map((label) => t(label))}
               />
             ),
           )}
@@ -448,7 +457,7 @@ export default function AssessmentRunnerPage() {
               prompt={honesty.prompt}
               value={responses[honesty.id]}
               onChange={(v) => setValue(honesty.id, v)}
-              labels={honesty.labels}
+              labels={honesty.labels.map((label) => t(label))}
             />
           )}
         </div>
@@ -460,7 +469,7 @@ export default function AssessmentRunnerPage() {
             onClick={() => setStep((s) => Math.max(0, s - 1))}
             className="learn-btn learn-btn-ghost disabled:opacity-40"
           >
-            Back
+            {t("Back")}
           </button>
           {step < constructs.length - 1 ? (
             <button
@@ -479,7 +488,7 @@ export default function AssessmentRunnerPage() {
               }}
               className="learn-btn learn-btn-primary disabled:opacity-40"
             >
-              Next construct
+              {t("Next construct")}
             </button>
           ) : (
             <button
@@ -489,12 +498,12 @@ export default function AssessmentRunnerPage() {
               className="learn-btn learn-btn-primary disabled:opacity-40"
             >
               {busy
-                ? "Saving…"
+                ? t("Saving…")
                 : phase === "pre"
-                ? "Submit & see your narrative"
+                ? t("Submit & see your narrative")
                 : phase === "mid"
-                  ? "Submit mid check-in"
-                  : "Submit & view report"}
+                  ? t("Submit mid check-in")
+                  : t("Submit & view report")}
             </button>
           )}
         </div>

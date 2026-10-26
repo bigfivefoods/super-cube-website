@@ -6,6 +6,7 @@ import { constructs, type ConstructId } from "@/lib/content";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
 import { deriveFacePattern, pulseSeries } from "@/lib/lms/face-tracking";
 import { getMicroPracticesFor } from "@/lib/lms/micro-practices";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { buildAssessmentNarrative, faceGrowthLine } from "@/lib/lms/narrative";
 import type { LocalAttempt } from "@/lib/lms/store";
 import type { LocalLmsState } from "@/lib/lms/store";
@@ -20,7 +21,8 @@ export function ConstructDeepDive({
   post?: LocalAttempt;
 }) {
   const [open, setOpen] = useState<ConstructId | null>(null);
-  const narrative = buildAssessmentNarrative(post?.result ?? pre.result, (post ?? pre).programmeId);
+  const { t, L } = useLmsT();
+  const narrative = buildAssessmentNarrative(post?.result ?? pre.result, (post ?? pre).programmeId, t);
   const pattern = deriveFacePattern(state);
   const series = pulseSeries(state, 14);
 
@@ -82,7 +84,7 @@ export function ConstructDeepDive({
                     {face.headline}
                   </p>
                   {preScore != null && postScore != null && (
-                    <p className="mt-1 text-[0.8125rem] text-ink">{faceGrowthLine(c.name, preScore, postScore)}</p>
+                    <p className="mt-1 text-[0.8125rem] text-ink">{faceGrowthLine(c.name, preScore, postScore, t)}</p>
                   )}
                   <p className="mt-1 text-[0.8125rem] text-ink">
                     <span className="font-semibold">What&apos;s working: </span>
@@ -115,13 +117,13 @@ export function ConstructDeepDive({
                   )}
                   <div className="mt-3 flex flex-wrap gap-2 print:hidden">
                     <Link
-                      href={`/learn/courses/${c.id}`}
+                      href={L(`/learn/courses/${c.id}`)}
                       className="learn-btn learn-btn-ghost !min-h-8 !text-[0.75rem]"
                     >
                       Sessions
                     </Link>
                     <Link
-                      href="/learn/practice"
+                      href={L("/learn/practice")}
                       className="learn-btn learn-btn-primary !min-h-8 !text-[0.75rem]"
                     >
                       Practice

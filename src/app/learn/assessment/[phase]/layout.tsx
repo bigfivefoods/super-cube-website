@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { pageMeta } from "@/lib/seo";
+import { learnMetadata } from "@/lib/i18n/lms/meta";
 
 const PHASE_LABEL: Record<string, string> = {
   pre: "Pre-assessment baseline",
@@ -10,11 +10,11 @@ const PHASE_LABEL: Record<string, string> = {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ phase: string }>;
+  params: Promise<{ phase: string; locale?: string }>;
 }): Promise<Metadata> {
-  const { phase } = await params;
+  const { phase, locale } = await params;
   const key = phase === "post" ? "post" : phase === "mid" ? "mid" : "pre";
-  return pageMeta({
+  return learnMetadata(locale, {
     title: PHASE_LABEL[key],
     description: `Super-Cube® ${PHASE_LABEL[key].toLowerCase()}: rate yourself across the six leadership faces to see where you are growing.`,
     path: `/learn/assessment/${encodeURIComponent(phase)}`,

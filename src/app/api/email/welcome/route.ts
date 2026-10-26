@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sendEmail } from "@/lib/email";
 import { emailSiteUrl, isProgrammeId } from "@/lib/email/layout";
 import { verifiedRecipient } from "@/lib/email/recipient";
+import { isLocale } from "@/lib/i18n/config";
 import { welcomeEmail } from "@/lib/email/templates";
 import { getServerEntitlement, isEntitled } from "@/lib/lms/server/entitlement";
 import { limitRequest } from "@/lib/server/rate-limit";
@@ -37,7 +38,7 @@ export async function POST(request: Request) {
   const limited = await limitRequest(request, "email-welcome", [`user:${to.userId}`]);
   if (limited) return limited;
 
-  const body = (await request.json().catch(() => ({}))) as { programmeId?: unknown; mode?: unknown };
+  const body = (await request.json().catch(() => ({}))) as { programmeId?: unknown; mode?: unknown; locale?: unknown };
   const programmeId = isProgrammeId(body.programmeId) ? body.programmeId : "adults";
 
   let mode: "demo" | "purchase" = "demo";
@@ -49,7 +50,9 @@ export async function POST(request: Request) {
   }
 
   const site = emailSiteUrl();
-  const email = welcomeEmail({ name: to.name, programmeId, mode, site });
+  const localeRaw = typeof body.locale === "string" ? body.locale : null;
+  const locale = isLocale(localeRaw) ? localeRaw : "en";
+  const email = welcomeEmail({ name: to.name, programmeId, mode, site, locale });
   const result = await sendEmail({
     to: to.email,
     subject: email.subject,

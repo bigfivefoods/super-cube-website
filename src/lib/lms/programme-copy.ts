@@ -162,10 +162,10 @@ export function learnerProgrammeId(state: LocalLmsState | null | undefined): Pro
     | undefined;
 }
 
-export function programmeCopy(
+/** English template, placeholders still in place (`{programme}`, `{n}`, `{checks}`). */
+export function programmeTemplate(
   key: ProgrammeCopyKey,
   programmeId?: ProgrammeId | string | null,
-  vars: Record<string, string | number> = {},
 ): string {
   const table =
     programmeId === "kids"
@@ -173,5 +173,18 @@ export function programmeCopy(
       : programmeId === "adolescents"
         ? PROGRAMME_COPY_ADOLESCENTS
         : PROGRAMME_COPY_ADULTS;
-  return table[key].replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
+  return table[key];
+}
+
+/** Substitute `{placeholders}` after the template has been translated. */
+export function fillCopy(template: string, vars: Record<string, string | number> = {}): string {
+  return template.replace(/\{(\w+)\}/g, (m, k: string) => (k in vars ? String(vars[k]) : m));
+}
+
+export function programmeCopy(
+  key: ProgrammeCopyKey,
+  programmeId?: ProgrammeId | string | null,
+  vars: Record<string, string | number> = {},
+): string {
+  return fillCopy(programmeTemplate(key, programmeId), vars);
 }

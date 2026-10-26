@@ -234,54 +234,75 @@ const HEADLINE_SUFFIX: Record<FaceBand, string> = {
   signature: "a signature strength",
 };
 
-function faceFor(s: ConstructScore, p: ProgrammeId): FaceNarrative {
+type Tr = (s: string) => string;
+
+function faceFor(s: ConstructScore, p: ProgrammeId, tr: Tr): FaceNarrative {
   const b = bandFor(s.score);
   const c = COPY[s.constructId];
   const kids = p === "kids";
-  const strength = (kids ? c.kidsStrength : c.strength)[b];
-  const nextStep = (kids ? c.kidsNext : c.next)[b];
+  const strength = tr((kids ? c.kidsStrength : c.strength)[b]);
+  const nextStep = tr((kids ? c.kidsNext : c.next)[b]);
+  const name = tr(s.name);
   return {
     constructId: s.constructId,
-    name: s.name,
+    name,
     color: s.color,
     score: s.score,
     band: b,
-    bandLabel: BAND_LABELS[b],
-    headline: `${s.name}: ${HEADLINE_SUFFIX[b]}`,
+    bandLabel: tr(BAND_LABELS[b]),
+    headline: tr(`{name}: ${HEADLINE_SUFFIX[b]}`).replace("{name}", name),
     strength,
     nextStep,
     insight: `${strength} ${nextStep}`,
-    firstPractice: kids ? c.kidsPractice : c.practice,
+    firstPractice: tr(kids ? c.kidsPractice : c.practice),
     sessionHref: `/learn/courses/${s.constructId}`,
   };
 }
 
-/** Narrative from a pre (or post) attempt: baseline feedback, report and deep-dive. */
-export function buildAssessmentNarrative(result: AttemptResult, programmeId: ProgrammeId = "adults"): AssessmentNarrative {
+/**
+ * Narrative from a pre (or post) attempt: baseline feedback, report and deep-dive.
+ * `tr` defaults to identity so English output stays the source strings. Pass a
+ * catalogue lookup to translate; face names and `{placeholders}` are filled after.
+ */
+export function buildAssessmentNarrative(
+  result: AttemptResult,
+  programmeId: ProgrammeId = "adults",
+  tr: Tr = (s) => s,
+): AssessmentNarrative {
   const sorted = [...result.constructScores].sort((a, b) => a.score - b.score);
   const weakestIds = sorted.slice(0, 2).map((s) => s.constructId);
   const strongestIds = sorted.slice(-2).reverse().map((s) => s.constructId);
-  const nameOf = (id: ConstructId) => constructs.find((c) => c.id === id)?.name;
-  const strongNames = strongestIds.map(nameOf).filter(Boolean).join(" and ");
-  const growNames = weakestIds.map(nameOf).filter(Boolean).join(" and ");
+  const nameOf = (id: ConstructId) => constructs.find((c) => c.id === id)?.name ?? "";
+  const joinNames = (ids: ConstructId[]) => ids.map((id) => tr(nameOf(id))).filter(Boolean).join(tr(" and "));
+  const strongNames = joinNames(strongestIds);
+  const growNames = joinNames(weakestIds);
   const kids = programmeId === "kids";
 
-  let overallHeadline = "A solid profile to build on.";
-  let overallBody = `Your strongest faces right now are ${strongNames}. Lead with them while you grow the others: this is a starting map, not a verdict.`;
+  let overallHeadline = tr("A solid profile to build on.");
+  let overallBody = tr(
+    "Your strongest faces right now are {strong}. Lead with them while you grow the others: this is a starting map, not a verdict.",
+  ).replace("{strong}", strongNames);
   if (result.overall < 40) {
-    overallHeadline = "An honest starting map.";
-    overallBody = `Your relative strengths are ${strongNames}. Lower starting scores aren't a judgement; they show where practice can help most, and the sessions are built for exactly this starting point.`;
+    overallHeadline = tr("An honest starting map.");
+    overallBody = tr(
+      "Your relative strengths are {strong}. Lower starting scores aren't a judgement; they show where practice can help most, and the sessions are built for exactly this starting point.",
+    ).replace("{strong}", strongNames);
   } else if (result.overall >= 75) {
-    overallHeadline = "A strong profile, with room to refine.";
-    overallBody = `${strongNames} stand out as signature or established strengths. The next level of growth comes from deliberate stretch on the faces that feel less natural.`;
+    overallHeadline = tr("A strong profile, with room to refine.");
+    overallBody = tr(
+      "{strong} stand out as signature or established strengths. The next level of growth comes from deliberate stretch on the faces that feel less natural.",
+    ).replace("{strong}", strongNames);
   }
   if (kids) {
-    overallHeadline = "Look at all your strengths!";
-    overallBody = `You're especially good at ${strongNames}. Now let's have fun growing the other faces too.`;
+    overallHeadline = tr("Look at all your strengths!");
+    overallBody = tr("You're especially good at {strong}. Now let's have fun growing the other faces too.").replace(
+      "{strong}",
+      strongNames,
+    );
   }
 
   // Strengths first: strongest face first in the list.
-  const faces = result.constructScores.map((s) => faceFor(s, programmeId)).sort((a, b) => b.score - a.score);
+  const faces = result.constructScores.map((s) => faceFor(s, programmeId, tr)).sort((a, b) => b.score - a.score);
 
   return {
     overall: result.overall,
@@ -291,28 +312,38 @@ export function buildAssessmentNarrative(result: AttemptResult, programmeId: Pro
     weakestIds,
     strongestIds,
     weekFocus: kids
-      ? `This week: keep using ${strongNames}, and try one session on ${growNames}.`
-      : `This week: lead with ${strongNames}, and give ${growNames || "your growth faces"} one session and one micro-practice each.`,
+      ? tr("This week: keep using {strong}, and try one session on {grow}.")
+          .replace("{strong}", strongNames)
+          .replace("{grow}", growNames)
+      : tr("This week: lead with {strong}, and give {grow} one session and one micro-practice each.")
+          .replace("{strong}", strongNames)
+          .replace("{grow}", growNames || tr("your growth faces")),
   };
 }
 
 /** Strengths-first, noise-aware wording for one face's change from pre to post. */
-export function faceGrowthLine(name: string, pre: number, post: number): string {
+export function faceGrowthLine(name: string, pre: number, post: number, tr: Tr = (s) => s): string {
   const delta = Math.round((post - pre) * 10) / 10;
   const band = changeBand(delta, "face");
   const signed = `${delta > 0 ? "+" : ""}${delta}`;
+  const face = tr(name);
+  const line = (template: string) => tr(template).replace("{name}", face).replace("{signed}", signed);
   switch (band?.id) {
     case "real_growth":
-      return `${name} moved ${signed} points, past a placeholder band. The band is provisional until real norms exist, so treat it as a clue and name what you practised.`;
+      return line(
+        "{name} moved {signed} points, past a placeholder band. The band is provisional until real norms exist, so treat it as a clue and name what you practised.",
+      );
     case "possible_growth":
-      return `${name} rose ${signed} points on a placeholder scale. Keep practising. This is not a measured change.`;
+      return line("{name} rose {signed} points on a placeholder scale. Keep practising. This is not a measured change.");
     case "within_noise":
       return post >= 60
-        ? `${name} held steady at a strong level (${signed}). Keep using it, and pick one stretch practice to take it further.`
-        : `${name} held steady (${signed}). This is a good face for your next 21 days of practice.`;
+        ? line("{name} held steady at a strong level ({signed}). Keep using it, and pick one stretch practice to take it further.")
+        : line("{name} held steady ({signed}). This is a good face for your next 21 days of practice.");
     case "possible_decline":
-      return `${name} dipped ${signed} points on a placeholder scale. Treat it as useful data, not a verdict.`;
+      return line("{name} dipped {signed} points on a placeholder scale. Treat it as useful data, not a verdict.");
     default:
-      return `${name} fell ${signed} points on a placeholder scale. Greater self-awareness after a programme can sometimes lower self-ratings (known as response shift); talk it through with a coach or mentor and choose one practice.`;
+      return line(
+        "{name} fell {signed} points on a placeholder scale. Greater self-awareness after a programme can sometimes lower self-ratings (known as response shift); talk it through with a coach or mentor and choose one practice.",
+      );
   }
 }

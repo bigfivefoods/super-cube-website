@@ -1,5 +1,11 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import {
+  LOCALE_COOKIE,
+  isPrefixedLocale,
+  localizedPath,
+  stripLocale,
+} from "@/lib/i18n/config";
 
 /**
  * /learn pages a visitor who isn't signed in may open when the demo is off.
@@ -39,7 +45,44 @@ function isPublicLearnPath(path: string): boolean {
   return PUBLIC_LEARN_SECTIONS.some((x) => p === x || p.startsWith(x + "/"));
 }
 
+/**
+ * Unprefixed /learn follows the language the visitor already chose.
+ * The cookie wins. English in the cookie stays on /learn (so the switcher
+ * can leave a French page). With no cookie, a same-site referer such as
+ * /fr/pricing keeps them in French. Nothing uses the browser language.
+ */
+function learnLocaleRedirect(request: NextRequest): NextResponse | null {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+  const path = request.nextUrl.pathname;
+  if (path !== "/learn" && !path.startsWith("/learn/")) return null;
+  const cookie = request.cookies.get(LOCALE_COOKIE)?.value;
+  if (cookie === "en") return null;
+  let locale: string | null = null;
+  if (isPrefixedLocale(cookie)) locale = cookie;
+  else if (!cookie) {
+    const ref = request.headers.get("referer");
+    if (ref) {
+      try {
+        const u = new URL(ref);
+        if (u.origin === request.nextUrl.origin) {
+          const seg = u.pathname.split("/")[1];
+          if (isPrefixedLocale(seg)) locale = seg;
+        }
+      } catch {
+        /* ignore a bad referer */
+      }
+    }
+  }
+  if (!isPrefixedLocale(locale)) return null;
+  const dest = request.nextUrl.clone();
+  dest.pathname = localizedPath(locale, path);
+  return NextResponse.redirect(dest);
+}
+
 export async function middleware(request: NextRequest) {
+  const localeRedirect = learnLocaleRedirect(request);
+  if (localeRedirect) return localeRedirect;
+
   let response = NextResponse.next({
     request: { headers: request.headers },
   });
@@ -48,6 +91,7 @@ export async function middleware(request: NextRequest) {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   const demoOpen = process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true";
   const path = request.nextUrl.pathname;
+  const learnPath = stripLocale(path);
 
   // Refresh Supabase session when configured
   if (url && key) {
@@ -70,8 +114,8 @@ export async function middleware(request: NextRequest) {
     await supabase.auth.getUser();
   }
 
-  // Hard gate only when Supabase is live and demo is off
-  if (path.startsWith("/learn") && url && key && !demoOpen) {
+  // Hard gate only when Supabase is live and demo is off. Locale prefixes are stripped first.
+  if (learnPath.startsWith("/learn") && url && key && !demoOpen) {
     const supabase = createServerClient(url, key, {
       cookies: {
         getAll() {
@@ -85,7 +129,7 @@ export async function middleware(request: NextRequest) {
     } = await supabase.auth.getUser();
 
     // Pages a visitor who isn't signed in may open (see isPublicLearnPath)
-    const publicLearn = isPublicLearnPath(path);
+    const publicLearn = isPublicLearnPath(learnPath);
     if (!user && !publicLearn) {
       const login = new URL("/login", request.url);
       login.searchParams.set("next", path);
@@ -98,7 +142,20 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/learn",
     "/learn/:path*",
+    "/fr/learn",
+    "/fr/learn/:path*",
+    "/ar/learn",
+    "/ar/learn/:path*",
+    "/pt/learn",
+    "/pt/learn/:path*",
+    "/sw/learn",
+    "/sw/learn/:path*",
+    "/zu/learn",
+    "/zu/learn/:path*",
+    "/af/learn",
+    "/af/learn/:path*",
     "/login",
     "/signup",
     "/auth/callback",

@@ -2,6 +2,8 @@
  * Every email the site sends, built on the shared layout (layout.ts).
  * Copy only states what the product actually does (see /pricing, /learn/demo).
  */
+import { isPrefixedLocale, localizedPath, type Locale } from "@/lib/i18n/config";
+import { lmsText } from "@/lib/i18n/lms/text";
 import { COURSE_PRICE_ZAR, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import {
   bullets,
@@ -40,6 +42,16 @@ function themeFor(id?: string | null): EmailTheme {
   return isProgrammeId(id) ? id : "brand";
 }
 
+/** Learn copy in the visitor's language. English, and any string without a catalogue entry, stays English. */
+function emailT(locale?: string | null) {
+  return (s: string) => (!locale || locale === "en" || !isPrefixedLocale(locale) ? s : lmsText(locale, s));
+}
+
+function learnUrl(site: string, locale: string | undefined, path: string) {
+  const loc: Locale = isPrefixedLocale(locale) ? locale : "en";
+  return `${site}${localizedPath(loc, path)}`;
+}
+
 /** "R99.00" for rand, "$6.00 USD" for dollars, else "EUR 10.00". Amount in minor units. */
 export function formatAmount(minor: number, currency: string): string {
   const major = (Number(minor) / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -73,12 +85,13 @@ export function formatPaidAt(iso?: string | null): string {
 // ---------------------------------------------------------------------------
 
 export function welcomeEmail(
-  o: Common & { name?: string | null; programmeId: ProgrammeId | string; mode: "demo" | "purchase"; continueUrl?: string },
+  o: Common & { name?: string | null; programmeId: ProgrammeId | string; mode: "demo" | "purchase"; continueUrl?: string; locale?: string | null },
 ): RenderedEmail {
   const site = (o.site ?? emailSiteUrl()).replace(/\/$/, "");
   const pid = isProgrammeId(o.programmeId) ? o.programmeId : "adults";
   const pname = programmeName(pid);
-  const continueUrl = o.continueUrl ?? `${site}/learn/onboarding?mode=${o.mode}&programme=${pid}`;
+  const E = emailT(o.locale);
+  const continueUrl = o.continueUrl ?? learnUrl(site, o.locale ?? undefined, `/learn/onboarding?mode=${o.mode}&programme=${pid}`);
   const hi = firstName(o.name);
   const purchase = o.mode === "purchase";
 
@@ -89,7 +102,7 @@ export function welcomeEmail(
       strong(pname),
       " pathway. Leadership capacity grows through deliberate practice, not binge content: short sessions, real reflection, and a measure of where you started.",
     ),
-    button({ href: continueUrl, label: purchase ? "Continue your pathway" : "Start your free demo", theme: pid }),
+    button({ href: continueUrl, label: E(purchase ? "Continue your pathway" : "Start your free demo"), theme: pid }),
     heading(purchase ? "Your pathway" : "What's in your free demo", { eyebrow: "How it works" }),
     purchase
       ? steps([
@@ -122,17 +135,17 @@ export function welcomeEmail(
   if (purchase) blocks.pop();
 
   return renderEmail({
-    subject: purchase ? "You're in — Super-Cube® Learn is unlocked" : "Welcome to Super-Cube® Learn (free demo)",
+    subject: E(purchase ? "You're in — Super-Cube® Learn is unlocked" : "Welcome to Super-Cube® Learn (free demo)"),
     preheader: purchase
       ? `${pname} is unlocked for life. Here's how to make the most of your pathway.`
       : `Your free ${pname} demo is ready: orientation, your baseline and two sample sessions.`,
     theme: pid,
     label: "Learn",
     eyebrow: pname,
-    title: purchase ? "You're in. Your pathway is unlocked." : "Welcome. Your free demo is ready.",
-    intro: purchase
+    title: E(purchase ? "You're in. Your pathway is unlocked." : "Welcome. Your free demo is ready."),
+    intro: E(purchase
       ? "Thank you for joining Super-Cube® Learn. Everything you need to grow all six faces is waiting for you."
-      : "Start with a short orientation and your baseline, then try two sample sessions. No card required.",
+      : "Start with a short orientation and your baseline, then try two sample sessions. No card required."),
     blocks,
     signoff: rich("Grow well,", { html: "<br />", text: "\n" }, "The Super-Cube® team"),
     site,

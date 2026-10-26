@@ -10,11 +10,15 @@ import {
 } from "@/lib/lms/scoring";
 import { getProgramme } from "@/lib/programmes";
 import { bandFor, BAND_LABELS, buildAssessmentNarrative, faceGrowthLine } from "@/lib/lms/narrative";
+import type { Locale } from "@/lib/i18n/config";
+import { lmsText } from "@/lib/i18n/lms/text";
 
 export type ReportPdfInput = {
   state: LocalLmsState;
   pre: LocalAttempt;
   post?: LocalAttempt | null;
+  /** Latin languages are drawn in the PDF. Arabic stays English (the built-in font is WinAnsi). */
+  locale?: Locale;
 };
 
 /** jsPDF core fonts are WinAnsi only: map curly quotes, arrows and ellipses */
@@ -45,7 +49,10 @@ export function buildGrowthReportPdf({
   state,
   pre,
   post,
+  locale,
 }: ReportPdfInput): jsPDF {
+  const tr = (s: string) =>
+    !locale || locale === "en" || locale === "ar" ? s : lmsText(locale, s);
   const doc = new jsPDF({ unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth();
   const margin = 16;
@@ -335,7 +342,7 @@ export function buildGrowthReportPdf({
   y = (tablePlugin.lastAutoTable?.finalY ?? y) + 10;
 
   // —— Strengths first: what is working, then one next step per face ——
-  const narrative = buildAssessmentNarrative((post ?? pre).result, pre.programmeId);
+  const narrative = buildAssessmentNarrative((post ?? pre).result, pre.programmeId, tr);
   // 8.5pt text at 1.3 line height = the 3.9mm line step used below
   doc.setLineHeightFactor(1.3);
   ensureSpace(30);
@@ -352,7 +359,7 @@ export function buildGrowthReportPdf({
   y += introLines.length * 3.9 + 3;
   for (const f of narrative.faces) {
     const preScore = pre.result.constructScores.find((s) => s.constructId === f.constructId)?.score;
-    const growthLine = post && preScore != null ? faceGrowthLine(f.name, preScore, f.score) : null;
+    const growthLine = post && preScore != null ? faceGrowthLine(f.name, preScore, f.score, tr) : null;
     const textW = contentW - 6;
     doc.setFontSize(8.5);
     const strengthLines = doc.splitTextToSize(pdfText(f.strength), textW);

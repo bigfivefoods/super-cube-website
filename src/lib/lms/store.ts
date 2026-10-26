@@ -41,6 +41,8 @@ export interface LocalAttempt {
   /** Per-attempt item-order seed and time taken (integrity checks) */
   seed?: number;
   durationMs?: number;
+  /** Language the questionnaire was shown in. Not part of the score. */
+  locale?: string;
 }
 
 export interface LocalOrientation {

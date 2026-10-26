@@ -27,10 +27,12 @@ import { isMinorProfile } from "@/lib/lms/consent";
 import type { ProgrammeId } from "@/lib/programmes";
 import { serverHasRecordedPractice } from "@/lib/lms/rewards";
 import { getProgramme } from "@/lib/programmes";
-import { programmeCopy } from "@/lib/lms/programme-copy";
+import { programmeTemplate } from "@/lib/lms/programme-copy";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 export default function ReportPage() {
   const state = useLmsState();
+  const { t, L, fill } = useLmsT();
   const programmeHint = state.subscription?.programmeId || state.user?.programmeId || state.profile?.programmeId;
   useEffect(() => {
     if (!programmeHint) return;
@@ -62,19 +64,19 @@ export default function ReportPage() {
         <div className="flex flex-wrap gap-2">
           {!orientation && (
             <Button
-              href="/learn/assessment/orientation"
+              href={L("/learn/assessment/orientation")}
               variant="primary"
               className="!min-h-9 !py-1.5 !text-[0.8125rem]"
             >
-              Start pre-pre assessment
+              {t("Start pre-pre assessment")}
             </Button>
           )}
           <Button
-            href="/learn/assessment/pre"
+            href={L("/learn/assessment/pre")}
             variant={orientation ? "primary" : "ghost"}
             className="!min-h-9 !py-1.5 !text-[0.8125rem]"
           >
-            Start pre-assessment
+            {t("Start pre-assessment")}
           </Button>
         </div>
         {orientation && (
@@ -100,10 +102,9 @@ export default function ReportPage() {
   return (
     <LearnShell
       title="Step 6 of 6 · See your growth report"
-      subtitle={`${programmeCopy("report.subtitle", programmeId, { programme: programme?.name ?? "Super-Cube®" })}${programmeCopy(
-        post ? "report.subtitle.post" : "report.subtitle.baseline",
-        programmeId,
-      )}`}
+      subtitle={`${fill(programmeTemplate("report.subtitle", programmeId), {
+        programme: t(programme?.name ?? "Super-Cube®"),
+      })}${t(programmeTemplate(post ? "report.subtitle.post" : "report.subtitle.baseline", programmeId))}`}
     >
       <div className="report-print-root">
         <ReportMeta state={state} />
@@ -113,35 +114,35 @@ export default function ReportPage() {
         <div className="mb-4 flex flex-wrap gap-2 print:hidden">
           <DownloadReportButton state={state} pre={pre} post={post} />
           <a href="#share-growth" className="learn-btn learn-btn-primary">
-            Share growth link
+            {t("Share growth link")}
           </a>
           <Button
-            href="/learn/feedback"
+            href={L("/learn/feedback")}
             variant="ghost"
             className="!min-h-9 !py-1.5 !text-[0.8125rem]"
           >
-            Narrative + lit cube
+            {t("Narrative + lit cube")}
           </Button>
           <Button
-            href="/learn/practice"
+            href={L("/learn/practice")}
             variant="ghost"
             className="!min-h-9 !py-1.5 !text-[0.8125rem]"
           >
-            Micro-practice
+            {t("Micro-practice")}
           </Button>
           <Button
-            href="/learn/account"
+            href={L("/learn/account")}
             variant="ghost"
             className="!min-h-9 !py-1.5 !text-[0.8125rem]"
           >
-            You / profile
+            {t("You / profile")}
           </Button>
           <button
             type="button"
             className="learn-btn learn-btn-ghost"
             onClick={() => window.print()}
           >
-            Print / PDF view
+            {t("Print / PDF view")}
           </button>
         </div>
 
@@ -158,18 +159,18 @@ export default function ReportPage() {
               </p>
             </div>
             <Button
-              href="/learn/assessment/post"
+              href={L("/learn/assessment/post")}
               variant="primary"
               className="mt-3 !min-h-10 shrink-0 !text-[0.8125rem] sm:mt-0"
             >
-              Check after-test status →
+              {t("Check after-test status →")}
             </Button>
           </div>
         )}
 
         <section className="mb-4 grid gap-2 sm:mb-5 sm:grid-cols-3 print:break-inside-avoid">
           <div className="learn-card !p-4">
-            <p className="learn-eyebrow">Pre · baseline</p>
+            <p className="learn-eyebrow">{t("Pre · baseline")}</p>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-ink tabular-nums">
               {pre.result.overall}
             </p>
@@ -178,18 +179,18 @@ export default function ReportPage() {
             </p>
           </div>
           <div className="learn-card !p-4">
-            <p className="learn-eyebrow">Post · after programme</p>
+            <p className="learn-eyebrow">{t("Post · after programme")}</p>
             <p className="mt-1 text-2xl font-semibold tracking-tight text-ink tabular-nums">
               {post ? post.result.overall : "—"}
             </p>
             <p className="learn-meta mt-0.5">
               {post
                 ? formatDateZA(post.completedAt)
-                : "Not taken yet"}
+                : t("Not taken yet")}
             </p>
           </div>
           <div className="learn-card !p-4">
-            <p className="learn-eyebrow">Overall growth</p>
+            <p className="learn-eyebrow">{t("Overall growth")}</p>
             <p
               className={`mt-1 text-2xl font-semibold tracking-tight tabular-nums ${
                 growth !== null && growth >= 0 ? "text-ink" : "text-slate"
@@ -201,7 +202,7 @@ export default function ReportPage() {
               )}
             </p>
             <p className="learn-meta mt-0.5">
-              {post ? "Pre → post change" : "After-test not taken yet"}
+              {post ? t("Pre → post change") : t("After-test not taken yet")}
             </p>
             {overallBand && <BandBadge band={overallBand} />}
           </div>
@@ -262,8 +263,8 @@ export default function ReportPage() {
               <RadarChart
                 scores={pre.result.constructScores}
                 compareScores={post?.result.constructScores}
-                preLabel="Before"
-                postLabel="After"
+                preLabel={t("Before")}
+                postLabel={t("After")}
                 size={380}
                 table="none"
               />
@@ -278,15 +279,15 @@ export default function ReportPage() {
               <table className="w-full min-w-[16rem] text-left text-[0.8125rem]">
                 <thead>
                   <tr className="border-b border-line text-[0.65rem] font-semibold uppercase tracking-[0.08em] text-muted">
-                    <th className="py-2 pr-2 font-semibold">Construct</th>
-                    <th className="py-2 px-1 text-right font-semibold">Pre</th>
+                    <th className="py-2 pr-2 font-semibold">{t("Construct")}</th>
+                    <th className="py-2 px-1 text-right font-semibold">{t("Pre")}</th>
                     {post && (
                       <>
                         <th className="py-2 px-1 text-right font-semibold">
-                          Post
+                          {t("Post")}
                         </th>
                         <th className="py-2 pl-1 text-right font-semibold">
-                          Change
+                          {t("Change")}
                         </th>
                       </>
                     )}
@@ -304,7 +305,7 @@ export default function ReportPage() {
                             className="h-2 w-2 shrink-0 rounded-full"
                             style={{ background: row.color }}
                           />
-                          {row.name}
+                          {t(row.name)}
                         </span>
                       </td>
                       <td className="py-2.5 px-1 text-right tabular-nums text-slate">
@@ -327,7 +328,7 @@ export default function ReportPage() {
                   ))}
                   <tr className="border-t border-line-strong bg-surface">
                     <td className="py-2.5 pr-2 font-semibold text-ink">
-                      Overall
+                      {t("Overall")}
                     </td>
                     <td className="py-2.5 px-1 text-right font-semibold tabular-nums text-ink">
                       {pre.result.overall}
@@ -374,14 +375,14 @@ export default function ReportPage() {
         )}
 
         <section className="learn-card mt-4 sm:mt-5 print:break-inside-avoid">
-          <h2 className="learn-card-title">Recommendations</h2>
+          <h2 className="learn-card-title">{t("Recommendations")}</h2>
           <ul className="mt-3 space-y-2">
             {recs.map((r) => (
               <li
                 key={r}
                 className="learn-body"
                 dangerouslySetInnerHTML={{
-                  __html: r.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"),
+                  __html: t(r).replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>"),
                 }}
               />
             ))}
@@ -391,27 +392,27 @@ export default function ReportPage() {
             {!post ? (
               <>
                 <Button
-                  href="/learn/assessment/post"
+                  href={L("/learn/assessment/post")}
                   variant="ghost"
                   className="!min-h-9 !py-1.5 !text-[0.8125rem]"
                 >
-                  Take post-assessment
+                  {t("Take post-assessment")}
                 </Button>
                 <Button
-                  href="/learn/courses"
+                  href={L("/learn/courses")}
                   variant="ghost"
                   className="!min-h-9 !py-1.5 !text-[0.8125rem]"
                 >
-                  Continue courses
+                  {t("Continue courses")}
                 </Button>
               </>
             ) : (
               <Button
-                href="/learn/courses"
+                href={L("/learn/courses")}
                 variant="ghost"
                 className="!min-h-9 !py-1.5 !text-[0.8125rem]"
               >
-                Revisit courses
+                {t("Revisit courses")}
               </Button>
             )}
           </div>
@@ -436,6 +437,7 @@ export default function ReportPage() {
 }
 
 function BandBadge({ band, compact = false }: { band: ChangeBand | null; compact?: boolean }) {
+  const { t } = useLmsT();
   if (!band) return null;
   const tone =
     band.tone === "good"
@@ -449,7 +451,7 @@ function BandBadge({ band, compact = false }: { band: ChangeBand | null; compact
       title={`${band.label}. Placeholder band only, about ±${band.threshold} points. Not a reliable-change claim.`}
       data-band={band.id}
     >
-      {compact ? band.short : band.label}
+      {t(compact ? band.short : band.label)}
     </span>
   );
 }

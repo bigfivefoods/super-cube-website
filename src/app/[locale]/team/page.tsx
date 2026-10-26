@@ -17,5 +17,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocaleTeamPage({ params }: Props) {
   const { locale } = await params;
   if (!isPrefixedLocale(locale)) notFound();
-  return <TeamCubeView s={translateDeep(locale, TEAM_STRINGS)} impactHref={localizedPath(locale, "/impact")} />;
+  return (
+    <TeamCubeView
+      s={translateDeep(locale, TEAM_STRINGS)}
+      impactHref={localizedPath(locale, "/impact")}
+      coachHref={localizedPath(locale, "/learn/coach")}
+    />
+  );
 }

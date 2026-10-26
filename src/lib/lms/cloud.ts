@@ -93,7 +93,7 @@ export async function claimDeviceBaselines(): Promise<number> {
         programmeId: a.programmeId,
         responses: a.responses,
         completedAt: a.completedAt,
-        meta: { seed: a.seed, durationMs: a.durationMs },
+        meta: { seed: a.seed, durationMs: a.durationMs, locale: a.locale },
       }),
     });
     if (r.kind !== "ok") continue;
@@ -159,7 +159,7 @@ export function submitAttempt(
   phase: "pre" | "mid" | "post",
   programmeId: ProgrammeId,
   responses: ResponseMap,
-  meta: { seed?: number; durationMs?: number } = {},
+  meta: { seed?: number; durationMs?: number; locale?: string; instrument?: string; honesty?: number; attention?: number } = {},
 ) {
   return call<{ ok: true; attempt: ServerAttemptView }>("/api/lms/attempts", {
     method: "POST",

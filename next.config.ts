@@ -34,11 +34,10 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        // Languages (src/lib/i18n/config.ts): only the pages in TRANSLATED_PATHS have /fr, /ar, /pt,
-        // /sw, /zu and /af versions. Any other page under a language prefix goes to its English page
-        // (temporary: more pages may be translated later). Learn, the assessment, account, admin and
-        // API routes are never language-prefixed.
-        source: `/:locale(${PREFIXED_LOCALES.join("|")})/:path((?!(?:${TRANSLATED_SEGMENTS.join("|")})(?:/|$)).+)`,
+        // Languages (src/lib/i18n/config.ts): TRANSLATED_PATHS and the Learn app (/learn/…) have
+        // /fr, /ar, /pt, /sw, /zu and /af versions. Any other page under a language prefix goes to
+        // its English page. Account outside Learn, admin and API routes stay unprefixed.
+        source: `/:locale(${PREFIXED_LOCALES.join("|")})/:path((?!(?:${TRANSLATED_SEGMENTS.join("|")}|learn)(?:/|$)).+)`,
         destination: "/:path",
         permanent: false,
       },

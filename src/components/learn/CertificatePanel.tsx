@@ -22,6 +22,7 @@ import {
 import { setCertificateMeta, type LocalAttempt, type LocalLmsState } from "@/lib/lms/store";
 import type { ProgrammeId } from "@/lib/programmes";
 import { track } from "@/lib/analytics";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 const CERT_KEY = "supercube_certificate_v1";
 
@@ -70,6 +71,7 @@ type Props = {
  * record, so every ID here resolves at /verify/{id}.
  */
 export function CertificatePanel({ state, pre, post, programmeId, onStateChange }: Props) {
+  const { t, locale } = useLmsT();
   // Restore the last issued certificate on this device (persisted right after issue).
   // The report renders only on the client, so localStorage is available here.
   const [row, setRow] = useState<IssuedCertificateRow | null>(() =>
@@ -121,7 +123,7 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
       if (!c) return;
       setBusy("pdf");
       const { downloadCompletionCertificate } = await import("@/lib/lms/certificate-pdf");
-      await downloadCompletionCertificate(c);
+      await downloadCompletionCertificate({ ...c, locale });
       track("certificate_download", { certificateId: c.id });
     } catch {
       setNote("Could not create the PDF on this device. Please try again.");
@@ -164,12 +166,12 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
     >
       <div className="h-1.5 w-full" aria-hidden style={{ background: "linear-gradient(90deg,#B32026 0 16.66%,#5D1F5E 16.66% 33.33%,#ED8F20 33.33% 50%,#367638 50% 66.66%,#16979A 66.66% 83.33%,#26408C 83.33%)" }} />
       <div className="p-4 sm:p-5">
-        <p className="learn-eyebrow">Pathway complete</p>
+        <p className="learn-eyebrow">{t("Pathway complete")}</p>
         <h2 id="cert-title" className="mt-1 text-base font-semibold text-ink">
-          Your Super-Cube® certificate of completion
+          {t("Your Super-Cube® certificate of completion")}
         </h2>
         <p className="learn-meta mt-0.5">
-          Issued by the server from your recorded baseline and after-test, with an ID and QR code anyone can verify.
+          {t("Issued by the server from your recorded baseline and after-test, with an ID and QR code anyone can verify.")}
         </p>
 
         {cert && (
@@ -181,12 +183,12 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
               role="group"
             >
               <Image src="/brand/logo.png" alt="Super-Cube®" width={160} height={34} className="mx-auto h-auto w-[140px]" />
-              <p className="mt-4 text-[0.625rem] font-bold uppercase tracking-[0.28em] text-[#5c5a56]">Certificate of completion</p>
+              <p className="mt-4 text-[0.625rem] font-bold uppercase tracking-[0.28em] text-[#5c5a56]">{t("Certificate of completion")}</p>
               <p className="mt-3 font-serif text-2xl font-bold leading-tight sm:text-[1.75rem]" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
                 {cert.learnerName}
               </p>
               <p className="mt-2 text-sm">
-                has completed the <strong>{programmeName(cert.programmeId)}</strong> programme
+                {t("has completed the")} <strong>{t(programmeName(cert.programmeId))}</strong> {t("programme")}
               </p>
               <p className="mt-3 text-xs text-[#5c5a56] tabular-nums">
                 Overall {cert.preOverall} → {cert.postOverall} · Awarded {formatIssuedDate(cert.issuedAt)}

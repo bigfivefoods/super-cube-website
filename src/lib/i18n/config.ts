@@ -4,10 +4,10 @@
  *
  * Same approach as bigfivegroup.africa: English is the default and keeps the existing unprefixed
  * URLs. The other languages live under /fr, /ar, /pt, /sw, /zu and /af, but only for the pages in
- * TRANSLATED_PATHS. Every other page (Learn, the assessment, account, admin, API and the rest of
- * the site) stays English and outside locale routing: /fr/<anything else> redirects to the English
- * page (next.config.ts). The visitor's choice is kept in a cookie set by the switcher; nothing ever
- * redirects by browser language.
+ * TRANSLATED_PATHS, plus the whole Learn app (/learn and every screen under it). Every other page
+ * (account outside Learn, admin, API and the rest of the site) stays English: /fr/<anything else>
+ * redirects to the English page (next.config.ts). The visitor's choice is kept in a cookie set by
+ * the switcher; nothing ever redirects by browser language.
  *
  * No hooks and no server-only imports: safe in Server and Client Components.
  */
@@ -133,11 +133,18 @@ export function stripLocale(pathname: string | null | undefined): string {
   return rest === "" ? "/" : rest;
 }
 
-/** A translated page, including a child of a translated section (/insights/…, /news/…, /verify/…). */
+/** Learn app, including every screen under /learn. English stays unprefixed; other languages use /fr/learn, /ar/learn, …. */
+export function isLearnPath(path: string): boolean {
+  const base = (path.split(/[?#]/)[0] || "/") as string;
+  return base === "/learn" || base.startsWith("/learn/");
+}
+
+/** A translated page: marketing pages, their children, and the Learn app. */
 export function isTranslatedPath(path: string): boolean {
   const base = (path.split(/[?#]/)[0] || "/") as string;
   if ((TRANSLATED_PATHS as readonly string[]).includes(base)) return true;
-  return TRANSLATED_PREFIXES.some((prefix) => base.startsWith(prefix));
+  if (TRANSLATED_PREFIXES.some((prefix) => base.startsWith(prefix))) return true;
+  return isLearnPath(base);
 }
 
 /**

@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+import { stripLocale } from "@/lib/i18n/config";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { constructs, type ConstructId } from "@/lib/content";
@@ -29,7 +31,8 @@ export function LearnCourseNav({
   /** Indent as nested under a journey step row */
   nested?: boolean;
 }) {
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname() || "/");
+  const { t, L } = useLmsT();
   const [state, setState] = useState<LocalLmsState | null>(null);
 
   useEffect(() => {
@@ -141,7 +144,7 @@ export function LearnCourseNav({
                 </button>
 
                 <Link
-                  href={`/learn/courses/${course.constructId}`}
+                  href={L(`/learn/courses/${course.constructId}`)}
                   className={`flex min-w-0 flex-1 items-center gap-2 rounded-lg px-2 py-1.5 text-left text-[0.75rem] font-medium tracking-tight transition ${
                     isCourseActive && !pathLesson
                       ? "bg-void text-void-fg"
@@ -159,7 +162,7 @@ export function LearnCourseNav({
                     aria-hidden
                   />
                   <span className="min-w-0 flex-1 truncate">
-                    {construct.shortName}
+                    {t(construct.shortName)}
                   </span>
                   <span
                     className={`shrink-0 text-[0.625rem] tabular-nums ${
@@ -185,7 +188,7 @@ export function LearnCourseNav({
                     return (
                       <li key={lesson.id}>
                         <Link
-                          href={href}
+                          href={L(href)}
                           className={`flex items-start gap-1.5 rounded-md px-2 py-1.5 text-left transition ${
                             active
                               ? "bg-void text-void-fg"
@@ -210,10 +213,12 @@ export function LearnCourseNav({
                                 active ? "text-white" : "text-ink"
                               }`}
                             >
-                              {lesson.title.replace(
-                                /^Overview:\s*/i,
-                                "Overview · ",
-                              )}
+                              {(() => {
+                                const translated = t(lesson.title);
+                                return translated === lesson.title
+                                  ? translated.replace(/^Overview:\s*/i, "Overview · ")
+                                  : translated;
+                              })()}
                             </span>
                             <span
                               className={`mt-0.5 block text-[0.6rem] ${
@@ -235,10 +240,10 @@ export function LearnCourseNav({
       </ul>
 
       <Link
-        href="/learn/courses"
+        href={L("/learn/courses")}
         className="mt-1 block rounded-lg px-2 py-1.5 text-[0.7rem] font-medium text-muted transition hover:bg-black/[0.04] dark:hover:bg-white/[0.06] hover:text-ink"
       >
-        All courses →
+        {t("All courses →")}
       </Link>
     </div>
   );
@@ -246,7 +251,7 @@ export function LearnCourseNav({
 
 /** Parse current course context from path for breadcrumb-style labels */
 export function useLearnCourseContext() {
-  const pathname = usePathname();
+  const pathname = stripLocale(usePathname() || "/");
   const [state, setState] = useState<LocalLmsState | null>(null);
 
   useEffect(() => {
