@@ -175,23 +175,23 @@ export function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?:
                           alt={`SDG ${goal.id}: ${goal.short}`}
                           width={120}
                           height={120}
-                          className="h-full w-full object-cover object-center"
+                          className="lc-img"
                         />
                       </div>
                       <div className="text-center">
                         <p
-                          className="text-[0.65rem] font-bold uppercase tracking-[0.12em] face-ink"
+                          className="lc-kicker face-ink"
                           style={faceInkStyle(goal.color)}
                         >
                           {t("Goal")}{" "}{t(goal.id)}
                         </p>
-                        <p className="mt-1 text-sm font-semibold tracking-tight text-ink">
+                        <p className="lc-name">
                           {t(goal.short)}
                         </p>
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-4 p-5 sm:p-6">
+                    <div className="lc-body">
                       <div>
                         <p className="lc-label">
                           {t("Issue")}
@@ -202,7 +202,7 @@ export function LeadershipChallengesView({ locale = DEFAULT_LOCALE }: { locale?:
                       </div>
 
                       {row.sofiLink && (
-                        <div className="rounded-xl border border-line bg-elevated px-4 py-3">
+                        <div className="lc-note">
                           <p className="lc-label">
                             {t("SOFI / food systems")}
                           </p>

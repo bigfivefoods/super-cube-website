@@ -92,6 +92,9 @@ const ar: Dict = {
   "footer.orgs": "المؤسسات",
   "footer.company": "الشركة",
   "footer.sixFaces": "الأوجه الستة",
+  "footer.groupMission":
+    "مجموعة واحدة. رسالة واحدة. نحن موجودون لكي تزدهر أفريقيا: الإطعام والتعليم والتمكين.",
+  "footer.groupMotto": "تجديدية. سيادية. على سلسلة الكتل. هادفة.",
   "footer.tagline": "قيادة تتمحور حول الإنسان، تنمو من الجوهر إلى الخارج.",
   "footer.credit": "Craig Ross Muller · UKZN · 2021",
   "footer.contactUs": "اتصل بنا",

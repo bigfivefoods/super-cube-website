@@ -143,6 +143,21 @@ test.describe("languages", () => {
     }
   }
 
+  test("footer mission lines follow the page language", async ({ page }) => {
+    await page.goto("/fr");
+    const footer = page.locator("footer.site-footer");
+    await expect(footer).toContainText(
+      "Un groupe. Une mission. Nous existons pour que l'Afrique prospère : nourrir, éduquer et autonomiser.",
+    );
+    await expect(footer).toContainText("Régénérateur. Souverain. On-chain. Porteur de sens.");
+    await page.goto("/ar");
+    await expect(page.locator("footer.site-footer")).toContainText("مجموعة واحدة. رسالة واحدة.");
+    await page.goto("/af");
+    await expect(page.locator("footer.site-footer")).toContainText(
+      "Een groep. Een missie. Ons bestaan sodat Afrika kan floreer — voed, onderrig en bemagtig.",
+    );
+  });
+
   test("the translated pages list is the one the sitemap advertises", async ({ request }) => {
     const xml = await (await request.get("/sitemap.xml")).text();
     for (const l of LOCALES) {

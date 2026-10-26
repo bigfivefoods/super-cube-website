@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { expect, test } from "@playwright/test";
-import { MESSAGES, messageKey } from "@/lib/i18n/pages/t";
+import { MESSAGES } from "@/lib/i18n/pages/catalogues";
+import { messageKey } from "@/lib/i18n/pages/t";
 import type { PrefixedLocale } from "@/lib/i18n/config";
 
 const LOCALES = Object.keys(MESSAGES) as PrefixedLocale[];

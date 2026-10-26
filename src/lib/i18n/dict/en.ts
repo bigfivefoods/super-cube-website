@@ -89,6 +89,9 @@ const en = {
   "footer.orgs": "Organisations",
   "footer.company": "Company",
   "footer.sixFaces": "Six faces",
+  "footer.groupMission":
+    "One group. One mission. We exist so Africa can prosper — feed, educate and empower.",
+  "footer.groupMotto": "Regenerative. Sovereign. On-chain. On-purpose.",
   "footer.tagline":
     "Human-centric leadership, developed from the core outward.",
   "footer.credit": "Craig Ross Muller · UKZN · 2021",

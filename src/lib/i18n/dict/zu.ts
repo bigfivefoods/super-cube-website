@@ -83,6 +83,9 @@ const zu: Dict = {
   "footer.orgs": "Izinhlangano",
   "footer.company": "Inkampani",
   "footer.sixFaces": "Ubuso obuyisithupha",
+  "footer.groupMission":
+    "Iqembu elilodwa. Umgomo owodwa. Sikhona ukuze i-Afrika ichume: siyondla, siyafundisa futhi sinika amandla.",
+  "footer.groupMotto": "Siyavuselela. Sizimele. On-chain. Sinenhloso.",
   "footer.tagline":
     "Ubuholi obugxile kumuntu, bukhuliswa kusukela phakathi kuya ngaphandle.",
   "footer.credit": "Craig Ross Muller · UKZN · 2021",

@@ -90,6 +90,9 @@ const sw: Dict = {
   "footer.orgs": "Mashirika",
   "footer.company": "Kampuni",
   "footer.sixFaces": "Pande sita",
+  "footer.groupMission":
+    "Kundi moja. Dhamira moja. Tupo ili Afrika istawi: kulisha, kuelimisha na kuwezesha.",
+  "footer.groupMotto": "Kurejesha. Huru. On-chain. Yenye kusudi.",
   "footer.tagline": "Uongozi unaomlenga binadamu, unaokuzwa kutoka kiini kwenda nje.",
   "footer.credit": "Craig Ross Muller · UKZN · 2021",
   "footer.contactUs": "Wasiliana nasi",

@@ -91,6 +91,9 @@ const pt: Dict = {
   "footer.orgs": "Organizações",
   "footer.company": "Empresa",
   "footer.sixFaces": "As seis faces",
+  "footer.groupMission":
+    "Um grupo. Uma missão. Existimos para que a África prospere: alimentar, educar e capacitar.",
+  "footer.groupMotto": "Regenerativo. Soberano. On-chain. Com propósito.",
   "footer.tagline": "Liderança centrada no ser humano, desenvolvida do núcleo para fora.",
   "footer.credit": "Craig Ross Muller · UKZN · 2021",
   "footer.contactUs": "Contacte-nos",

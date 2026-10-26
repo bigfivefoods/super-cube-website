@@ -342,6 +342,13 @@ export function Footer() {
                   style={{ height: 32, width: "auto" }}
                 />
               </Link>
+              {/* Same two lines, and the same classes, as the bigfivegroup.africa footer. */}
+              <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#6b7280] dark:text-slate">
+                {t("footer.groupMission")}
+              </p>
+              <p className="mt-2 max-w-xs text-sm text-[#6b7280] dark:text-slate">
+                {t("footer.groupMotto")}
+              </p>
               <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#6b7280] dark:text-slate">
                 {t("footer.tagline")}
               </p>

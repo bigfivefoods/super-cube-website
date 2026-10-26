@@ -81,6 +81,9 @@ const af: Dict = {
   "footer.orgs": "Organisasies",
   "footer.company": "Maatskappy",
   "footer.sixFaces": "Ses vlakke",
+  "footer.groupMission":
+    "Een groep. Een missie. Ons bestaan sodat Afrika kan floreer — voed, onderrig en bemagtig.",
+  "footer.groupMotto": "Regeneratief. Soewerein. On-chain. Doelgerig.",
   "footer.tagline":
     "Mensgesentreerde leierskap, ontwikkel van die kern na buite.",
   "footer.credit": "Craig Ross Muller · UKZN · 2021",
