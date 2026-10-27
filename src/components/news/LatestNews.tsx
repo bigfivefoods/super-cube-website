@@ -9,7 +9,7 @@ import { NewsCard } from "./NewsCard";
 export async function LatestNews({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
   const posts = (await listPublishedNews()).slice(0, 3);
   if (!posts.length) return null;
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <section className="section-pad border-t border-line bg-paper" data-testid="latest-news">
       <div className="container-site">

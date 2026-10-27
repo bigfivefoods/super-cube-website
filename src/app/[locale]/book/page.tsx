@@ -11,8 +11,8 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!isPrefixedLocale(locale)) return {};
-  const base = localePageMeta(locale, META);
-  const shareImage = { ...BOOK.share, alt: translateText(locale, SHARE_IMAGE_ALT) };
+  const [base, alt] = await Promise.all([localePageMeta(locale, META), translateText(locale, SHARE_IMAGE_ALT)]);
+  const shareImage = { ...BOOK.share, alt };
   return {
     ...base,
     openGraph: { ...base.openGraph, type: "book", images: [shareImage] },

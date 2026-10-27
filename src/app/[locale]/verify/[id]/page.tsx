@@ -24,8 +24,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return localeMeta({
     locale,
     path: `/verify/${encodeURIComponent(id)}`,
-    title: fill(translateText(locale, "Certificate check {id}"), { id }),
-    description: translateText(
+    title: fill(await translateText(locale, "Certificate check {id}"), { id }),
+    description: await translateText(
       locale,
       "Check that a Super-Cube® leadership certificate is genuine and still valid.",
     ),

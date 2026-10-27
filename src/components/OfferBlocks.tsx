@@ -8,7 +8,7 @@ import { SectionHeading } from "@/components/ui";
 export type Step = { title: string; body: string };
 
 /** Pre-assessment → programme → post-assessment → report. */
-export function HowItWorks({ locale = DEFAULT_LOCALE,
+export async function HowItWorks({ locale = DEFAULT_LOCALE,
   steps,
   eyebrow = "How it works",
   title = "Four steps, from baseline to proof.",
@@ -17,7 +17,7 @@ export function HowItWorks({ locale = DEFAULT_LOCALE,
   eyebrow?: string;
   title?: string;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <section className="section-pad border-t border-line bg-surface">
       <div className="container-site">
@@ -70,7 +70,7 @@ export function CaseStudyComingSoon({ audience }: { audience: string }) {
 }
 
 /** Two-column offer list. */
-export function OfferList({ locale = DEFAULT_LOCALE,
+export async function OfferList({ locale = DEFAULT_LOCALE,
   eyebrow,
   title,
   description,
@@ -81,7 +81,7 @@ export function OfferList({ locale = DEFAULT_LOCALE,
   description?: string;
   items: { title: string; body: string }[];
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <section className="section-pad bg-paper">
       <div className="container-site">
@@ -106,7 +106,7 @@ export type CaseStudyStat = { value: string; label: string };
  * up to three figures with a short source line, an optional quote, and a link to the post.
  * Figures must match the post and its source exactly.
  */
-export function CaseStudyFeature({ locale = DEFAULT_LOCALE,
+export async function CaseStudyFeature({ locale = DEFAULT_LOCALE,
   eyebrow,
   title,
   body,
@@ -131,7 +131,7 @@ export function CaseStudyFeature({ locale = DEFAULT_LOCALE,
   imageAlt: string;
   testId?: string;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <section className="section-pad border-t border-line" data-testid={testId}>
       <div className="container-site grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center lg:gap-12">

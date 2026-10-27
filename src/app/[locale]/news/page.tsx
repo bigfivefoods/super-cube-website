@@ -12,7 +12,7 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   if (!isPrefixedLocale(locale)) return {};
-  const meta = localePageMeta(locale, META);
+  const meta = await localePageMeta(locale, META);
   return {
     ...meta,
     alternates: {

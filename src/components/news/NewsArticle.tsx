@@ -19,8 +19,8 @@ import type { NewsPost } from "@/lib/news/types";
  * A news post: full-width hero (the same size as the landing hero), share row, body,
  * closing share row. Used by /news/[slug] and the admin preview.
  */
-export function NewsArticle({ post, locale = DEFAULT_LOCALE }: { post: NewsPost; locale?: Locale }) {
-  const { t } = pageI18n(locale);
+export async function NewsArticle({ post, locale = DEFAULT_LOCALE }: { post: NewsPost; locale?: Locale }) {
+  const { t } = await pageI18n(locale);
   const title = t(post.title);
   const excerpt = t(post.excerpt);
   const body = t(post.body);

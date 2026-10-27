@@ -33,7 +33,7 @@ function issuedOn(iso: string, locale: Locale) {
   });
 }
 
-export function VerifySearch({
+export async function VerifySearch({
   locale = DEFAULT_LOCALE,
   submitted,
   error,
@@ -42,7 +42,7 @@ export function VerifySearch({
   submitted?: string;
   error: string | null;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   return (
     <section className="bg-surface pb-16 pt-32 sm:pb-20 lg:pt-36">
       <div className="container-site max-w-2xl">
@@ -117,7 +117,7 @@ function Row({ label, children }: { label: string; children: React.ReactNode }) 
   );
 }
 
-export function VerifyResult({
+export async function VerifyResult({
   locale = DEFAULT_LOCALE,
   id,
   status,
@@ -130,7 +130,7 @@ export function VerifyResult({
   certificate?: Extract<LookupResult, { status: "found" | "revoked" }>["certificate"];
   openBadge?: OpenBadgeState;
 }) {
-  const { t, L } = pageI18n(locale);
+  const { t, L } = await pageI18n(locale);
   const url = verifyUrl(id, DEFAULT_ORIGIN);
   return (
     <section className="bg-surface pb-16 pt-32 sm:pb-20 lg:pt-36">
@@ -247,8 +247,8 @@ export function VerifyResult({
   );
 }
 
-function OpenBadgeStatus({ locale, state }: { locale: Locale; id: string; state: OpenBadgeState }) {
-  const { t } = pageI18n(locale);
+async function OpenBadgeStatus({ locale, state }: { locale: Locale; id: string; state: OpenBadgeState }) {
+  const { t } = await pageI18n(locale);
   const copy: Record<OpenBadgeState, string> = {
     valid: fill(t("This Open Badge 3.0 credential is signed by {issuer} and matches this certificate check."), {
       issuer: VERIFY_ISSUER,
@@ -268,8 +268,8 @@ function OpenBadgeStatus({ locale, state }: { locale: Locale; id: string; state:
   );
 }
 
-function OpenBadgeDownloads({ id, state, locale }: { id: string; state: OpenBadgeState; locale: Locale }) {
-  const { t } = pageI18n(locale);
+async function OpenBadgeDownloads({ id, state, locale }: { id: string; state: OpenBadgeState; locale: Locale }) {
+  const { t } = await pageI18n(locale);
   if (state !== "valid" && state !== "revoked" && state !== "unsigned" && state !== "unchecked") return null;
   const base = `/credentials/${encodeURIComponent(id)}`;
   return (

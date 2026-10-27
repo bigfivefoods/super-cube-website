@@ -14,8 +14,8 @@ export const META = {
     "Super-Cube® impact: live, consented cohort results as they arrive, alongside the results of the 12-week Super-Cube® leadership intervention with Imana Foods and Kerry Foods, each clearly labelled.",
 } satisfies PageMetaInput;
 
-export function ImpactView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function ImpactView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

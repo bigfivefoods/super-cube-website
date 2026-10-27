@@ -80,13 +80,13 @@ export type PageMetaInput = Parameters<typeof pageMeta>[0];
  * description go through the page catalogue (src/lib/i18n/messages), the canonical is the
  * localised URL and the hreflang cluster lists every language.
  */
-export function localePageMeta(locale: PrefixedLocale, meta: PageMetaInput): Metadata {
+export async function localePageMeta(locale: PrefixedLocale, meta: PageMetaInput): Promise<Metadata> {
   if (!isTranslatedPath(meta.path)) throw new Error(`${meta.path} is not a translated path`);
   return localeMeta({
     locale,
     path: meta.path,
-    title: translateText(locale, meta.title),
-    description: translateText(locale, meta.description),
+    title: await translateText(locale, meta.title),
+    description: await translateText(locale, meta.description),
     image: meta.image,
   });
 }

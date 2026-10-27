@@ -21,8 +21,7 @@ export const META = {
 
 /** News index. Refreshed with the route's revalidate (publishing in the admin also revalidates). */
 export async function NewsIndex({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
-  const posts = await listPublishedNews();
+  const [{ t, L }, posts] = await Promise.all([pageI18n(locale), listPublishedNews()]);
   const [featured, ...rest] = posts;
   const heroImage = NEWS_HERO.wide;
 

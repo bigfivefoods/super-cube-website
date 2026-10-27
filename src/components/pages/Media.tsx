@@ -17,8 +17,8 @@ export const META = {
     "Brand assets, one-page abstract, peer-reviewed journal PDFs, founder bio, and citation guide for Super-Cube®.",
 } satisfies PageMetaInput;
 
-export function MediaView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function MediaView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

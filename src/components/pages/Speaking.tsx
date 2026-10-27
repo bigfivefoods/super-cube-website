@@ -46,8 +46,8 @@ const facts = [
   "Over 20 years of blue-chip experience in FMCG, supply chain and consulting",
 ];
 
-export function SpeakingView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function SpeakingView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   const booking = bookingUrl();
   return (
     <>

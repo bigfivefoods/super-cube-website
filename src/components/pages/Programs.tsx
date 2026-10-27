@@ -97,8 +97,8 @@ const modalities = [
   },
 ];
 
-export function ProgramsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function ProgramsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

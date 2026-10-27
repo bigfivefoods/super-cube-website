@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getInsight(slug);
   if (!post) return { title: "Insight" };
   return localePageMeta(locale, {
-    title: translateText(locale, post.title),
-    description: translateText(locale, post.excerpt),
+    title: await translateText(locale, post.title),
+    description: await translateText(locale, post.excerpt),
     path: `/insights/${post.slug}`,
   });
 }

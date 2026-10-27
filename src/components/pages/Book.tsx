@@ -62,8 +62,8 @@ function bookJsonLd() {
   };
 }
 
-export function BookView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function BookView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   const downloadLabel = fill(t(DOWNLOAD_LABEL), { pages: BOOK.pages, size: BOOK.size });
   const share = {
     url: absoluteUrl(BOOK.page),

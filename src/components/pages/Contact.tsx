@@ -13,8 +13,8 @@ export const META = {
     "Begin a conversation about Super-Cube® leadership development—personal plans, organisational pipelines, or network partnerships.",
 } satisfies PageMetaInput;
 
-export function ContactView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function ContactView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero t={t}

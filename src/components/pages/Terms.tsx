@@ -37,8 +37,8 @@ const sections: { title: string; body: string }[] = [
   },
 ];
 
-export function TermsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
-  const { t, L } = pageI18n(locale);
+export async function TermsView({ locale = DEFAULT_LOCALE }: { locale?: Locale } = {}) {
+  const { t, L } = await pageI18n(locale);
   return (
     <>
       <PageHero
