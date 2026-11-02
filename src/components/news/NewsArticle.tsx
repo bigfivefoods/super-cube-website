@@ -9,6 +9,7 @@ import { PaidBookCard } from "@/components/book/PaidBook";
 import { Button } from "@/components/ui";
 import { DEFAULT_LOCALE, localizedPath, type Locale } from "@/lib/i18n/config";
 import { fill } from "@/lib/i18n/pages/format";
+import { translateNewsBody } from "@/lib/i18n/news/body";
 import { pageI18n } from "@/lib/i18n/pages/t";
 import { NEWS_HERO } from "@/lib/news/hero";
 import { clampDescription, formatNewsDate, readingMinutes, stripMarks } from "@/lib/news/seo";
@@ -20,10 +21,9 @@ import type { NewsPost } from "@/lib/news/types";
  * closing share row. Used by /news/[slug] and the admin preview.
  */
 export async function NewsArticle({ post, locale = DEFAULT_LOCALE }: { post: NewsPost; locale?: Locale }) {
-  const { t } = await pageI18n(locale);
+  const [{ t }, body] = await Promise.all([pageI18n(locale), translateNewsBody(locale, post.slug, post.body)]);
   const title = t(post.title);
   const excerpt = t(post.excerpt);
-  const body = t(post.body);
   const bodyTranslated = locale === DEFAULT_LOCALE || body !== post.body;
   const share = { url: absoluteUrl(localizedPath(locale, `/news/${post.slug}`)), title: stripMarks(title), summary: clampDescription(excerpt) };
   // The hero is always calm artwork (never the cover, which may carry charts or screenshots).

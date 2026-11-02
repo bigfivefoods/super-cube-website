@@ -1,4 +1,5 @@
 import { site } from "@/lib/content";
+import { DEFAULT_LOCALE, LOCALE_HTML_LANG, type Locale } from "@/lib/i18n/config";
 import { SHARE_IMAGE } from "@/lib/seo";
 import type { NewsPost } from "./types";
 
@@ -77,7 +78,7 @@ const org = {
 };
 
 /** schema.org NewsArticle for a published post. */
-export function newsArticleJsonLd(post: NewsPost) {
+export function newsArticleJsonLd(post: NewsPost, locale: Locale = DEFAULT_LOCALE) {
   const share = newsShareImage(post);
   return {
     "@context": "https://schema.org",
@@ -91,6 +92,6 @@ export function newsArticleJsonLd(post: NewsPost) {
     publisher: org,
     mainEntityOfPage: { "@type": "WebPage", "@id": newsUrl(post.slug) },
     url: newsUrl(post.slug),
-    inLanguage: "en-ZA",
+    inLanguage: locale === DEFAULT_LOCALE ? "en-ZA" : LOCALE_HTML_LANG[locale],
   };
 }

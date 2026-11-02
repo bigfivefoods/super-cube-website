@@ -15,7 +15,9 @@ export async function NewsPostView({ slug, locale = DEFAULT_LOCALE }: { slug: st
   if (!post) notFound();
   const [{ t, L }, published] = await Promise.all([pageI18n(locale), listPublishedNews()]);
   const others = published.filter((p) => p.slug !== post.slug).slice(0, 3);
-  const json = JSON.stringify(newsArticleJsonLd(post)).replace(/</g, "\\u003c");
+  const json = JSON.stringify(
+    newsArticleJsonLd({ ...post, title: t(post.title), excerpt: t(post.excerpt) }, locale),
+  ).replace(/</g, "\\u003c");
 
   return (
     <>

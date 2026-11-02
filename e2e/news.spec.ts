@@ -147,6 +147,40 @@ test("the school field snapshot never names the school", async ({ page }) => {
   await expect(page.getByText("Field snapshot · School leadership").first()).toBeVisible();
 });
 
+test("translated posts show the article, not an English-only note", async ({ page }) => {
+  await page.goto("/fr/news/leadership-is-learnable-new-book");
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(page.locator("[data-english-only]")).toHaveCount(0);
+  const fr = page.locator(".news-body");
+  await expect(fr).toContainText("Commencez gratuitement, puis allez plus loin");
+  await expect(fr).toContainText("Leadership Is Learnable");
+  await expect(fr).toContainText("Super-Cube®");
+  await expect(fr).toContainText("32,2");
+  await expect(fr).toContainText("132");
+  await expect(fr).toContainText("Imana Foods");
+  await expect(page.getByTestId("news-cta")).toHaveText("Acheter le livre broché sur Amazon");
+  await expect(page.getByTestId("news-paid-book")).toContainText("Disponible en broché · Amazon");
+  await expect(page.locator("main")).not.toContainText(/kwaden/i);
+
+  await page.goto("/ar/news/start-free-pay-once-lifetime-access-r99");
+  await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
+  await expect(page.locator("[data-english-only]")).toHaveCount(0);
+  await expect(page.locator(".news-body")).toContainText("Super-Cube®");
+  await expect(page.locator(".news-body")).toContainText("R99");
+  await expect(page.getByRole("heading", { level: 2, name: "ابدأ مجانًا" })).toBeVisible();
+
+  await page.goto("/fr/news/grade-12-boarders-leadership-field-snapshot");
+  await expect(page.locator("main")).not.toContainText(/maritzburg|pietermaritzburg|old collegian|westville|hilton|kwaden/i);
+  await expect(page.locator(".news-body")).toContainText("lycée de premier plan en Afrique du Sud");
+
+  await page.goto("/pt/news/twelve-weeks-six-faces-fmcg-leadership");
+  await expect(page.locator("[data-english-only]")).toHaveCount(0);
+  await expect(page.locator(".news-body")).toContainText("Imana Foods");
+  await expect(page.locator(".news-body")).toContainText("Kerry Foods");
+  await expect(page.locator(".news-body")).toContainText("32,2%");
+  await expect(page.locator(".news-body")).not.toContainText("132");
+});
+
 test("RSS feed includes both case studies", async ({ request }) => {
   const xml = await (await request.get("/news/feed.xml")).text();
   for (const cs of CASE_STUDIES) expect(xml).toContain(`https://www.super-cube.me${cs.path}</link>`);

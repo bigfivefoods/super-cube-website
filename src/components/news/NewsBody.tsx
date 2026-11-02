@@ -43,13 +43,13 @@ export function NewsBody({ body }: { body: string }) {
             );
           case "quote":
             return (
-              <blockquote key={i} className="mt-5 border-l-2 border-line-strong pl-4 text-lg leading-relaxed text-ink">
+              <blockquote key={i} className="mt-5 border-s-2 border-line-strong ps-4 text-lg leading-relaxed text-ink">
                 {renderInline(b.c)}
               </blockquote>
             );
           case "ul":
             return (
-              <ul key={i} className="mt-5 space-y-2.5 pl-5 text-[1rem] leading-relaxed text-slate marker:text-muted sm:text-[1.0625rem] list-disc">
+              <ul key={i} className="mt-5 list-disc space-y-2.5 ps-5 text-[1rem] leading-relaxed text-slate marker:text-muted sm:text-[1.0625rem]">
                 {b.items.map((item, j) => (
                   <li key={j}>{renderInline(item)}</li>
                 ))}
