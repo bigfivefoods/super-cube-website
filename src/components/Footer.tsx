@@ -130,9 +130,9 @@ const resourceGroups: FooterGroup[] = [
 const legalLinks = [
   { href: "/privacy", key: "footer.privacy" },
   { href: "/terms", key: "footer.terms" },
-  // PAIA manual and accessibility statement are the Group's (same legal entity), on bigfivegroup.africa.
+  // The PAIA manual is the Group's (same legal entity), on bigfivegroup.africa.
   { href: "https://bigfivegroup.africa/paia", key: "footer.paia", external: true },
-  { href: "https://bigfivegroup.africa/accessibility", key: "footer.accessibility", external: true },
+  { href: "/accessibility", key: "footer.accessibility" },
 ] as const satisfies readonly { href: string; key: I18nKey; external?: boolean }[];
 
 /** Legal entity, as in the bigfivegroup.africa footer (app/lib/contact.ts there). */

@@ -2923,5 +2923,7 @@
   "xAPI (Tin Can)": "xAPI (Tin Can)",
   "{name} asked you, as their {role}, to rate how strongly you see them on each Super-Cube® face. Use the same agreement scale as their self-report. It takes about 3 minutes.": "{name} amekualika, kama {role} wao, utathmini jinsi unavyowaona wakiishi kila uso wa Super-Cube®. Tumia kipimo kilekile cha kukubali cha ripoti yao binafsi. Inachukua kama dakika 3.",
   "{name} invited you to a Super-Cube® check-in": "{name} amekualika kwenye ukaguzi wa Super-Cube®",
-  "{name} is developing their leadership with Super-Cube® and asked you for a short check-in.": "{name} anaendeleza uongozi wake na Super-Cube® na amekualika ukaguzi mfupi."
+  "{name} is developing their leadership with Super-Cube® and asked you for a short check-in.": "{name} anaendeleza uongozi wake na Super-Cube® na amekualika ukaguzi mfupi.",
+  "Start your free baseline": "Anza msingi wako bila malipo",
+  "Start your free Super-Cube® leadership baseline in about 5 minutes, no payment needed.": "Anza msingi wako wa uongozi wa Super-Cube® bila malipo ndani ya dakika 5 hivi."
 }

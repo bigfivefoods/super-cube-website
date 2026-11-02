@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { WELCOME_REDIRECT_SCRIPT } from "@/lib/lms/welcome-redirect";
 import { learnMetadata } from "@/lib/i18n/lms/meta";
 
 const META = {
@@ -18,5 +19,12 @@ export async function generateMetadata({
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: WELCOME_REDIRECT_SCRIPT }} />
+      </head>
+      {children}
+    </>
+  );
 }

@@ -18,8 +18,11 @@ export function LearnAppFrame({ children }: { children: React.ReactNode }) {
       <LmsSyncProvider>
         <ProfileGate>
           <PracticeReminders />
-          <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 md:top-[calc(4rem+env(safe-area-inset-top,0px))]">
-            <InstallAppBanner />
+          {/* Fixed, out of flow: inserting the banner must not push the page (CLS). */}
+          <div className="pointer-events-none fixed inset-x-0 top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 md:top-[calc(4rem+env(safe-area-inset-top,0px))]">
+            <div className="pointer-events-auto">
+              <InstallAppBanner />
+            </div>
           </div>
           {children}
           <CelebrationToast />

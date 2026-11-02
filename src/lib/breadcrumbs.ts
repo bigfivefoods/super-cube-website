@@ -55,6 +55,7 @@ export const routeLabels: Record<string, RouteLabel> = {
   "/contact": { label: "Contact", i18n: "nav.contact" },
   "/privacy": { label: "Privacy", i18n: "footer.privacy" },
   "/terms": { label: "Terms", i18n: "footer.terms" },
+  "/accessibility": { label: "Accessibility", i18n: "footer.accessibility" },
   "/signup": { label: "Create account", i18n: "footer.createAccount" },
   "/newsletter/unsubscribe": { label: "Unsubscribe", i18n: "bc.unsubscribe" },
   "/newsletter/confirm": { label: "Confirm subscription" },

@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { LearnAppFrame } from "@/components/learn/LearnAppFrame";
-import { LmsLocaleData } from "@/components/learn/LmsLocaleData";
 import { isPrefixedLocale } from "@/lib/i18n/config";
 import { learnMetadata } from "@/lib/i18n/lms/meta";
 import { viewport as learnViewport } from "../../learn/layout";
@@ -42,10 +41,5 @@ export default async function LocaleLearnLayout({
 }) {
   const { locale } = await params;
   if (!isPrefixedLocale(locale)) notFound();
-  return (
-    <>
-      <LmsLocaleData locale={locale} />
-      <LearnAppFrame>{children}</LearnAppFrame>
-    </>
-  );
+  return <LearnAppFrame>{children}</LearnAppFrame>;
 }

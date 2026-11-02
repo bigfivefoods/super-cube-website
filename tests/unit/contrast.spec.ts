@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { constructs } from "../../src/lib/content";
 import { contrastRatio, inkFor, textOn } from "../../src/lib/contrast";
 
 const FACES = ["#B32026", "#5D1F5E", "#ED8F20", "#367638", "#16979A", "#26408C"];
@@ -15,6 +16,16 @@ test("every face colour gets an AA-safe text shade on light and dark", () => {
   }
   // Already-dark colours are left alone.
   expect(inkFor("#26408C")).toBe("#26408C");
+});
+
+test("home cube face text meets AA on every face colour", () => {
+  for (const face of constructs) {
+    expect(contrastRatio(textOn(face.color), face.color), face.id).toBeGreaterThanOrEqual(4.5);
+  }
+  // Light faces keep their colour and take dark text. Darker faces stay white.
+  expect(textOn("#ED8F20")).toBe("#0a0a0a");
+  expect(textOn("#16979A")).toBe("#0a0a0a");
+  expect(textOn("#26408C")).toBe("#ffffff");
 });
 
 test("chip text picks the more readable of black and white", () => {

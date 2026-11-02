@@ -137,7 +137,7 @@ test.describe("Super-Cube smoke", () => {
       [/^Big Five Learn/, "https://bigfivegroup.africa/leadership"],
       [/^SupplierAdvisor®/, "https://www.supplieradvisor.com"],
       [/^PAIA/, "https://bigfivegroup.africa/paia"],
-      [/^Accessibility/, "https://bigfivegroup.africa/accessibility"],
+      [/^Accessibility/, "/accessibility"],
       [/^WhatsApp/, /^https:\/\/wa\.me\/27825814215/],
     ] as const) {
       await expect(footer.getByRole("link", { name }).first(), String(name)).toHaveAttribute("href", href);
