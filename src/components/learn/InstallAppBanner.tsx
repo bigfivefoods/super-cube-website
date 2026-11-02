@@ -145,7 +145,8 @@ export function InstallAppBanner() {
               alt=""
               width={44}
               height={44}
-              className="h-full w-full object-cover"
+              className="h-11 w-11 object-cover"
+              style={{ width: 44, height: 44 }}
             />
           </div>
 

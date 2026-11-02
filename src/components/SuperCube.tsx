@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useLocale } from "@/components/LocaleProvider";
 import { constructs, type ConstructId } from "@/lib/content";
+import { textOn } from "@/lib/contrast";
 import { faceI18n, type I18nKey } from "@/lib/i18n";
 
 /**
@@ -213,6 +214,10 @@ export function SuperCube({
             const scoreDim = hasScore ? Math.max(0, Math.min(0.55, (1 - score / 100) * 0.55)) : 0;
             const tier = light ? Math.max(0, Math.min(4, light[face.id] ?? 0)) : null;
             const lit = tier === null ? null : LIGHT_STYLE[tier];
+            // Light faces (Mental orange, Physical teal) cannot hold white small text at 4.5:1.
+            // Dark text keeps the face colour. Darker faces stay white.
+            const fg = textOn(c.color);
+            const onLight = fg !== "#ffffff";
             return (
               <div
                 key={face.className}
@@ -224,12 +229,15 @@ export function SuperCube({
                 style={
                   {
                     "--face-bg": c.color,
-                    // All face text is white (Craig, Oct 2026); a soft dark shadow
-                    // (globals.css) keeps it readable on the lighter faces.
-                    "--face-fg": "#ffffff",
+                    "--face-fg": fg,
+                    "--face-shadow": onLight
+                      ? "0 1px 1px rgba(255, 255, 255, 0.35)"
+                      : "0 1px 2px rgba(0, 0, 0, 0.45)",
                     background: faceBackground(c.color, lit ? lit.dim : scoreDim),
-                    color: "#ffffff",
-                    textShadow: "0 1px 2px rgba(0, 0, 0, 0.45)",
+                    color: fg,
+                    textShadow: onLight
+                      ? "0 1px 1px rgba(255, 255, 255, 0.35)"
+                      : "0 1px 2px rgba(0, 0, 0, 0.45)",
                     boxShadow: lit
                       ? lit.glow
                         ? `0 0 ${lit.glow}px ${c.color}, inset 0 0 0 1px rgba(255,255,255,0.35)`

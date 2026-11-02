@@ -68,7 +68,7 @@ test.describe("languages", () => {
   });
 
   test("translated inner pages stay on their language URL", async ({ request }) => {
-    for (const path of ["/fr/about", "/ar/book", "/af/the-model", "/pt/programs", "/sw/privacy", "/zu/insights"]) {
+    for (const path of ["/fr/about", "/ar/book", "/af/the-model", "/pt/programs", "/sw/privacy", "/zu/insights", "/fr/accessibility"]) {
       const res = await request.get(path, { maxRedirects: 0 });
       expect(res.status(), path).toBe(200);
     }
@@ -165,6 +165,32 @@ test.describe("languages", () => {
       for (const p of TRANSLATED) expect(xml).toContain(`/${l}${p}<`);
     }
   });
+});
+
+test("learn start keeps one canonical and a full hreflang cluster", async ({ page }) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "supercube_lms_v1",
+      JSON.stringify({
+        profile: {
+          displayName: "Thandi Mokoena",
+          ageBand: "25-34",
+          role: "professional",
+          context: "work",
+          programmeId: "adults",
+          profileCompletedAt: "2026-10-01T08:00:00.000Z",
+        },
+      }),
+    );
+  });
+  for (const path of ["/learn/start", "/fr/learn/start", "/ar/learn/start"]) {
+    await page.goto(path);
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(1);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", new RegExp(`${path}$`));
+    await expect(page.locator('link[rel="alternate"][hreflang]')).toHaveCount(8);
+    await expect(page.locator('link[rel="alternate"][hreflang="x-default"]')).toHaveAttribute("href", /\/learn\/start$/);
+    await expect(page.locator('link[rel="alternate"][hreflang="fr"]')).toHaveAttribute("href", /\/fr\/learn\/start$/);
+  }
 });
 
 // In-content links on translated pages go to the visitor's language wherever that page is translated.

@@ -2923,5 +2923,7 @@
   "xAPI (Tin Can)": "xAPI (Tin Can)",
   "{name} asked you, as their {role}, to rate how strongly you see them on each Super-Cube® face. Use the same agreement scale as their self-report. It takes about 3 minutes.": "طلب منك {name}، بصفتك {role}، أن تقيّم مدى رؤيتك له وهو يعيش كل وجه من وجوه ⁦Super-Cube®⁩. استخدم مقياس الموافقة نفسه المستخدم في تقريره الذاتي. يستغرق ذلك نحو 3 دقائق.",
   "{name} invited you to a Super-Cube® check-in": "دعاك {name} إلى متابعة ⁦Super-Cube®⁩",
-  "{name} is developing their leadership with Super-Cube® and asked you for a short check-in.": "يطوّر {name} قيادته مع ⁦Super-Cube®⁩ وطلب منك متابعة قصيرة."
+  "{name} is developing their leadership with Super-Cube® and asked you for a short check-in.": "يطوّر {name} قيادته مع ⁦Super-Cube®⁩ وطلب منك متابعة قصيرة.",
+  "Start your free baseline": "ابدأ خط الأساس المجاني",
+  "Start your free Super-Cube® leadership baseline in about 5 minutes, no payment needed.": "ابدأ خط الأساس المجاني للقيادة في ⁦Super-Cube®⁩ خلال نحو 5 دقائق، دون دفع."
 }

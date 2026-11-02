@@ -74,6 +74,7 @@ const PAGES = [
   "/schools",
   "/organisations",
   "/book",
+  "/accessibility",
 ];
 
 for (const [tag, viewport] of [

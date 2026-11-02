@@ -1,14 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { useLmsState } from "@/components/learn/useLearnState";
 import { track } from "@/lib/analytics";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { getProfile, profileComplete } from "@/lib/lms/profile";
-import { loadLmsState, unlockDemo, type LocalLmsState } from "@/lib/lms/store";
+import { loadLmsState, unlockDemo } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
-import { programmeCopy } from "@/lib/lms/programme-copy";
+import { fillCopy, programmeTemplate } from "@/lib/lms/programme-copy";
 import { buildAssessmentItems } from "@/lib/lms/assessment-items";
 import { getCoursesForProgramme } from "@/lib/lms/curriculum-meta";
 import { questionnaireMinutes } from "@/lib/lms/duration";
@@ -26,14 +27,15 @@ function firstRunMinutes(programmeId: ProgrammeId) {
  * Guided first run with honest timings (computed from the content); never dump users on the full dashboard.
  */
 export default function GuidedStartPage() {
-  const router = useRouter();
-  const [state, setState] = useState<LocalLmsState | null>(null);
-  const [ready, setReady] = useState(false);
+  const { t, L } = useLmsT();
+  const state = useLmsState();
 
   useEffect(() => {
     const p = getProfile();
     if (!profileComplete(p)) {
-      router.replace("/learn/welcome");
+      // A full navigation, not a client transition: a soft move to welcome left
+      // both pages' canonical links in the document (Lighthouse SEO).
+      window.location.replace(L("/learn/welcome"));
       return;
     }
     const s = loadLmsState();
@@ -42,19 +44,9 @@ export default function GuidedStartPage() {
         (p?.programmeId || s.user?.programmeId || "adults") as ProgrammeId,
       );
     }
-    setState(loadLmsState());
-    setReady(true);
     track("page_view", { path: "/learn/start" });
     track("guided_start_open", {});
-  }, [router]);
-
-  if (!ready || !state) {
-    return (
-      <LearnShell title={`Your first ${firstRunMinutes("adults").totalMin} minutes`}>
-        <p className="learn-meta">Loading…</p>
-      </LearnShell>
-    );
-  }
+  }, [L]);
 
   const programmeId = (state?.subscription?.programmeId ||
     state?.user?.programmeId ||
@@ -64,46 +56,49 @@ export default function GuidedStartPage() {
   const fr = state?.firstRun ?? {};
   const orientDone = Boolean(state?.orientation || fr.orient);
   const preDone = Boolean(
-    state?.attempts.some((a) => a.phase === "pre") || fr.pre,
+    state?.attempts?.some((a) => a.phase === "pre") || fr.pre,
   );
   const lessonDone =
     Boolean(fr.firstLesson) ||
     Object.values(state?.lessonProgress ?? {}).some((s) => s === "completed");
 
-  const name = state.profile?.displayName || state.user?.fullName;
+  const name = state?.profile?.displayName || state?.user?.fullName;
 
   const { baselineMin, firstSessionMin, orientMin, winMin, totalMin } = firstRunMinutes(programmeId);
+  const subtitle = fillCopy(t(programmeTemplate("start.subtitle", programmeId)), {
+    programme: programme?.name ?? "Super-Cube®",
+  });
 
   const steps = [
     {
       n: 1,
       min: `${orientMin} min`,
-      t: "Orient",
-      d: "How you see leadership levels—quick pre-pre check.",
+      t: t("Orient"),
+      d: t("How you see leadership levels—quick pre-pre check."),
       href: "/learn/assessment/orientation",
       done: orientDone,
     },
     {
       n: 2,
       min: `${baselineMin} min`,
-      t: "Baseline (start)",
-      d: "Six faces, honest ratings. You can save mid-way and resume.",
+      t: t("Baseline (start)"),
+      d: t("Six faces, honest ratings. You can save mid-way and resume."),
       href: "/learn/assessment/pre",
       done: preDone,
     },
     {
       n: 3,
       min: `${firstSessionMin} min`,
-      t: "One session",
-      d: "After baseline, open your weekly plan’s first face—or start any course.",
+      t: t("One session"),
+      d: t("After baseline, open your weekly plan’s first face—or start any course."),
       href: preDone ? "/learn" : "/learn/courses",
       done: lessonDone,
     },
     {
       n: 4,
       min: `${winMin} min`,
-      t: "First win",
-      d: "Complete a session to unlock win-of-the-day and streak.",
+      t: t("First win"),
+      d: t("Complete a session to unlock win-of-the-day and streak."),
       href: "/learn",
       done: lessonDone,
     },
@@ -118,12 +113,12 @@ export default function GuidedStartPage() {
           ? `${name.split(" ")[0]}, your first ${totalMin} minutes`
           : `Your first ${totalMin} minutes`
       }
-      subtitle={programmeCopy("start.subtitle", programmeId, { programme: programme?.name ?? "Super-Cube®" })}
+      subtitle={subtitle}
       hideJourneyRail
     >
       <div className="mb-5 rounded-2xl border border-ink bg-void p-5 text-white sm:p-6">
-        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.14em] text-white/50">
-          Recommended next
+        <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/80">
+          {t("Recommended next")}
         </p>
         <h2 className="mt-2 text-xl font-semibold tracking-tight">
           {next.t}
@@ -133,11 +128,11 @@ export default function GuidedStartPage() {
         </h2>
         <p className="mt-2 text-sm text-white/70">{next.d}</p>
         <Link
-          href={next.href}
+          href={L(next.href)}
           onClick={() => track("guided_start_cta", { step: next.n })}
           className="mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-white px-6 text-sm font-semibold text-ink"
         >
-          Continue →
+          {t("Continue →")}
         </Link>
       </div>
 
@@ -170,10 +165,10 @@ export default function GuidedStartPage() {
               <p className="mt-0.5 text-[0.8125rem] text-slate">{step.d}</p>
               {!step.done && (
                 <Link
-                  href={step.href}
+                  href={L(step.href)}
                   className="mt-2 inline-block text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline"
                 >
-                  Open step →
+                  {t("Open step →")}
                 </Link>
               )}
             </div>
@@ -182,26 +177,26 @@ export default function GuidedStartPage() {
       </ol>
 
       <p className="mt-6 text-center text-sm text-muted">
-        Prefer the full dashboard?{" "}
+        {t("Prefer the full dashboard?")}{" "}
         <Link
-          href="/learn"
+          href={L("/learn")}
           className="font-semibold text-ink underline-offset-2 hover:underline"
         >
-          Go to Learn
+          {t("Go to Learn")}
         </Link>
         {" · "}
         <Link
-          href="/learn/account"
+          href={L("/learn/account")}
           className="font-semibold text-ink underline-offset-2 hover:underline"
         >
-          You / profile
+          {t("You / profile")}
         </Link>
         {" · "}
         <Link
-          href="/learn/welcome"
+          href={L("/learn/welcome")}
           className="font-semibold text-ink underline-offset-2 hover:underline"
         >
-          Edit profile
+          {t("Edit profile")}
         </Link>
       </p>
     </LearnShell>

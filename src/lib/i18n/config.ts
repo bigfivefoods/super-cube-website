@@ -93,6 +93,7 @@ export const TRANSLATED_PATHS = [
   "/programs",
   "/privacy",
   "/terms",
+  "/accessibility",
   "/insights",
   "/news",
   "/verify",
