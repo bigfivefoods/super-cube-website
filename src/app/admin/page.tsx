@@ -151,6 +151,22 @@ async function Overview({ db }: { db: Parameters<typeof loadLearners>[0] }) {
         </ol>
         <p className="mt-3 text-xs text-muted">{consents.length} consent record{consents.length === 1 ? "" : "s"} on file.</p>
       </section>
+      <section className={`${card} mt-6`} aria-labelledby="lms-pack-h">
+        <h2 id="lms-pack-h" className={h2}>Load Super-Cube® in a company LMS</h2>
+        <p className="mt-1 text-sm text-slate">
+          SCORM 1.2, SCORM 2004 and xAPI (Tin Can) packages for the six faces. Issued by Super-Cube® by Big Five Group. Completion is reported to the LMS; the package does not include learner scores.
+        </p>
+        <ul className="mt-3 space-y-2 text-sm">
+          {(["adults", "adolescents", "kids"] as const).map((programme) => (
+            <li key={programme} className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="font-semibold text-ink">{programmeName(programme)}</span>
+              <a className="font-semibold text-ink underline underline-offset-2" href={`/api/admin/lms-package?format=scorm12&programme=${programme}`}>SCORM 1.2</a>
+              <a className="font-semibold text-ink underline underline-offset-2" href={`/api/admin/lms-package?format=scorm2004&programme=${programme}`}>SCORM 2004</a>
+              <a className="font-semibold text-ink underline underline-offset-2" href={`/api/admin/lms-package?format=xapi&programme=${programme}`}>xAPI (Tin Can)</a>
+            </li>
+          ))}
+        </ul>
+      </section>
       <EmailTestCard className={`${card} mt-6`} />
     </>
   );

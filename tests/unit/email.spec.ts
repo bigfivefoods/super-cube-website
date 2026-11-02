@@ -2,7 +2,8 @@ import { expect, test } from "@playwright/test";
 import { button, esc, newsletterEmail, renderEmail, paragraph } from "../../src/lib/email/layout";
 import { sameSiteUrl, verifiedRecipient } from "../../src/lib/email/recipient";
 import { SAMPLE_IDS, sampleEmail } from "../../src/lib/email/samples";
-import { formatAmount, receiptEmail, weeklyEmail, welcomeEmail } from "../../src/lib/email/templates";
+import { checkinInviteEmail, formatAmount, receiptEmail, weeklyEmail, welcomeEmail } from "../../src/lib/email/templates";
+import { CERT_ISSUER } from "../../src/lib/lms/certificate";
 
 const SITE = "https://www.super-cube.me";
 
@@ -101,6 +102,32 @@ test.describe("branded email layout", () => {
     expect(formatAmount(168300, "ZAR")).toBe("R1,683.00");
     expect(formatAmount(600, "USD")).toBe("$6.00 USD");
   });
+});
+
+test("check-in invitation names Super-Cube® by Big Five Group and uses vous in French", () => {
+  const e = checkinInviteEmail({
+    site: SITE,
+    learnerName: "Ada Lovelace",
+    relationship: "manager",
+    url: `${SITE}/feedback/checkin/token`,
+  });
+  expect(e.subject).toContain("Super-Cube®");
+  expect(e.html).toContain(CERT_ISSUER);
+  expect(e.text).toContain(CERT_ISSUER);
+  expect(e.html).toContain(`${SITE}/feedback/checkin/token`);
+  expect(e.html.toLowerCase()).not.toContain("kwaden");
+  expect(e.text).not.toMatch(/<[a-z!/]/i);
+  const fr = checkinInviteEmail({
+    site: SITE,
+    learnerName: "Ada",
+    relationship: "peer",
+    url: `${SITE}/feedback/checkin/token`,
+    locale: "fr",
+  });
+  expect(fr.subject).toContain("Super-Cube®");
+  expect(fr.html).toContain(CERT_ISSUER);
+  expect(fr.html).toMatch(/\bvous\b/i);
+  expect(fr.text).not.toMatch(/\b(tu|ton|ta)\b/i);
 });
 
 test.describe("self-service email recipient (lockdown)", () => {

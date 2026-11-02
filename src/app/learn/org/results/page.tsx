@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
+import { LmsPackageCard } from "@/components/learn/LmsPackageCard";
+import { OrgCheckinSection } from "@/components/learn/OrgCheckinSection";
 import { track } from "@/lib/analytics";
 import { faceInkStyle } from "@/lib/contrast";
 import {
@@ -286,6 +288,9 @@ function Dashboard({
           </div>
         </section>
       </div>
+
+      <OrgCheckinSection orgId={orgId || raw.org?.id || ""} />
+      <LmsPackageCard />
 
       <p className="learn-meta">
         Self-report scores from the server-scored Super-Cube® questionnaire; no control group. Only learners who chose to

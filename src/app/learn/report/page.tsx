@@ -3,6 +3,7 @@
 import { formatDateZA } from "@/lib/datetime";
 import { useEffect, useMemo } from "react";
 import { ConstructDeepDive } from "@/components/learn/ConstructDeepDive";
+import { CheckinPanel } from "@/components/learn/CheckinPanel";
 import { Feedback360Panel } from "@/components/learn/Feedback360Panel";
 import { DownloadReportButton } from "@/components/learn/DownloadReportButton";
 import { GrowthStoryCard } from "@/components/learn/GrowthStoryCard";
@@ -370,6 +371,7 @@ export default function ReportPage() {
 
         {programmeId === "adults" && (
           <div className="mt-4 sm:mt-5 print:hidden">
+            <CheckinPanel minor={isMinorProfile(state.profile)} programmeId={programmeId} />
             <Feedback360Panel self={(post ?? pre).result.constructScores} minor={isMinorProfile(state.profile)} />
           </div>
         )}

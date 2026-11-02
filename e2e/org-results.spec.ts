@@ -15,16 +15,36 @@ const results = {
 test.describe("organisation results", () => {
   test("admins see faces, funnel, engagement and can download the CSV", async ({ page }) => {
     await page.route("**/api/org/results**", (r) => r.fulfill({ json: { orgs: [results.org], results } }));
+    await page.route("**/api/org/checkins**", (r) =>
+      r.fulfill({
+        json: {
+          comparison: {
+            min_group: 3,
+            generated_at: "2026-10-19T08:00:00Z",
+            learners_with_both: 4,
+            overall: { n: 4, self_mean: 50, others_mean: 62, gap_mean: 12 },
+            faces: [{ face: "choices", n: 4, self_mean: 40, others_mean: 55, gap_mean: 15 }],
+          },
+        },
+      }),
+    );
     await page.goto("/learn/org/results");
     test.skip(page.url().includes("/login"), "Supabase-gated build: covered by the signed-in stack run");
     await expect(page.getByTestId("org-results")).toBeVisible();
     await expect(page.getByText("Acme Holdings")).toBeVisible();
-    await expect(page.locator('[data-face="principles"]')).toContainText("+12.8");
-    await expect(page.locator('[data-face="emotional"]')).toContainText("shown once 3+");
+    await expect(page.getByTestId("org-results-faces").locator('[data-face="principles"]')).toContainText("+12.8");
+    await expect(page.getByTestId("org-results-faces").locator('[data-face="emotional"]')).toContainText("shown once 3+");
     await expect(page.getByTestId("org-results-funnel")).toContainText("Certified");
     const dl = page.waitForEvent("download");
     await page.getByTestId("org-results-csv").click();
     expect((await dl).suggestedFilename()).toBe("super-cube-results-ACME26.csv");
+    const checkins = page.getByTestId("org-checkins");
+    await expect(checkins).toContainText("Self and others");
+    await expect(checkins.locator('[data-face="choices"]')).toContainText("+15.0");
+    const packs = page.getByTestId("lms-packages");
+    await expect(packs.getByRole("link", { name: "SCORM 1.2" })).toHaveAttribute("href", /format=scorm12/);
+    await expect(packs.getByRole("link", { name: "SCORM 2004" })).toHaveAttribute("href", /format=scorm2004/);
+    await expect(packs.getByRole("link", { name: "xAPI (Tin Can)" })).toHaveAttribute("href", /format=xapi/);
   });
 
   test("non-admins get a plain refusal", async ({ page }) => {

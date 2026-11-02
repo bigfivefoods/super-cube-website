@@ -38,6 +38,8 @@ export const RATE_RULES = {
   "insights-collect": { limit: 120, windowSec: 600 },
   "feedback360-create": { limit: 5, windowSec: 3600 },
   "feedback360-rater": { limit: 30, windowSec: 600 },
+  "checkin-create": { limit: 10, windowSec: 3600 },
+  "checkin-rater": { limit: 30, windowSec: 600 },
   "email-ip": { limit: 20, windowSec: 600 },
   "email-welcome": { limit: 3, windowSec: 86400 },
   "email-weekly": { limit: 3, windowSec: 86400 },

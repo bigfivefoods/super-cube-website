@@ -3,7 +3,9 @@
  * Copy only states what the product actually does (see /pricing, /learn/demo).
  */
 import { isPrefixedLocale, localizedPath, type Locale } from "@/lib/i18n/config";
-import { lmsText } from "@/lib/i18n/lms/text";
+import { fillCopy, lmsText } from "@/lib/i18n/lms/text";
+import { CERT_ISSUER } from "@/lib/lms/certificate";
+import type { CheckinRelationship } from "@/lib/lms/checkin";
 import { COURSE_PRICE_ZAR, getProgramme, type ProgrammeId } from "@/lib/programmes";
 import {
   bullets,
@@ -346,6 +348,58 @@ export function weeklyEmail(
       reason: "You're receiving this because you asked Super-Cube® Learn for your weekly summary.",
       preferencesUrl: `${site}/learn/account`,
       preferencesLabel: "Your account",
+    },
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Manager / peer check-in invitation
+// ---------------------------------------------------------------------------
+
+export function checkinInviteEmail(
+  o: Common & {
+    learnerName?: string | null;
+    relationship: CheckinRelationship;
+    url: string;
+    locale?: string | null;
+  },
+): RenderedEmail {
+  const site = (o.site ?? emailSiteUrl()).replace(/\/$/, "");
+  const E = emailT(o.locale);
+  const name = firstName(o.learnerName) || "A colleague";
+  const role = o.relationship === "manager" ? "manager" : "peer";
+  const fill = (s: string) => fillCopy(E(s), { name, role });
+
+  return renderEmail({
+    subject: fill("{name} invited you to a Super-Cube® check-in"),
+    preheader: fill("Rate {name} on the six Super-Cube® faces. Issued by Super-Cube® by Big Five Group."),
+    theme: "brand",
+    label: "Check-in",
+    eyebrow: CERT_ISSUER,
+    title: fill("Rate {name} on the six Super-Cube® faces"),
+    intro: fill("{name} is developing their leadership with Super-Cube® and asked you for a short check-in."),
+    blocks: [
+      button({ href: o.url, label: E("Open the check-in"), theme: "brand" }),
+      heading(E("What you are asked to do"), { eyebrow: CERT_ISSUER }),
+      steps([
+        { title: E("Six faces"), detail: E("Rate each of the six faces on the same agreement scale as their self-report.") },
+        { title: E("A few minutes"), detail: E("The link works once and expires in 21 days.") },
+        { title: E("For development"), detail: E("This is for development only, never for hiring, pay or disciplinary decisions.") },
+      ]),
+      paragraph(E("Your answers help them see themselves beside how others see them.")),
+      callout({
+        title: E("Peer ratings stay private"),
+        body: E("If you are a peer, your individual answers stay hidden until at least 3 peers have responded."),
+        color: FACE_COLOURS[1].color,
+      }),
+      small(E("Issued by Super-Cube® by Big Five Group.")),
+    ],
+    signoff: rich(E("Thank you for taking the time,"), { html: "<br />", text: "\n" }, CERT_ISSUER),
+    site,
+    assetBase: o.assetBase,
+    lang: isPrefixedLocale(o.locale) ? o.locale : "en",
+    footer: {
+      reason: E("You are receiving this because a Super-Cube® learner invited this address to a check-in."),
     },
   });
 }
