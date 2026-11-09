@@ -171,7 +171,7 @@ export function LanguageSwitcher({
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-controls={listId}
-        aria-label={`${t("lang.label")}: ${LOCALE_NATIVE_NAMES[locale]}`}
+        aria-label={`${locale.toUpperCase()}, ${t("lang.label")}: ${LOCALE_NATIVE_NAMES[locale]}`}
         className={`inline-flex h-11 items-center gap-1 rounded-full px-1.5 text-[13px] font-semibold transition-colors focus-visible:outline focus-visible:outline-2 sm:px-2.5 ${
           overDark
             ? "text-white hover:bg-white/10 focus-visible:outline-white"

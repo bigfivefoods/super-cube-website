@@ -50,6 +50,76 @@ const CHROME_LITERALS = [
   "A 60-second profile so Learn, Report, and your cohort fit who you are. Private on this device until you sign in.",
 ] as const;
 
+/** Profile step on /learn/welcome. The shell title is already in the chrome list. */
+const WELCOME_LITERALS = [
+  "Profile steps",
+  "Continue →",
+  "Who are you?",
+  "Preferred name",
+  "e.g. Craig",
+  "Email (optional — for sync later)",
+  "Age & programme",
+  "We match Kids, Adolescents, or Adults content to your age band.",
+  "Matched programme:",
+  "Back",
+  "Role & context",
+  "I am a…",
+  "Learning mainly for…",
+  "Country",
+  "City (optional)",
+  "Primary growth goal (optional)",
+  "e.g. Lead my team with more presence and clarity",
+  "How will you learn?",
+  "Family code (optional)",
+  "Cohort / school / company code (optional)",
+  "e.g. DEMO2026 or FAMILY-ABC",
+  "You can join later from You → Cohort. Try DEMO2026 for pilots.",
+  "After profile: optional first face pulse so charts start with real data.",
+  "Sign up",
+  "Sign in",
+  "Save profile & start →",
+  "Profile already saved.",
+  "Skip to guided start",
+  "Under 13",
+  "13–17",
+  "18–21",
+  "22–24",
+  "25–34",
+  "35–44",
+  "45–54",
+  "55+",
+  "Student",
+  "Educator / teacher",
+  "Manager / team lead",
+  "Executive / senior leader",
+  "Entrepreneur",
+  "Parent / caregiver",
+  "Professional",
+  "Other",
+  "School",
+  "University / college",
+  "Company / workplace",
+  "NPO / NGO",
+  "Family",
+  "Faith community",
+  "Personal growth",
+  "Just me",
+  "Learn at your own pace",
+  "Parents, kids, household",
+  "School / class",
+  "Teacher or school code",
+  "Company / team",
+  "Work cohort or pilot",
+  "Friends / peers",
+  "Study circle",
+  "Ages 5–12",
+  "Ages 13–21",
+  "Ages 22+",
+  "Super-Cube® Kids",
+  "Super-Cube® Adolescents",
+  "Super-Cube® Adults",
+] as const;
+
 /** Copy the guided start screen itself can show, plus its document title. */
 const START_LITERALS = [
   "Start your free baseline",
@@ -70,6 +140,9 @@ const START_LITERALS = [
   "You / profile",
   "Edit profile",
   "Loading…",
+  "Your first {total} minutes",
+  "{name}, your first {total} minutes",
+  "{n} min",
   PROGRAMME_COPY_ADULTS["start.subtitle"],
   PROGRAMME_COPY_KIDS["start.subtitle"],
   PROGRAMME_COPY_ADOLESCENTS["start.subtitle"],
@@ -100,7 +173,7 @@ function collect(extra: readonly string[]): string[] {
 }
 
 /** Strings for /learn/welcome (shell plus the profile intro). */
-export const LEARN_CHROME_KEYS: readonly string[] = collect(CHROME_LITERALS);
+export const LEARN_CHROME_KEYS: readonly string[] = collect([...CHROME_LITERALS, ...WELCOME_LITERALS]);
 
 /** Strings for /learn/start: chrome, the four steps, and the document title. */
 export const LEARN_START_KEYS: readonly string[] = collect([...CHROME_LITERALS, ...START_LITERALS]);

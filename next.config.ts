@@ -33,6 +33,10 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Short Why URL, with or without a language prefix, goes straight to the canonical page.
+      // Listed before the language-prefix strip so /fr/why keeps French.
+      { source: `/:locale(${PREFIXED_LOCALES.join("|")})/why`, destination: "/:locale/why-leadership", permanent: true },
+      { source: "/why", destination: "/why-leadership", permanent: true },
       {
         // Languages (src/lib/i18n/config.ts): TRANSLATED_PATHS and the Learn app (/learn/…) have
         // /fr, /ar, /pt, /sw, /zu and /af versions. Any other page under a language prefix goes to
@@ -45,8 +49,6 @@ const nextConfig: NextConfig = {
       ...((TRANSLATED_PATHS as readonly string[]).includes("/")
         ? []
         : [{ source: `/:locale(${PREFIXED_LOCALES.join("|")})`, destination: "/", permanent: false }]),
-      // /why is the short nav URL; the canonical page is /why-leadership (one permanent hop).
-      { source: "/why", destination: "/why-leadership", permanent: true },
       // The JCM paper's file was renamed (no case-company name in the URL); old links keep working.
       {
         source: "/research/jcm-2022-kwaden-leadership-skills-model.pdf",

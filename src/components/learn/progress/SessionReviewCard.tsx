@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { constructs } from "@/lib/content";
 import { formatDateZA } from "@/lib/datetime";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { sessionReviewQueue, type SessionReviewItem } from "@/lib/lms/progression";
 import type { LocalLmsState } from "@/lib/lms/store";
 
@@ -20,28 +21,31 @@ export function SessionReviewCard({ state, fallback }: { state: LocalLmsState; f
   const kids = (state.subscription?.programmeId || state.user?.programmeId || state.profile?.programmeId) === "kids";
   const item = openItem ?? due[0];
   const open = Boolean(openItem);
+  const { t, L, fill } = useLmsT();
 
   if (!item) {
     return (
       <div className="rounded-2xl border border-line bg-elevated p-4 sm:p-5" data-testid="next-review">
-        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Spaced reviews</p>
+        <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Spaced reviews")}</p>
         {next ? (
           <>
             <p className="mt-1 text-[1rem] font-semibold tracking-tight text-ink">
-              Day {next.days[0]} · {next.title}
+              {fill("Day {n} · {title}", { n: next.days[0], title: t(next.title) })}
             </p>
             <p className="mt-1 text-[0.875rem] leading-snug text-slate">
-              Due {formatDateZA(new Date(`${next.dueKey}T12:00:00`))}. Each session comes back on Day 3, 7 and 21 as a two-minute quiz.
+              {fill("Due {date}. Each session comes back on Day 3, 7 and 21 as a two-minute quiz.", {
+                date: formatDateZA(new Date(`${next.dueKey}T12:00:00`)),
+              })}
             </p>
           </>
         ) : fallback ? (
-          <Link href={fallback.href} className="block">
-            <p className="mt-1 text-[1rem] font-semibold tracking-tight text-ink">{fallback.title}</p>
-            <p className="mt-1 text-[0.875rem] leading-snug text-slate">{fallback.when}</p>
+          <Link href={L(fallback.href)} className="block">
+            <p className="mt-1 text-[1rem] font-semibold tracking-tight text-ink">{t(fallback.title)}</p>
+            <p className="mt-1 text-[0.875rem] leading-snug text-slate">{t(fallback.when)}</p>
           </Link>
         ) : (
           <p className="mt-1 text-[0.875rem] leading-snug text-slate">
-            Finish a session and it comes back on Day 3, 7 and 21 as a two-minute quiz, which is how it sticks.
+            {t("Finish a session and it comes back on Day 3, 7 and 21 as a two-minute quiz, which is how it sticks.")}
           </p>
         )}
       </div>
@@ -59,18 +63,24 @@ export function SessionReviewCard({ state, fallback }: { state: LocalLmsState; f
       data-testid="next-review"
     >
       <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">
-        {open ? "Spaced review" : `Review due${due.length > 1 ? ` · ${due.length} waiting` : ""}`}
+        {open
+          ? t("Spaced review")
+          : due.length > 1
+            ? fill("Review due · {n} waiting", { n: due.length })
+            : t("Review due")}
       </p>
       <h2 id="review-due-h" className="mt-1 text-[1rem] font-semibold tracking-tight text-ink">
-        Day {day} · {NAMES[day]}: {item.title}
+        {fill("Day {n} · {name}: {title}", { n: day, name: t(NAMES[day]), title: t(item.title) })}
       </h2>
       {!open ? (
         <>
           <p className="mt-1 text-[0.875rem] leading-snug text-slate">
-            {kids ? "A tiny quiz about a session you finished. Ready?" : "Two minutes, from memory, on a session you finished. Spacing it out is what makes it last."}
+            {kids
+              ? t("A tiny quiz about a session you finished. Ready?")
+              : t("Two minutes, from memory, on a session you finished. Spacing it out is what makes it last.")}
           </p>
           <button type="button" className="learn-btn learn-btn-primary mt-3" onClick={() => setOpenItem(item)} data-testid="start-review">
-            Start review
+            {t("Start review")}
           </button>
         </>
       ) : (

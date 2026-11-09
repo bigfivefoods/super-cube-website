@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isPrefixedLocale(locale)) return {};
   const post = await getPublishedNews(slug);
-  if (!post) return { title: "Post not found", robots: { index: false, follow: true } };
+  if (!post) return { title: await translateText(locale, "Post not found"), robots: { index: false, follow: true } };
   const title = stripMarks(await translateText(locale, post.title));
   const description = clampDescription(await translateText(locale, post.excerpt));
   const path = `/news/${post.slug}`;

@@ -90,7 +90,7 @@ export function LearnShell({
     <div className="learn-surface min-h-[100svh] min-h-[100dvh] bg-surface">
       {/* Second skip link: past the Learn sidebar straight to this page's content. */}
       <a href="#learn-content" className="skip-link">
-        Skip to page content
+        {t("Skip to page content")}
       </a>
       {hero}
 
