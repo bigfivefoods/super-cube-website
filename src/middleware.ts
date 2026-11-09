@@ -28,6 +28,8 @@ const PUBLIC_LEARN_PREFIXES = [
   "/learn/welcome",
   // Progress works on this device when signed out (with a prompt to sign in)
   "/learn/progress",
+  // Corporate LMS guide is readable before sign-in. Registration stays gated.
+  "/learn/org/lti/guide",
 ];
 const PUBLIC_LEARN_SECTIONS = ["/learn/pulse", "/learn/programmes", "/learn/courses"];
 const PUBLIC_LEARN_EXACT = [

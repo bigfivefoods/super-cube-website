@@ -5,6 +5,7 @@ import {
   LEARN_PRIMARY_NAV,
   LEARN_PROCESS_ACCENT,
   LEARN_SECONDARY_LINKS,
+  ORG_LTI_LINK,
   ORG_RESULTS_LINK,
   SECONDARY_GROUP_LABELS,
 } from "@/lib/lms/nav";
@@ -85,6 +86,7 @@ function collect(extra: readonly string[]): string[] {
   keys.add(LEARN_JOURNAL_PRACTICE.hint);
   for (const link of LEARN_SECONDARY_LINKS) keys.add(link.label);
   keys.add(ORG_RESULTS_LINK.label);
+  keys.add(ORG_LTI_LINK.label);
   for (const label of Object.values(SECONDARY_GROUP_LABELS)) keys.add(label);
   for (const accent of Object.values(LEARN_PROCESS_ACCENT)) keys.add(accent.label);
   for (const programme of programmes) keys.add(programme.name);

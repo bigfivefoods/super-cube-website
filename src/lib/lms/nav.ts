@@ -118,6 +118,13 @@ export const ORG_RESULTS_LINK: { href: string; label: string; group: SecondaryGr
   group: "account",
 };
 
+/** LTI 1.3 platform registration. Same audience as organisation results. */
+export const ORG_LTI_LINK: { href: string; label: string; group: SecondaryGroup } = {
+  href: "/learn/org/lti",
+  label: "LMS connection",
+  group: "account",
+};
+
 export const SECONDARY_GROUP_LABELS: Record<SecondaryGroup, string> = {
   learning: "Learning",
   journaling: "Journaling",

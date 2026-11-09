@@ -30,6 +30,7 @@ import {
 } from "@/lib/lms/store";
 import { courseId, type ProgrammeId } from "@/lib/programmes";
 import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+import { reportLtiProgress } from "@/lib/lti/browser-grade";
 
 const TYPE_LABEL: Record<string, string> = {
   content: "Session",
@@ -114,6 +115,7 @@ export default function LessonPlayerPage() {
     }
     setMasteryPrompt(null);
     markLessonCompleted(id, constructId);
+    reportLtiProgress(programmeId, constructId);
     const win = sessionWinLine(constructId, programmeId, data.lesson.title);
     recordSessionWin(id, constructId, win);
     setWinBanner(win);

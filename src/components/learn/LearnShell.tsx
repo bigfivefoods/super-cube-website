@@ -13,6 +13,7 @@ import {
   isLearnNavActive,
   LEARN_JOURNAL_PRACTICE,
   LEARN_SECONDARY_LINKS,
+  ORG_LTI_LINK,
   ORG_RESULTS_LINK,
   SECONDARY_GROUP_LABELS,
   type LearnNavItem,
@@ -82,7 +83,7 @@ export function LearnShell({
     label: SECONDARY_GROUP_LABELS[group],
     links: [
       ...LEARN_SECONDARY_LINKS.filter((l) => l.group === group),
-      ...(group === "account" && orgAdmin ? [ORG_RESULTS_LINK] : []),
+      ...(group === "account" && orgAdmin ? [ORG_RESULTS_LINK, ORG_LTI_LINK] : []),
     ],
   }));
 
