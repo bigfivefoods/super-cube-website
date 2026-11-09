@@ -1,4 +1,5 @@
 import type { PrefixedLocale } from "@/lib/i18n/config";
+import { LTI_MESSAGES } from "@/lib/i18n/lms/lti-messages";
 import type { LmsCatalogue } from "./text";
 import fr from "./messages/fr.json";
 import ar from "./messages/ar.json";
@@ -7,12 +8,16 @@ import sw from "./messages/sw.json";
 import zu from "./messages/zu.json";
 import af from "./messages/af.json";
 
+function withLti(locale: PrefixedLocale, base: LmsCatalogue): LmsCatalogue {
+  return { ...base, ...LTI_MESSAGES[locale] };
+}
+
 /** Server-only Learn catalogues. Do not import this from a client component. */
 export const LMS_MESSAGES: Record<PrefixedLocale, LmsCatalogue> = {
-  fr: fr as LmsCatalogue,
-  ar: ar as LmsCatalogue,
-  pt: pt as LmsCatalogue,
-  sw: sw as LmsCatalogue,
-  zu: zu as LmsCatalogue,
-  af: af as LmsCatalogue,
+  fr: withLti("fr", fr as LmsCatalogue),
+  ar: withLti("ar", ar as LmsCatalogue),
+  pt: withLti("pt", pt as LmsCatalogue),
+  sw: withLti("sw", sw as LmsCatalogue),
+  zu: withLti("zu", zu as LmsCatalogue),
+  af: withLti("af", af as LmsCatalogue),
 };

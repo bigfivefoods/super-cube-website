@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { LmsPackageCard } from "@/components/learn/LmsPackageCard";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+import { lti } from "@/lib/lti/copy";
 import { OrgCheckinSection } from "@/components/learn/OrgCheckinSection";
 import { track } from "@/lib/analytics";
 import { faceInkStyle } from "@/lib/contrast";
@@ -283,6 +285,7 @@ function Dashboard({
 
       <OrgCheckinSection orgId={orgId || raw.org?.id || ""} />
       <LmsPackageCard />
+      <LtiPackageLink />
 
       <p className="learn-meta">
         Self-report scores from the server-scored Super-Cube® questionnaire; no control group. Only learners who chose to
@@ -341,5 +344,16 @@ function FaceBar({ f, k }: { f: FaceRow; k: number }) {
         </div>
       )}
     </li>
+  );
+}
+
+function LtiPackageLink() {
+  const { t, L } = useLmsT();
+  return (
+    <p className="learn-meta">
+      <Link href={L("/learn/org/lti")} className="font-semibold text-ink underline underline-offset-2">
+        {t(lti.packageLink)}
+      </Link>
+    </p>
   );
 }

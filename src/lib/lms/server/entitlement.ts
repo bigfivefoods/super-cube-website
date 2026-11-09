@@ -50,6 +50,13 @@ export async function getServerEntitlement(
   });
   if (seat) return { tier: "cohort", source: "seat_pack" };
 
+  const { data: lti, error: ltiError } = await admin
+    .from("lti_user_links")
+    .select("id")
+    .eq("user_id", userId)
+    .limit(1);
+  if (!ltiError && (lti ?? []).length > 0) return { tier: "cohort", source: "lti" };
+
   return { tier: "none" };
 }
 
