@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { LmsPackageCard } from "@/components/learn/LmsPackageCard";
-import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import { lti } from "@/lib/lti/copy";
 import { OrgCheckinSection } from "@/components/learn/OrgCheckinSection";
 import { track } from "@/lib/analytics";
