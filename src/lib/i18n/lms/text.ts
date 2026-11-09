@@ -409,13 +409,24 @@ const CHROME: Record<PrefixedLocale, Record<string, string>> = {
 const SKIP_KEY =
   /^(id|href|color|colorSoft|accent|coverPath|instrumentId|constructId|courseId|lessonId|programmeId|itemType|lessonType|block|phase|tone|sessionHref|key|answer|value|score|sortOrder|reverse|durationMinutes|kind|process|urgency|status|serverId|completedAt)$/;
 
+/**
+ * Full catalogues live on globalThis, set by catalogues.ts when a server module imports it.
+ * The client graph never imports that file, so the six language JSON files stay out of the
+ * browser bundle. Client lookups read the page's `#sc-lms-locale` slice instead.
+ */
+const LMS_MESSAGES_GLOBAL = "__SC_LMS_MESSAGES__";
+
+export function installServerLmsMessages(maps: Record<string, LmsCatalogue>) {
+  (globalThis as Record<string, unknown>)[LMS_MESSAGES_GLOBAL] = maps;
+}
+
 let clientCache: { locale: string; map: LmsCatalogue } | null = null;
 
 function serverCatalogue(locale: PrefixedLocale): LmsCatalogue {
-  // Server only. This branch is dropped from the browser bundle.
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { LMS_MESSAGES } = require("./catalogues") as typeof import("./catalogues");
-  return LMS_MESSAGES[locale] ?? {};
+  const maps = (globalThis as Record<string, unknown>)[LMS_MESSAGES_GLOBAL] as
+    | Record<string, LmsCatalogue>
+    | undefined;
+  return maps?.[locale] ?? {};
 }
 
 function clientCatalogue(locale: PrefixedLocale): LmsCatalogue {

@@ -3,6 +3,7 @@
  * Copy only states what the product actually does (see /pricing, /learn/demo).
  */
 import { isPrefixedLocale, localizedPath, type Locale } from "@/lib/i18n/config";
+import "@/lib/i18n/lms/catalogues";
 import { fillCopy, lmsText } from "@/lib/i18n/lms/text";
 import { CERT_ISSUER } from "@/lib/lms/certificate";
 import type { CheckinRelationship } from "@/lib/lms/checkin";

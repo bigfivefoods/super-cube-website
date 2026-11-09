@@ -1,66 +1,24 @@
 "use client";
 
-import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
-
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
-import { syncLearnerState, type SyncStatus } from "@/lib/lms/sync";
-import { claimDeviceBaselines } from "@/lib/lms/cloud";
+import { stripLocale } from "@/lib/i18n/config";
+import type { SyncStatus } from "@/lib/lms/sync";
 
 /**
  * On Learn mount / auth change: pull → merge → push cloud progress.
  * Renders a slim status strip when syncing or on error.
  */
 export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
-  const { t } = useLmsT();
-
   const [status, setStatus] = useState<SyncStatus>("idle");
   const [message, setMessage] = useState<string | null>(null);
+  // The profile step has nothing to sync yet. Loading Supabase here competes with first paint.
+  const defer = stripLocale(usePathname() || "/") === "/learn/welcome";
 
   useEffect(() => {
-    const supabase = createClient();
-    if (!supabase) {
-      setStatus("offline");
-      return;
-    }
-
+    if (defer) return;
     let cancelled = false;
-
-    async function run(reason: string) {
-      setStatus("syncing");
-      setMessage(null);
-      const result = await syncLearnerState(supabase);
-      if (cancelled) return;
-      setStatus(result.status);
-      setMessage(result.message ?? null);
-      if (result.status === "synced") {
-        // A baseline taken before signing in becomes the account's locked baseline
-        void claimDeviceBaselines();
-        // Clear success banner shortly
-        window.setTimeout(() => {
-          if (!cancelled) setStatus("idle");
-        }, 2500);
-      }
-      void reason;
-    }
-
-    void run("mount");
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event) => {
-      if (
-        event === "SIGNED_IN" ||
-        event === "TOKEN_REFRESHED" ||
-        event === "USER_UPDATED"
-      ) {
-        void run(event);
-      }
-      if (event === "SIGNED_OUT") {
-        setStatus("unsigned");
-        setMessage(null);
-      }
-    });
+    let unsubscribe = () => {};
 
     const onSync = (e: Event) => {
       const detail = (e as CustomEvent).detail as
@@ -72,12 +30,63 @@ export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
     };
     window.addEventListener("sc-lms-sync", onSync);
 
+    // Supabase is a large client. Load it after first paint so the welcome
+    // screen is not waiting on it (the profile step does not sync yet).
+    void (async () => {
+      const { createClient } = await import("@/lib/supabase/client");
+      if (cancelled) return;
+      const supabase = createClient();
+      if (!supabase) {
+        setStatus("offline");
+        return;
+      }
+      const { syncLearnerState } = await import("@/lib/lms/sync");
+      const { claimDeviceBaselines } = await import("@/lib/lms/cloud");
+      if (cancelled) return;
+
+      async function run(reason: string) {
+        setStatus("syncing");
+        setMessage(null);
+        const result = await syncLearnerState(supabase!);
+        if (cancelled) return;
+        setStatus(result.status);
+        setMessage(result.message ?? null);
+        if (result.status === "synced") {
+          // A baseline taken before signing in becomes the account's locked baseline
+          void claimDeviceBaselines();
+          window.setTimeout(() => {
+            if (!cancelled) setStatus("idle");
+          }, 2500);
+        }
+        void reason;
+      }
+
+      void run("mount");
+
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((event) => {
+        if (
+          event === "SIGNED_IN" ||
+          event === "TOKEN_REFRESHED" ||
+          event === "USER_UPDATED"
+        ) {
+          void run(event);
+        }
+        if (event === "SIGNED_OUT") {
+          setStatus("unsigned");
+          setMessage(null);
+        }
+      });
+      unsubscribe = () => subscription.unsubscribe();
+    })();
+
     return () => {
       cancelled = true;
-      subscription.unsubscribe();
+      unsubscribe();
       window.removeEventListener("sc-lms-sync", onSync);
     };
-  }, []);
+  }, [defer]);
 
   const show =
     status === "syncing" || status === "error" || status === "synced";
