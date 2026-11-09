@@ -1,15 +1,15 @@
 import { Noto_Sans_Arabic } from "next/font/google";
 
 /**
- * Arabic script only, one weight. Not preloaded, so English never downloads it.
- * display: swap — Latin text uses Inter (listed first in globals.css), so this file
- * does not gate the welcome sentence. LocaleHtml adds the variable on /ar only.
+ * Arabic script only, one weight. Preloaded so /ar does not discover the file after
+ * CSS (that late fetch was the Arabic welcome LCP). Latin text uses Inter, listed
+ * first in globals.css. LocaleHtml adds this variable on /ar only.
  */
 export const notoArabic = Noto_Sans_Arabic({
   subsets: ["arabic"],
   weight: "400",
   display: "swap",
-  preload: false,
+  preload: true,
   adjustFontFallback: true,
   variable: "--font-arabic",
 });
