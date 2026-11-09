@@ -1,7 +1,12 @@
+"use client";
+
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import type { BadgeView } from "@/lib/lms/progression";
 
 /** Earned badges in colour, the rest as gentle outlines with how to earn them. */
 export function BadgeWall({ badges, title = "Badges" }: { badges: BadgeView[]; title?: string }) {
+  const { t } = useLmsT();
+
   const earned = badges.filter((b) => b.earned).length;
   return (
     <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5" aria-labelledby="badges-h" data-testid="badge-wall">
@@ -31,7 +36,7 @@ export function BadgeWall({ badges, title = "Badges" }: { badges: BadgeView[]; t
             <span className="min-w-0">
               <span className={`block text-[0.8125rem] font-semibold leading-tight ${b.earned ? "text-ink" : "text-slate"}`}>
                 {b.name}
-                {b.kind === "progress" && b.earned && <span className="sr-only"> (earned)</span>}
+                {b.kind === "progress" && b.earned && <span className="sr-only">{t("(earned)")}</span>}
               </span>
               <span className="mt-0.5 block text-[0.6875rem] leading-snug text-slate">{b.criteria}</span>
             </span>

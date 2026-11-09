@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { constructs, type ConstructId } from "@/lib/content";
@@ -58,6 +60,8 @@ export function DailyCheckInPanel({
   state: LocalLmsState;
   onSaved?: (next: LocalLmsState) => void;
 }) {
+  const { t } = useLmsT();
+
   const today = localDayKey();
   const [step, setStep] = useState<Step>("day");
   const [selectedDay, setSelectedDay] = useState(today);
@@ -153,7 +157,7 @@ export function DailyCheckInPanel({
       <div className="space-y-5">
         <LearnPageHeader
           kicker="Check-in"
-          title="Which day are you logging?"
+          title={t("Which day are you logging?")}
           description="Tap a day on the week strip, or open the full calendar. Then rate the six faces."
           step={1}
           stepTotal={4}
@@ -161,15 +165,13 @@ export function DailyCheckInPanel({
         <LearnCard>
           <LearnCardBody>
             <div className="mb-3 flex items-center justify-between">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                This week
-              </p>
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("This week")}</p>
               <button
                 type="button"
                 onClick={() => setShowMonth((v) => !v)}
                 className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
               >
-                {showMonth ? "Hide calendar" : "Full calendar"}
+                {showMonth ? t("Hide calendar") : t("Full calendar")}
               </button>
             </div>
             <div className="grid grid-cols-7 gap-1.5">
@@ -288,13 +290,13 @@ export function DailyCheckInPanel({
         </LearnCard>
         <LearnPageActions
           primary={{
-            label: "Next · rate faces →",
+            label: t("Next · rate faces →"),
             onClick: () => {
               setFaceIndex(0);
               setStep("faces");
             },
           }}
-          tertiary={{ href: "/learn", label: "Back to Today" }}
+          tertiary={{ href: "/learn", label: t("Back to Today") }}
         />
       </div>
     );
@@ -306,7 +308,7 @@ export function DailyCheckInPanel({
       <div className="space-y-5">
         <LearnPageHeader
           kicker={`${face.name} · face ${faceIndex + 1} of 6`}
-          title="Rate this face"
+          title={t("Rate this face")}
           description="Three quick sliders. Be honest—this is developmental, not a test."
           step={2}
           stepTotal={4}
@@ -400,8 +402,8 @@ export function DailyCheckInPanel({
           primary={{
             label:
               faceIndex < constructs.length - 1
-                ? "Next face →"
-                : "Next · journal →",
+                ? t("Next face →")
+                : t("Next · journal →"),
             onClick: () => {
               if (faceIndex < constructs.length - 1) {
                 setFaceIndex((i) => i + 1);
@@ -411,7 +413,7 @@ export function DailyCheckInPanel({
             },
           }}
           secondary={{
-            label: faceIndex === 0 ? "Back · day" : "Previous face",
+            label: faceIndex === 0 ? "Back · day" : t("Previous face"),
             onClick: () => {
               if (faceIndex === 0) setStep("day");
               else setFaceIndex((i) => i - 1);
@@ -428,7 +430,7 @@ export function DailyCheckInPanel({
       <div className="space-y-5">
         <LearnPageHeader
           kicker="Journal"
-          title="Anything to capture?"
+          title={t("Anything to capture?")}
           description="Optional free text. Private on this device. Then save your check-in."
           step={3}
           stepTotal={4}
@@ -442,16 +444,14 @@ export function DailyCheckInPanel({
               rated for{" "}
               <span className="font-semibold text-ink">{selectedDay}</span>
               {!canSave && (
-                <span className="mt-1 block text-amber-800">
-                  Rate at least 3 faces (2+ sliders each) before saving.
-                </span>
+                <span className="mt-1 block text-amber-800">{t("Rate at least 3 faces (2+ sliders each) before saving.")}</span>
               )}
             </p>
             <textarea
               value={note}
               onChange={(e) => setNote(e.target.value)}
               rows={4}
-              placeholder="What mattered most about how you led? One win, one friction, one intention…"
+              placeholder={t("What mattered most about how you led? One win, one friction, one intention…")}
               className="learn-input mt-4 w-full resize-y text-sm"
             />
           </LearnCardBody>
@@ -459,13 +459,13 @@ export function DailyCheckInPanel({
         <LearnPageActions
           primary={{
             label: pulseDates.has(selectedDay)
-              ? "Update check-in"
-              : "Save check-in",
+              ? t("Update check-in")
+              : t("Save check-in"),
             onClick: save,
             disabled: !canSave,
           }}
           secondary={{
-            label: "Back · faces",
+            label: t("Back · faces"),
             onClick: () => {
               setFaceIndex(constructs.length - 1);
               setStep("faces");
@@ -481,7 +481,7 @@ export function DailyCheckInPanel({
     <div className="space-y-5">
       <LearnPageHeader
         kicker="Complete"
-        title="Check-in saved"
+        title={t("Check-in saved")}
         description="Patterns will sharpen as you log more days. Choose your next page."
         step={4}
         stepTotal={4}
@@ -492,14 +492,14 @@ export function DailyCheckInPanel({
             Logged for{" "}
             <span className="font-semibold text-white">{selectedDay}</span>.{" "}
             {answeredFaces} faces captured
-            {note ? " with a journal note" : ""}.
+            {note ? t(" with a journal note") : ""}.
           </p>
         </LearnCardBody>
       </LearnCard>
       <LearnPageActions
-        primary={{ href: "/learn/practice", label: "Micro-practice →" }}
-        secondary={{ href: "/learn/courses", label: "Continue learning" }}
-        tertiary={{ href: "/learn", label: "Back to Today" }}
+        primary={{ href: "/learn/practice", label: t("Micro-practice →") }}
+        secondary={{ href: "/learn/courses", label: t("Continue learning") }}
+        tertiary={{ href: "/learn", label: t("Back to Today") }}
       />
       <p className="text-center">
         <button
@@ -517,9 +517,7 @@ export function DailyCheckInPanel({
         <Link
           href="/learn/progress"
           className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
-        >
-          View your progress
-        </Link>
+        >{t("View your progress")}</Link>
       </p>
     </div>
   );

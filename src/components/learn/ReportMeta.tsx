@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { formatDateZA } from "@/lib/datetime";
 import Link from "next/link";
 import {
@@ -15,6 +17,8 @@ import { getProgramme } from "@/lib/programmes";
 
 /** Learner identity + assessment timeline strip for the Report page. */
 export function ReportMeta({ state }: { state: LocalLmsState }) {
+  const { t } = useLmsT();
+
   const profile = getProfile(state);
   const pre = state.attempts.find((a) => a.phase === "pre");
   const post = state.attempts.find((a) => a.phase === "post");
@@ -51,7 +55,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
       <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="learn-eyebrow">Report for</p>
+            <p className="learn-eyebrow">{t("Report for")}</p>
             <h2 className="mt-0.5 text-lg font-semibold tracking-tight text-ink">
               {name}
             </h2>
@@ -64,9 +68,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
           <Link
             href="/learn/account"
             className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-          >
-            Open You →
-          </Link>
+          >{t("Open You →")}</Link>
         </div>
 
         <dl className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -97,33 +99,33 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
 
         {profile?.goal && (
           <p className="mt-3 rounded-xl border border-line bg-surface px-3 py-2 text-[0.8125rem] text-slate">
-            <span className="font-semibold text-ink">Goal · </span>
+            <span className="font-semibold text-ink">{t("Goal ·")}</span>
             {profile.goal}
           </p>
         )}
       </section>
 
       <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5">
-        <h3 className="text-sm font-semibold text-ink">Assessment history</h3>
+        <h3 className="text-sm font-semibold text-ink">{t("Assessment history")}</h3>
         <ol className="mt-3 space-y-2">
           {[
             {
-              label: "Orientation",
+              label: t("Orientation"),
               at: state.orientation?.completedAt,
               meta: state.orientation?.result.label,
             },
             {
-              label: "Pre-assessment",
+              label: t("Pre-assessment"),
               at: pre?.completedAt,
               meta: pre ? `Overall ${pre.result.overall}` : undefined,
             },
             {
-              label: "Mid check",
+              label: t("Mid check"),
               at: mid?.completedAt,
               meta: mid ? `Overall ${mid.result.overall}` : undefined,
             },
             {
-              label: "Post-assessment",
+              label: t("Post-assessment"),
               at: post?.completedAt,
               meta: post ? `Overall ${post.result.overall}` : undefined,
             },
@@ -150,7 +152,7 @@ export function ReportMeta({ state }: { state: LocalLmsState }) {
                 </div>
               </div>
               <p className="text-[0.7rem] tabular-nums text-muted">
-                {row.at ? formatDateZA(row.at) : "Pending"}
+                {row.at ? formatDateZA(row.at) : t("Pending")}
               </p>
             </li>
           ))}

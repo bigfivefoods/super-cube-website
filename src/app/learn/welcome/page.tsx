@@ -25,11 +25,13 @@ import {
 } from "@/lib/lms/store";
 import { getProgramme } from "@/lib/programmes";
 import { hasValidGuardianConsent, MINOR_AGE_BANDS } from "@/lib/lms/consent";
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
 type Step = 1 | 2 | 3 | 4;
 
 export default function WelcomeProfilePage() {
   const router = useRouter();
+  const { t, L, fill } = useLmsT();
   const [step, setStep] = useState<Step>(1);
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
@@ -102,10 +104,10 @@ export default function WelcomeProfilePage() {
       dest = "/learn/org";
     }
     if (MINOR_AGE_BANDS.includes(ageBand) && !hasValidGuardianConsent(getProfile(s), s.guardianConsent)) {
-      router.push(`/learn/consent?next=${encodeURIComponent(dest)}`);
+      router.push(L(`/learn/consent?next=${encodeURIComponent(dest)}`));
       return;
     }
-    router.push(dest);
+    router.push(L(dest));
   }
 
   const programme =
@@ -114,18 +116,18 @@ export default function WelcomeProfilePage() {
 
   return (
     <LearnShell
-      title="Welcome: tell us about you"
+      title={t("Welcome: tell us about you")}
       subtitle="A 60-second profile so Learn, Report, and your cohort fit who you are. Private on this device until you sign in."
       hideJourneyRail
     >
       <div
         className="mb-5 flex gap-1.5"
         role="progressbar"
-        aria-label="Profile steps"
+        aria-label={t("Profile steps")}
         aria-valuemin={1}
         aria-valuemax={4}
         aria-valuenow={step}
-        aria-valuetext={`Step ${step} of 4`}
+        aria-valuetext={fill("Step {n} of {total}", { n: step, total: 4 })}
         data-testid="welcome-progress"
       >
         {([1, 2, 3, 4] as Step[]).map((s) => (
@@ -140,20 +142,20 @@ export default function WelcomeProfilePage() {
 
       {step === 1 && (
         <section className="learn-card space-y-4">
-          <h2 className="learn-card-title">Who are you?</h2>
+          <h2 className="learn-card-title">{t("Who are you?")}</h2>
           <label className="block">
-            <span className="learn-label">Preferred name</span>
+            <span className="learn-label">{t("Preferred name")}</span>
             <input
               className="learn-input mt-1.5 w-full"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              placeholder="e.g. Craig"
+              placeholder={t("e.g. Craig")}
               autoComplete="name"
             />
           </label>
           <label className="block">
             <span className="learn-label">
-              Email (optional — for sync later)
+              {t("Email (optional — for sync later)")}
             </span>
             <input
               className="learn-input mt-1.5 w-full"
@@ -170,16 +172,16 @@ export default function WelcomeProfilePage() {
             onClick={() => setStep(2)}
             className="learn-btn learn-btn-primary w-full disabled:opacity-40"
           >
-            Continue →
+            {t("Continue →")}
           </button>
         </section>
       )}
 
       {step === 2 && (
         <section className="learn-card space-y-4">
-          <h2 className="learn-card-title">Age & programme</h2>
+          <h2 className="learn-card-title">{t("Age & programme")}</h2>
           <p className="learn-meta">
-            We match Kids, Adolescents, or Adults content to your age band.
+            {t("We match Kids, Adolescents, or Adults content to your age band.")}
           </p>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {AGE_BANDS.map((a) => (
@@ -193,15 +195,15 @@ export default function WelcomeProfilePage() {
                     : "border-line bg-elevated text-ink"
                 }`}
               >
-                {a.label}
+                {t(a.label)}
               </button>
             ))}
           </div>
           {programme && (
             <p className="rounded-xl bg-surface px-3 py-2 text-[0.8125rem] text-slate">
-              Matched programme:{" "}
-              <strong className="text-ink">{programme.name}</strong> (
-              {programme.ageLabel})
+              {t("Matched programme:")}{" "}
+              <strong className="text-ink">{t(programme.name)}</strong> (
+              {t(programme.ageLabel)})
             </p>
           )}
           <div className="flex gap-2">
@@ -210,7 +212,7 @@ export default function WelcomeProfilePage() {
               onClick={() => setStep(1)}
               className="learn-btn learn-btn-ghost"
             >
-              Back
+              {t("Back")}
             </button>
             <button
               type="button"
@@ -218,7 +220,7 @@ export default function WelcomeProfilePage() {
               onClick={() => setStep(3)}
               className="learn-btn learn-btn-primary flex-1 disabled:opacity-40"
             >
-              Continue →
+              {t("Continue →")}
             </button>
           </div>
         </section>
@@ -226,8 +228,8 @@ export default function WelcomeProfilePage() {
 
       {step === 3 && (
         <section className="learn-card space-y-4">
-          <h2 className="learn-card-title">Role & context</h2>
-          <p className="learn-label">I am a…</p>
+          <h2 className="learn-card-title">{t("Role & context")}</h2>
+          <p className="learn-label">{t("I am a…")}</p>
           <div className="flex flex-wrap gap-2">
             {ROLES.map((r) => (
               <button
@@ -240,11 +242,11 @@ export default function WelcomeProfilePage() {
                     : "border-line-strong text-ink"
                 }`}
               >
-                {r.label}
+                {t(r.label)}
               </button>
             ))}
           </div>
-          <p className="learn-label pt-2">Learning mainly for…</p>
+          <p className="learn-label pt-2">{t("Learning mainly for…")}</p>
           <div className="flex flex-wrap gap-2">
             {CONTEXTS.map((c) => (
               <button
@@ -257,13 +259,13 @@ export default function WelcomeProfilePage() {
                     : "border-line-strong text-ink"
                 }`}
               >
-                {c.label}
+                {t(c.label)}
               </button>
             ))}
           </div>
           <div className="grid gap-3 sm:grid-cols-2">
             <label className="block">
-              <span className="learn-label">Country</span>
+              <span className="learn-label">{t("Country")}</span>
               <input
                 className="learn-input mt-1 w-full"
                 value={country}
@@ -271,7 +273,7 @@ export default function WelcomeProfilePage() {
               />
             </label>
             <label className="block">
-              <span className="learn-label">City (optional)</span>
+              <span className="learn-label">{t("City (optional)")}</span>
               <input
                 className="learn-input mt-1 w-full"
                 value={city}
@@ -280,12 +282,12 @@ export default function WelcomeProfilePage() {
             </label>
           </div>
           <label className="block">
-            <span className="learn-label">Primary growth goal (optional)</span>
+            <span className="learn-label">{t("Primary growth goal (optional)")}</span>
             <textarea
               className="learn-input mt-1 min-h-[4rem] w-full"
               value={goal}
               onChange={(e) => setGoal(e.target.value)}
-              placeholder="e.g. Lead my team with more presence and clarity"
+              placeholder={t("e.g. Lead my team with more presence and clarity")}
             />
           </label>
           <div className="flex gap-2">
@@ -294,7 +296,7 @@ export default function WelcomeProfilePage() {
               onClick={() => setStep(2)}
               className="learn-btn learn-btn-ghost"
             >
-              Back
+              {t("Back")}
             </button>
             <button
               type="button"
@@ -302,7 +304,7 @@ export default function WelcomeProfilePage() {
               onClick={() => setStep(4)}
               className="learn-btn learn-btn-primary flex-1 disabled:opacity-40"
             >
-              Continue →
+              {t("Continue →")}
             </button>
           </div>
         </section>
@@ -310,7 +312,7 @@ export default function WelcomeProfilePage() {
 
       {step === 4 && (
         <section className="learn-card space-y-4">
-          <h2 className="learn-card-title">How will you learn?</h2>
+          <h2 className="learn-card-title">{t("How will you learn?")}</h2>
           <div className="grid gap-2 sm:grid-cols-2">
             {COHORT_KINDS.map((c) => (
               <button
@@ -323,13 +325,13 @@ export default function WelcomeProfilePage() {
                     : "border-line bg-elevated"
                 }`}
               >
-                <p className="text-sm font-semibold">{c.label}</p>
+                <p className="text-sm font-semibold">{t(c.label)}</p>
                 <p
                   className={`mt-0.5 text-[0.7rem] ${
                     cohortKind === c.id ? "text-white/70" : "text-muted"
                   }`}
                 >
-                  {c.hint}
+                  {t(c.hint)}
                 </p>
               </button>
             ))}
@@ -337,31 +339,32 @@ export default function WelcomeProfilePage() {
           {cohortKind !== "solo" && (
             <label className="block">
               <span className="learn-label">
-                {cohortKind === "family"
-                  ? "Family code (optional)"
-                  : "Cohort / school / company code (optional)"}
+                {t(
+                  cohortKind === "family"
+                    ? t("Family code (optional)")
+                    : t("Cohort / school / company code (optional)"),
+                )}
               </span>
               <input
                 className="learn-input mt-1.5 w-full"
                 value={codeInput}
                 onChange={(e) => setCodeInput(e.target.value.toUpperCase())}
-                placeholder="e.g. DEMO2026 or FAMILY-ABC"
+                placeholder={t("e.g. DEMO2026 or FAMILY-ABC")}
                 maxLength={24}
               />
               <p className="learn-meta mt-1">
-                You can join later from You → Cohort. Try DEMO2026 for pilots.
+                {t("You can join later from You → Cohort. Try DEMO2026 for pilots.")}
               </p>
             </label>
           )}
           <div className="rounded-xl border border-line bg-surface p-3 text-[0.8125rem] text-slate">
-            After profile: optional first face pulse so charts start with real
-            data.{" "}
+            {t("After profile: optional first face pulse so charts start with real data.")}{" "}
             <Link href="/signup" className="font-semibold text-ink underline">
-              Sign up
+              {t("Sign up")}
             </Link>{" "}
             ·{" "}
             <Link href="/login" className="font-semibold text-ink underline">
-              Sign in
+              {t("Sign in")}
             </Link>
           </div>
           <div className="flex gap-2">
@@ -370,14 +373,14 @@ export default function WelcomeProfilePage() {
               onClick={() => setStep(3)}
               className="learn-btn learn-btn-ghost"
             >
-              Back
+              {t("Back")}
             </button>
             <button
               type="button"
               onClick={finish}
               className="learn-btn learn-btn-primary flex-1"
             >
-              Save profile & start →
+              {t("Save profile & start →")}
             </button>
           </div>
         </section>
@@ -385,12 +388,12 @@ export default function WelcomeProfilePage() {
 
       {hasSavedProfile && (
         <p className="mt-4 text-center text-sm text-muted">
-          Profile already saved.{" "}
+          {t("Profile already saved.")}{" "}
           <Link
-            href="/learn/start"
+            href={L("/learn/start")}
             className="font-semibold text-ink underline"
           >
-            Skip to guided start
+            {t("Skip to guided start")}
           </Link>
         </p>
       )}

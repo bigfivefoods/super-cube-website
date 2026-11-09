@@ -27,7 +27,7 @@ function firstRunMinutes(programmeId: ProgrammeId) {
  * Guided first run with honest timings (computed from the content); never dump users on the full dashboard.
  */
 export default function GuidedStartPage() {
-  const { t, L } = useLmsT();
+  const { t, L, fill } = useLmsT();
   const state = useLmsState();
 
   useEffect(() => {
@@ -66,13 +66,17 @@ export default function GuidedStartPage() {
 
   const { baselineMin, firstSessionMin, orientMin, winMin, totalMin } = firstRunMinutes(programmeId);
   const subtitle = fillCopy(t(programmeTemplate("start.subtitle", programmeId)), {
-    programme: programme?.name ?? "Super-Cube®",
+    programme: t(programme?.name ?? t("Super-Cube®")),
   });
+  const minutes = (n: number) => fill("{n} min", { n });
+  const title = name
+    ? fill("{name}, your first {total} minutes", { name: name.split(" ")[0], total: totalMin })
+    : fill("Your first {total} minutes", { total: totalMin });
 
   const steps = [
     {
       n: 1,
-      min: `${orientMin} min`,
+      min: minutes(orientMin),
       t: t("Orient"),
       d: t("How you see leadership levels—quick pre-pre check."),
       href: "/learn/assessment/orientation",
@@ -80,7 +84,7 @@ export default function GuidedStartPage() {
     },
     {
       n: 2,
-      min: `${baselineMin} min`,
+      min: minutes(baselineMin),
       t: t("Baseline (start)"),
       d: t("Six faces, honest ratings. You can save mid-way and resume."),
       href: "/learn/assessment/pre",
@@ -88,7 +92,7 @@ export default function GuidedStartPage() {
     },
     {
       n: 3,
-      min: `${firstSessionMin} min`,
+      min: minutes(firstSessionMin),
       t: t("One session"),
       d: t("After baseline, open your weekly plan’s first face—or start any course."),
       href: preDone ? "/learn" : "/learn/courses",
@@ -96,7 +100,7 @@ export default function GuidedStartPage() {
     },
     {
       n: 4,
-      min: `${winMin} min`,
+      min: minutes(winMin),
       t: t("First win"),
       d: t("Complete a session to unlock win-of-the-day and streak."),
       href: "/learn",
@@ -107,15 +111,7 @@ export default function GuidedStartPage() {
   const next = steps.find((s) => !s.done) ?? steps[steps.length - 1]!;
 
   return (
-    <LearnShell
-      title={
-        name
-          ? `${name.split(" ")[0]}, your first ${totalMin} minutes`
-          : `Your first ${totalMin} minutes`
-      }
-      subtitle={subtitle}
-      hideJourneyRail
-    >
+    <LearnShell title={title} subtitle={subtitle} hideJourneyRail>
       <div className="mb-5 rounded-2xl border border-ink bg-void p-5 text-white sm:p-6">
         <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/80">
           {t("Recommended next")}

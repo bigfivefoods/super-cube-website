@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { formatDateTimeZA } from "@/lib/datetime";
 import { useEffect, useState } from "react";
 import type { ConstructId } from "@/lib/content";
@@ -26,6 +28,8 @@ export function SessionReflection({
   /** Rendered inside a session step: no top margin */
   embedded?: boolean;
 }) {
+  const { t } = useLmsT();
+
   const [text, setText] = useState("");
   const [savedAt, setSavedAt] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
@@ -47,8 +51,8 @@ export function SessionReflection({
 
   const generic = reflectionPrompt(constructId, programmeId);
   const prompt = journalPrompt
-    ? { ...generic, title: journalPrompt, hint: "Write a few lines. Your journal is private to this device until you share or sync.",
-        placeholder: programmeId === "kids" ? "Write here, or ask a grown-up to write for you…" : "Write here…" }
+    ? { ...generic, title: journalPrompt, hint: t("Write a few lines. Your journal is private to this device until you share or sync."),
+        placeholder: programmeId === "kids" ? "Write here, or ask a grown-up to write for you…" : t("Write here…") }
     : generic;
 
   function save() {
@@ -65,9 +69,7 @@ export function SessionReflection({
       aria-labelledby={`reflect-title-${lessonId}`}
     >
       <div className="border-b border-line px-4 py-3 sm:px-5">
-        <p className="learn-eyebrow" style={{ color }}>
-          Leadership journal
-        </p>
+        <p className="learn-eyebrow" style={{ color }}>{t("Leadership journal")}</p>
         <h3
           id={`reflect-title-${lessonId}`}
           className="mt-0.5 text-[0.9375rem] font-semibold tracking-tight text-ink"
@@ -77,9 +79,7 @@ export function SessionReflection({
         <p className="learn-meta mt-0.5">{prompt.hint}</p>
       </div>
       <div className="px-4 py-4 sm:px-5">
-        <label className="sr-only" htmlFor={`reflect-${lessonId}`}>
-          Reflection
-        </label>
+        <label className="sr-only" htmlFor={`reflect-${lessonId}`}>{t("Reflection")}</label>
         <textarea
           id={`reflect-${lessonId}`}
           value={text}
@@ -96,8 +96,8 @@ export function SessionReflection({
             {savedAt && !dirty
               ? `Saved ${formatDateTimeZA(savedAt)}`
               : dirty
-                ? "Unsaved changes"
-                : "Private to this device until you share or sync"}
+                ? t("Unsaved changes")
+                : t("Private to this device until you share or sync")}
           </p>
           <button
             type="button"
@@ -105,9 +105,7 @@ export function SessionReflection({
             disabled={!text.trim()}
             className="learn-btn learn-btn-primary disabled:opacity-40"
             style={{ background: color }}
-          >
-            Save reflection
-          </button>
+          >{t("Save reflection")}</button>
         </div>
       </div>
     </section>

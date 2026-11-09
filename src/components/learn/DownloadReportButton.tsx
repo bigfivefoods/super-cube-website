@@ -16,7 +16,7 @@ export function DownloadReportButton({
   post?: LocalAttempt | null;
   className?: string;
 }) {
-  const { locale } = useLmsT();
+  const { t, locale } = useLmsT();
   const [busy, setBusy] = useState(false);
   const [lastFile, setLastFile] = useState<string | null>(null);
 
@@ -47,14 +47,13 @@ export function DownloadReportButton({
       >
         <DownloadIcon />
         {busy
-          ? "Preparing PDF…"
+          ? t("Preparing PDF…")
           : post
-            ? "Download growth report (PDF)"
-            : "Download baseline report (PDF)"}
+            ? t("Download growth report (PDF)")
+            : t("Download baseline report (PDF)")}
       </button>
       {lastFile && (
-        <p className="learn-meta">
-          Saved · <span className="font-medium text-ink">{lastFile}</span>
+        <p className="learn-meta">{t("Saved ·")}<span className="font-medium text-ink">{lastFile}</span>
         </p>
       )}
     </div>

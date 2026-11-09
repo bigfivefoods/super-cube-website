@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useState } from "react";
 import { SuperCube } from "@/components/SuperCube";
 import { constructs, type ConstructId } from "@/lib/content";
@@ -18,6 +20,8 @@ export function ProgressCube({
   celebrate?: ConstructId | null;
   size?: "sm" | "md" | "lg";
 }) {
+  const { t } = useLmsT();
+
   const [celebrate, setCelebrate] = useState<ConstructId | null>(initial);
   useEffect(() => {
     const on = (e: Event) => setCelebrate((e as CustomEvent<ConstructId>).detail);
@@ -32,15 +36,11 @@ export function ProgressCube({
 
   return (
     <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5" aria-labelledby="cube-h" data-testid="progress-cube">
-      <h2 id="cube-h" className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">
-        Your Super-Cube®
-      </h2>
-      <p className="mt-1 text-[0.8125rem] leading-snug text-slate">
-        Each face lights up as you learn, practise and review it: four steps from dark to fully lit.
-      </p>
+      <h2 id="cube-h" className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Your Super-Cube®")}</h2>
+      <p className="mt-1 text-[0.8125rem] leading-snug text-slate">{t("Each face lights up as you learn, practise and review it: four steps from dark to fully lit.")}</p>
       <div className="mt-2 flex flex-col items-center gap-4 sm:flex-row sm:items-center sm:gap-6">
         <SuperCube size={size} light={view.tiers} celebrate={celebrate} showSkills={false} autoSpin={false} hideControls className="py-6" />
-        <ul className="grid w-full grid-cols-2 gap-1.5 sm:grid-cols-1 sm:gap-1" aria-label="Points per face">
+        <ul className="grid w-full grid-cols-2 gap-1.5 sm:grid-cols-1 sm:gap-1" aria-label={t("Points per face")}>
           {constructs.map((c) => {
             const pts = view.faces[c.id];
             const tier = view.tiers[c.id];
@@ -54,8 +54,8 @@ export function ProgressCube({
                   {nextAt ? <span className="sr-only"> points; next light at {nextAt}</span> : <span className="sr-only"> points; fully lit</span>}
                 </span>
                 <span className="flex gap-0.5" aria-hidden>
-                  {[1, 2, 3, 4].map((t) => (
-                    <i key={t} className="h-1.5 w-2.5 rounded-sm" style={{ background: t <= tier ? c.color : "rgba(127,127,127,0.25)" }} />
+                  {[1, 2, 3, 4].map((step) => (
+                    <i key={step} className="h-1.5 w-2.5 rounded-sm" style={{ background: step <= tier ? c.color : "rgba(127,127,127,0.25)" }} />
                   ))}
                 </span>
               </li>

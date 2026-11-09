@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { constructs, type ConstructId } from "@/lib/content";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
 import { RadarChart } from "@/components/learn/RadarChart";
@@ -164,6 +166,8 @@ export function SampleReportCharts({
   preOverall: number;
   postOverall: number;
 }) {
+  const { t } = useLmsT();
+
   const preScores = toScores(faces, "pre");
   const postScores = toScores(faces, "post");
   const series = buildSampleSeries(preOverall, postOverall);
@@ -172,9 +176,7 @@ export function SampleReportCharts({
   return (
     <div className="mt-8 space-y-6">
       <div>
-        <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">
-          Growth radar · before → after
-        </h3>
+        <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">{t("Growth radar · before → after")}</h3>
         <p className="mt-1 text-xs leading-relaxed text-slate">
           Before is the dashed outline with hollow markers; after is the filled shape in face colours. Choices
           at top, Principles at bottom, matching the Super-Cube® face layout.
@@ -192,9 +194,7 @@ export function SampleReportCharts({
           </div>
 
           <div className="rounded-2xl border border-line bg-surface px-4 py-4 sm:px-5">
-            <h4 className="text-sm font-semibold tracking-tight text-ink">
-              Where to focus next
-            </h4>
+            <h4 className="text-sm font-semibold tracking-tight text-ink">{t("Where to focus next")}</h4>
             <p className="mt-1 text-xs leading-relaxed text-slate">
               Sample guidance from this composite&apos;s pre → post pattern—same
               style of improvement advice learners see after a real report.
@@ -219,25 +219,17 @@ export function SampleReportCharts({
       </div>
 
       <div>
-        <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">
-          Longitudinal trend · continuous tracking
-        </h3>
-        <p className="mt-1 text-xs leading-relaxed text-slate">
-          Illustrative 14-day overall capacity path from daily/weekly face
-          pulses—the same continuous tracking available in Learn after baseline.
-          Gaps show days without a log.
-        </p>
+        <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-muted">{t("Longitudinal trend · continuous tracking")}</h3>
+        <p className="mt-1 text-xs leading-relaxed text-slate">{t("Illustrative 14-day overall capacity path from daily/weekly face pulses—the same continuous tracking available in Learn after baseline. Gaps show days without a log.")}</p>
         <div className="mt-3 rounded-2xl border border-line bg-surface px-4 py-4">
           <div className="flex items-end justify-between gap-3">
             <div>
-              <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">
-                Overall capacity
-              </p>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-wider text-muted">{t("Overall capacity")}</p>
               <p className="mt-0.5 text-sm font-semibold tabular-nums text-ink">
                 {preOverall} → {postOverall}
               </p>
             </div>
-            <p className="text-[0.65rem] text-muted">14-day sample</p>
+            <p className="text-[0.65rem] text-muted">{t("14-day sample")}</p>
           </div>
           <div className="mt-3">
             <FaceSparkline
@@ -247,10 +239,7 @@ export function SampleReportCharts({
               stroke="#0a0a0a"
             />
           </div>
-          <p className="mt-2 text-[0.7rem] leading-relaxed text-muted">
-            In live Learn, pulses feed adaptive micro-practices and coach
-            heatmaps (with consent). This sample is illustrative only.
-          </p>
+          <p className="mt-2 text-[0.7rem] leading-relaxed text-muted">{t("In live Learn, pulses feed adaptive micro-practices and coach heatmaps (with consent). This sample is illustrative only.")}</p>
         </div>
       </div>
     </div>

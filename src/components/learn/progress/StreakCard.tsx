@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { liveStreak } from "@/lib/lms/badges";
 import { FREEZE_EVERY_DAYS, localDayKey, MAX_STREAK_FREEZES } from "@/lib/lms/day";
 import { formatDateZA } from "@/lib/datetime";
@@ -7,6 +9,8 @@ import type { LocalLmsState } from "@/lib/lms/store";
 
 /** Streak with earned freezes: one per 7 days in a row, hold up to 2. */
 export function StreakCard({ state }: { state: LocalLmsState }) {
+  const { t } = useLmsT();
+
   const freezes = Math.min(MAX_STREAK_FREEZES, state.streakFreezes ?? 0);
   const current = state.practiceStreak?.current ?? 0;
   const streak = liveStreak(
@@ -18,9 +22,7 @@ export function StreakCard({ state }: { state: LocalLmsState }) {
   const usedOn = state.streakFreezeUsedOn;
   return (
     <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5" aria-labelledby="streak-h" data-testid="streak-card">
-      <h2 id="streak-h" className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">
-        Streak
-      </h2>
+      <h2 id="streak-h" className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Streak")}</h2>
       <div className="mt-1 flex items-end justify-between gap-3">
         <p className="text-[1.75rem] font-semibold leading-none tabular-nums text-ink">
           {streak}

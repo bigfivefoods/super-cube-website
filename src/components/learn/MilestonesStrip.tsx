@@ -1,16 +1,20 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { getMilestones } from "@/lib/lms/milestones";
 import type { LocalLmsState } from "@/lib/lms/store";
 
 export function MilestonesStrip({ state }: { state: LocalLmsState }) {
+  const { t } = useLmsT();
+
   const items = getMilestones(state);
   const earned = items.filter((m) => m.earned).length;
 
   return (
     <section className="learn-card mb-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="learn-card-title">Wins & milestones</h2>
+        <h2 className="learn-card-title">{t("Wins & milestones")}</h2>
         <p className="text-[0.75rem] font-semibold tabular-nums text-muted">
           {earned}/{items.length}
         </p>

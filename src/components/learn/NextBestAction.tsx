@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import {
   processLabel,
@@ -7,6 +9,8 @@ import {
 } from "@/lib/lms/next-action";
 
 export function NextBestActionCard({ action }: { action: Action }) {
+  const { t } = useLmsT();
+
   const border =
     action.urgency === "high"
       ? "border-ink bg-void text-void-fg"
@@ -26,7 +30,7 @@ export function NextBestActionCard({ action }: { action: Action }) {
             }`}
           >
             {process}
-            {action.urgency === "high" ? " · priority" : " · next"}
+            {action.urgency === "high" ? " · priority" : t(" · next")}
           </p>
           <div className="mt-1 flex items-center gap-2">
             {action.color && (

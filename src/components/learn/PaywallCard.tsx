@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { hasFullPathwayAccess } from "@/lib/lms/entitlements";
 import { sessionCount } from "@/lib/lms/curriculum-meta";
@@ -10,6 +12,8 @@ import { useEffect, useState } from "react";
 
 /** Soft paywall banner when DEMO_LMS_OPEN is false and user is not paid/demo */
 export function PaywallCard() {
+  const { t } = useLmsT();
+
   const [show, setShow] = useState(false);
   const [n, setN] = useState(() => sessionCount("adults"));
 
@@ -23,9 +27,7 @@ export function PaywallCard() {
 
   return (
     <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 sm:px-5">
-      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-amber-900">
-        Full pathway
-      </p>
+      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-amber-900">{t("Full pathway")}</p>
       <p className="mt-1 text-sm font-semibold text-ink" data-testid="paywall-unlock">
         Unlock all {n} sessions · {formatCoursePrice("ZAR")} once, lifetime access
       </p>

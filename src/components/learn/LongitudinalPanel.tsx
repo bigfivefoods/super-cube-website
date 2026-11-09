@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { constructs, type ConstructId } from "@/lib/content";
 import { FaceSparkline } from "@/components/learn/FaceSparkline";
@@ -7,6 +9,8 @@ import { deriveFacePattern, pulseSeries } from "@/lib/lms/face-tracking";
 import type { LocalLmsState } from "@/lib/lms/store";
 
 export function LongitudinalPanel({ state }: { state: LocalLmsState }) {
+  const { t } = useLmsT();
+
   const series = pulseSeries(state, 28);
   const overall = series.map((s) => s.overall);
   const pattern = deriveFacePattern(state, 28);
@@ -16,7 +20,7 @@ export function LongitudinalPanel({ state }: { state: LocalLmsState }) {
     <section className="learn-card mb-4 sm:mb-5 print:break-inside-avoid">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h2 className="learn-card-title">Longitudinal trajectory</h2>
+          <h2 className="learn-card-title">{t("Longitudinal trajectory")}</h2>
           <p className="learn-meta mt-0.5">
             28-day face pulses · consistency {pattern.consistency}% ·{" "}
             {pattern.pulseCount} check-ins
@@ -25,27 +29,21 @@ export function LongitudinalPanel({ state }: { state: LocalLmsState }) {
         <Link
           href="/learn/pulse"
           className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline print:hidden"
-        >
-          Open pulse →
-        </Link>
+        >{t("Open pulse →")}</Link>
       </div>
 
       {!hasData ? (
         <div className="mt-3">
-          <p className="learn-body">
-            Log daily or weekly face pulses to unlock your trajectory chart.
-          </p>
+          <p className="learn-body">{t("Log daily or weekly face pulses to unlock your trajectory chart.")}</p>
           <Link
             href="/learn/pulse"
             className="learn-btn learn-btn-primary mt-3 inline-flex print:hidden"
-          >
-            Start tracking →
-          </Link>
+          >{t("Start tracking →")}</Link>
         </div>
       ) : (
         <>
           <div className="mt-3">
-            <p className="learn-eyebrow mb-1">Overall capacity</p>
+            <p className="learn-eyebrow mb-1">{t("Overall capacity")}</p>
             <FaceSparkline values={overall} width={320} height={56} />
           </div>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

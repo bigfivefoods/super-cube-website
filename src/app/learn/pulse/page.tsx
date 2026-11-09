@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { DailyCheckInPanel } from "@/components/learn/DailyCheckInPanel";
@@ -32,6 +34,8 @@ import {
 type Mode = "checkin" | "patterns" | "peer";
 
 export default function PulsePage() {
+  const { t } = useLmsT();
+
   const [mode, setMode] = useState<Mode>("checkin");
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [peerResponses, setPeerResponses] = useState<PeerPulseResponses>({});
@@ -89,7 +93,7 @@ export default function PulsePage() {
     return (
       <LearnShell>
         <LearnPage>
-          <p className="text-sm text-muted">Loading…</p>
+          <p className="text-sm text-muted">{t("Loading…")}</p>
         </LearnPage>
       </LearnShell>
     );
@@ -130,9 +134,7 @@ export default function PulsePage() {
           <div className="space-y-5">
             <LearnCard>
               <LearnCardBody>
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                  Patterns
-                </p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Patterns")}</p>
                 <h2 className="mt-1 text-lg font-semibold text-ink">
                   {pattern.insight}
                 </h2>
@@ -148,9 +150,7 @@ export default function PulsePage() {
             {recommended.length > 0 && (
               <LearnCard tone="soft">
                 <LearnCardBody>
-                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                    Suggested practices
-                  </p>
+                  <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Suggested practices")}</p>
                   <ul className="mt-3 space-y-2">
                     {recommended.map((p) => {
                       const meta = constructs.find(
@@ -180,12 +180,12 @@ export default function PulsePage() {
               </LearnCard>
             )}
             <LearnPageActions
-              primary={{ href: "/learn/practice", label: "Open practice →" }}
+              primary={{ href: "/learn/practice", label: t("Open practice →") }}
               secondary={{
-                label: "Back to check-in",
+                label: t("Back to check-in"),
                 onClick: () => setMode("checkin"),
               }}
-              tertiary={{ href: "/learn", label: "Today" }}
+              tertiary={{ href: "/learn", label: t("Today") }}
             />
           </div>
         )}
@@ -194,30 +194,21 @@ export default function PulsePage() {
           <div className="space-y-5">
             <LearnCard>
               <LearnCardBody>
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                  Peer pulse
-                </p>
-                <h2 className="mt-1 text-lg font-semibold text-ink">
-                  Optional observation
-                </h2>
-                <p className="mt-1 text-sm text-slate">
-                  Five items for someone who sees you lead. Stored on this
-                  device.
-                </p>
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Peer pulse")}</p>
+                <h2 className="mt-1 text-lg font-semibold text-ink">{t("Optional observation")}</h2>
+                <p className="mt-1 text-sm text-slate">{t("Five items for someone who sees you lead. Stored on this device.")}</p>
                 {peerSaved != null && (
                   <p className="mt-3 text-sm font-semibold text-emerald-800">
                     Last peer score: {peerSaved}/5
                   </p>
                 )}
                 <label className="mt-4 block">
-                  <span className="text-[0.75rem] font-semibold text-muted">
-                    Observer (optional)
-                  </span>
+                  <span className="text-[0.75rem] font-semibold text-muted">{t("Observer (optional)")}</span>
                   <input
                     className="learn-input mt-1 w-full"
                     value={observer}
                     onChange={(e) => setObserver(e.target.value)}
-                    placeholder="Manager · peer"
+                    placeholder={t("Manager · peer")}
                   />
                 </label>
                 <div className="mt-4 space-y-4">
@@ -254,12 +245,12 @@ export default function PulsePage() {
             </LearnCard>
             <LearnPageActions
               primary={{
-                label: "Save peer pulse",
+                label: t("Save peer pulse"),
                 onClick: submitPeer,
                 disabled: !peerReady,
               }}
               secondary={{
-                label: "Back to check-in",
+                label: t("Back to check-in"),
                 onClick: () => setMode("checkin"),
               }}
             />

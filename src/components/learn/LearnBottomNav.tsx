@@ -73,6 +73,8 @@ export function LearnBottomNav() {
 }
 
 function HomeIcon({ active }: { active: boolean }) {
+  const { t } = useLmsT();
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -92,6 +94,8 @@ function HomeIcon({ active }: { active: boolean }) {
 }
 
 function CoursesIcon({ active }: { active: boolean }) {
+  const { t } = useLmsT();
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -112,6 +116,8 @@ function CoursesIcon({ active }: { active: boolean }) {
 
 /** Notebook / journal — distinct from Learn book and Progress chart. */
 function JournalIcon({ active }: { active: boolean }) {
+  const { t } = useLmsT();
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -131,6 +137,8 @@ function JournalIcon({ active }: { active: boolean }) {
 }
 
 function ProgressIcon({ active }: { active: boolean }) {
+  const { t } = useLmsT();
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -150,6 +158,8 @@ function ProgressIcon({ active }: { active: boolean }) {
 }
 
 function YouIcon({ active }: { active: boolean }) {
+  const { t } = useLmsT();
+
   return (
     <svg
       viewBox="0 0 24 24"

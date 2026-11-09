@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -19,6 +21,8 @@ import type { ProgrammeId } from "@/lib/programmes";
 type Plan = Partial<Record<ConstructId, { answer: string; when: string; then: string }>>;
 
 export default function CapstonePage() {
+  const { t } = useLmsT();
+
   const [state, setState] = useState<LocalLmsState | null>(null);
   useEffect(() => setState(loadLmsState()), []);
   const programmeId = (state?.subscription?.programmeId || state?.user?.programmeId || "adults") as ProgrammeId;
@@ -38,20 +42,20 @@ export default function CapstonePage() {
   return (
     <LearnShell
       title={`Capstone · ${cap.title}`}
-      subtitle={kids ? "Use all six faces in one story." : "One realistic case. Six faces. One personal leadership plan."}
+      subtitle={kids ? t("Use all six faces in one story.") : t("One realistic case. Six faces. One personal leadership plan.")}
     >
       <PaywallCard />
       {!locked && (
         <div className="space-y-4">
           <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5 print:hidden" aria-labelledby="cap-warm">
-            <h2 id="cap-warm" className="learn-eyebrow">Warm-up · one question per face</h2>
+            <h2 id="cap-warm" className="learn-eyebrow">{t("Warm-up · one question per face")}</h2>
             <div className="mt-3">
               <RetrievalCheck questions={capstoneCheck(programmeId)} color="#111111" storageKey="capstone" kids={kids} context={{ capstone: "1", programmeId }} />
             </div>
           </section>
 
           <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5" aria-labelledby="cap-case">
-            <h2 id="cap-case" className="learn-eyebrow">The case</h2>
+            <h2 id="cap-case" className="learn-eyebrow">{t("The case")}</h2>
             <p className={`mt-2 leading-relaxed text-ink ${kids ? "text-[1rem]" : "text-[0.9375rem]"}`}>{cap.scenario}</p>
           </section>
 
@@ -75,9 +79,7 @@ export default function CapstonePage() {
                 >
                   <h3 className="face-ink text-[0.8125rem] font-bold uppercase tracking-wider">{c.name}</h3>
                   <p className="mt-1 text-[0.875rem] leading-snug text-ink">{cap.prompts[c.id]}</p>
-                  <label className="mt-2 block text-[0.75rem] font-semibold text-ink">
-                    My thinking
-                    <textarea rows={2} className="learn-input mt-1 min-h-[3.5rem] resize-y" value={v.answer} onChange={(e) => update(c.id, "answer", e.target.value)} />
+                  <label className="mt-2 block text-[0.75rem] font-semibold text-ink">{t("My thinking")}<textarea rows={2} className="learn-input mt-1 min-h-[3.5rem] resize-y" value={v.answer} onChange={(e) => update(c.id, "answer", e.target.value)} />
                   </label>
                   <div className="mt-2 grid gap-2 sm:grid-cols-2">
                     <label className="block text-[0.75rem] font-semibold text-ink">
@@ -104,16 +106,14 @@ export default function CapstonePage() {
                 track("review_complete", { capstone: "1", programmeId });
               }}
             >
-              {doneAt ? "Update my plan" : "Complete the capstone"}
+              {doneAt ? t("Update my plan") : t("Complete the capstone")}
             </button>
             <button type="button" className="learn-btn learn-btn-secondary" onClick={() => window.print()}>
               Print or save as PDF
             </button>
-            <Link href="/learn/assessment/post" className="learn-btn learn-btn-ghost">
-              Go to the after-test
-            </Link>
+            <Link href="/learn/assessment/post" className="learn-btn learn-btn-ghost">{t("Go to the after-test")}</Link>
             <span className="learn-meta" role="status">
-              {doneAt ? `Completed ${formatDateZA(doneAt)}` : filled < 6 ? "Plan all six faces to complete." : ""}
+              {doneAt ? `Completed ${formatDateZA(doneAt)}` : filled < 6 ? t("Plan all six faces to complete.") : ""}
             </span>
           </div>
         </div>

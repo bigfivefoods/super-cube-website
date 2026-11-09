@@ -41,8 +41,8 @@ export default function AssessmentFeedbackPage() {
 
   if (!state) {
     return (
-      <LearnShell title="Your baseline">
-        <p className="learn-meta">Loading…</p>
+      <LearnShell title={t("Your baseline")}>
+        <p className="learn-meta">{t("Loading…")}</p>
       </LearnShell>
     );
   }
@@ -50,7 +50,7 @@ export default function AssessmentFeedbackPage() {
   if (!pre || !narrative) {
     return (
       <LearnShell
-        title="Your baseline"
+        title={t("Your baseline")}
         subtitle={programmeCopy("feedback.locked.subtitle", learnerProgrammeId(state))}
       >
         <Link
@@ -65,7 +65,7 @@ export default function AssessmentFeedbackPage() {
 
   return (
     <LearnShell
-      title="Your baseline narrative"
+      title={t("Your baseline narrative")}
       subtitle={programmeCopy("feedback.subtitle", pre.programmeId)}
     >
       <div className="mb-5 grid gap-5 lg:grid-cols-[1fr_0.9fr] lg:items-start">
@@ -93,9 +93,7 @@ export default function AssessmentFeedbackPage() {
           </div>
         </div>
         <div className="flex flex-col items-center rounded-2xl border border-line bg-surface p-4">
-          <p className="mb-2 text-center text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-            Your cube · lit by baseline scores
-          </p>
+          <p className="mb-2 text-center text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Your cube · lit by baseline scores")}</p>
           <SuperCube
             size="md"
             showSkills={false}
@@ -131,11 +129,9 @@ export default function AssessmentFeedbackPage() {
             </p>
             <p className="mt-1.5 text-sm leading-relaxed text-slate">{f.nextStep}</p>
             <p className="mt-2 text-[0.8125rem] text-ink">
-              <span className="font-semibold">First practice: </span>
+              <span className="font-semibold">{t("First practice:")}</span>
               {f.firstPractice}{" "}
-              <Link href={f.sessionHref} className="font-semibold underline underline-offset-2">
-                Sessions
-              </Link>
+              <Link href={f.sessionHref} className="font-semibold underline underline-offset-2">{t("Sessions")}</Link>
             </p>
           </li>
         ))}

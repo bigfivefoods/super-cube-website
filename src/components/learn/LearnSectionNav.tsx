@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useState } from "react";
 
 const SECTIONS = [
@@ -12,6 +14,8 @@ const SECTIONS = [
 
 /** Sticky section chips for multi-page-feel vertical Today scroll. */
 export function LearnSectionNav() {
+  const { t } = useLmsT();
+
   const [active, setActive] = useState<string>("hero");
 
   useEffect(() => {
@@ -36,7 +40,7 @@ export function LearnSectionNav() {
   return (
     <nav
       className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-30 -mx-1 mb-5 border-b border-line bg-surface/95 px-1 py-2 backdrop-blur-md md:top-[calc(4rem+env(safe-area-inset-top,0px))] lg:top-20"
-      aria-label="Today sections"
+      aria-label={t("Today sections")}
     >
       <ul className="flex gap-1 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {SECTIONS.map((s) => {
@@ -51,7 +55,7 @@ export function LearnSectionNav() {
                     : "bg-elevated text-slate ring-1 ring-line hover:text-ink"
                 }`}
               >
-                {s.label}
+                {t(s.label)}
               </a>
             </li>
           );

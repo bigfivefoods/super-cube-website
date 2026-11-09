@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useMemo, useState } from "react";
 import { RetrievalCheck } from "@/components/learn/session/RetrievalCheck";
 import { track } from "@/lib/analytics";
@@ -22,6 +24,8 @@ function hash(s: string): number {
  * (in a fresh order). Loaded on demand so the Today page stays light.
  */
 export default function ReviewQuiz({ item, kids, onDone }: { item: SessionReviewItem; kids: boolean; onDone?: () => void }) {
+  const { t } = useLmsT();
+
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [result, setResult] = useState<{ correct: number; total: number } | null>(null);
   useEffect(() => {
@@ -44,7 +48,7 @@ export default function ReviewQuiz({ item, kids, onDone }: { item: SessionReview
   const color = constructs.find((c) => c.id === item.constructId)?.color ?? "#26408C";
 
   if (!lesson) {
-    return <div className="h-40 animate-pulse rounded-xl bg-black/[0.04] motion-reduce:animate-none" aria-busy="true" aria-label="Loading review" />;
+    return <div className="h-40 animate-pulse rounded-xl bg-black/[0.04] motion-reduce:animate-none" aria-busy="true" aria-label={t("Loading review")} />;
   }
   return (
     <div data-testid="review-quiz">
@@ -68,16 +72,14 @@ export default function ReviewQuiz({ item, kids, onDone }: { item: SessionReview
           <p className="mt-0.5 text-[0.8125rem] leading-snug text-slate">
             {result.correct === result.total
               ? kids
-                ? "You remembered everything! Super!"
-                : "Everything came back. That memory is getting stronger with each spaced review."
+                ? t("You remembered everything! Super!")
+                : t("Everything came back. That memory is getting stronger with each spaced review.")
               : kids
-                ? "Great remembering! Read the notes above, they help it stick."
-                : "Read the explanations above once more. Pulling an idea back after a gap, even imperfectly, is what makes it last."}
+                ? t("Great remembering! Read the notes above, they help it stick.")
+                : t("Read the explanations above once more. Pulling an idea back after a gap, even imperfectly, is what makes it last.")}
           </p>
           {onDone && (
-            <button type="button" className="learn-btn learn-btn-secondary mt-2" onClick={onDone}>
-              Done
-            </button>
+            <button type="button" className="learn-btn learn-btn-secondary mt-2" onClick={onDone}>{t("Done")}</button>
           )}
         </div>
       )}

@@ -28,7 +28,7 @@ export function OrgCheckinSection({ orgId }: { orgId: string }) {
         const j = await r.json().catch(() => ({}));
         if (cancel) return;
         if (r.ok && j.comparison) setView({ orgId, raw: j.comparison as Raw, note: null });
-        else if (j.error === "not_ready") setView({ orgId, raw: null, note: "Check-ins are not switched on yet" });
+        else if (j.error === "not_ready") setView({ orgId, raw: null, note: t("Check-ins are not switched on yet") });
         else setView({ orgId, raw: null, note: null });
       })
       .catch(() => {

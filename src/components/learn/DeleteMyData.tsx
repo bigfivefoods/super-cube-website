@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useState } from "react";
 import { deleteAccountOnServer } from "@/lib/lms/cloud";
 import { createClient } from "@/lib/supabase/client";
@@ -20,6 +22,8 @@ const LOCAL_KEYS = [
  * every Super-Cube® key from this browser. Requires typing DELETE.
  */
 export function DeleteMyData() {
+  const { t } = useLmsT();
+
   const [open, setOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const [busy, setBusy] = useState(false);
@@ -52,20 +56,16 @@ export function DeleteMyData() {
     setBusy(false);
     setResult(
       r.kind === "ok"
-        ? "Done. Your Super-Cube® account, scores, sessions, reflections and certificates were deleted from our servers and from this browser."
-        : "Done. Your data was deleted from this browser. You were not signed in, so there was no cloud account to delete.",
+        ? t("Done. Your Super-Cube® account, scores, sessions, reflections and certificates were deleted from our servers and from this browser.")
+        : t("Done. Your data was deleted from this browser. You were not signed in, so there was no cloud account to delete."),
     );
     setTyped("");
   }
 
   return (
     <section className="learn-card border-red-200 lg:col-span-2" data-testid="delete-my-data">
-      <h2 className="learn-card-title">Delete my data</h2>
-      <p className="learn-body mt-2">
-        Permanently erase your Super-Cube® account and learning data: profile, baseline and
-        after-test scores, sessions, reflections, cohort progress, certificates and guardian
-        consent records. Download a backup first if you want a copy. This cannot be undone.
-      </p>
+      <h2 className="learn-card-title">{t("Delete my data")}</h2>
+      <p className="learn-body mt-2">{t("Permanently erase your Super-Cube® account and learning data: profile, baseline and after-test scores, sessions, reflections, cohort progress, certificates and guardian consent records. Download a backup first if you want a copy. This cannot be undone.")}</p>
       {!open ? (
         <button
           type="button"
@@ -77,7 +77,7 @@ export function DeleteMyData() {
       ) : (
         <div className="mt-3 space-y-2">
           <label className="block">
-            <span className="learn-label">Type DELETE to confirm</span>
+            <span className="learn-label">{t("Type DELETE to confirm")}</span>
             <input
               className="learn-input mt-1.5 w-full max-w-xs"
               value={typed}
@@ -93,7 +93,7 @@ export function DeleteMyData() {
               disabled={typed !== "DELETE" || busy}
               onClick={() => void run()}
             >
-              {busy ? "Deleting…" : "Permanently delete"}
+              {busy ? t("Deleting…") : t("Permanently delete")}
             </button>
             <button type="button" className="learn-btn learn-btn-ghost" onClick={() => setOpen(false)}>
               Cancel

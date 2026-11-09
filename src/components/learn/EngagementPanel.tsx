@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AddToCalendar } from "@/components/learn/AddToCalendar";
@@ -22,6 +24,8 @@ const PUSH_MESSAGES: Record<PushOutcome, string> = {
 
 /** Streak, streak freezes, badges, push opt-in and the day-21 calendar invite. */
 export function EngagementPanel() {
+  const { t } = useLmsT();
+
   const [view, setView] = useState<EngagementView | null>(null);
   const [signedIn, setSignedIn] = useState<boolean | null>(null);
   const [local, setLocal] = useState<ReturnType<typeof loadLmsState> | null>(null);
@@ -62,34 +66,32 @@ export function EngagementPanel() {
     if (view?.push.subscribed) {
       await turnOffPush();
       setView((v) => (v ? { ...v, push: { ...v.push, subscribed: false } } : v));
-      setPushMsg("Push reminders are off.");
+      setPushMsg(t("Push reminders are off."));
     } else {
       const out = await turnOnPush();
       if (out === "on") setView((v) => (v ? { ...v, push: { ...v.push, subscribed: true } } : v));
-      setPushMsg(PUSH_MESSAGES[out]);
+      setPushMsg(t(PUSH_MESSAGES[out]));
     }
     setBusy(false);
   }
 
   return (
     <section className="learn-card" aria-labelledby="habits-h" data-testid="engagement">
-      <h2 id="habits-h" className="learn-card-title">
-        Habits and badges
-      </h2>
+      <h2 id="habits-h" className="learn-card-title">{t("Habits and badges")}</h2>
 
       <dl className="mt-3 grid grid-cols-3 gap-2">
         <div className="rounded-xl border border-line bg-surface p-3">
-          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Streak</dt>
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Streak")}</dt>
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink" data-testid="streak-current">
             {current} {current === 1 ? "day" : "days"}
           </dd>
         </div>
         <div className="rounded-xl border border-line bg-surface p-3">
-          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Best</dt>
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Best")}</dt>
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink">{streak.best}</dd>
         </div>
         <div className="rounded-xl border border-line bg-surface p-3">
-          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">Freezes</dt>
+          <dt className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Freezes")}</dt>
           <dd className="mt-1 text-lg font-semibold tabular-nums text-ink" data-testid="streak-freezes">
             {streak.freezes}
             <span className="text-sm font-medium text-slate"> / 2</span>
@@ -102,7 +104,7 @@ export function EngagementPanel() {
         {signedIn === false && " Sign in to keep your streak and badges on every device."}
       </p>
 
-      <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">Badges</h3>
+      <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">{t("Badges")}</h3>
       <ul className="mt-2 grid grid-cols-2 gap-2 lg:grid-cols-3" data-testid="badges">
         {BADGE_IDS.map((id) => {
           const at = earned.get(id);
@@ -134,9 +136,7 @@ export function EngagementPanel() {
                   <Link
                     href={`/badges/${encodeURIComponent(credentialId)}`}
                     className="mt-1 inline-block text-[0.75rem] font-semibold text-ink underline underline-offset-2"
-                  >
-                    Open Badge
-                  </Link>
+                  >{t("Open Badge")}</Link>
                 )}
               </span>
             </li>
@@ -145,13 +145,11 @@ export function EngagementPanel() {
       </ul>
       <p className="learn-meta mt-2">
         Mastery and weekly-goal badges, your level and your lit Super-Cube® are on{" "}
-        <Link href="/learn/progress" className="font-semibold text-ink underline underline-offset-2">
-          Progress
-        </Link>
+        <Link href="/learn/progress" className="font-semibold text-ink underline underline-offset-2">{t("Progress")}</Link>
         .
       </p>
 
-      <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">Reminders</h3>
+      <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">{t("Reminders")}</h3>
       {PUSH_ENABLED && view?.push.configured ? (
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <button
@@ -161,14 +159,11 @@ export function EngagementPanel() {
             className="learn-btn learn-btn-ghost"
             aria-pressed={Boolean(view?.push.subscribed)}
           >
-            {view?.push.subscribed ? "Turn off push reminders" : "Turn on push reminders"}
+            {view?.push.subscribed ? t("Turn off push reminders") : t("Turn on push reminders")}
           </button>
         </div>
       ) : (
-        <p className="mt-1 text-[0.8125rem] leading-relaxed text-slate" data-testid="push-off">
-          Push reminders to your phone are coming soon. Until then, browser reminders on this device (below) and a
-          calendar invite keep you on track.
-        </p>
+        <p className="mt-1 text-[0.8125rem] leading-relaxed text-slate" data-testid="push-off">{t("Push reminders to your phone are coming soon. Until then, browser reminders on this device (below) and a calendar invite keep you on track.")}</p>
       )}
       {pushMsg && (
         <p className="mt-2 text-[0.8125rem] text-ink" role="status">
@@ -177,12 +172,12 @@ export function EngagementPanel() {
       )}
       {pre && !post ? (
         <div className="mt-3">
-          <AddToCalendar preCompletedAt={pre.completedAt} programmeName={programme?.name ?? "Super-Cube®"} />
+          <AddToCalendar preCompletedAt={pre.completedAt} programmeName={programme?.name ?? t("Super-Cube®")} />
         </div>
       ) : !pre ? (
         <p className="mt-2 text-[0.8125rem] text-slate">
-          Take your <Link href="/learn/assessment/pre" className="font-semibold text-ink underline underline-offset-2">baseline</Link>{" "}
-          and you can add the re-measure date to your calendar.
+          <Link href="/learn/assessment/pre" className="font-semibold text-ink underline underline-offset-2">{t("Take your baseline")}</Link>{" "}
+          {t("and you can add the re-measure date to your calendar.")}
         </p>
       ) : null}
     </section>

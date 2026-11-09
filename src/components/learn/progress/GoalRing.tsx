@@ -1,3 +1,6 @@
+"use client";
+
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 /** A small SVG progress ring (weekly goal). */
 export function GoalRing({
   done,
@@ -14,6 +17,8 @@ export function GoalRing({
   color?: string;
   label?: string;
 }) {
+  const { t } = useLmsT();
+
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const pct = target > 0 ? Math.min(1, done / target) : 0;
@@ -41,7 +46,7 @@ export function GoalRing({
           <span className="text-[0.75rem] font-medium text-slate">/{target}</span>
         </span>
         {size >= 88 && (
-          <span className="mt-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-slate">this week</span>
+          <span className="mt-0.5 text-[0.625rem] font-semibold uppercase tracking-wider text-slate">{t("this week")}</span>
         )}
       </span>
     </div>

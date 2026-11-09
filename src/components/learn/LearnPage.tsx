@@ -89,6 +89,8 @@ export function LearnPageHeader({
   step?: number;
   stepTotal?: number;
 }) {
+  const { t } = useLmsT();
+
   return (
     <header className="space-y-2">
       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -136,6 +138,8 @@ export function LearnCard({
   className?: string;
   tone?: "default" | "ink" | "soft";
 }) {
+  const { t } = useLmsT();
+
   const tones = {
     default: "border-line bg-elevated",
     ink: "border-transparent bg-void text-void-fg",

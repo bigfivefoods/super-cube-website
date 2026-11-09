@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -15,6 +17,8 @@ import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import type { ProgrammeId } from "@/lib/programmes";
 
 export default function ReviewPage() {
+  const { t } = useLmsT();
+
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [open, setOpen] = useState<ReviewDay | null>(null);
   const [misses, setMisses] = useState<string[]>([]);
@@ -45,11 +49,11 @@ export default function ReviewPage() {
 
   return (
     <LearnShell
-      title="Spaced review"
+      title={t("Spaced review")}
       subtitle={
         kids
-          ? "Little memory games on Day 3, 7 and 21 help you remember what you learned."
-          : "Three short reviews across your 21 days. Spacing practice out and mixing the faces is one of the most reliable ways to make learning last."
+          ? t("Little memory games on Day 3, 7 and 21 help you remember what you learned.")
+          : t("Three short reviews across your 21 days. Spacing practice out and mixing the faces is one of the most reliable ways to make learning last.")
       }
     >
       <PaywallCard />
@@ -63,7 +67,7 @@ export default function ReviewPage() {
                 <li key={day} className="rounded-2xl border border-line bg-elevated p-4">
                   <p className="learn-eyebrow">Day {day}</p>
                   <p className="mt-1 text-[0.9375rem] font-semibold text-ink">
-                    {day === 3 ? "First recall" : day === 7 ? "Mix it up" : "Lock it in"}
+                    {day === 3 ? "First recall" : day === 7 ? "Mix it up" : t("Lock it in")}
                   </p>
                   <p className="learn-meta mt-0.5">
                     {completed
@@ -72,9 +76,9 @@ export default function ReviewPage() {
                         ? isDue
                           ? `Due since ${formatDateZA(due)}`
                           : `Due ${formatDateZA(due)}`
-                        : "Starts after your baseline"}
+                        : t("Starts after your baseline")}
                     {" · "}
-                    {kids ? "4 questions" : "6 questions · ~3 min"}
+                    {kids ? t("4 questions") : t("6 questions · ~3 min")}
                   </p>
                   <button
                     type="button"
@@ -84,7 +88,7 @@ export default function ReviewPage() {
                       window.history.replaceState(null, "", `/learn/review?day=${day}`);
                     }}
                   >
-                    {completed ? "Do it again" : isDue ? "Start review" : "Start early"}
+                    {completed ? t("Do it again") : isDue ? t("Start review") : t("Start early")}
                   </button>
                 </li>
               );
@@ -92,16 +96,14 @@ export default function ReviewPage() {
           </ol>
 
           <div className="mt-4 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
-            <p className="learn-eyebrow">Before your after-test</p>
-            <p className="mt-1 text-[0.9375rem] font-semibold text-ink">Capstone: all six faces at once</p>
+            <p className="learn-eyebrow">{t("Before your after-test")}</p>
+            <p className="mt-1 text-[0.9375rem] font-semibold text-ink">{t("Capstone: all six faces at once")}</p>
             <p className="learn-meta mt-0.5">
               {kids
-                ? "One story where you use all six faces, and a plan to keep growing."
-                : "One realistic case that needs every face, ending in a personal leadership plan you can print. Best done in your third week."}
+                ? t("One story where you use all six faces, and a plan to keep growing.")
+                : t("One realistic case that needs every face, ending in a personal leadership plan you can print. Best done in your third week.")}
             </p>
-            <Link href="/learn/review/capstone" className="learn-btn learn-btn-primary mt-3">
-              Open the capstone
-            </Link>
+            <Link href="/learn/review/capstone" className="learn-btn learn-btn-primary mt-3">{t("Open the capstone")}</Link>
           </div>
         </>
       )}
@@ -110,14 +112,14 @@ export default function ReviewPage() {
         <section aria-labelledby="review-h" className="rounded-2xl border border-line bg-elevated p-4 sm:p-5">
           <p className="learn-eyebrow">Day {open} review</p>
           <h2 id="review-h" className="mt-1 text-[1rem] font-semibold text-ink">
-            {kids ? "What do you remember?" : "Mixed recall across the six faces"}
+            {kids ? t("What do you remember?") : t("Mixed recall across the six faces")}
           </h2>
           <p className="learn-meta mb-3 mt-0.5">
             {misses.length
-              ? "Questions you found tricky come first."
-              : "Answer from memory first. Each question shows its face."}
+              ? t("Questions you found tricky come first.")
+              : t("Answer from memory first. Each question shows its face.")}
           </p>
-          <div className="mb-3 flex flex-wrap gap-1.5" aria-label="Faces in this review">
+          <div className="mb-3 flex flex-wrap gap-1.5" aria-label={t("Faces in this review")}>
             {questions.map((q, i) => {
               const c = constructs.find((x) => x.id === q.constructId);
               return (

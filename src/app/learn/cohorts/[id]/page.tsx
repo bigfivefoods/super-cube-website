@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { use, useCallback, useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -43,6 +45,8 @@ const ATTENDANCE = [
 ] as const;
 
 export default function CohortDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { t } = useLmsT();
+
   const { id } = use(params);
   const [detail, setDetail] = useState<Detail | null>(null);
   const [state, setState] = useState<"loading" | "sign_in" | "missing" | "unavailable" | "ready">("loading");
@@ -83,37 +87,33 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
   const staff = detail?.viewer === "facilitator" || detail?.viewer === "admin";
 
   return (
-    <LearnShell title={detail?.cohort.name ?? "Cohort"} subtitle={detail ? `${detail.cohort.orgName} · ${detail.cohort.timeZone}` : "Super-Cube® live cohort"}>
+    <LearnShell title={detail?.cohort.name ?? t("Cohort")} subtitle={detail ? `${detail.cohort.orgName} · ${detail.cohort.timeZone}` : t("Super-Cube® live cohort")}>
       <p className="mb-4">
-        <Link href="/learn/cohorts" className="text-sm font-semibold text-ink underline underline-offset-2">
-          All cohorts
-        </Link>
+        <Link href="/learn/cohorts" className="text-sm font-semibold text-ink underline underline-offset-2">{t("All cohorts")}</Link>
       </p>
-      {state === "loading" && <p className="learn-meta" role="status">Loading cohort…</p>}
+      {state === "loading" && <p className="learn-meta" role="status">{t("Loading cohort…")}</p>}
       {state === "sign_in" && (
-        <Link href={`/login?next=${encodeURIComponent(`/learn/cohorts/${id}`)}`} className="learn-btn learn-btn-primary">
-          Sign in
-        </Link>
+        <Link href={`/login?next=${encodeURIComponent(`/learn/cohorts/${id}`)}`} className="learn-btn learn-btn-primary">{t("Sign in")}</Link>
       )}
-      {state === "missing" && <p className="learn-card" role="status">This cohort is not available to you.</p>}
-      {state === "unavailable" && <p className="learn-card" role="alert">The cohort could not be loaded.</p>}
+      {state === "missing" && <p className="learn-card" role="status">{t("This cohort is not available to you.")}</p>}
+      {state === "unavailable" && <p className="learn-card" role="alert">{t("The cohort could not be loaded.")}</p>}
       {message && <p className="mb-3 text-sm font-medium text-ink" role="status">{message}</p>}
       {error && <p className="mb-3 text-sm font-medium text-red-800" role="alert">{error}</p>}
 
       {detail && state === "ready" && (
         <div className="grid gap-4">
           <section className="learn-card" aria-labelledby="cohort-about">
-            <h2 id="cohort-about" className="learn-card-title">About this cohort</h2>
+            <h2 id="cohort-about" className="learn-card-title">{t("About this cohort")}</h2>
             <p className="learn-meta mt-1">
               Starts {detail.cohort.startOn}. Status: {detail.cohort.status}.
               {programmeLabel(detail.cohort.programmeId) ? ` Programme: ${programmeLabel(detail.cohort.programmeId)}.` : ""}
             </p>
             {detail.cohort.description && <p className="mt-2 text-sm leading-relaxed text-ink">{detail.cohort.description}</p>}
-            <h3 className="mt-4 text-sm font-semibold text-ink">People</h3>
+            <h3 className="mt-4 text-sm font-semibold text-ink">{t("People")}</h3>
             <ul className="mt-2 grid gap-1 text-sm text-ink">
               {detail.members.map((member) => (
                 <li key={`${member.displayName}-${member.role}-${member.userId ?? "self"}`}>
-                  {member.displayName} <span className="text-slate">({member.role === "facilitator" ? "Facilitator" : "Learner"})</span>
+                  {member.displayName} <span className="text-slate">({member.role === "facilitator" ? t("Facilitator") : t("Learner")})</span>
                 </li>
               ))}
             </ul>
@@ -130,36 +130,32 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                 event.currentTarget.reset();
               }}
             >
-              <h2 id="add-member" className="learn-card-title">Add someone from the organisation</h2>
-              <p className="learn-meta">Only people who already belong to the organisation can be added. Email addresses are not shown.</p>
+              <h2 id="add-member" className="learn-card-title">{t("Add someone from the organisation")}</h2>
+              <p className="learn-meta">{t("Only people who already belong to the organisation can be added. Email addresses are not shown.")}</p>
               {detail.roster.length === 0 ? (
-                <p className="text-sm text-slate">Everyone in the organisation is already in this cohort.</p>
+                <p className="text-sm text-slate">{t("Everyone in the organisation is already in this cohort.")}</p>
               ) : (
                 <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto] sm:items-end">
-                  <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="member-id">
-                    Person
-                    <select id="member-id" name="userId" required className="min-h-11 rounded-xl border border-line bg-surface px-3">
+                  <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="member-id">{t("Person")}<select id="member-id" name="userId" required className="min-h-11 rounded-xl border border-line bg-surface px-3">
                       {detail.roster.map((person) => (
                         <option key={person.userId} value={person.userId}>{person.displayName}</option>
                       ))}
                     </select>
                   </label>
-                  <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="member-role">
-                    Role
-                    <select id="member-role" name="role" className="min-h-11 rounded-xl border border-line bg-surface px-3">
-                      <option value="learner">Learner</option>
-                      <option value="facilitator">Facilitator</option>
+                  <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="member-role">{t("Role")}<select id="member-role" name="role" className="min-h-11 rounded-xl border border-line bg-surface px-3">
+                      <option value="learner">{t("Learner")}</option>
+                      <option value="facilitator">{t("Facilitator")}</option>
                     </select>
                   </label>
-                  <button type="submit" className="learn-btn learn-btn-primary min-h-11">Add</button>
+                  <button type="submit" className="learn-btn learn-btn-primary min-h-11">{t("Add")}</button>
                 </div>
               )}
             </form>
           )}
 
           <section className="grid gap-3" aria-labelledby="sessions-h">
-            <h2 id="sessions-h" className="learn-card-title">Live sessions</h2>
-            {detail.sessions.length === 0 && <p className="learn-meta">No sessions scheduled yet.</p>}
+            <h2 id="sessions-h" className="learn-card-title">{t("Live sessions")}</h2>
+            {detail.sessions.length === 0 && <p className="learn-meta">{t("No sessions scheduled yet.")}</p>}
             <ul className="grid gap-3">
               {detail.sessions.map((session) => (
                 <li key={session.id} className="learn-card">
@@ -169,11 +165,9 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                     {session.endsAt ? ` to ${formatInZone(session.endsAt, detail.cohort.timeZone)}` : ""}
                   </p>
                   {session.joinUrl ? (
-                    <a href={session.joinUrl} className="mt-2 inline-flex min-h-11 items-center font-semibold text-ink underline underline-offset-2" target="_blank" rel="noopener noreferrer">
-                      Join live session
-                    </a>
+                    <a href={session.joinUrl} className="mt-2 inline-flex min-h-11 items-center font-semibold text-ink underline underline-offset-2" target="_blank" rel="noopener noreferrer">{t("Join live session")}</a>
                   ) : (
-                    <p className="learn-meta mt-2">No join link yet.</p>
+                    <p className="learn-meta mt-2">{t("No join link yet.")}</p>
                   )}
                   {!staff && (
                     <p className="mt-2 text-sm text-ink">
@@ -203,9 +197,9 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                                 );
                               }}
                             >
-                              <option value="">Not marked</option>
+                              <option value="">{t("Not marked")}</option>
                               {ATTENDANCE.map((option) => (
-                                <option key={option.value} value={option.value}>{option.label}</option>
+                                <option key={option.value} value={option.value}>{t(option.label)}</option>
                               ))}
                             </select>
                           </li>
@@ -235,32 +229,24 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                 event.currentTarget.reset();
               }}
             >
-              <h2 id="add-session" className="learn-card-title">Add a session</h2>
+              <h2 id="add-session" className="learn-card-title">{t("Add a session")}</h2>
               <p className="learn-meta">The date and time use {detail.cohort.timeZone}, the cohort&apos;s time zone.</p>
-              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-title">
-                Title
-                <input id="new-session-title" name="title" required minLength={2} maxLength={120} className="min-h-11 rounded-xl border border-line bg-surface px-3" />
+              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-title">{t("Title")}<input id="new-session-title" name="title" required minLength={2} maxLength={120} className="min-h-11 rounded-xl border border-line bg-surface px-3" />
               </label>
               <div className="grid gap-3 sm:grid-cols-2">
-                <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-date">
-                  Date
-                  <input id="new-session-date" name="date" type="date" required className="min-h-11 rounded-xl border border-line bg-surface px-3" />
+                <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-date">{t("Date")}<input id="new-session-date" name="date" type="date" required className="min-h-11 rounded-xl border border-line bg-surface px-3" />
                 </label>
-                <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-time">
-                  Time
-                  <input id="new-session-time" name="time" type="time" required className="min-h-11 rounded-xl border border-line bg-surface px-3" />
+                <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-time">{t("Time")}<input id="new-session-time" name="time" type="time" required className="min-h-11 rounded-xl border border-line bg-surface px-3" />
                 </label>
               </div>
-              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-join">
-                Join link
-                <input id="new-session-join" name="joinUrl" type="url" placeholder="https://" className="min-h-11 rounded-xl border border-line bg-surface px-3" />
+              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="new-session-join">{t("Join link")}<input id="new-session-join" name="joinUrl" type="url" placeholder="https://" className="min-h-11 rounded-xl border border-line bg-surface px-3" />
               </label>
-              <button type="submit" className="learn-btn learn-btn-primary min-h-11 w-full sm:w-auto">Add session</button>
+              <button type="submit" className="learn-btn learn-btn-primary min-h-11 w-full sm:w-auto">{t("Add session")}</button>
             </form>
           )}
 
           <section className="grid gap-3" aria-labelledby="discuss-h">
-            <h2 id="discuss-h" className="learn-card-title">Discussion</h2>
+            <h2 id="discuss-h" className="learn-card-title">{t("Discussion")}</h2>
             <form
               className="learn-card grid gap-3"
               onSubmit={(event) => {
@@ -270,39 +256,34 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                 event.currentTarget.reset();
               }}
             >
-              <h3 className="text-sm font-semibold text-ink">Start a thread</h3>
-              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="thread-title">
-                Title
-                <input id="thread-title" name="title" required maxLength={140} className="min-h-11 rounded-xl border border-line bg-surface px-3" />
+              <h3 className="text-sm font-semibold text-ink">{t("Start a thread")}</h3>
+              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="thread-title">{t("Title")}<input id="thread-title" name="title" required maxLength={140} className="min-h-11 rounded-xl border border-line bg-surface px-3" />
               </label>
-              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="thread-session">
-                About a session <span className="font-normal text-slate">(optional)</span>
+              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="thread-session">{t("About a session")}<span className="font-normal text-slate">{t("(optional)")}</span>
                 <select id="thread-session" name="sessionId" className="min-h-11 rounded-xl border border-line bg-surface px-3">
-                  <option value="">Whole cohort</option>
+                  <option value="">{t("Whole cohort")}</option>
                   {detail.sessions.map((session) => (
                     <option key={session.id} value={session.id}>{session.title}</option>
                   ))}
                 </select>
               </label>
-              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="thread-body">
-                Message
-                <textarea id="thread-body" name="body" required maxLength={4000} rows={3} className="rounded-xl border border-line bg-surface px-3 py-2" />
+              <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor="thread-body">{t("Message")}<textarea id="thread-body" name="body" required maxLength={4000} rows={3} className="rounded-xl border border-line bg-surface px-3 py-2" />
               </label>
-              <button type="submit" className="learn-btn learn-btn-primary min-h-11 w-full sm:w-auto">Post thread</button>
+              <button type="submit" className="learn-btn learn-btn-primary min-h-11 w-full sm:w-auto">{t("Post thread")}</button>
             </form>
 
             <ul className="grid gap-3">
               {detail.threads.map((thread) => (
                 <li key={thread.id} className="learn-card">
                   <h3 className="font-semibold text-ink">{thread.title}</h3>
-                  {thread.locked && <p className="text-sm text-slate">This discussion is locked.</p>}
-                  {thread.hidden && staff && <p className="text-sm text-slate">Hidden from learners.</p>}
+                  {thread.locked && <p className="text-sm text-slate">{t("This discussion is locked.")}</p>}
+                  {thread.hidden && staff && <p className="text-sm text-slate">{t("Hidden from learners.")}</p>}
                   <ul className="mt-3 grid gap-3">
                     {thread.posts.map((post) => (
                       <li key={post.id} className="rounded-xl border border-line px-3 py-2">
                         <p className="text-xs font-semibold text-slate">
                           {post.authorName}
-                          {post.hidden ? " · Hidden" : ""}
+                          {post.hidden ? t(" · Hidden") : ""}
                         </p>
                         <p className="mt-1 whitespace-pre-wrap text-sm leading-relaxed text-ink">{post.body}</p>
                         {staff && post.hidden && post.hiddenReason && (
@@ -315,12 +296,12 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                             onClick={() =>
                               void send(
                                 `/api/cohorts/${id}/moderation`,
-                                { action: post.hidden ? "restore_post" : "hide_post", id: post.id, reason: "Removed by facilitator" },
-                                post.hidden ? "Post restored." : "Post hidden from learners.",
+                                { action: post.hidden ? "restore_post" : "hide_post", id: post.id, reason: t("Removed by facilitator") },
+                                post.hidden ? t("Post restored.") : "Post hidden from learners.",
                               )
                             }
                           >
-                            {post.hidden ? "Restore post" : "Hide post"}
+                            {post.hidden ? t("Restore post") : t("Hide post")}
                           </button>
                         )}
                       </li>
@@ -336,11 +317,9 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                         event.currentTarget.reset();
                       }}
                     >
-                      <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor={`reply-${thread.id}`}>
-                        Reply
-                        <textarea id={`reply-${thread.id}`} name="body" required maxLength={4000} rows={2} className="rounded-xl border border-line bg-surface px-3 py-2" />
+                      <label className="grid gap-1 text-sm font-semibold text-ink" htmlFor={`reply-${thread.id}`}>{t("Reply")}<textarea id={`reply-${thread.id}`} name="body" required maxLength={4000} rows={2} className="rounded-xl border border-line bg-surface px-3 py-2" />
                       </label>
-                      <button type="submit" className="learn-btn learn-btn-ghost min-h-11 w-full sm:w-auto">Reply</button>
+                      <button type="submit" className="learn-btn learn-btn-ghost min-h-11 w-full sm:w-auto">{t("Reply")}</button>
                     </form>
                   )}
                   {staff && (
@@ -351,11 +330,11 @@ export default function CohortDetailPage({ params }: { params: Promise<{ id: str
                         void send(
                           `/api/cohorts/${id}/moderation`,
                           { action: thread.locked ? "unlock" : "lock", id: thread.id },
-                          thread.locked ? "Discussion unlocked." : "Discussion locked.",
+                          thread.locked ? t("Discussion unlocked.") : t("Discussion locked."),
                         )
                       }
                     >
-                      {thread.locked ? "Unlock discussion" : "Lock discussion"}
+                      {thread.locked ? t("Unlock discussion") : t("Lock discussion")}
                     </button>
                   )}
                 </li>

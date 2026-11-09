@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -36,6 +38,8 @@ function ConsentPoints() {
 }
 
 function ConsentForm() {
+  const { t } = useLmsT();
+
   const router = useRouter();
   const search = useSearchParams();
   const next = safeNext(search.get("next"));
@@ -127,20 +131,16 @@ function ConsentForm() {
   }
 
   if (!ready) {
-    return <p className="learn-meta">Loading…</p>;
+    return <p className="learn-meta">{t("Loading…")}</p>;
   }
 
   if (minor && already) {
     return (
       <div className="learn-card" data-testid="consent-granted">
-        <p className="learn-body">
-          A parent or guardian has given consent. They can withdraw it at any time.
-        </p>
+        <p className="learn-body">{t("A parent or guardian has given consent. They can withdraw it at any time.")}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Link href={next} className="learn-btn learn-btn-primary">Continue learning</Link>
-          <button type="button" className="learn-btn learn-btn-ghost" onClick={withdraw}>
-            Withdraw consent
-          </button>
+          <Link href={next} className="learn-btn learn-btn-primary">{t("Continue learning")}</Link>
+          <button type="button" className="learn-btn learn-btn-ghost" onClick={withdraw}>{t("Withdraw consent")}</button>
         </div>
         {note && <p className="learn-meta mt-3" role="status">{note}</p>}
       </div>
@@ -151,7 +151,7 @@ function ConsentForm() {
     return (
       <div className="space-y-4" data-testid="consent-minor">
         <section className="learn-card">
-          <p className="learn-eyebrow">For the parent or guardian</p>
+          <p className="learn-eyebrow">{t("For the parent or guardian")}</p>
           <h2 className="learn-card-title mt-1">
             Before {profile?.displayName || "your child"} starts
             {band?.label ? <span className="learn-meta"> · {band.label}</span> : null}
@@ -160,13 +160,9 @@ function ConsentForm() {
           <ConsentPoints />
         </section>
         <section className="learn-card">
-          <p className="learn-body">
-            This account is the learner’s. A parent or guardian has to record consent while signed in on their own account. The learner cannot consent for themselves.
-          </p>
-          <p className="learn-body mt-2">
-            Sign out, sign in as the parent or guardian, open this page, and enter the learner’s account email.
-          </p>
-          <Link href="/login?next=/learn/consent" className="learn-btn learn-btn-primary mt-3">Sign in as the parent or guardian</Link>
+          <p className="learn-body">{t("This account is the learner’s. A parent or guardian has to record consent while signed in on their own account. The learner cannot consent for themselves.")}</p>
+          <p className="learn-body mt-2">{t("Sign out, sign in as the parent or guardian, open this page, and enter the learner’s account email.")}</p>
+          <Link href="/login?next=/learn/consent" className="learn-btn learn-btn-primary mt-3">{t("Sign in as the parent or guardian")}</Link>
         </section>
       </div>
     );
@@ -175,15 +171,15 @@ function ConsentForm() {
   return (
     <div className="space-y-4" data-testid="consent-form">
       <section className="learn-card">
-        <p className="learn-eyebrow">For the parent or guardian</p>
-        <h2 className="learn-card-title mt-1">Record consent for a learner under 18</h2>
+        <p className="learn-eyebrow">{t("For the parent or guardian")}</p>
+        <h2 className="learn-card-title mt-1">{t("Record consent for a learner under 18")}</h2>
         <p className="learn-body mt-2">{CONSENT_INTRO}</p>
         <ConsentPoints />
       </section>
 
       <section className="learn-card space-y-3">
         <label className="block">
-          <span className="learn-label">Learner’s account email</span>
+          <span className="learn-label">{t("Learner’s account email")}</span>
           <input
             className="learn-input mt-1.5 w-full"
             type="email"
@@ -194,7 +190,7 @@ function ConsentForm() {
           />
         </label>
         <label className="block">
-          <span className="learn-label">Learner’s first name or nickname (optional)</span>
+          <span className="learn-label">{t("Learner’s first name or nickname (optional)")}</span>
           <input
             className="learn-input mt-1.5 w-full"
             value={learnerName}
@@ -203,21 +199,21 @@ function ConsentForm() {
           />
         </label>
         <label className="block">
-          <span className="learn-label">Learner’s age band</span>
+          <span className="learn-label">{t("Learner’s age band")}</span>
           <select
             className="learn-input mt-1.5 w-full"
             value={ageBand}
             onChange={(e) => setAgeBand(e.target.value as AgeBand | "")}
             name="ageBand"
           >
-            <option value="">Choose…</option>
+            <option value="">{t("Choose…")}</option>
             {AGE_BANDS.filter((a) => MINOR_AGE_BANDS.includes(a.id)).map((a) => (
               <option key={a.id} value={a.id}>{a.label}</option>
             ))}
           </select>
         </label>
         <label className="block">
-          <span className="learn-label">Your full name (parent or guardian)</span>
+          <span className="learn-label">{t("Your full name (parent or guardian)")}</span>
           <input
             className="learn-input mt-1.5 w-full"
             value={guardianName}
@@ -227,21 +223,21 @@ function ConsentForm() {
           />
         </label>
         <label className="block">
-          <span className="learn-label">Relationship to the learner</span>
+          <span className="learn-label">{t("Relationship to the learner")}</span>
           <select
             className="learn-input mt-1.5 w-full"
             value={relationship}
             onChange={(e) => setRelationship(e.target.value)}
             name="relationship"
           >
-            <option value="">Choose…</option>
+            <option value="">{t("Choose…")}</option>
             {GUARDIAN_RELATIONSHIPS.map((r) => (
               <option key={r} value={r}>{r}</option>
             ))}
           </select>
         </label>
         <label className="block">
-          <span className="learn-label">Your email (optional, so we can help if you ask us to delete or correct data)</span>
+          <span className="learn-label">{t("Your email (optional, so we can help if you ask us to delete or correct data)")}</span>
           <input
             className="learn-input mt-1.5 w-full"
             type="email"
@@ -267,7 +263,7 @@ function ConsentForm() {
           disabled={!canSubmit}
           onClick={() => void submit()}
         >
-          {busy ? "Saving…" : "I consent · continue"}
+          {busy ? t("Saving…") : t("I consent · continue")}
         </button>
         <p className="learn-meta">
           Consent version {CONSENT_TEXT_VERSION}. This only counts from the parent or guardian’s own account. We’ll only email you if you add your email address and ask us to.
@@ -279,13 +275,15 @@ function ConsentForm() {
 }
 
 export default function GuardianConsentPage() {
+  const { t } = useLmsT();
+
   return (
     <LearnShell
-      title="Parent or guardian consent"
+      title={t("Parent or guardian consent")}
       subtitle="Needed before a learner under 18 can use Super-Cube® Learn. Recorded by the parent or guardian, not the learner."
       hideJourneyRail
     >
-      <Suspense fallback={<p className="learn-meta">Loading…</p>}>
+      <Suspense fallback={<p className="learn-meta">{t("Loading…")}</p>}>
         <ConsentForm />
       </Suspense>
     </LearnShell>

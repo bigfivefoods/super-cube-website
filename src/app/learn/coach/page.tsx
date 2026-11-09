@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
@@ -48,11 +50,13 @@ type RosterRow = {
 };
 
 export default function CoachToolsPage() {
+  const { t } = useLmsT();
+
   return (
     <Suspense
       fallback={
-        <LearnShell title="Coach tools">
-          <p className="learn-meta">Loading…</p>
+        <LearnShell title={t("Coach tools")}>
+          <p className="learn-meta">{t("Loading…")}</p>
         </LearnShell>
       }
     >
@@ -62,6 +66,8 @@ export default function CoachToolsPage() {
 }
 
 function CoachToolsInner() {
+  const { t } = useLmsT();
+
   const searchParams = useSearchParams();
   const orgAdmin = useOrgAdmin();
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -200,66 +206,49 @@ function CoachToolsInner() {
 
   return (
     <LearnShell
-      title="Coach & facilitator tools"
+      title={t("Coach & facilitator tools")}
       subtitle="Share consented growth summaries and view cloud cohort roster when signed in as coach."
     >
       <div className="learn-card mb-4 flex flex-wrap items-center justify-between gap-3">
         <div className="min-w-0">
-          <p className="learn-card-title">Live cohorts</p>
-          <p className="learn-meta mt-0.5">
-            Schedule facilitator-led Super-Cube® sessions, take attendance and keep the discussion inside the cohort.
-          </p>
+          <p className="learn-card-title">{t("Live cohorts")}</p>
+          <p className="learn-meta mt-0.5">{t("Schedule facilitator-led Super-Cube® sessions, take attendance and keep the discussion inside the cohort.")}</p>
         </div>
-        <Link href="/learn/cohorts" className="learn-btn learn-btn-primary">
-          Open cohorts
-        </Link>
+        <Link href="/learn/cohorts" className="learn-btn learn-btn-primary">{t("Open cohorts")}</Link>
       </div>
       {orgAdmin && (
         <div className="learn-card mb-4 flex flex-wrap items-center justify-between gap-3" data-testid="org-results-link">
           <div className="min-w-0">
-            <p className="learn-card-title">Organisation results</p>
-            <p className="learn-meta mt-0.5">
-              Before and after by Super-Cube® face, completion and engagement for your organisation, with CSV export.
-            </p>
+            <p className="learn-card-title">{t("Organisation results")}</p>
+            <p className="learn-meta mt-0.5">{t("Before and after by Super-Cube® face, completion and engagement for your organisation, with CSV export.")}</p>
           </div>
-          <Link href="/learn/org/results" className="learn-btn learn-btn-primary">
-            Open results
-          </Link>
+          <Link href="/learn/org/results" className="learn-btn learn-btn-primary">{t("Open results")}</Link>
         </div>
       )}
       {packBanner && (
         <div className="mb-4 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-4">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-emerald-900/70">
-            Seat pack
-          </p>
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-emerald-900/70">{t("Seat pack")}</p>
           <p className="mt-1 text-sm font-semibold text-ink">{packBanner}</p>
-          <p className="mt-2 text-[0.8125rem] text-slate">
-            Code: <strong className="font-mono text-ink">{orgCode}</strong>
+          <p className="mt-2 text-[0.8125rem] text-slate">{t("Code:")}<strong className="font-mono text-ink">{orgCode}</strong>
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <a
               href={`/api/org/export?code=${encodeURIComponent(orgCode)}`}
               className="learn-btn learn-btn-primary !min-h-9"
-            >
-              Export CSV
-            </a>
+            >{t("Export CSV")}</a>
             <Link
               href="/pricing#pilot"
               className="learn-btn learn-btn-ghost !min-h-9"
-            >
-              Buy more seats
-            </Link>
+            >{t("Buy more seats")}</Link>
           </div>
         </div>
       )}
 
       <section className="learn-card mb-4">
-        <h2 className="learn-card-title">Consent & privacy</h2>
+        <h2 className="learn-card-title">{t("Consent & privacy")}</h2>
         <p className="learn-body mt-2">
           Coaches only see scores and completion when learners turn on{" "}
-          <strong className="text-ink">share progress with coach</strong> on
-          their dashboard. Journal reflections never leave the learner’s device.
-        </p>
+          <strong className="text-ink">{t("share progress with coach")}</strong>{t("on their dashboard. Journal reflections never leave the learner’s device.")}</p>
         <label className="mt-3 flex items-start gap-2 text-[0.8125rem] text-slate">
           <input
             type="checkbox"
@@ -271,10 +260,7 @@ function CoachToolsInner() {
               void syncCoachConsent(next);
             }}
           />
-          <span>
-            As a learner on this device, I consent to share my scores (not
-            journals) with my cohort coach.
-          </span>
+          <span>{t("As a learner on this device, I consent to share my scores (not journals) with my cohort coach.")}</span>
         </label>
       </section>
 
@@ -287,14 +273,12 @@ function CoachToolsInner() {
         />
 
         <section className="learn-card">
-          <h2 className="learn-card-title">Create organisation</h2>
-          <p className="learn-body mt-1">
-            Signed-in coaches can create a cohort code (requires orgs SQL).
-          </p>
+          <h2 className="learn-card-title">{t("Create organisation")}</h2>
+          <p className="learn-body mt-1">{t("Signed-in coaches can create a cohort code (requires orgs SQL).")}</p>
           <form onSubmit={createOrg} className="mt-3 space-y-2">
             <input
               className="learn-input"
-              placeholder="School or company name"
+              placeholder={t("School or company name")}
               value={createName}
               onChange={(e) => setCreateName(e.target.value)}
               required
@@ -304,9 +288,7 @@ function CoachToolsInner() {
               type="submit"
               className="learn-btn learn-btn-primary"
               disabled={!email}
-            >
-              Create cohort
-            </button>
+            >{t("Create cohort")}</button>
           </form>
           {createMsg && (
             <p className="mt-2 text-[0.8125rem] font-medium text-ink">
@@ -318,9 +300,7 @@ function CoachToolsInner() {
               <Link
                 href="/login?next=/learn/coach"
                 className="font-semibold text-ink underline-offset-2 hover:underline"
-              >
-                Sign in
-              </Link>{" "}
+              >{t("Sign in")}</Link>{" "}
               to create orgs.
             </p>
           )}
@@ -337,14 +317,12 @@ function CoachToolsInner() {
 
         <section className="learn-card lg:col-span-2">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="learn-card-title">Cloud roster</h2>
+            <h2 className="learn-card-title">{t("Cloud roster")}</h2>
             {email && orgCode && (
               <a
                 href={`/api/org/export?code=${encodeURIComponent(orgCode)}`}
                 className="text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline"
-              >
-                Export CSV
-              </a>
+              >{t("Export CSV")}</a>
             )}
           </div>
           {!email && (
@@ -352,9 +330,7 @@ function CoachToolsInner() {
               <Link
                 href="/login?next=/learn/coach"
                 className="font-semibold text-ink underline-offset-2 hover:underline"
-              >
-                Sign in
-              </Link>{" "}
+              >{t("Sign in")}</Link>{" "}
               to see your organisation&apos;s roster. Coaches join with an invite
               link from the organisation&apos;s admin.
             </p>
@@ -368,7 +344,7 @@ function CoachToolsInner() {
                   onChange={(e) =>
                     setOrgCodeState(e.target.value.toUpperCase())
                   }
-                  placeholder="CODE"
+                  placeholder={t("CODE")}
                 />
                 <button
                   type="button"
@@ -385,14 +361,14 @@ function CoachToolsInner() {
                 <p className="learn-meta mt-1 text-amber-800">{rosterMsg}</p>
               )}
               <div className="mt-3 rounded-xl border border-line bg-surface p-3" data-testid="coach-invite">
-                <p className="learn-label">Invite a coach (organisation admins only)</p>
+                <p className="learn-label">{t("Invite a coach (organisation admins only)")}</p>
                 <div className="mt-1.5 flex flex-wrap gap-2">
                   <input
                     className="learn-input max-w-[16rem]"
                     type="email"
                     value={inviteEmail}
                     onChange={(e) => setInviteEmail(e.target.value)}
-                    placeholder="Coach's email (optional lock)"
+                    placeholder={t("Coach's email (optional lock)")}
                   />
                   <button type="button" className="learn-btn learn-btn-ghost" onClick={() => void createInvite()}>
                     Create invite link
@@ -404,40 +380,32 @@ function CoachToolsInner() {
                 {inviteMsg && <p className="learn-meta mt-1">{inviteMsg}</p>}
               </div>
               {roster.length === 0 ? (
-                <p className="learn-body mt-3">
-                  No members yet. Learners join the same code on /learn/org and
-                  enable “Share progress with coach”.
-                </p>
+                <p className="learn-body mt-3">{t("No members yet. Learners join the same code on /learn/org and enable “Share progress with coach”.")}</p>
               ) : (
                 <>
                   {/* Cohort pulse trend summary */}
                   <div className="mt-4 rounded-xl border border-line bg-surface p-3">
-                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                      Cohort pulse trends
-                    </p>
-                    <p className="learn-meta mt-0.5">
-                      Continuous face tracking (migration 005). Shows habit
-                      formation, not ranking.
-                    </p>
+                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Cohort pulse trends")}</p>
+                    <p className="learn-meta mt-0.5">{t("Continuous face tracking (migration 005). Shows habit formation, not ranking.")}</p>
                     <div className="mt-2 flex flex-wrap gap-4 text-[0.8125rem]">
                       <div>
                         <span className="font-semibold text-ink">
                           {pulseStats.withPulse}/{pulseStats.total}
                         </span>{" "}
-                        <span className="text-slate">with pulses</span>
+                        <span className="text-slate">{t("with pulses")}</span>
                       </div>
                       <div>
                         <span className="font-semibold text-ink">
                           {pulseStats.recentlyPulsed}
                         </span>{" "}
-                        <span className="text-slate">pulsed in last 7d</span>
+                        <span className="text-slate">{t("pulsed in last 7d")}</span>
                       </div>
                       {pulseStats.meanConsistency != null && (
                         <div>
                           <span className="font-semibold text-ink">
                             {pulseStats.meanConsistency}%
                           </span>{" "}
-                          <span className="text-slate">mean consistency</span>
+                          <span className="text-slate">{t("mean consistency")}</span>
                         </div>
                       )}
                     </div>
@@ -445,13 +413,8 @@ function CoachToolsInner() {
 
                   {/* Heat map: completion + growth bands (no ranking language) */}
                   <div className="mt-4">
-                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                      Cohort heat · completion & growth
-                    </p>
-                    <p className="learn-meta mt-0.5">
-                      Colours show effort and change—not fixed ability. Never
-                      display as a public leaderboard.
-                    </p>
+                    <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Cohort heat · completion & growth")}</p>
+                    <p className="learn-meta mt-0.5">{t("Colours show effort and change—not fixed ability. Never display as a public leaderboard.")}</p>
                     <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
                       {roster.map((r) => {
                         const pre = r.progress?.pre_overall;
@@ -470,7 +433,7 @@ function CoachToolsInner() {
                             key={r.userId}
                             className="rounded-lg px-2 py-2 text-center text-[0.65rem] font-semibold text-white"
                             style={{ background: heat }}
-                            title="Consented snapshot only"
+                            title={t("Consented snapshot only")}
                           >
                             <span className="block truncate">
                               {(r.displayName || "Learner").split(" ")[0]}
@@ -486,14 +449,8 @@ function CoachToolsInner() {
                     </div>
                     {/* Face-level heat from consented face_scores when present */}
                     <div className="mt-5">
-                      <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">
-                        Face heat · cohort mean pre
-                      </p>
-                      <p className="learn-meta mt-0.5">
-                        Real face scores when learners share progress (requires
-                        face_scores column—run migration 004). Falls back to
-                        overall pre mean if faces not yet synced.
-                      </p>
+                      <p className="text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Face heat · cohort mean pre")}</p>
+                      <p className="learn-meta mt-0.5">{t("Real face scores when learners share progress (requires face_scores column—run migration 004). Falls back to overall pre mean if faces not yet synced.")}</p>
                       <div className="mt-2 grid grid-cols-3 gap-2 sm:grid-cols-6">
                         {(() => {
                           const faceMaps = roster
@@ -604,7 +561,7 @@ function CoachToolsInner() {
                               : ""}
                           </p>
                         ) : (
-                          <p className="mt-0.5 text-muted">No snapshot yet</p>
+                          <p className="mt-0.5 text-muted">{t("No snapshot yet")}</p>
                         )}
                       </li>
                     ))}
@@ -616,7 +573,7 @@ function CoachToolsInner() {
         </section>
 
         <section className="learn-card lg:col-span-2">
-          <h2 className="learn-card-title">Construct colours · tools</h2>
+          <h2 className="learn-card-title">{t("Construct colours · tools")}</h2>
           <ul className="mt-3 flex flex-wrap gap-3">
             {constructs.map((c) => (
               <li key={c.id} className="flex items-center gap-2 text-sm">
@@ -632,21 +589,15 @@ function CoachToolsInner() {
             <Link
               href="/facilitator"
               className="text-ink underline-offset-2 hover:underline"
-            >
-              8-week calendar →
-            </Link>
+            >{t("8-week calendar →")}</Link>
             <Link
               href="/team"
               className="text-ink underline-offset-2 hover:underline"
-            >
-              Team cube →
-            </Link>
+            >{t("Team cube →")}</Link>
             <Link
               href="/practices"
               className="text-ink underline-offset-2 hover:underline"
-            >
-              Practice library →
-            </Link>
+            >{t("Practice library →")}</Link>
           </div>
         </section>
       </div>

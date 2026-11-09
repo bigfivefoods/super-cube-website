@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useCallback, useEffect, useId, useState, useSyncExternalStore } from "react";
 import { track } from "@/lib/analytics";
@@ -30,6 +32,8 @@ export function ShareLinksPanel({
   hasBaseline?: boolean;
   headingLevel?: 2 | 3;
 }) {
+  const { t } = useLmsT();
+
   const uid = useId();
   const [load, setLoad] = useState<Load>({ kind: "loading" });
   const [days, setDays] = useState<number>(DEFAULT_SHARE_DAYS);
@@ -121,33 +125,24 @@ export function ShareLinksPanel({
 
   return (
     <section className="learn-card" aria-labelledby={`${uid}-h`} data-testid="share-links">
-      <H id={`${uid}-h`} className="learn-card-title">
-        Share your growth
-      </H>
-      <p className="learn-body mt-1.5">
-        Send a coach or mentor a private link to your scores. It expires, you can turn it off at any time, and your
-        journals and answers are never shared.
-      </p>
+      <H id={`${uid}-h`} className="learn-card-title">{t("Share your growth")}</H>
+      <p className="learn-body mt-1.5">{t("Send a coach or mentor a private link to your scores. It expires, you can turn it off at any time, and your journals and answers are never shared.")}</p>
 
-      {load.kind === "loading" && <p className="learn-meta mt-3">Loading your links…</p>}
+      {load.kind === "loading" && <p className="learn-meta mt-3">{t("Loading your links…")}</p>}
 
       {load.kind === "signed_out" && (
         <div className="mt-3">
-          <p className="learn-body">Sign in to create a share link. Your scores need to be saved to your account first.</p>
-          <Link href="/login?next=/learn/report" className="learn-btn learn-btn-primary mt-3">
-            Sign in to share
-          </Link>
+          <p className="learn-body">{t("Sign in to create a share link. Your scores need to be saved to your account first.")}</p>
+          <Link href="/login?next=/learn/report" className="learn-btn learn-btn-primary mt-3">{t("Sign in to share")}</Link>
         </div>
       )}
 
       {load.kind === "unavailable" && (
-        <p className="learn-meta mt-3" role="status">
-          Sharing isn’t available right now. Please try again later.
-        </p>
+        <p className="learn-meta mt-3" role="status">{t("Sharing isn’t available right now. Please try again later.")}</p>
       )}
 
       {load.kind === "ready" && !hasBaseline && (
-        <p className="learn-body mt-3">Take your baseline first, then you can share your growth.</p>
+        <p className="learn-body mt-3">{t("Take your baseline first, then you can share your growth.")}</p>
       )}
 
       {load.kind === "ready" && hasBaseline && (
@@ -155,22 +150,19 @@ export function ShareLinksPanel({
           <form onSubmit={create} className="mt-4 grid gap-3 sm:grid-cols-[1fr_auto] sm:items-end">
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
-                <label htmlFor={`${uid}-label`} className="block text-[0.8125rem] font-semibold text-ink">
-                  Who is it for? <span className="font-normal text-slate">(optional)</span>
+                <label htmlFor={`${uid}-label`} className="block text-[0.8125rem] font-semibold text-ink">{t("Who is it for?")}<span className="font-normal text-slate">{t("(optional)")}</span>
                 </label>
                 <input
                   id={`${uid}-label`}
                   value={label}
                   maxLength={80}
                   onChange={(e) => setLabel(e.target.value)}
-                  placeholder="e.g. My coach, Thandi"
+                  placeholder={t("e.g. My coach, Thandi")}
                   className="mt-1 w-full rounded-xl border border-line-strong bg-surface px-3 py-2.5 text-[0.9375rem] text-ink outline-none focus:border-ink focus:ring-2 focus:ring-ink/10"
                 />
               </div>
               <div>
-                <label htmlFor={`${uid}-days`} className="block text-[0.8125rem] font-semibold text-ink">
-                  Link works for
-                </label>
+                <label htmlFor={`${uid}-days`} className="block text-[0.8125rem] font-semibold text-ink">{t("Link works for")}</label>
                 <select
                   id={`${uid}-days`}
                   value={days}
@@ -186,11 +178,11 @@ export function ShareLinksPanel({
               </div>
               <label className="flex items-start gap-2 text-[0.8125rem] text-slate sm:col-span-2">
                 <input type="checkbox" className="mt-0.5 h-4 w-4" checked={showName} onChange={(e) => setShowName(e.target.checked)} />
-                <span>{minor ? "Show my first name" : "Show my name"} on the shared report</span>
+                <span>{minor ? t("Show my first name") : t("Show my name")} on the shared report</span>
               </label>
             </div>
             <button type="submit" disabled={busy} className="learn-btn learn-btn-primary disabled:opacity-50">
-              {busy ? "Creating…" : "Create link"}
+              {busy ? t("Creating…") : t("Create link")}
             </button>
           </form>
 
@@ -202,10 +194,8 @@ export function ShareLinksPanel({
 
           {fresh && (
             <div className="mt-4 rounded-xl border border-ink/20 bg-surface p-3" role="status" data-testid="share-fresh">
-              <p className="text-[0.8125rem] font-semibold text-ink">Your link is ready</p>
-              <label htmlFor={`${uid}-url`} className="sr-only">
-                Share link
-              </label>
+              <p className="text-[0.8125rem] font-semibold text-ink">{t("Your link is ready")}</p>
+              <label htmlFor={`${uid}-url`} className="sr-only">{t("Share link")}</label>
               <input
                 id={`${uid}-url`}
                 readOnly
@@ -215,13 +205,13 @@ export function ShareLinksPanel({
               />
               <div className="mt-2 flex flex-wrap gap-2">
                 <button type="button" onClick={copy} className="learn-btn learn-btn-primary !min-h-10">
-                  {copied ? "Copied" : "Copy link"}
+                  {copied ? t("Copied") : t("Copy link")}
                 </button>
                 {canShare && (
                   <button
                     type="button"
                     className="learn-btn learn-btn-ghost !min-h-10"
-                    onClick={() => void navigator.share({ title: "My Super-Cube® growth report", url: fresh.url }).catch(() => {})}
+                    onClick={() => void navigator.share({ title: t("My Super-Cube® growth report"), url: fresh.url }).catch(() => {})}
                   >
                     Share…
                   </button>
@@ -233,7 +223,7 @@ export function ShareLinksPanel({
 
           <H className="mt-6 text-[0.8125rem] font-semibold text-ink">Active links ({active.length})</H>
           {active.length === 0 ? (
-            <p className="learn-meta mt-1">No active links.</p>
+            <p className="learn-meta mt-1">{t("No active links.")}</p>
           ) : (
             <ul className="mt-2 divide-y divide-line rounded-xl border border-line">
               {active.map((l) => (
@@ -272,7 +262,7 @@ export function ShareLinksPanel({
 
           {past.length > 0 && (
             <details className="mt-3">
-              <summary className="cursor-pointer text-[0.8125rem] font-semibold text-slate">Past links</summary>
+              <summary className="cursor-pointer text-[0.8125rem] font-semibold text-slate">{t("Past links")}</summary>
               <ul className="mt-2 space-y-1">
                 {past.map((l) => (
                   <li key={l.id} className="learn-meta">

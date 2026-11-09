@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { track } from "@/lib/analytics";
 import type { ConstructId } from "@/lib/content";
@@ -30,6 +32,8 @@ export function LockedSessionCard({
   color: string;
   colorSoft: string;
 }) {
+  const { t } = useLmsT();
+
   const n = sessionCount(programmeId);
   const price = formatCoursePrice("ZAR");
   const sampleHref = `/learn/courses/choices/${courseId(programmeId, "choices")}-overview`;
@@ -47,16 +51,16 @@ export function LockedSessionCard({
       }))
     : lesson.lab
       ? [
-          { label: "The challenge", detail: teaser(lesson.lab.challenge) },
-          { label: "WOOP plan", detail: "Wish, outcome, obstacle, plan" },
-          { label: "Success checklist", detail: `${lesson.lab.checklist.length} checks` },
-          { label: "Reflect" },
+          { label: t("The challenge"), detail: teaser(lesson.lab.challenge) },
+          { label: t("WOOP plan"), detail: t("Wish, outcome, obstacle, plan") },
+          { label: t("Success checklist"), detail: `${lesson.lab.checklist.length} checks` },
+          { label: t("Reflect") },
         ]
       : lesson.faceCheck
         ? [
-            { label: "Recall every skill", detail: `${lesson.faceCheck.length} questions from memory` },
-            { label: "Teach it back" },
-            { label: "Lock one habit" },
+            { label: t("Recall every skill"), detail: `${lesson.faceCheck.length} questions from memory` },
+            { label: t("Teach it back") },
+            { label: t("Lock one habit") },
           ]
         : [];
 
@@ -66,14 +70,14 @@ export function LockedSessionCard({
         <p className="learn-eyebrow" style={{ color: "var(--color-ink, #111)" }}>Full pathway · {lesson.durationMinutes} min session</p>
         <p className="mt-1 text-[1.0625rem] font-semibold tracking-tight text-ink">{lesson.title}</p>
         <p className="mt-1 text-[0.9375rem] leading-snug text-ink">
-          <span className="font-semibold">What you’ll learn: </span>
+          <span className="font-semibold">{t("What you’ll learn:")}</span>
           {lesson.outcome}
         </p>
       </div>
 
       {outline.length > 0 && (
         <div className="px-4 pt-4 sm:px-5">
-          <h2 className="learn-eyebrow text-slate">Session outline</h2>
+          <h2 className="learn-eyebrow text-slate">{t("Session outline")}</h2>
           <ol className="mt-2 grid gap-1.5 sm:grid-cols-2" data-testid="locked-outline">
             {outline.map((o, i) => (
               <li key={o.label} className="flex gap-2 text-[0.8125rem] leading-snug">
@@ -98,10 +102,7 @@ export function LockedSessionCard({
         <p className="text-[0.9375rem] font-semibold text-ink" data-testid="locked-price">
           Unlock all {n} sessions · {price} once, lifetime access
         </p>
-        <p className="learn-meta mt-1">
-          Every session on all six faces of the Super-Cube®, the after-test, your growth report and a verifiable
-          certificate. No subscription.
-        </p>
+        <p className="learn-meta mt-1">{t("Every session on all six faces of the Super-Cube®, the after-test, your growth report and a verifiable certificate. No subscription.")}</p>
         <div className="mt-3 flex flex-wrap gap-2">
           <Link
             href="/pricing"
@@ -110,18 +111,12 @@ export function LockedSessionCard({
           >
             Unlock all {n} for {price}
           </Link>
-          <Link href="/learn/org" className="learn-btn learn-btn-secondary">
-            I have a cohort code
-          </Link>
-          <Link href={sampleHref} className="learn-btn learn-btn-ghost">
-            Try the free sample
-          </Link>
+          <Link href="/learn/org" className="learn-btn learn-btn-secondary">{t("I have a cohort code")}</Link>
+          <Link href={sampleHref} className="learn-btn learn-btn-ghost">{t("Try the free sample")}</Link>
         </div>
         <p className="learn-meta mt-3">
           Already paid?{" "}
-          <Link href={`/login?next=${encodeURIComponent(`/learn/courses/${constructId}/${lesson.id}`)}`} className="underline">
-            Sign in
-          </Link>{" "}
+          <Link href={`/login?next=${encodeURIComponent(`/learn/courses/${constructId}/${lesson.id}`)}`} className="underline">{t("Sign in")}</Link>{" "}
           to open your sessions on this device.
         </p>
       </div>

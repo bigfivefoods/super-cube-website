@@ -48,7 +48,7 @@ export async function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: 
               {/* Fixed box: width/height give a 1x/2x srcset instead of every breakpoint. */}
               <Image
                 src="/images/sdgs/sdg-logo.png"
-                alt="United Nations Sustainable Development Goals"
+                alt={t("United Nations Sustainable Development Goals")}
                 width={480}
                 height={304}
                 className="h-full w-full object-contain object-center"
@@ -57,10 +57,10 @@ export async function WhyLeadershipView({ locale = DEFAULT_LOCALE }: { locale?: 
             </div>
             <figcaption className="pt-3 text-center lg:text-right">
               <p className="text-[0.7rem] font-semibold tracking-tight text-ink">
-                2030 Agenda · 17 Goals
+                {t("2030 Agenda · 17 Goals")}
               </p>
               <p className="mt-0.5 text-[0.65rem] leading-snug text-muted">
-                One shared plan for people, planet, and prosperity.
+                {t("One shared plan for people, planet, and prosperity.")}
               </p>
             </figcaption>
           </figure>

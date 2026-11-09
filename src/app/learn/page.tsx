@@ -69,7 +69,7 @@ function readReviewsDone(): Record<string, string> {
 export default function LearnDashboardPage() {
   const state = useLmsState();
   const journey = useJourney();
-  const { t, L } = useLmsT();
+  const { t, L, fill } = useLmsT();
   const now = useClientNow();
   const [reviewsDone, setReviewsDone] = useState<Record<string, string>>({});
 
@@ -105,14 +105,21 @@ export default function LearnDashboardPage() {
   const rewardsReady = serverHasRecordedPractice(state);
   const reviewWhen =
     review.status === "needs-baseline"
-      ? "Starts after your baseline · days 3, 7 and 21"
+      ? t("Starts after your baseline · days 3, 7 and 21")
       : review.status === "finished"
-        ? "Day 3, 7 and 21 are done"
+        ? t("Day 3, 7 and 21 are done")
         : review.due
           ? review.status === "due"
-            ? `Due since ${formatDateZA(review.due)}`
-            : `Due ${formatDateZA(review.due)}`
-          : "Days 3, 7 and 21";
+            ? fill("Due since {date}", { date: formatDateZA(review.due) })
+            : fill("Due {date}", { date: formatDateZA(review.due) })
+          : t("Days 3, 7 and 21");
+  const spacedTitle =
+    review.status === "needs-baseline" || review.status === "finished"
+      ? t(review.title)
+      : fill("Day {n} · {name}", {
+          n: review.day ?? 3,
+          name: t(review.day === 7 ? "Mix it up" : review.day === 21 ? "Lock it in" : t("First recall")),
+        });
   const step = t("Step {n} of {total}").replace("{n}", String(journey.current.n)).replace("{total}", String(journey.total));
   const eyebrow =
     action.process === "journaling"
@@ -181,7 +188,7 @@ export default function LearnDashboardPage() {
               <span className="mt-0.5 block text-[0.7rem] font-normal text-slate">
                 {best > streak ? `${t("Best")} ${best}` : ""}
                 {best > streak && freezes > 0 ? " · " : ""}
-                {freezes > 0 ? `❄ ${freezes} freeze${freezes === 1 ? "" : "s"}` : ""}
+                {freezes > 0 ? `❄ ${fill(freezes === 1 ? "{n} freeze" : "{n} freezes", { n: freezes })}` : ""}
               </span>
             )}
           </dd>
@@ -217,7 +224,7 @@ export default function LearnDashboardPage() {
 
       <div className="mt-3 grid gap-3 sm:mt-4 sm:grid-cols-2">
         <TodayProgress state={state} />
-        <SessionReviewCard state={state} fallback={{ title: review.title, when: reviewWhen, href: review.href }} />
+        <SessionReviewCard state={state} fallback={{ title: spacedTitle, when: reviewWhen, href: review.href }} />
       </div>
 
       {/* ── Pathway ── */}
@@ -231,23 +238,23 @@ export default function LearnDashboardPage() {
         <LearnNavTile
           href="/learn/courses"
           kicker="Learning"
-          title="Six faces · courses"
-          detail={`${journey.coursePct}% of sessions done`}
+          title={t("Six faces · courses")}
+          detail={fill("{pct}% of sessions done", { pct: journey.coursePct })}
           accent={LEARN_PROCESS_ACCENT.learning.color}
         />
         <LearnNavTile
           href={journalUnlocked ? "/learn/pulse" : journey.current.href}
           kicker="Journaling"
-          title="Daily check-in"
+          title={t("Daily check-in")}
           detail="Rate your faces, then a two-minute practice"
-          status={pulseToday ? "Done" : undefined}
+          status={pulseToday ? t("Done") : undefined}
           accent={LEARN_PROCESS_ACCENT.journaling.color}
         />
         {rewardsReady ? (
           <LearnNavTile
             href="/learn/report"
             kicker="Earned"
-            title="Growth report and certificate"
+            title={t("Growth report and certificate")}
             detail="The server has recorded your practice"
             accent={constructs[5].color}
           />
@@ -256,7 +263,7 @@ export default function LearnDashboardPage() {
             <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Not yet earned")}</p>
             <p className="mt-1 text-[0.9375rem] font-semibold text-ink">{t("Growth report and certificate")}</p>
             <p className="mt-1 text-[0.8125rem] leading-snug text-slate">
-              Offered when the server has recorded your sessions and after-test. A score kept only on this device does not unlock them.
+              {t("Offered when the server has recorded your sessions and after-test. A score kept only on this device does not unlock them.")}
             </p>
           </div>
         )}
@@ -270,7 +277,7 @@ export default function LearnDashboardPage() {
 function TodayProgress({ state }: { state: ReturnType<typeof useLmsState> }) {
   const v = progression(state);
   const g = weeklyGoal(state);
-  const { t, L } = useLmsT();
+  const { t, L, fill } = useLmsT();
   return (
     <Link
       href={L("/learn/progress")}
@@ -278,20 +285,20 @@ function TodayProgress({ state }: { state: ReturnType<typeof useLmsState> }) {
       data-testid="today-progress"
     >
       {g.target ? (
-        <GoalRing done={g.done} target={g.target} size={72} stroke={7} color="#16979A" label={`Weekly goal: ${g.done} of ${g.target}`} />
+        <GoalRing done={g.done} target={g.target} size={72} stroke={7} color="#16979A" label={fill("Weekly goal: {done} of {target}", { done: g.done, target: g.target })} />
       ) : null}
       <span className="min-w-0">
         <span className="block text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">
-          Level {v.level.level.n} · {v.total} points
+          {fill("Level {n} · {points} points", { n: v.level.level.n, points: v.total })}
         </span>
-        <span className="mt-0.5 block text-[1rem] font-semibold tracking-tight text-ink">{v.level.level.name}</span>
+        <span className="mt-0.5 block text-[1rem] font-semibold tracking-tight text-ink">{t(v.level.level.name)}</span>
         <span className="mt-0.5 block text-[0.8125rem] leading-snug text-slate">
           {g.target
             ? g.reached
-              ? "Weekly goal reached. "
-              : `${g.target - g.done} more for your weekly goal. `
-            : "Set a weekly goal on your Progress page. "}
-          {v.level.next ? `${v.level.toNext} points to ${v.level.next.name}.` : ""}
+              ? t("Weekly goal reached. ")
+              : fill("{n} more for your weekly goal. ", { n: g.target - g.done })
+            : t("Set a weekly goal on your Progress page. ")}
+          {v.level.next ? fill("{n} points to {name}.", { n: v.level.toNext, name: t(v.level.next.name) }) : ""}
         </span>
       </span>
     </Link>

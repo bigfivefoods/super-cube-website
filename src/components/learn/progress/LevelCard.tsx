@@ -1,8 +1,13 @@
+"use client";
+
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 import type { ProgressionView } from "@/lib/lms/progression";
 import { LEVELS } from "@/lib/lms/progression";
 
 /** Level, points and the next level. */
 export function LevelCard({ view }: { view: ProgressionView }) {
+  const { t } = useLmsT();
+
   const { level, next, pct, toNext } = view.level;
   return (
     <section className="rounded-2xl border border-line bg-elevated p-4 sm:p-5" aria-labelledby="level-h" data-testid="level-card">
@@ -17,7 +22,7 @@ export function LevelCard({ view }: { view: ProgressionView }) {
       <div
         className="mt-3 h-2 overflow-hidden rounded-full bg-black/[0.07] dark:bg-white/10"
         role="progressbar"
-        aria-label={next ? `Progress to ${next.name}` : "Top level reached"}
+        aria-label={next ? `Progress to ${next.name}` : t("Top level reached")}
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={pct}
@@ -25,9 +30,9 @@ export function LevelCard({ view }: { view: ProgressionView }) {
         <div className="sc-ring-arc h-full rounded-full bg-ink" style={{ width: `${Math.max(pct, 3)}%`, transition: "width 700ms ease" }} />
       </div>
       <p className="mt-1.5 text-[0.75rem] text-slate">
-        {next ? `${toNext} points to ${next.name}` : "You’ve reached the top level. Keep the whole cube lit."}
+        {next ? `${toNext} points to ${next.name}` : t("You’ve reached the top level. Keep the whole cube lit.")}
       </p>
-      <ol className="mt-3 flex flex-wrap gap-1" aria-label="All levels">
+      <ol className="mt-3 flex flex-wrap gap-1" aria-label={t("All levels")}>
         {LEVELS.map((l) => (
           <li
             key={l.n}

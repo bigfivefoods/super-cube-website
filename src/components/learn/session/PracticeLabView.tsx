@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { SessionReflection } from "@/components/learn/SessionReflection";
 import type { ConstructId } from "@/lib/content";
 import { faceInkStyle } from "@/lib/contrast";
@@ -24,6 +26,8 @@ export function PracticeLabView({
   programmeId: ProgrammeId;
   constructId: ConstructId;
 }) {
+  const { t } = useLmsT();
+
   const kids = programmeId === "kids";
   const [woop, setWoop] = useLocalField<Record<string, string>>(`woop:${lessonId}`, {});
   const [ticks, setTicks] = useLocalField<boolean[]>(`lab:${lessonId}`, lab.checklist.map(() => false));
@@ -38,11 +42,11 @@ export function PracticeLabView({
       </section>
 
       <section className="rounded-2xl border border-line bg-elevated p-3.5 sm:p-5" aria-labelledby="lab-woop">
-        <h2 id="lab-woop" className="learn-eyebrow face-ink">{kids ? "Make a plan" : "Plan it with WOOP"}</h2>
+        <h2 id="lab-woop" className="learn-eyebrow face-ink">{kids ? t("Make a plan") : t("Plan it with WOOP")}</h2>
         <p className="learn-meta mt-1">
           {kids
-            ? "Four little steps to help you do it."
-            : "Wish, Outcome, Obstacle, Plan: picture the goal, then name what could get in the way and decide in advance how you'll handle it."}
+            ? t("Four little steps to help you do it.")
+            : t("Wish, Outcome, Obstacle, Plan: picture the goal, then name what could get in the way and decide in advance how you'll handle it.")}
         </p>
         <ol className="mt-3 grid gap-3 sm:grid-cols-2">
           {lab.woop.map((w, i) => (
@@ -62,12 +66,11 @@ export function PracticeLabView({
             </li>
           ))}
         </ol>
-        <p className="learn-meta mt-2">Saved on this device as you type.</p>
+        <p className="learn-meta mt-2">{t("Saved on this device as you type.")}</p>
       </section>
 
       <section className="rounded-2xl border border-line bg-elevated p-3.5 sm:p-5" aria-labelledby="lab-check">
-        <h2 id="lab-check" className="learn-eyebrow face-ink">
-          Success checklist · <span className="tabular-nums">{done}/{lab.checklist.length}</span>
+        <h2 id="lab-check" className="learn-eyebrow face-ink">{t("Success checklist ·")}<span className="tabular-nums">{done}/{lab.checklist.length}</span>
         </h2>
         <ul className="mt-2 space-y-1.5">
           {lab.checklist.map((c, i) => (
@@ -94,7 +97,7 @@ export function PracticeLabView({
         lessonId={lessonId}
         constructId={constructId}
         color={color}
-        journalPrompt={kids ? "What happened when you tried it?" : "What did I try, what happened, and what will I keep doing?"}
+        journalPrompt={kids ? t("What happened when you tried it?") : t("What did I try, what happened, and what will I keep doing?")}
         embedded
       />
     </div>

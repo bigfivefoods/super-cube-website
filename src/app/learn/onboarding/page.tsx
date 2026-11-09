@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
@@ -9,6 +11,8 @@ import { loadLmsState, type LocalLmsState } from "@/lib/lms/store";
 import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 
 function OnboardingInner() {
+  const { t } = useLmsT();
+
   const params = useSearchParams();
   const mode = params.get("mode") === "purchase" ? "purchase" : "demo";
   const [state, setState] = useState<LocalLmsState | null>(null);
@@ -26,50 +30,48 @@ function OnboardingInner() {
 
   return (
     <LearnShell
-      title={mode === "purchase" ? "You're in" : "Welcome to your demo"}
+      title={mode === "purchase" ? "You're in" : t("Welcome to your demo")}
       subtitle={
         mode === "purchase"
-          ? "Payment confirmed (or access activated). Here’s the clearest path to real growth—not a content binge."
-          : "Free on this device. Five steps. Deliberate practice. You’ll see pre → post change on your report."
+          ? t("Payment confirmed (or access activated). Here’s the clearest path to real growth—not a content binge.")
+          : t("Free on this device. Five steps. Deliberate practice. You’ll see pre → post change on your report.")
       }
     >
       <div className="mb-5 rounded-2xl border border-ink bg-elevated p-5 sm:p-6">
         <p className="learn-eyebrow">
-          {programme?.name ?? "Super-Cube®"} · {programme?.ageLabel}
+          {programme?.name ?? t("Super-Cube®")} · {programme?.ageLabel}
         </p>
-        <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">
-          Your next 30 minutes
-        </h2>
+        <h2 className="mt-2 text-xl font-semibold tracking-tight text-ink">{t("Your next 30 minutes")}</h2>
         <ol className="mt-4 space-y-3">
           {[
             {
               n: "1",
-              t: "Orient",
-              d: "Pre-pre assessment — how you see leadership levels",
+              t: t("Orient"),
+              d: t("Pre-pre assessment — how you see leadership levels"),
               href: "/learn/assessment/orientation",
             },
             {
               n: "2",
-              t: "Baseline",
-              d: "Six-face self-assessment so growth is measurable",
+              t: t("Baseline"),
+              d: t("Six-face self-assessment so growth is measurable"),
               href: "/learn/assessment/pre",
             },
             {
               n: "3",
-              t: "First session",
-              d: "Start your weakest face (we’ll plan your week after baseline)",
+              t: t("First session"),
+              d: t("Start your weakest face (we’ll plan your week after baseline)"),
               href: "/learn/courses",
             },
             {
               n: "4",
-              t: "First face pulse",
-              d: "30 seconds — rate 3 faces so continuous patterns can start",
+              t: t("First face pulse"),
+              d: t("30 seconds — rate 3 faces so continuous patterns can start"),
               href: "/learn/pulse",
             },
             {
               n: "5",
-              t: "Reflect",
-              d: "2–5 sentences in the journal — transfer is the product",
+              t: t("Reflect"),
+              d: t("2–5 sentences in the journal — transfer is the product"),
               href: "/learn",
             },
           ].map((step) => (
@@ -83,9 +85,7 @@ function OnboardingInner() {
                 <Link
                   href={step.href}
                   className="mt-1 inline-block text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline"
-                >
-                  Open →
-                </Link>
+                >{t("Open →")}</Link>
               </div>
             </li>
           ))}
@@ -93,31 +93,25 @@ function OnboardingInner() {
         <Link
           href="/learn/assessment/orientation"
           className="learn-btn learn-btn-primary mt-6 w-full sm:w-auto"
-        >
-          Start orientation →
-        </Link>
+        >{t("Start orientation →")}</Link>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2">
         <div className="learn-card-muted">
-          <p className="learn-label">Tips</p>
+          <p className="learn-label">{t("Tips")}</p>
           <ul className="learn-body mt-2 space-y-1">
-            <li>· Short sessions beat marathons</li>
-            <li>· Turn on practice reminders on the dashboard</li>
-            <li>· Sign in to sync across devices</li>
+            <li>{t("· Short sessions beat marathons")}</li>
+            <li>{t("· Turn on practice reminders on the dashboard")}</li>
+            <li>{t("· Sign in to sync across devices")}</li>
           </ul>
         </div>
         <div className="learn-card-muted">
-          <p className="learn-label">For schools & teams</p>
-          <p className="learn-body mt-2">
-            Join a cohort code so coaches can see progress (not journals).
-          </p>
+          <p className="learn-label">{t("For schools & teams")}</p>
+          <p className="learn-body mt-2">{t("Join a cohort code so coaches can see progress (not journals).")}</p>
           <Link
             href="/learn/org"
             className="mt-2 inline-block text-[0.8125rem] font-semibold text-ink"
-          >
-            Join cohort →
-          </Link>
+          >{t("Join cohort →")}</Link>
         </div>
       </div>
     </LearnShell>
@@ -125,11 +119,13 @@ function OnboardingInner() {
 }
 
 export default function OnboardingPage() {
+  const { t } = useLmsT();
+
   return (
     <Suspense
       fallback={
-        <LearnShell title="Welcome">
-          <p className="learn-meta">Loading…</p>
+        <LearnShell title={t("Welcome")}>
+          <p className="learn-meta">{t("Loading…")}</p>
         </LearnShell>
       }
     >

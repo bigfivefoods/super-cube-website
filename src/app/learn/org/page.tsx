@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -12,6 +14,8 @@ import { createClient } from "@/lib/supabase/client";
  * Join family / school / company cohort — local code always; Supabase when signed in.
  */
 export default function LearnOrgPage() {
+  const { t } = useLmsT();
+
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [code, setCode] = useState("");
   const [invite, setInvite] = useState<string | null>(null);
@@ -111,7 +115,7 @@ export default function LearnOrgPage() {
 
   return (
     <LearnShell
-      title="Family, school or company cohort"
+      title={t("Family, school or company cohort")}
       subtitle="Join with a short code—family circle, classroom, or workplace pilot. Local save always works; signed-in users appear on the coach roster. Journals stay private; scores only if you consent on Today / Coach."
     >
       {profile?.cohortKind && profile.cohortKind !== "solo" && (
@@ -124,10 +128,8 @@ export default function LearnOrgPage() {
 
       {invite && (
         <div className="learn-card mb-4 max-w-md" data-testid="invite-card">
-          <p className="learn-eyebrow">Staff invite</p>
-          <p className="learn-body mt-1">
-            You have been invited to join an organisation as a coach or admin.
-          </p>
+          <p className="learn-eyebrow">{t("Staff invite")}</p>
+          <p className="learn-body mt-1">{t("You have been invited to join an organisation as a coach or admin.")}</p>
           <button type="button" className="learn-btn learn-btn-primary mt-3" onClick={() => void acceptInvite()}>
             Accept invite
           </button>
@@ -136,7 +138,7 @@ export default function LearnOrgPage() {
 
       <form onSubmit={join} className="learn-card max-w-md space-y-3">
         <label className="block">
-          <span className="learn-label">Learner cohort / family code</span>
+          <span className="learn-label">{t("Learner cohort / family code")}</span>
           <input
             value={code}
             onChange={(e) => {
@@ -144,7 +146,7 @@ export default function LearnOrgPage() {
               setSaved(false);
               setCloudMsg(null);
             }}
-            placeholder="e.g. FAMILY-ABC"
+            placeholder={t("e.g. FAMILY-ABC")}
             className="learn-input mt-1.5"
             maxLength={24}
             autoCapitalize="characters"
@@ -156,9 +158,7 @@ export default function LearnOrgPage() {
           Coaches and facilitators join with a personal invite link from the
           organisation&apos;s admin, so only invited staff can see learners&apos; scores.
         </p>
-        <button type="submit" className="learn-btn learn-btn-primary">
-          Join cohort
-        </button>
+        <button type="submit" className="learn-btn learn-btn-primary">{t("Join cohort")}</button>
         {saved && (
           <p className="text-[0.8125rem] font-medium text-emerald-800">
             Local code saved{state?.orgCode ? `: ${state.orgCode}` : ""}.
@@ -170,9 +170,7 @@ export default function LearnOrgPage() {
             <Link
               href="/login?next=/learn/org"
               className="font-semibold text-ink underline-offset-2 hover:underline"
-            >
-              Sign in
-            </Link>{" "}
+            >{t("Sign in")}</Link>{" "}
             for multi-device roster membership.
           </p>
         )}
@@ -180,25 +178,19 @@ export default function LearnOrgPage() {
 
       <div className="mt-6 grid max-w-md gap-3 sm:grid-cols-2">
         <div className="learn-card-muted">
-          <p className="learn-label">Facilitators</p>
+          <p className="learn-label">{t("Facilitators")}</p>
           <p className="learn-body mt-1">
             After joining as coach, open{" "}
-            <Link href="/learn/coach" className="font-semibold text-ink">
-              Coach tools
-            </Link>
+            <Link href="/learn/coach" className="font-semibold text-ink">{t("Coach tools")}</Link>
             .
           </p>
         </div>
         <div className="learn-card-muted">
-          <p className="learn-label">Your profile</p>
+          <p className="learn-label">{t("Your profile")}</p>
           <p className="learn-body mt-1">
-            <Link href="/learn/account" className="font-semibold text-ink">
-              You
-            </Link>{" "}
+            <Link href="/learn/account" className="font-semibold text-ink">{t("You")}</Link>{" "}
             ·{" "}
-            <Link href="/learn/report" className="font-semibold text-ink">
-              Reports
-            </Link>
+            <Link href="/learn/report" className="font-semibold text-ink">{t("Reports")}</Link>
           </p>
         </div>
       </div>

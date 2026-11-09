@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 /** Minimal SVG sparkline for overall face-pulse trend (nulls = gaps). */
 export function FaceSparkline({
   values,
@@ -12,15 +14,15 @@ export function FaceSparkline({
   height?: number;
   stroke?: string;
 }) {
+  const { t } = useLmsT();
+
   const pts = values
     .map((v, i) => ({ i, v }))
     .filter((p): p is { i: number; v: number } => typeof p.v === "number");
 
   if (pts.length < 2) {
     return (
-      <p className="text-[0.75rem] text-muted">
-        Log a few daily pulses to see your trend line.
-      </p>
+      <p className="text-[0.75rem] text-muted">{t("Log a few daily pulses to see your trend line.")}</p>
     );
   }
 
@@ -51,7 +53,7 @@ export function FaceSparkline({
       viewBox={`0 0 ${width} ${height}`}
       className="h-12 w-full max-w-sm"
       role="img"
-      aria-label="Overall face capacity trend from recent pulses"
+      aria-label={t("Overall face capacity trend from recent pulses")}
     >
       <path
         d={d}
