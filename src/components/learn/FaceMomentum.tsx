@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { constructs, type ConstructId } from "@/lib/content";
 import {
@@ -18,6 +20,8 @@ function trendGlyph(t?: FaceTrend): string {
 }
 
 export function FaceMomentum({ state }: { state: LocalLmsState }) {
+  const { t } = useLmsT();
+
   const pattern = deriveFacePattern(state);
   const series = pulseSeries(state, 14);
   const overall = series.map((s) => s.overall);
@@ -26,15 +30,13 @@ export function FaceMomentum({ state }: { state: LocalLmsState }) {
     <section className="learn-card mb-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
-          <h2 className="learn-card-title">Face momentum</h2>
+          <h2 className="learn-card-title">{t("Face momentum")}</h2>
           <p className="learn-meta mt-0.5">{pattern.insight}</p>
         </div>
         <Link
           href="/learn/pulse"
           className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-        >
-          Pulse →
-        </Link>
+        >{t("Pulse →")}</Link>
       </div>
 
       <div className="mt-3">

@@ -66,7 +66,7 @@ export default function GuidedStartPage() {
 
   const { baselineMin, firstSessionMin, orientMin, winMin, totalMin } = firstRunMinutes(programmeId);
   const subtitle = fillCopy(t(programmeTemplate("start.subtitle", programmeId)), {
-    programme: t(programme?.name ?? "Super-Cube®"),
+    programme: t(programme?.name ?? t("Super-Cube®")),
   });
   const minutes = (n: number) => fill("{n} min", { n });
   const title = name

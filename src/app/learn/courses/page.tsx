@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import Image from "next/image";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -13,6 +15,8 @@ import { faceInkStyle } from "@/lib/contrast";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function CoursesPage() {
+  const { t } = useLmsT();
+
   const state = useLmsState();
 
   const programmeId = (state?.subscription?.programmeId ||
@@ -23,8 +27,8 @@ export default function CoursesPage() {
 
   return (
     <LearnShell
-      title="Step 4 of 6 · Develop the six faces"
-      subtitle={programmeCopy("courses.subtitle", programmeId, { programme: programme?.name ?? "Programme" })}
+      title={t("Step 4 of 6 · Develop the six faces")}
+      subtitle={programmeCopy("courses.subtitle", programmeId, { programme: programme?.name ?? t("Programme") })}
     >
       <PaywallCard />
       <div className="grid gap-3 sm:grid-cols-2 sm:gap-3.5 xl:grid-cols-3">
@@ -90,30 +94,21 @@ export default function CoursesPage() {
       </div>
 
       <div className="mt-6 rounded-2xl border border-line bg-elevated p-4 sm:p-5" data-testid="review-card">
-        <p className="learn-eyebrow">Make it stick</p>
-        <p className="mt-1 text-sm font-semibold text-ink">Spaced review on Day 3, 7 and 21, then the capstone</p>
-        <p className="learn-meta mt-0.5">
-          Three short mixed reviews bring back what you learned just as you start to forget it. The capstone
-          brings all six faces together in one case and a personal leadership plan.
-        </p>
+        <p className="learn-eyebrow">{t("Make it stick")}</p>
+        <p className="mt-1 text-sm font-semibold text-ink">{t("Spaced review on Day 3, 7 and 21, then the capstone")}</p>
+        <p className="learn-meta mt-0.5">{t("Three short mixed reviews bring back what you learned just as you start to forget it. The capstone brings all six faces together in one case and a personal leadership plan.")}</p>
         <div className="mt-3 flex flex-wrap gap-3">
-          <Link href="/learn/review" className="text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline">
-            Spaced review →
-          </Link>
+          <Link href="/learn/review" className="text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline">{t("Spaced review →")}</Link>
           <Link
             href="/learn/review/capstone"
             className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
-          >
-            Capstone
-          </Link>
+          >{t("Capstone")}</Link>
         </div>
       </div>
 
       <div className="mt-3 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
-        <p className="learn-eyebrow">After the full programme</p>
-        <p className="mt-1 text-sm font-semibold text-ink">
-          Steps 5 and 6 of 6 · Re-measure, then see your report
-        </p>
+        <p className="learn-eyebrow">{t("After the full programme")}</p>
+        <p className="mt-1 text-sm font-semibold text-ink">{t("Steps 5 and 6 of 6 · Re-measure, then see your report")}</p>
         <p className="learn-meta mt-0.5">
           {programmeCopy("courses.after", programmeId)}
         </p>
@@ -121,15 +116,11 @@ export default function CoursesPage() {
           <Link
             href="/learn/assessment/post"
             className="text-[0.8125rem] font-semibold text-ink underline-offset-2 hover:underline"
-          >
-            Post-assessment →
-          </Link>
+          >{t("Post-assessment →")}</Link>
           <Link
             href="/learn/report"
             className="text-[0.8125rem] font-semibold text-muted underline-offset-2 hover:text-ink hover:underline"
-          >
-            View report
-          </Link>
+          >{t("View report")}</Link>
         </div>
       </div>
     </LearnShell>

@@ -116,7 +116,7 @@ export default function WelcomeProfilePage() {
 
   return (
     <LearnShell
-      title="Welcome: tell us about you"
+      title={t("Welcome: tell us about you")}
       subtitle="A 60-second profile so Learn, Report, and your cohort fit who you are. Private on this device until you sign in."
       hideJourneyRail
     >
@@ -341,8 +341,8 @@ export default function WelcomeProfilePage() {
               <span className="learn-label">
                 {t(
                   cohortKind === "family"
-                    ? "Family code (optional)"
-                    : "Cohort / school / company code (optional)",
+                    ? t("Family code (optional)")
+                    : t("Cohort / school / company code (optional)"),
                 )}
               </span>
               <input

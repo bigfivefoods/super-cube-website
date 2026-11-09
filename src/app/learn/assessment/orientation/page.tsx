@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -65,6 +67,8 @@ function ChoiceGroup<T extends string>({
 }
 
 export default function OrientationAssessmentPage() {
+  const { t } = useLmsT();
+
   const router = useRouter();
   const [ready, setReady] = useState(false);
   const [programmeId, setProgrammeId] = useState<string | undefined>(undefined);
@@ -102,8 +106,8 @@ export default function OrientationAssessmentPage() {
 
   if (!ready) {
     return (
-      <LearnShell title="Pre-pre assessment">
-        <p className="learn-meta">Loading…</p>
+      <LearnShell title={t("Pre-pre assessment")}>
+        <p className="learn-meta">{t("Loading…")}</p>
       </LearnShell>
     );
   }
@@ -112,14 +116,12 @@ export default function OrientationAssessmentPage() {
 
   return (
     <LearnShell
-      title="Step 2 of 6 · Orient your mind"
+      title={t("Step 2 of 6 · Orient your mind")}
       subtitle={programmeCopy("orientation.subtitle", programmeId)}
     >
       <section className="learn-card mb-5 sm:mb-6">
-        <p className="learn-eyebrow">How leadership knowledge is layered</p>
-        <h2 className="learn-card-title mt-1.5 sm:text-base">
-          Philosophy → theory → model
-        </h2>
+        <p className="learn-eyebrow">{t("How leadership knowledge is layered")}</p>
+        <h2 className="learn-card-title mt-1.5 sm:text-base">{t("Philosophy → theory → model")}</h2>
         <p className="learn-body mt-2 max-w-3xl">{LEVEL_RELATIONSHIP}</p>
 
         <div className="mt-4 grid gap-2.5 md:grid-cols-3">
@@ -139,23 +141,14 @@ export default function OrientationAssessmentPage() {
         </div>
 
         <p className="learn-body mt-4 rounded-xl border border-line bg-surface px-3.5 py-2.5">
-          <strong className="font-semibold text-ink">Why this matters:</strong>{" "}
-          Super-Cube® is a leadership <em>model</em> grounded in theory and
-          philosophy. We first need to know whether you already hold a
-          philosophy, draw on theories, use models—or are just beginning—so we
-          can meet you at the right level.
-        </p>
+          <strong className="font-semibold text-ink">{t("Why this matters:")}</strong>{" "}
+          Super-Cube® is a leadership <em>model</em>{"grounded in theory and philosophy. We first need to know whether you already hold a philosophy, draw on theories, use models—or are just beginning—so we can meet you at the right level."}</p>
       </section>
 
       <div className="space-y-3.5">
         <section className="learn-card">
-          <h3 className="learn-card-title">
-            1. Do you know anything about leadership models?
-          </h3>
-          <p className="learn-meta mt-1">
-            Named frameworks people use to lead (for example Super-Cube®, GROW,
-            situational grids).
-          </p>
+          <h3 className="learn-card-title">{t("1. Do you know anything about leadership models?")}</h3>
+          <p className="learn-meta mt-1">{"Named frameworks people use to lead (for example Super-Cube®, GROW, situational grids)."}</p>
           <div className="mt-3">
             <ChoiceGroup<YesSomeNo>
               name="knowsModels"
@@ -164,18 +157,18 @@ export default function OrientationAssessmentPage() {
               options={[
                 {
                   value: "yes",
-                  label: "Yes",
-                  hint: "I can name or describe models",
+                  label: t("Yes"),
+                  hint: t("I can name or describe models"),
                 },
                 {
                   value: "some",
-                  label: "A little",
-                  hint: "I’ve heard of some",
+                  label: t("A little"),
+                  hint: t("I’ve heard of some"),
                 },
                 {
                   value: "no",
-                  label: "Not really",
-                  hint: "This is new to me",
+                  label: t("Not really"),
+                  hint: t("This is new to me"),
                 },
               ]}
             />
@@ -183,11 +176,8 @@ export default function OrientationAssessmentPage() {
         </section>
 
         <section className="learn-card">
-          <h3 className="learn-card-title">2. Do you use leadership models?</h3>
-          <p className="learn-meta mt-1">
-            In work, school, sport, family, or community—do you apply a model on
-            purpose?
-          </p>
+          <h3 className="learn-card-title">{t("2. Do you use leadership models?")}</h3>
+          <p className="learn-meta mt-1">{t("In work, school, sport, family, or community—do you apply a model on purpose?")}</p>
           <div className="mt-3">
             <ChoiceGroup<YesSomeNo>
               name="usesModels"
@@ -196,18 +186,18 @@ export default function OrientationAssessmentPage() {
               options={[
                 {
                   value: "yes",
-                  label: "Yes",
-                  hint: "I use models regularly",
+                  label: t("Yes"),
+                  hint: t("I use models regularly"),
                 },
                 {
                   value: "some",
-                  label: "Sometimes",
-                  hint: "Occasionally or informally",
+                  label: t("Sometimes"),
+                  hint: t("Occasionally or informally"),
                 },
                 {
                   value: "no",
                   label: "No",
-                  hint: "I don’t use named models yet",
+                  hint: t("I don’t use named models yet"),
                 },
               ]}
             />
@@ -215,35 +205,30 @@ export default function OrientationAssessmentPage() {
         </section>
 
         <section className="learn-card">
-          <h3 className="learn-card-title">
-            3. Which best describes your current perspective?
-          </h3>
-          <p className="learn-meta mt-1">
-            Choose the layer you most often think from when you lead or talk
-            about leadership.
-          </p>
+          <h3 className="learn-card-title">{t("3. Which best describes your current perspective?")}</h3>
+          <p className="learn-meta mt-1">{t("Choose the layer you most often think from when you lead or talk about leadership.")}</p>
           <div className="mt-3 grid gap-1.5 sm:grid-cols-2">
             {(
               [
                 {
                   value: "philosophy" as LeadershipLevel,
-                  label: "Philosophy perspective",
+                  label: t("Philosophy perspective"),
                   hint: "High-level concepts & values — what leadership means to me",
                 },
                 {
                   value: "theory" as LeadershipLevel,
-                  label: "Theory perspective",
-                  hint: "Middle-level theories — how and why leadership works",
+                  label: t("Theory perspective"),
+                  hint: t("Middle-level theories — how and why leadership works"),
                 },
                 {
                   value: "model" as LeadershipLevel,
-                  label: "Model perspective",
+                  label: t("Model perspective"),
                   hint: "Concrete, absolute models — frameworks I can apply step by step",
                 },
                 {
                   value: "none" as LeadershipLevel,
-                  label: "Not yet framed",
-                  hint: "I don’t yet have a clear philosophy, theory, or model",
+                  label: t("Not yet framed"),
+                  hint: t("I don’t yet have a clear philosophy, theory, or model"),
                 },
               ] as const
             ).map((opt) => {
@@ -274,34 +259,29 @@ export default function OrientationAssessmentPage() {
         </section>
 
         <section className="learn-card">
-          <h3 className="learn-card-title">
-            4. Assess your depth at each level
-          </h3>
-          <p className="learn-meta mt-1">
-            Be honest—this is not a test. It tells us whether you hold a
-            philosophy, a theory view, a model view, or are still forming one.
-          </p>
+          <h3 className="learn-card-title">{t("4. Assess your depth at each level")}</h3>
+          <p className="learn-meta mt-1">{t("Be honest—this is not a test. It tells us whether you hold a philosophy, a theory view, a model view, or are still forming one.")}</p>
 
           <div className="mt-4 space-y-5">
             {(
               [
                 {
                   key: "hasPhilosophy" as const,
-                  title: "Leadership philosophy (high level)",
+                  title: t("Leadership philosophy (high level)"),
                   prompt:
-                    "Do you have a personal leadership philosophy—core beliefs about what good leadership is?",
+                    t("Do you have a personal leadership philosophy—core beliefs about what good leadership is?"),
                 },
                 {
                   key: "hasTheory" as const,
-                  title: "Leadership theory (middle level)",
+                  title: t("Leadership theory (middle level)"),
                   prompt:
-                    "Do you draw on leadership theories that explain how leadership works?",
+                    t("Do you draw on leadership theories that explain how leadership works?"),
                 },
                 {
                   key: "hasModel" as const,
                   title: "Leadership model (applied / absolute)",
                   prompt:
-                    "Do you use one or more concrete leadership models with clear parts you can practise?",
+                    t("Do you use one or more concrete leadership models with clear parts you can practise?"),
                 },
               ] as const
             ).map((row) => (
@@ -314,9 +294,9 @@ export default function OrientationAssessmentPage() {
                     value={responses[row.key]}
                     onChange={(v) => patch(row.key, v)}
                     options={[
-                      { value: "yes", label: "Yes — clear" },
-                      { value: "emerging", label: "Emerging" },
-                      { value: "no", label: "Not yet" },
+                      { value: "yes", label: t("Yes — clear") },
+                      { value: "emerging", label: t("Emerging") },
+                      { value: "no", label: t("Not yet") },
                     ]}
                   />
                 </div>
@@ -326,16 +306,13 @@ export default function OrientationAssessmentPage() {
         </section>
 
         <section className="learn-card">
-          <h3 className="learn-card-title">5. Optional — name any you know</h3>
-          <p className="learn-meta mt-1">
-            Philosophies, theories, or models you already use or have heard of
-            (comma-separated is fine).
-          </p>
+          <h3 className="learn-card-title">{t("5. Optional — name any you know")}</h3>
+          <p className="learn-meta mt-1">{t("Philosophies, theories, or models you already use or have heard of (comma-separated is fine).")}</p>
           <textarea
             value={responses.knownExamples}
             onChange={(e) => patch("knownExamples", e.target.value)}
             rows={3}
-            placeholder="e.g. servant leadership, transformational theory, Super-Cube®…"
+            placeholder={t("e.g. servant leadership, transformational theory, Super-Cube®…")}
             className="learn-input mt-3 resize-y"
           />
         </section>
@@ -343,17 +320,15 @@ export default function OrientationAssessmentPage() {
         <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
           <p className="learn-meta">
             {complete
-              ? "Ready to save. You’ll see your perspective, then continue to the construct pre-assessment."
-              : "Answer questions 1–4 to continue."}
+              ? t("Ready to save. You’ll see your perspective, then continue to the construct pre-assessment.")
+              : t("Answer questions 1–4 to continue.")}
           </p>
           <button
             type="button"
             disabled={!complete}
             onClick={submit}
             className="learn-btn learn-btn-primary disabled:opacity-40"
-          >
-            Save orientation & continue
-          </button>
+          >{t("Save orientation & continue")}</button>
         </div>
       </div>
     </LearnShell>

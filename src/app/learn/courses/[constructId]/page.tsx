@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { CourseVideo } from "@/components/learn/CourseVideo";
@@ -20,6 +22,8 @@ const TYPE_LABEL: Record<string, string> = {
 };
 
 export default function CourseDetailPage() {
+  const { t } = useLmsT();
+
   const params = useParams();
   const constructId = params.constructId as ConstructId;
   const state = useLmsState();
@@ -33,8 +37,8 @@ export default function CourseDetailPage() {
 
   if (!course || !construct) {
     return (
-      <LearnShell title="Course">
-        <p className="learn-body">Course not found.</p>
+      <LearnShell title={t("Course")}>
+        <p className="learn-body">{t("Course not found.")}</p>
         <Link
           href="/learn/courses"
           className="mt-3 inline-block text-[0.8125rem] font-semibold text-ink"
@@ -91,7 +95,7 @@ export default function CourseDetailPage() {
               className="learn-btn text-white shadow-sm transition hover:opacity-95"
               style={{ background: construct.color }}
             >
-              {doneCount === 0 ? "Start module" : "Continue"}
+              {doneCount === 0 ? "Start module" : t("Continue")}
             </Link>
             <Link
               href="/learn/courses"
@@ -146,7 +150,7 @@ export default function CourseDetailPage() {
                     style={faceInkStyle(construct.color)}
                   >
                     {String(i + 1).padStart(2, "0")} ·{" "}
-                    {TYPE_LABEL[lesson.lessonType] ?? lesson.lessonType}
+                    {t(TYPE_LABEL[lesson.lessonType] ?? lesson.lessonType)}
                   </p>
                   <p className="mt-0.5 truncate text-[0.875rem] font-semibold tracking-tight text-ink">
                     {lesson.title}
@@ -159,7 +163,7 @@ export default function CourseDetailPage() {
                   }`}
                   style={done ? { background: construct.color } : undefined}
                 >
-                  {done ? "Done" : `${lesson.durationMinutes}m`}
+                  {done ? t("Done") : `${lesson.durationMinutes}m`}
                 </span>
               </Link>
             </li>

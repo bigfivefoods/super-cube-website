@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { ConstructId } from "@/lib/content";
@@ -40,6 +42,8 @@ export function CourseVideo({
   /** WebVTT captions (EN) for THIS video. Omit until a transcript-matched file exists. */
   captionsSrc?: string | null;
 }) {
+  const { t } = useLmsT();
+
   const src =
     srcProp ??
     (lessonId
@@ -230,9 +234,7 @@ export function CourseVideo({
 
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 p-2 text-center">
-          <p className="text-[0.65rem] font-medium text-white/90">
-            Video unavailable
-          </p>
+          <p className="text-[0.65rem] font-medium text-white/90">{t("Video unavailable")}</p>
         </div>
       )}
 

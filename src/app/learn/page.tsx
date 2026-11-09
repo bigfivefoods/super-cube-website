@@ -97,7 +97,7 @@ export default function LearnDashboardPage() {
       ? t(review.title)
       : fill("Day {n} · {name}", {
           n: review.day ?? 3,
-          name: t(review.day === 7 ? "Mix it up" : review.day === 21 ? "Lock it in" : "First recall"),
+          name: t(review.day === 7 ? "Mix it up" : review.day === 21 ? "Lock it in" : t("First recall")),
         });
   const step = t("Step {n} of {total}").replace("{n}", String(journey.current.n)).replace("{total}", String(journey.total));
   const eyebrow =
@@ -212,23 +212,23 @@ export default function LearnDashboardPage() {
         <LearnNavTile
           href="/learn/courses"
           kicker="Learning"
-          title="Six faces · courses"
+          title={t("Six faces · courses")}
           detail={fill("{pct}% of sessions done", { pct: journey.coursePct })}
           accent={LEARN_PROCESS_ACCENT.learning.color}
         />
         <LearnNavTile
           href={journalUnlocked ? "/learn/pulse" : journey.current.href}
           kicker="Journaling"
-          title="Daily check-in"
+          title={t("Daily check-in")}
           detail="Rate your faces, then a two-minute practice"
-          status={pulseToday ? "Done" : undefined}
+          status={pulseToday ? t("Done") : undefined}
           accent={LEARN_PROCESS_ACCENT.journaling.color}
         />
         {rewardsReady ? (
           <LearnNavTile
             href="/learn/report"
             kicker="Earned"
-            title="Growth report and certificate"
+            title={t("Growth report and certificate")}
             detail="The server has recorded your practice"
             accent={constructs[5].color}
           />

@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useState, type ReactNode } from "react";
 import { renderBody, renderInline } from "@/components/learn/LessonContent";
 import { SessionReflection } from "@/components/learn/SessionReflection";
@@ -19,9 +21,11 @@ const AUDIENCE: Record<ProgrammeId, string> = {
 };
 
 export function SessionNotes({ programmeId, constructId }: { programmeId: ProgrammeId; constructId: ConstructId }) {
+  const { t } = useLmsT();
+
   const notes = sessionNotes(programmeId, constructId);
   if (!notes.length) return null;
-  const label = { safety: "Health note", inclusive: "Everyone welcome", kids: "With a grown-up" } as const;
+  const label = { safety: t("Health note"), inclusive: t("Everyone welcome"), kids: t("With a grown-up") } as const;
   return (
     <div className="mb-3.5 space-y-2" data-testid="session-notes">
       {notes.map((n) => (
@@ -86,6 +90,8 @@ function splitIfThen(s: string): { when: string; then: string } {
 }
 
 function IfThenPlanner({ suggestion, lessonId, color, kids }: { suggestion: string; lessonId: string; color: string; kids: boolean }) {
+  const { t } = useLmsT();
+
   const initial = splitIfThen(suggestion);
   const [plan, setPlan] = useLocalField(`ifthen:${lessonId}`, initial);
   const [saved, setSaved] = useState(false);
@@ -116,7 +122,7 @@ function IfThenPlanner({ suggestion, lessonId, color, kids }: { suggestion: stri
             className="learn-input"
             value={plan.when}
             onChange={(e) => setPlan({ ...plan, when: e.target.value })}
-            placeholder="the situation or cue"
+            placeholder={t("the situation or cue")}
           />
         </label>
         <label className="grid gap-1 text-[0.75rem] font-semibold text-ink">
@@ -125,18 +131,16 @@ function IfThenPlanner({ suggestion, lessonId, color, kids }: { suggestion: stri
             className="learn-input"
             value={plan.then}
             onChange={(e) => setPlan({ ...plan, then: e.target.value })}
-            placeholder="the specific action"
+            placeholder={t("the specific action")}
           />
         </label>
         <div className="flex flex-wrap items-center gap-2">
-          <button type="submit" className="learn-btn learn-btn-primary text-white" style={{ background: color }}>
-            Save my plan
-          </button>
+          <button type="submit" className="learn-btn learn-btn-primary text-white" style={{ background: color }}>{t("Save my plan")}</button>
           <button type="button" className="learn-btn learn-btn-ghost" onClick={() => setPlan(initial)}>
             Use the suggestion
           </button>
           <span className="learn-meta" role="status">
-            {saved ? "Saved on this device" : ""}
+            {saved ? t("Saved on this device") : ""}
           </span>
         </div>
       </form>
@@ -145,6 +149,8 @@ function IfThenPlanner({ suggestion, lessonId, color, kids }: { suggestion: stri
 }
 
 function PracticeTick({ lessonId, text, color, kids }: { lessonId: string; text: string; color: string; kids: boolean }) {
+  const { t } = useLmsT();
+
   const [done, setDone] = useLocalField(`practice:${lessonId}`, false);
   return (
     <div>
@@ -157,7 +163,7 @@ function PracticeTick({ lessonId, text, color, kids }: { lessonId: string; text:
           checked={done}
           onChange={(e) => setDone(e.target.checked)}
         />
-        {kids ? "I tried it!" : "I've done this, or put it in my calendar with a real date"}
+        {kids ? t("I tried it!") : t("I've done this, or put it in my calendar with a real date")}
       </label>
     </div>
   );
@@ -179,6 +185,8 @@ export function SessionArc({
   programmeId: ProgrammeId;
   constructId: ConstructId;
 }) {
+  const { t } = useLmsT();
+
   const kids = programmeId === "kids";
   const [active, setActive] = useState<string>("hook");
 
@@ -200,7 +208,7 @@ export function SessionArc({
     <div style={faceInkStyle(color)} data-testid="session-arc">
       <SessionNotes programmeId={programmeId} constructId={constructId} />
 
-      <nav aria-label="The 8 steps of this session" className="mb-3">
+      <nav aria-label={t("The 8 steps of this session")} className="mb-3">
         <ol className="grid grid-cols-4 gap-1 sm:grid-cols-8">
           {ARC_STEPS.map((s, i) => {
             const on = active === s.id;
@@ -237,7 +245,7 @@ export function SessionArc({
           <div className={`space-y-1 ${kids ? "[&_p]:text-[0.9375rem] [&_li]:text-[0.9375rem]" : ""}`}>{renderBody(arc.core)}</div>
         </Step>
 
-        <Step id="example" n={3} label={kids ? "A story" : "Real-world example"} color={color}>
+        <Step id="example" n={3} label={kids ? t("A story") : t("Real-world example")} color={color}>
           <figure className="rounded-xl p-3.5 sm:p-4" style={{ background: colorSoft }}>
             <figcaption className="text-[0.875rem] font-semibold tracking-tight text-ink">{arc.example.title}</figcaption>
             <p className={`mt-1.5 leading-relaxed text-ink/90 ${kids ? "text-[0.9375rem]" : "text-[0.8125rem]"}`}>{arc.example.body}</p>
@@ -252,7 +260,7 @@ export function SessionArc({
         <Step id="reflect" n={4} label="Reflect" color={color}>
           <p className="text-[0.875rem] font-medium leading-relaxed text-ink">{arc.reflect}</p>
           <p className="learn-meta mt-1.5">
-            {kids ? "Talk about it with your grown-up." : "Take a minute to think. You can capture your answer in the journal at step 8."}
+            {kids ? t("Talk about it with your grown-up.") : t("Take a minute to think. You can capture your answer in the journal at step 8.")}
           </p>
         </Step>
 
@@ -264,9 +272,9 @@ export function SessionArc({
           <IfThenPlanner suggestion={arc.ifThen} lessonId={lessonId} color={color} kids={kids} />
         </Step>
 
-        <Step id="check" n={7} label={kids ? "Quick quiz" : "Check your understanding"} color={color}>
+        <Step id="check" n={7} label={kids ? t("Quick quiz") : t("Check your understanding")} color={color}>
           <p className="learn-meta mb-3">
-            {kids ? "Pick an answer. It's OK to get it wrong. That's how we learn!" : "Answer from memory. You'll get feedback straight away."}
+            {kids ? t("Pick an answer. It's OK to get it wrong. That's how we learn!") : t("Answer from memory. You'll get feedback straight away.")}
           </p>
           <RetrievalCheck
             questions={arc.check}
@@ -282,7 +290,7 @@ export function SessionArc({
         </Step>
       </div>
 
-      <FacilitatorGuide guide={arc.guide} audience={AUDIENCE[programmeId]} />
+      <FacilitatorGuide guide={arc.guide} audience={t(AUDIENCE[programmeId])} />
     </div>
   );
 }

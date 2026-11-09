@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 
@@ -75,6 +77,8 @@ function ShareIcon({ className }: { className?: string }) {
  * - iOS Safari: step-by-step Share → Add to Home Screen guide
  */
 export function InstallAppBanner() {
+  const { t } = useLmsT();
+
   const [deferred, setDeferred] = useState<BeforeInstallPromptEvent | null>(
     null,
   );
@@ -151,13 +155,11 @@ export function InstallAppBanner() {
           </div>
 
           <div className="min-w-0 flex-1">
-            <p className="text-[0.8125rem] font-semibold tracking-tight">
-              Super-Cube® Learn
-            </p>
+            <p className="text-[0.8125rem] font-semibold tracking-tight">{t("Super-Cube® Learn")}</p>
             <p className="text-[0.7rem] leading-snug text-white/65">
               {ios
-                ? "Add to your Home Screen for one-tap access and a full-screen app."
-                : "Install for offline-ready, full-screen learning."}
+                ? t("Add to your Home Screen for one-tap access and a full-screen app.")
+                : t("Install for offline-ready, full-screen learning.")}
             </p>
           </div>
 
@@ -169,7 +171,7 @@ export function InstallAppBanner() {
                 disabled={installing}
                 className="rounded-full bg-white px-3.5 py-2 text-[0.75rem] font-semibold text-ink disabled:opacity-60"
               >
-                {installing ? "…" : "Install"}
+                {installing ? "…" : t("Install")}
               </button>
             ) : (
               <button
@@ -177,15 +179,13 @@ export function InstallAppBanner() {
                 onClick={() => setShowGuide(true)}
                 className="inline-flex items-center gap-1.5 rounded-full bg-white px-3.5 py-2 text-[0.75rem] font-semibold text-ink"
               >
-                <ShareIcon className="h-3.5 w-3.5" />
-                Add to Home
-              </button>
+                <ShareIcon className="h-3.5 w-3.5" />{t("Add to Home")}</button>
             )}
             <button
               type="button"
               onClick={dismiss}
               className="rounded-full px-2.5 py-2 text-[0.7rem] font-semibold text-white/55 hover:text-white"
-              aria-label="Dismiss install prompt"
+              aria-label={t("Dismiss install prompt")}
             >
               ✕
             </button>
@@ -205,19 +205,12 @@ export function InstallAppBanner() {
         >
           <div className="w-full max-w-md overflow-hidden rounded-2xl bg-elevated shadow-2xl">
             <div className="border-b border-line px-5 py-4">
-              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-                Install app
-              </p>
+              <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">{t("Install app")}</p>
               <h2
                 id="install-guide-title"
                 className="mt-1 text-lg font-semibold tracking-tight text-ink"
-              >
-                Add Super-Cube® to your Home Screen
-              </h2>
-              <p className="mt-1 text-sm text-slate">
-                Takes about 10 seconds in Safari. Opens full-screen like a
-                native app.
-              </p>
+              >{t("Add Super-Cube® to your Home Screen")}</h2>
+              <p className="mt-1 text-sm text-slate">{t("Takes about 10 seconds in Safari. Opens full-screen like a native app.")}</p>
             </div>
 
             <ol className="space-y-4 px-5 py-5">
@@ -226,14 +219,11 @@ export function InstallAppBanner() {
                   1
                 </span>
                 <div className="min-w-0 pt-0.5">
-                  <p className="text-sm font-semibold text-ink">
-                    Tap the Share button
-                  </p>
+                  <p className="text-sm font-semibold text-ink">{t("Tap the Share button")}</p>
                   <p className="mt-0.5 text-[0.8125rem] text-slate">
                     In Safari, use the{" "}
                     <span className="inline-flex items-center gap-0.5 font-semibold text-ink">
-                      <ShareIcon className="inline h-3.5 w-3.5" /> Share
-                    </span>{" "}
+                      <ShareIcon className="inline h-3.5 w-3.5" />{t("Share")}</span>{" "}
                     icon at the bottom of the screen (or top on iPad).
                   </p>
                 </div>
@@ -243,13 +233,8 @@ export function InstallAppBanner() {
                   2
                 </span>
                 <div className="min-w-0 pt-0.5">
-                  <p className="text-sm font-semibold text-ink">
-                    Scroll and tap “Add to Home Screen”
-                  </p>
-                  <p className="mt-0.5 text-[0.8125rem] text-slate">
-                    You may need to swipe the share sheet up to see it. Look for
-                    the icon with a + on a square.
-                  </p>
+                  <p className="text-sm font-semibold text-ink">{t("Scroll and tap “Add to Home Screen”")}</p>
+                  <p className="mt-0.5 text-[0.8125rem] text-slate">{t("You may need to swipe the share sheet up to see it. Look for the icon with a + on a square.")}</p>
                 </div>
               </li>
               <li className="flex gap-3">
@@ -257,11 +242,8 @@ export function InstallAppBanner() {
                   3
                 </span>
                 <div className="min-w-0 pt-0.5">
-                  <p className="text-sm font-semibold text-ink">Tap Add</p>
-                  <p className="mt-0.5 text-[0.8125rem] text-slate">
-                    Confirm the name “Super-Cube® Learn”, then open it from your
-                    Home Screen anytime.
-                  </p>
+                  <p className="text-sm font-semibold text-ink">{t("Tap Add")}</p>
+                  <p className="mt-0.5 text-[0.8125rem] text-slate">{t("Confirm the name “Super-Cube® Learn”, then open it from your Home Screen anytime.")}</p>
                 </div>
               </li>
             </ol>
@@ -278,15 +260,10 @@ export function InstallAppBanner() {
                 type="button"
                 onClick={dismiss}
                 className="min-h-11 shrink-0 rounded-full border border-line-strong px-4 text-sm font-semibold text-ink"
-              >
-                Not now
-              </button>
+              >{t("Not now")}</button>
             </div>
 
-            <p className="px-5 pb-4 text-center text-[0.65rem] text-muted">
-              Must use Safari on iPhone. Chrome on iOS cannot add this site to
-              Home Screen the same way.
-            </p>
+            <p className="px-5 pb-4 text-center text-[0.65rem] text-muted">{t("Must use Safari on iPhone. Chrome on iOS cannot add this site to Home Screen the same way.")}</p>
           </div>
         </div>
       )}

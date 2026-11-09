@@ -14,7 +14,7 @@ import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
  */
 export default function LearnDemoPage() {
   const router = useRouter();
-  const { locale, L } = useLmsT();
+  const { t, locale, L } = useLmsT();
   const [busy, setBusy] = useState<ProgrammeId | null>(null);
 
   function start(programmeId: ProgrammeId) {
@@ -35,15 +35,15 @@ export default function LearnDemoPage() {
 
   return (
     <LearnShell
-      title="Try Super-Cube® free"
+      title={t("Try Super-Cube® free")}
       subtitle="Try sample sessions on this device: orientation, your baseline, and two sample sessions. No card required. The full pathway, after-test and certificate need paid access or a cohort seat."
     >
       <div className="mb-5 rounded-2xl border border-line bg-elevated p-4 sm:p-5">
-        <p className="learn-eyebrow">What you get</p>
+        <p className="learn-eyebrow">{t("What you get")}</p>
         <ul className="mt-2 space-y-1.5 text-[0.8125rem] leading-relaxed text-slate">
-          <li>· Pre-pre orientation + baseline self-assessment</li>
-          <li>· Two free sample sessions from the Choices face</li>
-          <li>· Session reflections, streak, and growth report tools</li>
+          <li>{t("· Pre-pre orientation + baseline self-assessment")}</li>
+          <li>{t("· Two free sample sessions from the Choices face")}</li>
+          <li>{t("· Session reflections, streak, and growth report tools")}</li>
           <li>
             · Private to this browser until you create an account &amp; sync
           </li>
@@ -67,7 +67,7 @@ export default function LearnDemoPage() {
               {p.tagline}
             </p>
             <span className="mt-3 text-[0.8125rem] font-semibold text-ink">
-              {busy === p.id ? "Starting…" : "Start free demo →"}
+              {busy === p.id ? "Starting…" : t("Start free demo →")}
             </span>
           </button>
         ))}
@@ -78,16 +78,12 @@ export default function LearnDemoPage() {
         <Link
           href="/pricing"
           className="font-semibold text-ink underline-offset-2 hover:underline"
-        >
-          See pricing
-        </Link>{" "}
+        >{t("See pricing")}</Link>{" "}
         · Already learning?{" "}
         <Link
           href="/learn"
           className="font-semibold text-ink underline-offset-2 hover:underline"
-        >
-          Dashboard
-        </Link>
+        >{t("Dashboard")}</Link>
       </p>
     </LearnShell>
   );

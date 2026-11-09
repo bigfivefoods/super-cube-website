@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +21,8 @@ const TIER_WORD = ["", "first light", "glowing", "bright", "fully lit"];
  * quiet animation (none at all with prefers-reduced-motion).
  */
 export function CelebrationToast() {
+  const { t } = useLmsT();
+
   const trigger = useLmsState();
   const pathname = usePathname();
   const [toast, setToast] = useState<Toast | null>(null);
@@ -103,12 +107,10 @@ export function CelebrationToast() {
           <p className="text-[0.9375rem] font-semibold tracking-tight text-ink">{toast.title}</p>
           <p className="mt-0.5 text-[0.8125rem] leading-snug text-slate">{toast.detail}</p>
           {pathname !== "/learn/progress" && (
-            <Link href={face ? `/learn/progress?lit=${face}` : "/learn/progress"} className="mt-1.5 inline-block text-[0.8125rem] font-semibold text-ink underline underline-offset-2">
-              See your cube
-            </Link>
+            <Link href={face ? `/learn/progress?lit=${face}` : "/learn/progress"} className="mt-1.5 inline-block text-[0.8125rem] font-semibold text-ink underline underline-offset-2">{t("See your cube")}</Link>
           )}
         </div>
-        <button type="button" onClick={() => setToast(null)} className="relative -mr-1 -mt-1 flex h-9 w-9 items-center justify-center rounded-full text-slate hover:text-ink" aria-label="Dismiss">
+        <button type="button" onClick={() => setToast(null)} className="relative -mr-1 -mt-1 flex h-9 w-9 items-center justify-center rounded-full text-slate hover:text-ink" aria-label={t("Dismiss")}>
           ×
         </button>
       </div>

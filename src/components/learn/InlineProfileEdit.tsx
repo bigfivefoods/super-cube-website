@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useState } from "react";
 import {
   COHORT_KINDS,
@@ -16,6 +18,8 @@ export function InlineProfileEdit({
   state: LocalLmsState;
   onSaved: (s: LocalLmsState) => void;
 }) {
+  const { t } = useLmsT();
+
   const profile = getProfile(state);
   const [open, setOpen] = useState(false);
   const [goal, setGoal] = useState(profile?.goal || "");
@@ -51,16 +55,16 @@ export function InlineProfileEdit({
   return (
     <div className="mt-3 space-y-3 rounded-xl border border-line bg-surface p-3">
       <label className="block">
-        <span className="learn-label">Goal</span>
+        <span className="learn-label">{t("Goal")}</span>
         <textarea
           className="learn-input mt-1 min-h-[3.5rem] w-full"
           value={goal}
           onChange={(e) => setGoal(e.target.value)}
-          placeholder="What leadership growth matters most this season?"
+          placeholder={t("What leadership growth matters most this season?")}
         />
       </label>
       <div>
-        <p className="learn-label">Learning mode</p>
+        <p className="learn-label">{t("Learning mode")}</p>
         <div className="mt-1.5 flex flex-wrap gap-1.5">
           {COHORT_KINDS.map((c) => (
             <button
@@ -80,12 +84,12 @@ export function InlineProfileEdit({
       </div>
       {cohortKind !== "solo" && (
         <label className="block">
-          <span className="learn-label">Family / cohort code</span>
+          <span className="learn-label">{t("Family / cohort code")}</span>
           <input
             className="learn-input mt-1 w-full"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
-            placeholder="e.g. FAMILY-ABC"
+            placeholder={t("e.g. FAMILY-ABC")}
             maxLength={24}
           />
         </label>
@@ -95,9 +99,7 @@ export function InlineProfileEdit({
           type="button"
           onClick={save}
           className="learn-btn learn-btn-primary"
-        >
-          Save
-        </button>
+        >{t("Save")}</button>
         <button
           type="button"
           onClick={() => setOpen(false)}

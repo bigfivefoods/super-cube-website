@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -33,6 +35,8 @@ const REPORT_PARTS = [
  * with a gentle prompt to sign in and a preview of the full report.
  */
 export default function ProgressPage() {
+  const { t } = useLmsT();
+
   const state = useLmsState();
   const [mounted, setMounted] = useState(false);
   const [auth, setAuth] = useState<Auth>("pending");
@@ -66,23 +70,21 @@ export default function ProgressPage() {
 
   if (!mounted) {
     return (
-      <LearnShell title="Progress" subtitle="Your Super-Cube® lighting up, face by face.">
-        <div className="h-96 animate-pulse rounded-2xl border border-line bg-elevated motion-reduce:animate-none" aria-busy="true" aria-label="Loading your progress" />
+      <LearnShell title={t("Progress")} subtitle="Your Super-Cube® lighting up, face by face.">
+        <div className="h-96 animate-pulse rounded-2xl border border-line bg-elevated motion-reduce:animate-none" aria-busy="true" aria-label={t("Loading your progress")} />
       </LearnShell>
     );
   }
 
   return (
-    <LearnShell title="Progress" subtitle="Your Super-Cube® lighting up, face by face: every session, practice and review adds light.">
+    <LearnShell title={t("Progress")} subtitle="Your Super-Cube® lighting up, face by face: every session, practice and review adds light.">
       {auth === "out" && (
         <div className="mb-4 flex flex-col gap-2 rounded-2xl border border-line bg-elevated p-4 sm:flex-row sm:items-center sm:justify-between" data-testid="save-prompt">
           <p className="text-[0.875rem] leading-snug text-ink">
-            <span className="font-semibold">Saved on this device.</span>{" "}
-            <span className="text-slate">Sign in to keep your progress on every device and count it towards your certificate.</span>
+            <span className="font-semibold">{t("Saved on this device.")}</span>{" "}
+            <span className="text-slate">{t("Sign in to keep your progress on every device and count it towards your certificate.")}</span>
           </p>
-          <Link href="/login?next=/learn/progress" className="learn-btn learn-btn-secondary shrink-0">
-            Sign in to save
-          </Link>
+          <Link href="/login?next=/learn/progress" className="learn-btn learn-btn-secondary shrink-0">{t("Sign in to save")}</Link>
         </div>
       )}
 
@@ -100,9 +102,7 @@ export default function ProgressPage() {
       </div>
 
       <section className="mt-4 rounded-2xl border border-line bg-elevated p-4 sm:p-5" aria-labelledby="baseline-h" data-testid="baseline-preview">
-        <h2 id="baseline-h" className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">
-          Your baseline profile
-        </h2>
+        <h2 id="baseline-h" className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-slate">{t("Your baseline profile")}</h2>
         {pre ? (
           <div className="mt-2 flex flex-col items-center gap-3 sm:flex-row sm:items-start">
             <RadarChart scores={pre.result.constructScores} size={260} table="toggle" />
@@ -113,9 +113,7 @@ export default function ProgressPage() {
         ) : (
           <p className="mt-1 text-[0.875rem] leading-snug text-slate">
             Take the free baseline (28 statements plus one quick check, about 5 minutes) to see your starting Super-Cube® profile.{" "}
-            <Link href="/learn/assessment/pre" className="font-semibold text-ink underline underline-offset-2">
-              Start the baseline
-            </Link>
+            <Link href="/learn/assessment/pre" className="font-semibold text-ink underline underline-offset-2">{t("Start the baseline")}</Link>
           </p>
         )}
       </section>
@@ -127,9 +125,7 @@ export default function ProgressPage() {
         data-testid="full-report-teaser"
       >
         <div className="p-4 sm:p-5">
-          <h2 id="full-report-h" className="text-[1rem] font-semibold tracking-tight text-ink">
-            Full growth report
-          </h2>
+          <h2 id="full-report-h" className="text-[1rem] font-semibold tracking-tight text-ink">{t("Full growth report")}</h2>
           <ul className="mt-2 grid gap-1.5 sm:grid-cols-2">
             {REPORT_PARTS.map((p) => (
               <li key={p} className="flex gap-2 text-[0.8125rem] leading-snug text-ink">
@@ -145,20 +141,16 @@ export default function ProgressPage() {
               ))}
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <span className="rounded-full bg-elevated px-3 py-1 text-[0.75rem] font-semibold text-ink shadow">Preview</span>
+              <span className="rounded-full bg-elevated px-3 py-1 text-[0.75rem] font-semibold text-ink shadow">{t("Preview")}</span>
             </div>
           </div>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             {auth === "in" ? (
-              <Link href="/learn/report" className="learn-btn learn-btn-primary">
-                Open your full report
-              </Link>
+              <Link href="/learn/report" className="learn-btn learn-btn-primary">{t("Open your full report")}</Link>
             ) : (
               <>
-                <Link href="/login?next=/learn/report" className="learn-btn learn-btn-primary">
-                  Sign in to open it
-                </Link>
-                <span className="learn-meta">Free to view your baseline report once you’re signed in.</span>
+                <Link href="/login?next=/learn/report" className="learn-btn learn-btn-primary">{t("Sign in to open it")}</Link>
+                <span className="learn-meta">{t("Free to view your baseline report once you’re signed in.")}</span>
               </>
             )}
           </div>

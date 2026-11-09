@@ -43,7 +43,7 @@ export default function LessonPlayerPage() {
   const constructId = params.constructId as ConstructId;
   const lessonId = params.lessonId as string;
   const state = useLmsState();
-  const { td } = useLmsT();
+  const { t, td, fill } = useLmsT();
   const [winBanner, setWinBanner] = useState<string | null>(null);
   const [syncNote, setSyncNote] = useState<string | null>(null);
   const [masteryPrompt, setMasteryPrompt] = useState<MasteryPrompt | null>(null);
@@ -168,13 +168,11 @@ export default function LessonPlayerPage() {
 
   if (!data || !construct) {
     return (
-      <LearnShell title="Session not found">
-        <p className="learn-body">This session isn’t part of your programme.</p>
+      <LearnShell title={t("Session not found")}>
+        <p className="learn-body">{t("This session isn’t part of your programme.")}</p>
         <div className="mt-3 flex flex-wrap gap-2">
-          <Link href={construct ? `/learn/courses/${constructId}` : "/learn/courses"} className="learn-btn learn-btn-primary">
-            Back to module
-          </Link>
-          <Link href="/learn/courses" className="learn-btn learn-btn-ghost">All courses</Link>
+          <Link href={construct ? `/learn/courses/${constructId}` : "/learn/courses"} className="learn-btn learn-btn-primary">{t("Back to module")}</Link>
+          <Link href="/learn/courses" className="learn-btn learn-btn-ghost">{t("All courses")}</Link>
         </div>
       </LearnShell>
     );
@@ -205,7 +203,12 @@ export default function LessonPlayerPage() {
   return (
     <LearnShell
       title={data.lesson.title}
-      subtitle={`${TYPE_LABEL[data.lesson.lessonType] ?? "Session"} ${idx + 1} of ${data.course.lessons.length} · ~${data.lesson.durationMinutes} min`}
+      subtitle={fill("{type} {n} of {total} · ~{mins} min", {
+        type: t(TYPE_LABEL[data.lesson.lessonType] ?? "Session"),
+        n: idx + 1,
+        total: data.course.lessons.length,
+        mins: data.lesson.durationMinutes,
+      })}
     >
       <div
         className="mb-4 overflow-hidden rounded-2xl border border-line"
@@ -223,7 +226,7 @@ export default function LessonPlayerPage() {
               Face {faceIndex + 1} of {constructs.length}
             </span>
           </div>
-          <ol className="mt-2.5 flex flex-wrap gap-1" aria-label="The six faces">
+          <ol className="mt-2.5 flex flex-wrap gap-1" aria-label={t("The six faces")}>
             {constructs.map((c, i) => {
               const here = c.id === constructId;
               return (
@@ -262,12 +265,12 @@ export default function LessonPlayerPage() {
           </div>
           <p className={`learn-meta mt-2${data.lesson.arc ? " hidden sm:block" : ""}`}>
             {data.lesson.arc
-              ? "8 steps: hook, core idea, example, reflect, micro-practice, if–then plan, check and journal. The 15-second face intro plays on the module page."
+              ? t("8 steps: hook, core idea, example, reflect, micro-practice, if–then plan, check and journal. The 15-second face intro plays on the module page.")
               : data.lesson.lab
-                ? "Challenge → WOOP plan → checklist → reflect"
+                ? t("Challenge → WOOP plan → checklist → reflect")
                 : data.lesson.faceCheck
-                  ? "Recall every skill → teach it back → lock one habit"
-                  : "Read → Engage → Apply"}
+                  ? t("Recall every skill → teach it back → lock one habit")
+                  : t("Read → Engage → Apply")}
           </p>
           {data.lesson.arc && (
             <Link
@@ -337,9 +340,7 @@ export default function LessonPlayerPage() {
           style={{ boxShadow: `inset 3px 0 0 ${color}` }}
           role="status"
         >
-          <p className="learn-eyebrow" style={{ color }}>
-            Win of the day
-          </p>
+          <p className="learn-eyebrow" style={{ color }}>{t("Win of the day")}</p>
           <p className="mt-1 text-[0.9375rem] font-semibold leading-snug text-ink">
             {winBanner}
           </p>
@@ -349,7 +350,7 @@ export default function LessonPlayerPage() {
             className="learn-btn learn-btn-primary mt-3 text-white"
             style={{ background: color }}
           >
-            {next ? "Continue to next session →" : "Back to module →"}
+            {next ? t("Continue to next session →") : t("Back to module →")}
           </button>
         </div>
       )}
@@ -366,17 +367,13 @@ export default function LessonPlayerPage() {
             <Link
               href={`/learn/courses/${constructId}/${prev.id}`}
               className="text-muted underline-offset-2 hover:text-ink hover:underline"
-            >
-              Previous
-            </Link>
+            >{t("Previous")}</Link>
           )}
           {next && (
             <Link
               href={`/learn/courses/${constructId}/${next.id}`}
               className="text-muted underline-offset-2 hover:text-ink hover:underline"
-            >
-              Skip ahead
-            </Link>
+            >{t("Skip ahead")}</Link>
           )}
         </div>
         <button
@@ -387,11 +384,11 @@ export default function LessonPlayerPage() {
         >
           {done
             ? next
-              ? "Completed · next session"
-              : "Completed · back to module"
+              ? t("Completed · next session")
+              : t("Completed · back to module")
             : next
-              ? "Mark complete & continue"
-              : "Mark complete · finish module"}
+              ? t("Mark complete & continue")
+              : t("Mark complete · finish module")}
         </button>
       </div>
     </LearnShell>

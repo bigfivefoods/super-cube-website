@@ -1,10 +1,14 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import type { JourneySnapshot } from "@/lib/lms/journey";
 
 /** Beautiful integrated pathway strip — where you are, not a second nav. */
 export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
+  const { t } = useLmsT();
+
   return (
     <section
       id="journey"
@@ -12,9 +16,7 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
     >
       <div className="flex flex-col gap-4 border-b border-line px-5 py-5 sm:flex-row sm:items-end sm:justify-between sm:px-6">
         <div>
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">
-            Your journey
-          </p>
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-muted">{t("Your journey")}</p>
           <h2 className="mt-1 text-lg font-semibold tracking-tight text-ink sm:text-xl">
             Step {journey.current.n} of {journey.total} ·{" "}
             {journey.current.title}
@@ -66,7 +68,7 @@ export function LearnJourneyStrip({ journey }: { journey: JourneySnapshot }) {
                   {locked ? (
                     <span
                       className="flex h-9 w-9 items-center justify-center rounded-full border border-line-strong bg-elevated text-[0.7rem] font-bold text-muted"
-                      title="Complete previous steps first"
+                      title={t("Complete previous steps first")}
                     >
                       {step.n}
                     </span>

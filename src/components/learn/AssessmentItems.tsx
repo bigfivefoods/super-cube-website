@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import type { AssessmentOption } from "@/lib/lms/assessment-items";
 import { LIKERT_LABELS } from "@/lib/lms/assessment-items";
 
@@ -23,6 +25,8 @@ export function LikertQuestion({
   /** v1 shows numbers with end labels; v2 shows every label */
   compactLabels?: boolean;
 }) {
+  const { t } = useLmsT();
+
   const showWords = !compactLabels && labels !== LIKERT_LABELS;
   return (
     <fieldset
@@ -73,7 +77,7 @@ export function LikertQuestion({
         <span>
           <span className="sr-only">and </span>
           {labels[4]}
-          <span className="sr-only"> is 5. Keys 1 to 5 answer.</span>
+          <span className="sr-only">{t("is 5. Keys 1 to 5 answer.")}</span>
         </span>
       </div>
     </fieldset>
@@ -101,6 +105,8 @@ export function SjtQuestion({
   reveal?: boolean;
   color?: string;
 }) {
+  const { t } = useLmsT();
+
   const best = Math.max(...options.map((o) => o.key));
   return (
     <fieldset
@@ -114,10 +120,8 @@ export function SjtQuestion({
         onChange(n);
       }}
     >
-      <legend className="sr-only">Situation</legend>
-      <p className="learn-eyebrow" style={{ color }}>
-        Situation
-      </p>
+      <legend className="sr-only">{t("Situation")}</legend>
+      <p className="learn-eyebrow" style={{ color }}>{t("Situation")}</p>
       <p className="mt-1 text-[0.875rem] font-medium leading-relaxed text-ink">{scenario}</p>
       <p className="learn-meta mt-2" id={`${id}-instr`}>
         {instruction}
@@ -156,7 +160,7 @@ export function SjtQuestion({
                   {reveal && (
                     <span className="mt-1 block text-[0.75rem] text-muted">
                       <strong className={isBest ? "text-emerald-800 dark:text-emerald-300" : "text-ink"}>
-                        {isBest ? "Most effective" : `Effectiveness ${opt.key} of 4`}
+                        {isBest ? t("Most effective") : `Effectiveness ${opt.key} of 4`}
                       </strong>
                       {opt.why ? ` · ${opt.why}` : ""}
                     </span>

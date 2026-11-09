@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useMemo } from "react";
 import { constructs } from "@/lib/content";
 import { formatDateTimeZA } from "@/lib/datetime";
@@ -42,6 +44,8 @@ export function CohortImpact({
   cohortCode: string;
   now: number;
 }) {
+  const { t } = useLmsT();
+
   const faces = useMemo(() => faceImpact(roster, constructs.map((c) => ({ id: c.id, name: c.name }))), [roster]);
   const overall = useMemo(() => overallImpact(roster), [roster]);
   const steps = useMemo(() => funnel(roster), [roster]);
@@ -72,31 +76,27 @@ export function CohortImpact({
     <section className="learn-card min-w-0 lg:col-span-2" aria-labelledby="impact-h" data-testid="cohort-impact">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <h2 id="impact-h" className="learn-card-title">
-            Cohort impact
-          </h2>
+          <h2 id="impact-h" className="learn-card-title">{t("Cohort impact")}</h2>
           <p className="learn-meta mt-0.5">
             {cohortName} · {learners} learner{learners === 1 ? "" : "s"} · consented scores only, never journals
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button type="button" onClick={downloadCsv} className="learn-btn learn-btn-ghost" data-testid="roi-csv">
-            Download CSV
-          </button>
+          <button type="button" onClick={downloadCsv} className="learn-btn learn-btn-ghost" data-testid="roi-csv">{t("Download CSV")}</button>
           <button type="button" onClick={() => void downloadPdf()} className="learn-btn learn-btn-primary" data-testid="roi-pdf">
             ROI pack (PDF)
           </button>
         </div>
       </div>
 
-      <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">Before and after, by face</h3>
+      <h3 className="mt-5 text-[0.875rem] font-semibold text-ink">{t("Before and after, by face")}</h3>
       <p className="learn-meta mt-0.5">
         Paired learners only (baseline and re-measure). Means on a 0–100 scale with 95% confidence intervals; Cohen&apos;s
         d of 0.2 is small, 0.5 medium, 0.8 large. Faces with fewer than {MIN_GROUP} learners stay hidden.
       </p>
       {/* Phones: one card per face */}
       <ul className="mt-3 space-y-2 sm:hidden">
-        {[...faces.map((f) => ({ key: f.id, name: f.name, r: f.result })), { key: "overall", name: "Overall", r: overall }].map(
+        {[...faces.map((f) => ({ key: f.id, name: f.name, r: f.result })), { key: "overall", name: t("Overall"), r: overall }].map(
           ({ key, name, r }) => (
             <li key={key} className={`rounded-xl border p-3 ${key === "overall" ? "border-ink/25 bg-surface" : "border-line"}`}>
               <div className="flex items-baseline justify-between gap-2">
@@ -137,16 +137,16 @@ export function CohortImpact({
           <caption className="sr-only">Before and after scores by face with 95% confidence intervals and Cohen&apos;s d</caption>
           <thead>
             <tr className="border-b border-line text-[0.6875rem] uppercase tracking-[0.08em] text-slate">
-              <th scope="col" className="py-2 pr-3 font-semibold">Face</th>
+              <th scope="col" className="py-2 pr-3 font-semibold">{t("Face")}</th>
               <th scope="col" className="py-2 pr-3 font-semibold">n</th>
-              <th scope="col" className="py-2 pr-3 font-semibold">Before</th>
-              <th scope="col" className="py-2 pr-3 font-semibold">After</th>
-              <th scope="col" className="py-2 pr-3 font-semibold">Change (95% CI)</th>
+              <th scope="col" className="py-2 pr-3 font-semibold">{t("Before")}</th>
+              <th scope="col" className="py-2 pr-3 font-semibold">{t("After")}</th>
+              <th scope="col" className="py-2 pr-3 font-semibold">{t("Change (95% CI)")}</th>
               <th scope="col" className="py-2 font-semibold">Cohen&apos;s d</th>
             </tr>
           </thead>
           <tbody>
-            {[...faces.map((f) => ({ key: f.id, name: f.name, r: f.result })), { key: "overall", name: "Overall", r: overall }].map(
+            {[...faces.map((f) => ({ key: f.id, name: f.name, r: f.result })), { key: "overall", name: t("Overall"), r: overall }].map(
               ({ key, name, r }) => (
                 <tr key={key} className={`border-b border-line align-top ${key === "overall" ? "font-semibold" : ""}`} data-testid={`impact-${key}`}>
                   <th scope="row" className="py-2 pr-3 font-semibold text-ink">{name}</th>
@@ -180,7 +180,7 @@ export function CohortImpact({
 
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <div>
-          <h3 className="text-[0.875rem] font-semibold text-ink">Completion funnel</h3>
+          <h3 className="text-[0.875rem] font-semibold text-ink">{t("Completion funnel")}</h3>
           <ol className="mt-2 space-y-1.5" data-testid="funnel">
             {steps.map((s) => (
               <li key={s.id}>
@@ -198,9 +198,9 @@ export function CohortImpact({
           </ol>
         </div>
         <div>
-          <h3 className="text-[0.875rem] font-semibold text-ink">Who might need a check-in</h3>
+          <h3 className="text-[0.875rem] font-semibold text-ink">{t("Who might need a check-in")}</h3>
           {risk.length === 0 ? (
-            <p className="learn-meta mt-2">Nobody flagged right now.</p>
+            <p className="learn-meta mt-2">{t("Nobody flagged right now.")}</p>
           ) : (
             <ul className="mt-2 space-y-2" data-testid="at-risk">
               {risk.map((r) => (
@@ -215,7 +215,7 @@ export function CohortImpact({
               ))}
             </ul>
           )}
-          <p className="learn-meta mt-2">Flags are prompts for a supportive conversation, not a judgement.</p>
+          <p className="learn-meta mt-2">{t("Flags are prompts for a supportive conversation, not a judgement.")}</p>
         </div>
       </div>
     </section>

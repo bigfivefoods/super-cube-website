@@ -92,13 +92,13 @@ export function CheckinPanel({ minor, programmeId }: { minor: boolean; programme
 
   return (
     <section className="learn-card mt-4 sm:mt-5 print:break-inside-avoid" aria-labelledby="checkin-h" data-testid="checkin-panel">
-      <p className="learn-eyebrow">Super-Cube®</p>
+      <p className="learn-eyebrow">{t("Super-Cube®")}</p>
       <h2 id="checkin-h" className="learn-card-title">{t("Manager and peer check-in")}</h2>
       <p className="learn-body mt-1">
         {t("Invite your manager and peers by email. They rate you on the same six Super-Cube® faces as your self-report. You see your score next to theirs.")}
       </p>
       <p className="learn-meta mt-1">
-        {t("Your manager's rating is shown to you. Peer ratings stay hidden until at least 3 peers have answered, so one colleague cannot be singled out.")}
+        {"Your manager's rating is shown to you. Peer ratings stay hidden until at least 3 peers have answered, so one colleague cannot be singled out."}
       </p>
       <p className="learn-meta mt-1">{t("Development only. These ratings are not for pay, hiring or discipline.")}</p>
 

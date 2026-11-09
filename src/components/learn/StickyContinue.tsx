@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -24,6 +26,8 @@ function isUrgent(a: NextBestAction | null): a is NextBestAction {
  * Hidden on focused flows and when nothing is urgent.
  */
 export function StickyContinue() {
+  const { t } = useLmsT();
+
   const journey = useJourney();
   const pathname = usePathname();
   const [ready, setReady] = useState(false);

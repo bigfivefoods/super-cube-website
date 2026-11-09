@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { formatDateZA } from "@/lib/datetime";
 import { EngagementPanel } from "@/components/learn/EngagementPanel";
 import Link from "next/link";
@@ -42,11 +44,13 @@ import { getProgramme, type ProgrammeId } from "@/lib/programmes";
 import { programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function AccountPage() {
+  const { t } = useLmsT();
+
   return (
     <Suspense
       fallback={
-        <LearnShell title="You">
-          <p className="learn-meta">Loading…</p>
+        <LearnShell title={t("You")}>
+          <p className="learn-meta">{t("Loading…")}</p>
         </LearnShell>
       }
     >
@@ -56,6 +60,8 @@ export default function AccountPage() {
 }
 
 function AccountPageInner() {
+  const { t } = useLmsT();
+
   const searchParams = useSearchParams();
   const [state, setState] = useState<LocalLmsState | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -149,8 +155,8 @@ function AccountPageInner() {
               } else {
                 setMsg(
                   data.orgReason === "user_not_found_sign_up_first"
-                    ? "Payment OK. Sign up with the same email, then open Coach tools — or email hello@super-cube.me with your reference."
-                    : "Payment OK but cohort code was not created. Contact support with your Paystack reference.",
+                    ? t("Payment OK. Sign up with the same email, then open Coach tools — or email hello@super-cube.me with your reference.")
+                    : t("Payment OK but cohort code was not created. Contact support with your Paystack reference."),
                 );
               }
               return;
@@ -241,13 +247,13 @@ function AccountPageInner() {
     next.notifyPractice = perm === "granted";
     saveLmsState(next);
     setState(next);
-    setMsg(perm === "granted" ? "Reminders enabled." : "Notifications denied.");
+    setMsg(perm === "granted" ? "Reminders enabled." : t("Notifications denied."));
   }
 
   if (!state) {
     return (
-      <LearnShell title="You">
-        <p className="learn-meta">Loading…</p>
+      <LearnShell title={t("You")}>
+        <p className="learn-meta">{t("Loading…")}</p>
       </LearnShell>
     );
   }
@@ -302,7 +308,7 @@ function AccountPageInner() {
 
   return (
     <LearnShell
-      title="You"
+      title={t("You")}
       subtitle={programmeCopy("account.subtitle", programme?.id)}
     >
       {msg && (
@@ -319,9 +325,7 @@ function AccountPageInner() {
             {initials}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white/65">
-              Learner profile
-            </p>
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-white/65">{t("Learner profile")}</p>
             <h2 className="mt-1 text-xl font-semibold tracking-tight sm:text-2xl">
               {profile?.displayName ||
                 state.user?.fullName ||
@@ -330,11 +334,11 @@ function AccountPageInner() {
             <p className="mt-1 text-sm text-white/65">
               {profile
                 ? profileStory(profile)
-                : "Tell us who you are so Learn can fit you."}
+                : t("Tell us who you are so Learn can fit you.")}
             </p>
             {profile?.goal && (
               <p className="mt-2 rounded-xl bg-white/10 px-3 py-2 text-[0.8125rem] text-white/85">
-                <span className="text-white/50">Goal · </span>
+                <span className="text-white/50">{t("Goal ·")}</span>
                 {profile.goal}
               </p>
             )}
@@ -344,15 +348,13 @@ function AccountPageInner() {
               href="/learn/welcome"
               className="inline-flex min-h-10 items-center rounded-full bg-white px-4 text-sm font-semibold text-ink"
             >
-              {profileComplete(profile) ? "Edit profile" : "Set up profile"}
+              {profileComplete(profile) ? t("Edit profile") : t("Set up profile")}
             </Link>
             {!signedInEmail && (
               <Link
                 href="/login?next=/learn/account"
                 className="inline-flex min-h-10 items-center rounded-full border border-white/25 px-4 text-sm font-semibold text-white"
-              >
-                Sign in
-              </Link>
+              >{t("Sign in")}</Link>
             )}
           </div>
         </div>
@@ -380,13 +382,11 @@ function AccountPageInner() {
 
       <section className="learn-card mb-4">
         <div className="flex flex-wrap items-start justify-between gap-2">
-          <h2 className="learn-card-title">About you</h2>
+          <h2 className="learn-card-title">{t("About you")}</h2>
           <Link
             href="/learn/welcome"
             className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-          >
-            Full editor →
-          </Link>
+          >{t("Full editor →")}</Link>
         </div>
         <dl className="mt-3 grid gap-3 sm:grid-cols-2">
           {[
@@ -420,60 +420,49 @@ function AccountPageInner() {
       <section className="mb-4 grid gap-3 lg:grid-cols-2">
         <div className="learn-card">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <h2 className="learn-card-title">Growth snapshot</h2>
+            <h2 className="learn-card-title">{t("Growth snapshot")}</h2>
             <Link
               href="/learn/report"
               className="text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
-            >
-              Full report →
-            </Link>
+            >{t("Full report →")}</Link>
           </div>
           {!pre ? (
             <div className="mt-3">
-              <p className="learn-body">
-                No baseline yet. Take the pre-assessment to see your six-face
-                profile.
-              </p>
+              <p className="learn-body">{t("No baseline yet. Take the pre-assessment to see your six-face profile.")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 <Link
                   href="/learn/assessment/pre"
                   className="learn-btn learn-btn-primary inline-flex"
-                >
-                  Start baseline →
-                </Link>
+                >{t("Start baseline →")}</Link>
                 <button
                   type="button"
                   onClick={() => setShowSample((v) => !v)}
                   className="learn-btn learn-btn-ghost"
                 >
-                  {showSample ? "Hide example" : "Show example profile"}
+                  {showSample ? t("Hide example") : t("Show example profile")}
                 </button>
               </div>
               {showSample && (
-                <p className="mt-3 rounded-xl bg-surface px-3 py-2 text-[0.8125rem] text-slate">
-                  Example: Pre overall 58 · Strength Emotional · Focus Physical.
-                  After the programme, learners typically see multi-point lifts
-                  on stretch faces.
-                </p>
+                <p className="mt-3 rounded-xl bg-surface px-3 py-2 text-[0.8125rem] text-slate">{t("Example: Pre overall 58 · Strength Emotional · Focus Physical. After the programme, learners typically see multi-point lifts on stretch faces.")}</p>
               )}
             </div>
           ) : (
             <>
               <div className="mt-3 grid grid-cols-3 gap-2">
                 <div className="rounded-xl bg-surface px-3 py-2.5">
-                  <p className="learn-eyebrow">Pre</p>
+                  <p className="learn-eyebrow">{t("Pre")}</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {pre.result.overall}
                   </p>
                 </div>
                 <div className="rounded-xl bg-surface px-3 py-2.5">
-                  <p className="learn-eyebrow">Post</p>
+                  <p className="learn-eyebrow">{t("Post")}</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {post ? post.result.overall : "—"}
                   </p>
                 </div>
                 <div className="rounded-xl bg-surface px-3 py-2.5">
-                  <p className="learn-eyebrow">Growth</p>
+                  <p className="learn-eyebrow">{t("Growth")}</p>
                   <p className="text-lg font-semibold tabular-nums text-ink">
                     {growth === null
                       ? "—"
@@ -489,7 +478,7 @@ function AccountPageInner() {
                         className="h-2 w-2 rounded-full"
                         style={{ background: strongest.color }}
                       />
-                      <span className="text-slate">Strength ·</span>
+                      <span className="text-slate">{t("Strength ·")}</span>
                       <span className="font-semibold text-ink">
                         {strongest.name}
                       </span>
@@ -501,7 +490,7 @@ function AccountPageInner() {
                         className="h-2 w-2 rounded-full"
                         style={{ background: weakest.color }}
                       />
-                      <span className="text-slate">Focus ·</span>
+                      <span className="text-slate">{t("Focus ·")}</span>
                       <span className="font-semibold text-ink">
                         {weakest.name}
                       </span>
@@ -523,40 +512,38 @@ function AccountPageInner() {
 
         <div className="space-y-3">
           <div className="learn-card">
-            <h2 className="learn-card-title">Your reports</h2>
-            <p className="learn-meta mt-1">
-              Open any assessment view in one tap.
-            </p>
+            <h2 className="learn-card-title">{t("Your reports")}</h2>
+            <p className="learn-meta mt-1">{t("Open any assessment view in one tap.")}</p>
             <ul className="mt-3 space-y-2">
               {[
                 {
                   href: "/learn/report",
-                  t: "Growth report",
+                  t: t("Growth report"),
                   d: pre
                     ? post
                       ? `Pre ${pre.result.overall} → Post ${post.result.overall}`
                       : `Baseline ${pre.result.overall} · post pending`
-                    : "Complete baseline first",
+                    : t("Complete baseline first"),
                 },
                 {
                   href: "/learn/assessment/orientation",
-                  t: "Orientation",
+                  t: t("Orientation"),
                   d: state.orientation
                     ? state.orientation.result.label
-                    : "Not taken",
+                    : t("Not taken"),
                 },
                 {
                   href: "/learn/pulse",
-                  t: "Face pulse history",
+                  t: t("Face pulse history"),
                   d:
                     pulseCount > 0
                       ? `${pulseCount} check-ins recorded`
-                      : "Start daily/weekly tracking",
+                      : t("Start daily/weekly tracking"),
                 },
                 {
                   href: "/learn/feedback",
-                  t: "Narrative feedback",
-                  d: "Lit cube + story view",
+                  t: t("Narrative feedback"),
+                  d: t("Lit cube + story view"),
                 },
               ].map((item) => (
                 <li key={item.href}>
@@ -580,7 +567,7 @@ function AccountPageInner() {
           </div>
 
           <div className="learn-card">
-            <h2 className="learn-card-title">Family & cohort</h2>
+            <h2 className="learn-card-title">{t("Family & cohort")}</h2>
             <p className="learn-body mt-2">
               {state.orgCode ? (
                 <>
@@ -589,42 +576,40 @@ function AccountPageInner() {
                   {cohortLabel ? ` · ${cohortLabel}` : ""}
                 </>
               ) : (
-                <>Join a family, school, or company code to learn together.</>
+                <>{t("Join a family, school, or company code to learn together.")}</>
               )}
             </p>
             <div className="mt-3 flex flex-wrap gap-2">
               <Link href="/learn/org" className="learn-btn learn-btn-primary">
-                {state.orgCode ? "Manage cohort" : "Join family / cohort"}
+                {state.orgCode ? t("Manage cohort") : t("Join family / cohort")}
               </Link>
-              <Link href="/learn/coach" className="learn-btn learn-btn-ghost">
-                Coach tools
-              </Link>
+              <Link href="/learn/coach" className="learn-btn learn-btn-ghost">{t("Coach tools")}</Link>
             </div>
           </div>
         </div>
       </section>
 
       <section className="learn-card mb-4">
-        <h2 className="learn-card-title">Assessment timeline</h2>
+        <h2 className="learn-card-title">{t("Assessment timeline")}</h2>
         <ol className="mt-3 space-y-2">
           {[
             {
-              label: "Orientation",
+              label: t("Orientation"),
               at: state.orientation?.completedAt,
               meta: state.orientation?.result.label,
             },
             {
-              label: "Pre-assessment",
+              label: t("Pre-assessment"),
               at: pre?.completedAt,
               meta: pre ? `Overall ${pre.result.overall}` : undefined,
             },
             {
-              label: "Mid check",
+              label: t("Mid check"),
               at: mid?.completedAt,
               meta: mid ? `Overall ${mid.result.overall}` : undefined,
             },
             {
-              label: "Post-assessment",
+              label: t("Post-assessment"),
               at: post?.completedAt,
               meta: post ? `Overall ${post.result.overall}` : undefined,
             },
@@ -651,7 +636,7 @@ function AccountPageInner() {
                 </div>
               </div>
               <p className="text-[0.7rem] tabular-nums text-muted">
-                {row.at ? formatDateZA(row.at) : "Pending"}
+                {row.at ? formatDateZA(row.at) : t("Pending")}
               </p>
             </li>
           ))}
@@ -660,7 +645,7 @@ function AccountPageInner() {
 
       <div className="grid gap-3 lg:grid-cols-2">
         <section className="learn-card">
-          <h2 className="learn-card-title">Access & account</h2>
+          <h2 className="learn-card-title">{t("Access & account")}</h2>
           <p className="learn-body mt-2">
             Status:{" "}
             <strong className="text-ink">
@@ -679,33 +664,25 @@ function AccountPageInner() {
               href="/pricing"
               variant="primary"
               className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-            >
-              Manage plan
-            </Button>
+            >{t("Manage plan")}</Button>
             {signedInEmail ? (
               <button
                 type="button"
                 onClick={signOut}
                 className="learn-btn learn-btn-ghost"
-              >
-                Sign out
-              </button>
+              >{t("Sign out")}</button>
             ) : (
               <>
                 <Button
                   href="/login?next=/learn/account"
                   variant="ghost"
                   className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-                >
-                  Sign in
-                </Button>
+                >{t("Sign in")}</Button>
                 <Button
                   href="/signup"
                   variant="ghost"
                   className="!min-h-9 !py-1.5 !text-[0.8125rem]"
-                >
-                  Create account
-                </Button>
+                >{t("Create account")}</Button>
               </>
             )}
           </div>
@@ -715,13 +692,13 @@ function AccountPageInner() {
         </section>
 
         <section className="learn-card">
-          <h2 className="learn-card-title">Cloud sync</h2>
+          <h2 className="learn-card-title">{t("Cloud sync")}</h2>
           <p className="learn-body mt-2">
             {cloudReady
               ? signedInEmail
-                ? "Progress syncs when signed in."
-                : "Sign in to sync across devices."
-              : "Supabase keys not configured on this deploy."}
+                ? t("Progress syncs when signed in.")
+                : t("Sign in to sync across devices.")
+              : t("Supabase keys not configured on this deploy.")}
           </p>
           <button
             type="button"
@@ -729,7 +706,7 @@ function AccountPageInner() {
             disabled={!cloudReady || syncing}
             className="learn-btn learn-btn-primary mt-3 disabled:opacity-40"
           >
-            {syncing ? "Syncing…" : "Sync now"}
+            {syncing ? t("Syncing…") : t("Sync now")}
           </button>
         </section>
 
@@ -738,19 +715,14 @@ function AccountPageInner() {
         </div>
 
         <section className="learn-card lg:col-span-2">
-          <h2 className="learn-card-title">Backup & device tools</h2>
-          <p className="learn-body mt-2">
-            Download a JSON backup before switching devices. Includes profile,
-            assessments, courses, and journal.
-          </p>
+          <h2 className="learn-card-title">{t("Backup & device tools")}</h2>
+          <p className="learn-body mt-2">{t("Download a JSON backup before switching devices. Includes profile, assessments, courses, and journal.")}</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <button
               type="button"
               onClick={downloadBackup}
               className="learn-btn learn-btn-primary"
-            >
-              Download backup
-            </button>
+            >{t("Download backup")}</button>
             <button
               type="button"
               onClick={() => fileRef.current?.click()}
@@ -763,15 +735,13 @@ function AccountPageInner() {
               onClick={enableReminders}
               className="learn-btn learn-btn-ghost"
             >
-              {state.notifyPractice ? "Reminders on" : "Enable reminders"}
+              {state.notifyPractice ? t("Reminders on") : t("Enable reminders")}
             </button>
             <button
               type="button"
               onClick={clearDemo}
               className="learn-btn learn-btn-ghost !text-slate"
-            >
-              Reset local data
-            </button>
+            >{t("Reset local data")}</button>
             <input
               ref={fileRef}
               type="file"

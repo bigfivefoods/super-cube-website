@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { formatDateTimeZA } from "@/lib/datetime";
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -16,6 +18,8 @@ import {
  * Site-wide visits require NEXT_PUBLIC_GA_ID (see docs/ANALYTICS.md).
  */
 export default function LearnAnalyticsPage() {
+  const { t } = useLmsT();
+
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [log, setLog] = useState<AnalyticsRow[]>([]);
   const gaConfigured = Boolean(process.env.NEXT_PUBLIC_GA_ID);
@@ -31,7 +35,7 @@ export default function LearnAnalyticsPage() {
 
   return (
     <LearnShell
-      title="Funnel analytics"
+      title={t("Funnel analytics")}
       subtitle="Counts on this device only. For all visitors, configure Google Analytics (docs/ANALYTICS.md)."
     >
       <div
@@ -43,12 +47,10 @@ export default function LearnAnalyticsPage() {
       >
         {gaConfigured ? (
           <>
-            <strong>GA4 is configured</strong> on this build. View site-wide
-            reports at analytics.google.com (Realtime + Engagement).
-          </>
+            <strong>{t("GA4 is configured")}</strong>{t("on this build. View site-wide reports at analytics.google.com (Realtime + Engagement).")}</>
         ) : (
           <>
-            <strong>GA4 not configured.</strong> Set{" "}
+            <strong>{t("GA4 not configured.")}</strong> Set{" "}
             <code className="text-xs">NEXT_PUBLIC_GA_ID</code> in Vercel
             Production and redeploy. See{" "}
             <code className="text-xs">docs/ANALYTICS.md</code>.
@@ -57,7 +59,7 @@ export default function LearnAnalyticsPage() {
       </div>
 
       <section className="learn-card mb-4">
-        <h2 className="learn-card-title">Conversion goals</h2>
+        <h2 className="learn-card-title">{t("Conversion goals")}</h2>
         <ul className="mt-3 space-y-2">
           {FUNNEL_GOALS.map((g) => (
             <li
@@ -75,15 +77,13 @@ export default function LearnAnalyticsPage() {
 
       <section className="learn-card mb-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h2 className="learn-card-title">Recent events</h2>
+          <h2 className="learn-card-title">{t("Recent events")}</h2>
           <div className="flex gap-2">
             <button
               type="button"
               className="learn-btn learn-btn-ghost"
               onClick={refresh}
-            >
-              Refresh
-            </button>
+            >{t("Refresh")}</button>
             <button
               type="button"
               className="learn-btn learn-btn-ghost"
@@ -98,7 +98,7 @@ export default function LearnAnalyticsPage() {
         </div>
         <ul className="mt-3 max-h-80 space-y-1.5 overflow-y-auto text-[0.75rem]">
           {log.length === 0 && (
-            <li className="text-muted">No events yet on this device.</li>
+            <li className="text-muted">{t("No events yet on this device.")}</li>
           )}
           {log.map((row, i) => (
             <li

@@ -106,9 +106,9 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
     const code = String(r.body.error || "");
     setNote(
       code === "payment_required"
-        ? "Certificates are part of the full pathway (one-off payment for lifetime access, or a cohort seat)."
+        ? t("Certificates are part of the full pathway (one-off payment for lifetime access, or a cohort seat).")
         : code === "not_eligible"
-          ? "The server has no recorded baseline and after-test for you yet. Take both while signed in."
+          ? t("The server has no recorded baseline and after-test for you yet. Take both while signed in.")
           : `Could not issue the certificate (${code || r.status}).`,
     );
     return null;
@@ -179,10 +179,10 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
             {/* Preview: always on paper colours, like the printed certificate */}
             <div
               className="relative rounded-xl border border-[#d8d2c4] bg-[#fcfbf8] px-5 py-6 text-center text-[#141416] shadow-sm"
-              aria-label="Certificate preview"
+              aria-label={t("Certificate preview")}
               role="group"
             >
-              <Image src="/brand/logo.png" alt="Super-Cube®" width={160} height={34} className="mx-auto h-auto w-[140px]" />
+              <Image src="/brand/logo.png" alt={t("Super-Cube®")} width={160} height={34} className="mx-auto h-auto w-[140px]" />
               <p className="mt-4 text-[0.625rem] font-bold uppercase tracking-[0.28em] text-[#5c5a56]">{t("Certificate of completion")}</p>
               <p className="mt-3 font-serif text-2xl font-bold leading-tight sm:text-[1.75rem]" style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}>
                 {cert.learnerName}
@@ -201,20 +201,14 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
             <div>
               <div className="flex flex-wrap gap-2">
                 <button type="button" className="learn-btn learn-btn-primary" onClick={() => void downloadPdf()} disabled={busy !== null}>
-                  {busy === "pdf" ? "Preparing PDF…" : "Download PDF (A4)"}
+                  {busy === "pdf" ? "Preparing PDF…" : t("Download PDF (A4)")}
                 </button>
                 <button type="button" className="learn-btn learn-btn-ghost" onClick={() => void downloadImage()} disabled={busy !== null}>
-                  {busy === "png" ? "Preparing image…" : "Download share image"}
+                  {busy === "png" ? "Preparing image…" : t("Download share image")}
                 </button>
-                <a className="learn-btn learn-btn-ghost" href={verifyUrl(cert.id)} target="_blank" rel="noopener">
-                  Open verify page
-                </a>
-                <a className="learn-btn learn-btn-ghost" href={`/credentials/${encodeURIComponent(cert.id)}?download=1`}>
-                  Download Open Badge (JSON-LD)
-                </a>
-                <a className="learn-btn learn-btn-ghost" href={`/credentials/${encodeURIComponent(cert.id)}/image`}>
-                  Download badge image
-                </a>
+                <a className="learn-btn learn-btn-ghost" href={verifyUrl(cert.id)} target="_blank" rel="noopener">{t("Open verify page")}</a>
+                <a className="learn-btn learn-btn-ghost" href={`/credentials/${encodeURIComponent(cert.id)}?download=1`}>{t("Download Open Badge (JSON-LD)")}</a>
+                <a className="learn-btn learn-btn-ghost" href={`/credentials/${encodeURIComponent(cert.id)}/image`}>{t("Download badge image")}</a>
               </div>
 
               {!minor && (
@@ -242,9 +236,9 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
 
               <div className="mt-4 rounded-xl border border-line bg-surface p-3">
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-[0.8125rem] font-semibold text-ink">Credential details</p>
+                  <p className="text-[0.8125rem] font-semibold text-ink">{t("Credential details")}</p>
                   <button type="button" className="text-[0.8125rem] font-semibold text-ink underline underline-offset-2" onClick={() => void copy(credentialDetailsText(cert), "all")}>
-                    {copied === "all" ? "Copied" : "Copy all"}
+                    {copied === "all" ? "Copied" : t("Copy all")}
                   </button>
                 </div>
                 <dl className="mt-2 space-y-2 text-[0.8125rem]">
@@ -260,15 +254,13 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
                         onClick={() => void copy(d.value, d.label)}
                         aria-label={`Copy ${d.label}`}
                       >
-                        {copied === d.label ? "Copied" : "Copy"}
+                        {copied === d.label ? "Copied" : t("Copy")}
                       </button>
                     </div>
                   ))}
                 </dl>
                 {!minor && (
-                  <p className="learn-meta mt-2">
-                    LinkedIn opens with these filled in. If a field is empty, paste it from here.
-                  </p>
+                  <p className="learn-meta mt-2">{t("LinkedIn opens with these filled in. If a field is empty, paste it from here.")}</p>
                 )}
               </div>
             </div>
@@ -277,7 +269,7 @@ export function CertificatePanel({ state, pre, post, programmeId, onStateChange 
 
         {!cert && (
           <button type="button" className="learn-btn learn-btn-primary mt-3" disabled={busy !== null} onClick={() => void downloadPdf()}>
-            {busy ? "Issuing your certificate…" : "Get my certificate"}
+            {busy ? t("Issuing your certificate…") : t("Get my certificate")}
           </button>
         )}
 

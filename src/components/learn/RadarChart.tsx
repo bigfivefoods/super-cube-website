@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useId, useState } from "react";
 import type { ConstructId } from "@/lib/content";
 import { faceInkStyle } from "@/lib/contrast";
@@ -77,6 +79,8 @@ export function RadarChart({
   animate?: boolean;
   className?: string;
 }) {
+  const { t } = useLmsT();
+
   const uid = useId().replace(/:/g, "");
   const [showTable, setShowTable] = useState(table === "visible");
   const pre = orderScoresForRadar(scores);
@@ -120,7 +124,7 @@ export function RadarChart({
         aria-labelledby={`${uid}-t ${uid}-d`}
         shapeRendering="geometricPrecision"
       >
-        <title id={`${uid}-t`}>{hasCompare ? "Growth radar: before and after" : "Six-face profile radar"}</title>
+        <title id={`${uid}-t`}>{hasCompare ? t("Growth radar: before and after") : t("Six-face profile radar")}</title>
         <desc id={`${uid}-d`}>{describe}</desc>
         <defs>
           <radialGradient id={`${uid}-bg`} cx="50%" cy="50%" r="50%">
@@ -301,7 +305,7 @@ export function RadarChart({
 
       {/* Per-face growth deltas */}
       {hasCompare && deltas && post && (
-        <ul className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3" aria-label="Change per face">
+        <ul className="mt-3 grid grid-cols-2 gap-1.5 sm:grid-cols-3" aria-label={t("Change per face")}>
           {pre.map((s, i) => {
             const d = post[i].score - s.score;
             const arrow = r1(d) > 0 ? "▲" : r1(d) < 0 ? "▼" : "●";
@@ -339,18 +343,18 @@ export function RadarChart({
               aria-controls={`${uid}-table`}
               onClick={() => setShowTable((v) => !v)}
             >
-              {showTable ? "Hide data table" : "Show data table"}
+              {showTable ? t("Hide data table") : t("Show data table")}
             </button>
           )}
           <div id={`${uid}-table`} hidden={!showTable} className="mt-2 overflow-x-auto">
             <table className="w-full min-w-[15rem] text-left text-[0.8125rem]">
-              <caption className="sr-only">Scores per face (0–100)</caption>
+              <caption className="sr-only">{t("Scores per face (0–100)")}</caption>
               <thead>
                 <tr className="border-b border-line text-[0.65rem] uppercase tracking-[0.08em] text-muted">
-                  <th scope="col" className="py-1.5 pr-2 font-semibold">Face</th>
-                  <th scope="col" className="px-1 py-1.5 text-right font-semibold">{hasCompare ? preLabel : "Score"}</th>
+                  <th scope="col" className="py-1.5 pr-2 font-semibold">{t("Face")}</th>
+                  <th scope="col" className="px-1 py-1.5 text-right font-semibold">{hasCompare ? preLabel : t("Score")}</th>
                   {hasCompare && <th scope="col" className="px-1 py-1.5 text-right font-semibold">{postLabel}</th>}
-                  {hasCompare && <th scope="col" className="py-1.5 pl-1 text-right font-semibold">Change</th>}
+                  {hasCompare && <th scope="col" className="py-1.5 pl-1 text-right font-semibold">{t("Change")}</th>}
                 </tr>
               </thead>
               <tbody>

@@ -28,10 +28,8 @@ export function ConstructDeepDive({
 
   return (
     <section className="learn-card mt-4 sm:mt-5 print:break-inside-avoid">
-      <h2 className="learn-card-title">Construct deep-dive</h2>
-      <p className="learn-meta mt-1">
-        Tap a face for score history, insight, and practices.
-      </p>
+      <h2 className="learn-card-title">{"Construct deep-dive"}</h2>
+      <p className="learn-meta mt-1">{t("Tap a face for score history, insight, and practices.")}</p>
       <ul className="mt-3 space-y-2">
         {constructs.map((c) => {
           const face = narrative.faces.find((f) => f.constructId === c.id);
@@ -102,7 +100,7 @@ export function ConstructDeepDive({
                     · Trend: {pattern.trend[c.id] ?? "unknown"}
                   </p>
                   <p className="mt-2 text-[0.8125rem] text-ink">
-                    <span className="font-semibold">First practice · </span>
+                    <span className="font-semibold">{t("First practice ·")}</span>
                     {face.firstPractice}
                   </p>
                   {practices.length > 0 && (
@@ -119,15 +117,11 @@ export function ConstructDeepDive({
                     <Link
                       href={L(`/learn/courses/${c.id}`)}
                       className="learn-btn learn-btn-ghost !min-h-8 !text-[0.75rem]"
-                    >
-                      Sessions
-                    </Link>
+                    >{t("Sessions")}</Link>
                     <Link
                       href={L("/learn/practice")}
                       className="learn-btn learn-btn-primary !min-h-8 !text-[0.75rem]"
-                    >
-                      Practice
-                    </Link>
+                    >{t("Practice")}</Link>
                   </div>
                 </div>
               )}

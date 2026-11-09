@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -17,6 +19,8 @@ import { recordHabit } from "@/lib/lms/cloud";
 import { learnerProgrammeId, programmeCopy } from "@/lib/lms/programme-copy";
 
 export default function MicroPracticePage() {
+  const { t } = useLmsT();
+
   const [state, setState] = useState<LocalLmsState | null>(null);
   const [done, setDone] = useState(false);
   const [note, setNote] = useState("");
@@ -30,8 +34,8 @@ export default function MicroPracticePage() {
     // The page is prerendered: today's pick depends on the date and this device's
     // check-ins, so render it only after mount (no server/client mismatch, React #418).
     return (
-      <LearnShell title="Micro-practice" subtitle={programmeCopy("practice.subtitle", learnerProgrammeId(null))}>
-        <div className="h-72 animate-pulse rounded-2xl border border-line bg-elevated motion-reduce:animate-none" aria-busy="true" aria-label="Loading today’s practice" />
+      <LearnShell title={t("Micro-practice")} subtitle={programmeCopy("practice.subtitle", learnerProgrammeId(null))}>
+        <div className="h-72 animate-pulse rounded-2xl border border-line bg-elevated motion-reduce:animate-none" aria-busy="true" aria-label={t("Loading today’s practice")} />
       </LearnShell>
     );
   }
@@ -53,6 +57,8 @@ function PracticeView({
   note: string;
   setNote: (v: string) => void;
 }) {
+  const { t } = useLmsT();
+
   const pattern = useMemo(() => deriveFacePattern(state), [state]);
 
   const weakest = pattern.weakest as ConstructId[];
@@ -78,7 +84,7 @@ function PracticeView({
 
   return (
     <LearnShell
-      title="Micro-practice"
+      title={t("Micro-practice")}
       subtitle={programmeCopy("practice.subtitle", learnerProgrammeId(state))}
     >
       {pattern.insight && (
@@ -87,9 +93,7 @@ function PracticeView({
           <Link
             href="/learn/pulse"
             className="font-semibold text-ink underline"
-          >
-            Track faces →
-          </Link>
+          >{t("Track faces →")}</Link>
         </p>
       )}
 
@@ -107,18 +111,16 @@ function PracticeView({
           {daily.prompt}
         </p>
         <p className="mt-3 text-[0.8125rem] text-muted">
-          <span className="font-semibold text-ink">Reflect: </span>
+          <span className="font-semibold text-ink">{t("Reflect:")}</span>
           {daily.reflection}
         </p>
         <label className="mt-4 block">
-          <span className="text-[0.75rem] font-semibold text-muted">
-            Optional note (stays on device)
-          </span>
+          <span className="text-[0.75rem] font-semibold text-muted">{t("Optional note (stays on device)")}</span>
           <textarea
             className="learn-input mt-1 min-h-[4.5rem] w-full"
             value={note}
             onChange={(e) => setNote(e.target.value)}
-            placeholder="One sentence…"
+            placeholder={t("One sentence…")}
           />
         </label>
         <button
@@ -127,15 +129,13 @@ function PracticeView({
           onClick={complete}
           className="learn-btn learn-btn-primary mt-4 disabled:opacity-50"
         >
-          {already ? "Done for today ✓" : "Mark practice complete"}
+          {already ? t("Done for today ✓") : t("Mark practice complete")}
         </button>
       </section>
 
       {more.length > 0 && (
         <section className="mt-6">
-          <h3 className="text-sm font-semibold text-ink">
-            More for your stretch faces
-          </h3>
+          <h3 className="text-sm font-semibold text-ink">{t("More for your stretch faces")}</h3>
           <ul className="mt-3 space-y-2">
             {more.map((p) => (
               <li

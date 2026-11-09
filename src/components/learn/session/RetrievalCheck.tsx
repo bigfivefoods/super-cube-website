@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useId, useState } from "react";
 import { track } from "@/lib/analytics";
 import { faceInkStyle } from "@/lib/contrast";
@@ -41,6 +43,8 @@ function RetrievalCheckRound({
   hideSummary = false,
   round,
 }: Props & { round: number }) {
+  const { t } = useLmsT();
+
   const uid = useId();
   const [chosen, setChosen] = useState<(number | null)[]>(() => questions.map(() => null));
   const [first, setFirst] = useState<(number | null)[]>(() => questions.map(() => null));
@@ -74,7 +78,7 @@ function RetrievalCheckRound({
     <div className="space-y-4" style={faceInkStyle(color)} data-testid="retrieval-check" data-round={round}>
       {round > 0 && (
         <p className="rounded-xl border border-line bg-elevated px-3 py-2 text-[0.8125rem] text-ink" role="status">
-          {kids ? "Second go! Take your time." : "Second go. Take your time; the explanations you just read are the key."}
+          {kids ? t("Second go! Take your time.") : "Second go. Take your time; the explanations you just read are the key."}
         </p>
       )}
       {questions.map((q, qi) => {
@@ -114,8 +118,8 @@ function RetrievalCheckRound({
                     />
                     <span className="leading-snug text-ink">
                       {o}
-                      {showRight && <span className="ml-1.5 font-semibold text-emerald-800 dark:text-emerald-300">✓ Correct answer</span>}
-                      {selected && !showRight && <span className="ml-1.5 font-semibold text-amber-900 dark:text-amber-300">✗ Not this one</span>}
+                      {showRight && <span className="ml-1.5 font-semibold text-emerald-800 dark:text-emerald-300">{t("✓ Correct answer")}</span>}
+                      {selected && !showRight && <span className="ml-1.5 font-semibold text-amber-900 dark:text-amber-300">{t("✗ Not this one")}</span>}
                     </span>
                   </label>
                 );
@@ -124,7 +128,7 @@ function RetrievalCheckRound({
             <p className="mt-2 min-h-[1.25rem] text-[0.8125rem] leading-snug text-slate" aria-live="polite">
               {pickIdx !== null && (
                 <>
-                  <strong className="font-semibold text-ink">{isRight ? "Yes. " : "Not quite. "}</strong>
+                  <strong className="font-semibold text-ink">{isRight ? t("Yes. ") : t("Not quite. ")}</strong>
                   {q.why}
                 </>
               )}
@@ -139,11 +143,11 @@ function RetrievalCheckRound({
           </strong>{" "}
           {correctFirst === questions.length
             ? kids
-              ? "Brilliant remembering!"
-              : "Strong recall. These ideas will come back once more in your spaced review."
+              ? t("Brilliant remembering!")
+              : t("Strong recall. These ideas will come back once more in your spaced review.")
             : kids
-              ? "Great trying! We'll practise these again soon."
-              : "Good effort. The ones you missed will come back in your Day 3, 7 and 21 reviews, which is exactly how memory gets stronger."}
+              ? t("Great trying! We'll practise these again soon.")
+              : t("Good effort. The ones you missed will come back in your Day 3, 7 and 21 reviews, which is exactly how memory gets stronger.")}
         </p>
       )}
     </div>

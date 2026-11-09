@@ -225,15 +225,15 @@ export default function AssessmentRunnerPage() {
         const code = String(server.body.error || "");
         setSubmitError(
           code === "baseline_locked"
-            ? "Your baseline is already recorded and locked."
+            ? t("Your baseline is already recorded and locked.")
             : code === "post_gate"
-              ? "The after-test is not open yet. See the checklist above."
+              ? t("The after-test is not open yet. See the checklist above.")
               : code === "payment_required"
-                ? "The after-test needs the full pathway (payment or cohort seat)."
+                ? t("The after-test needs the full pathway (payment or cohort seat).")
                 : code === "post_locked"
-                  ? "Your after-test is already recorded."
+                  ? t("Your after-test is already recorded.")
                   : code === "consent_required"
-                    ? "A parent or guardian needs to record consent on their own account before this can be saved."
+                    ? t("A parent or guardian needs to record consent on their own account before this can be saved.")
                     : `Could not save: ${code || server.status}`,
         );
         if (server.status === 403 && server.body.gate) setServerGate(server.body.gate as PostGate);
@@ -257,7 +257,7 @@ export default function AssessmentRunnerPage() {
 
   if (!state) {
     return (
-      <LearnShell title="Assessment">
+      <LearnShell title={t("Assessment")}>
         <p className="learn-meta">{t("Loading…")}</p>
       </LearnShell>
     );
@@ -265,7 +265,7 @@ export default function AssessmentRunnerPage() {
 
   if (phase === "pre" && existingPre) {
     return (
-      <LearnShell title="Your baseline is locked" subtitle={`${programme?.name ?? "Programme"} · recorded ${formatDateZA(existingPre.completedAt)}`}>
+      <LearnShell title={t("Your baseline is locked")} subtitle={`${programme?.name ?? t("Programme")} · recorded ${formatDateZA(existingPre.completedAt)}`}>
         <div className="learn-card" data-testid="baseline-locked">
           <p className="learn-body">
             Your baseline was recorded on{" "}
@@ -284,7 +284,7 @@ export default function AssessmentRunnerPage() {
 
   if (phase === "post" && existingPost) {
     return (
-      <LearnShell title="After-test recorded" subtitle={programme?.name ?? "Programme"}>
+      <LearnShell title={t("After-test recorded")} subtitle={programme?.name ?? t("Programme")}>
         <div className="learn-card" data-testid="post-locked">
           <p className="learn-body">
             Your after-test was recorded on {formatDateTimeZA(existingPost.completedAt)}.
@@ -298,14 +298,11 @@ export default function AssessmentRunnerPage() {
 
   if (phase === "post" && (!paid || !gate?.ok)) {
     return (
-      <LearnShell title="After-test not open yet" subtitle={`${programme?.name ?? "Programme"} · growth needs time and practice`}>
+      <LearnShell title={t("After-test not open yet")} subtitle={`${programme?.name ?? t("Programme")} · growth needs time and practice`}>
         <div className="learn-card" data-testid="post-gate">
-          <p className="learn-body">
-            The after-test compares you with your baseline. To make that comparison mean
-            something, it opens only after real practice time.
-          </p>
+          <p className="learn-body">{t("The after-test compares you with your baseline. To make that comparison mean something, it opens only after real practice time.")}</p>
           <ul className="mt-3 space-y-1.5 text-[0.8125rem] text-ink">
-            {!paid && <li>· Unlock the full pathway (one-off payment or a cohort seat).</li>}
+            {!paid && <li>{t("· Unlock the full pathway (one-off payment or a cohort seat).")}</li>}
             {(gate?.reasons ?? []).map((r) => (
               <li key={r}>· {r}</li>
             ))}
@@ -317,14 +314,14 @@ export default function AssessmentRunnerPage() {
             </p>
           )}
           {signedIn === false && (
-            <p className="learn-meta mt-2">Sign in so the server can verify your progress for a certificate.</p>
+            <p className="learn-meta mt-2">{t("Sign in so the server can verify your progress for a certificate.")}</p>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
             <Link href={L("/learn/courses")} className="learn-btn learn-btn-primary">{t("Continue sessions")}</Link>
             {existingPre && gate?.daysRemaining ? (
-              <AddToCalendar preCompletedAt={existingPre.completedAt} programmeName={programme?.name ?? "Super-Cube®"} />
+              <AddToCalendar preCompletedAt={existingPre.completedAt} programmeName={programme?.name ?? t("Super-Cube®")} />
             ) : null}
-            {!paid && <Link href="/pricing" className="learn-btn learn-btn-ghost">View pricing</Link>}
+            {!paid && <Link href="/pricing" className="learn-btn learn-btn-ghost">{t("View pricing")}</Link>}
           </div>
         </div>
       </LearnShell>
@@ -335,21 +332,21 @@ export default function AssessmentRunnerPage() {
     <LearnShell
       title={
         phase === "pre"
-          ? "Step 3 of 6 · Measure your baseline"
+          ? t("Step 3 of 6 · Measure your baseline")
           : phase === "mid"
-            ? "Mid-pathway check-in"
-            : "Step 5 of 6 · Re-measure after the programme"
+            ? t("Mid-pathway check-in")
+            : t("Step 5 of 6 · Re-measure after the programme")
       }
       subtitle={
         phase === "pre"
           ? fill(programmeTemplate("assessment.pre.subtitle", programmeId), {
-                programme: t(programme?.name ?? "Programme"),
+                programme: t(programme?.name ?? t("Programme")),
                 n: items.length,
-                checks: t(honesty ? "two quick checks" : "one quick check"),
+                checks: t(honesty ? t("two quick checks") : t("one quick check")),
               })
           : phase === "mid"
-            ? fill(programmeTemplate("assessment.mid.subtitle", programmeId), { programme: t(programme?.name ?? "Programme") })
-            : fill(programmeTemplate("assessment.post.subtitle", programmeId), { programme: t(programme?.name ?? "Programme") })
+            ? fill(programmeTemplate("assessment.mid.subtitle", programmeId), { programme: t(programme?.name ?? t("Programme")) })
+            : fill(programmeTemplate("assessment.post.subtitle", programmeId), { programme: t(programme?.name ?? t("Programme")) })
       }
     >
       {fromOrientation && phase === "pre" && state?.orientation && (
@@ -357,10 +354,7 @@ export default function AssessmentRunnerPage() {
           <p className="text-[0.8125rem] font-semibold text-emerald-900">
             Step 2 done · {state.orientation.result.label}
           </p>
-          <p className="mt-0.5 text-[0.8125rem] text-emerald-900/85">
-            Now your baseline: one honest snapshot across the six faces. Your answers save as you go, so you can
-            stop and come back.
-          </p>
+          <p className="mt-0.5 text-[0.8125rem] text-emerald-900/85">{t("Now your baseline: one honest snapshot across the six faces. Your answers save as you go, so you can stop and come back.")}</p>
         </div>
       )}
 
@@ -384,13 +378,7 @@ export default function AssessmentRunnerPage() {
             style={{ width: `${pct}%` }}
           />
         </div>
-        <p className="mt-2 text-[0.7rem] leading-relaxed text-muted">
-          Instrument note: a short developmental self-report with a few items
-          per face. Its reliability for this version has not yet been
-          established, so small changes between baseline and after-test can be
-          noise. Your baseline is recorded once and cannot be retaken. Journals
-          stay separate and private.
-        </p>
+        <p className="mt-2 text-[0.7rem] leading-relaxed text-muted">{t("Instrument note: a short developmental self-report with a few items per face. Its reliability for this version has not yet been established, so small changes between baseline and after-test can be noise. Your baseline is recorded once and cannot be retaken. Journals stay separate and private.")}</p>
         {savedNote && (
           <p className="mt-1.5 text-[0.75rem] font-medium text-emerald-800">
             {savedNote}
@@ -509,11 +497,8 @@ export default function AssessmentRunnerPage() {
         </div>
         {confirmSame && (
           <div className="mt-4 rounded-xl border border-line-strong bg-surface p-4" role="alertdialog" aria-labelledby="same-h" aria-describedby="same-d">
-            <p id="same-h" className="text-[0.875rem] font-semibold text-ink">You gave nearly every statement the same answer</p>
-            <p id="same-d" className="mt-1 text-[0.8125rem] text-slate">
-              That’s fine if it’s how you see yourself. If you were moving quickly, take another look: an honest
-              baseline makes your growth report meaningful.
-            </p>
+            <p id="same-h" className="text-[0.875rem] font-semibold text-ink">{t("You gave nearly every statement the same answer")}</p>
+            <p id="same-d" className="mt-1 text-[0.8125rem] text-slate">{t("That’s fine if it’s how you see yourself. If you were moving quickly, take another look: an honest baseline makes your growth report meaningful.")}</p>
             <div className="mt-3 flex flex-wrap gap-2">
               <button type="button" className="learn-btn learn-btn-ghost" onClick={() => { setConfirmSame(false); setStep(0); }}>
                 Review my answers

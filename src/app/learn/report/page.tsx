@@ -59,7 +59,7 @@ export default function ReportPage() {
   if (!pre) {
     return (
       <LearnShell
-        title="Step 6 of 6 · See your growth report"
+        title={t("Step 6 of 6 · See your growth report")}
         subtitle="Complete Steps 2–3 first (orient + baseline) to unlock your Super-Cube® profile."
       >
         <div className="flex flex-wrap gap-2">
@@ -102,9 +102,9 @@ export default function ReportPage() {
 
   return (
     <LearnShell
-      title="Step 6 of 6 · See your growth report"
+      title={t("Step 6 of 6 · See your growth report")}
       subtitle={`${fill(programmeTemplate("report.subtitle", programmeId), {
-        programme: t(programme?.name ?? "Super-Cube®"),
+        programme: t(programme?.name ?? t("Super-Cube®")),
       })}${t(programmeTemplate(post ? "report.subtitle.post" : "report.subtitle.baseline", programmeId))}`}
     >
       <div className="report-print-root">
@@ -150,14 +150,9 @@ export default function ReportPage() {
         {!post && (
           <div className="mb-4 rounded-2xl border border-ink bg-elevated p-4 sm:flex sm:items-center sm:justify-between sm:p-5 print:hidden">
             <div>
-              <p className="learn-eyebrow">Step 5 of 6 · After practice</p>
-              <p className="mt-1 text-sm font-semibold text-ink">
-                The after-test measures change against your locked baseline
-              </p>
-              <p className="learn-meta mt-0.5">
-                It opens after the minimum practice period and enough completed
-                sessions, so any change has had time to happen.
-              </p>
+              <p className="learn-eyebrow">{t("Step 5 of 6 · After practice")}</p>
+              <p className="mt-1 text-sm font-semibold text-ink">{t("The after-test measures change against your locked baseline")}</p>
+              <p className="learn-meta mt-0.5">{t("It opens after the minimum practice period and enough completed sessions, so any change has had time to happen.")}</p>
             </div>
             <Button
               href={L("/learn/assessment/post")}
@@ -220,17 +215,15 @@ export default function ReportPage() {
         )}
         {post && !serverHasRecordedPractice(state) && (
           <section className="mb-4 rounded-2xl border border-dashed border-line bg-elevated p-4 sm:p-5" data-testid="certificate-locked">
-            <p className="learn-eyebrow">Not yet earned</p>
-            <h2 className="mt-1 text-base font-semibold text-ink">Certificate</h2>
-            <p className="learn-body mt-1">
-              The certificate is offered when the server has recorded your practice and after-test. A score kept only on this device does not earn it.
-            </p>
+            <p className="learn-eyebrow">{t("Not yet earned")}</p>
+            <h2 className="mt-1 text-base font-semibold text-ink">{t("Certificate")}</h2>
+            <p className="learn-body mt-1">{t("The certificate is offered when the server has recorded your practice and after-test. A score kept only on this device does not earn it.")}</p>
           </section>
         )}
 
         {orientation && (
           <section className="learn-card mb-4 sm:mb-5 print:break-inside-avoid">
-            <h2 className="learn-card-title">Leadership knowledge frame</h2>
+            <h2 className="learn-card-title">{t("Leadership knowledge frame")}</h2>
             <p className="learn-body mt-2">{orientation.result.summary}</p>
             <p className="learn-body mt-1.5">{orientation.result.guidance}</p>
             <div className="mt-3.5 grid gap-2 sm:grid-cols-3">
@@ -253,12 +246,12 @@ export default function ReportPage() {
         <div className="grid gap-3 sm:gap-4 lg:grid-cols-[1.25fr_1fr] print:break-inside-avoid">
           <div className="learn-card" data-testid="report-radar">
             <h2 className="learn-card-title">
-              {post ? "Your growth across the six faces" : "Your six-face profile"}
+              {post ? t("Your growth across the six faces") : t("Your six-face profile")}
             </h2>
             <p className="learn-meta mt-1">
               {post
                 ? "Before is the dashed outline with hollow markers; after is the filled shape. Each face shows its change."
-                : "Your baseline across the six faces. Higher means you rated yourself higher on that face."}
+                : t("Your baseline across the six faces. Higher means you rated yourself higher on that face.")}
             </p>
             <div className="mt-2">
               <RadarChart
@@ -274,7 +267,7 @@ export default function ReportPage() {
 
           <div className="learn-card">
             <h2 className="learn-card-title">
-              {post ? "Scores by construct" : "Baseline construct scores"}
+              {post ? t("Scores by construct") : t("Baseline construct scores")}
             </h2>
             <div className="mt-3 overflow-x-auto">
               <table className="w-full min-w-[16rem] text-left text-[0.8125rem]">
@@ -429,10 +422,7 @@ export default function ReportPage() {
           />
         </div>
 
-        <p className="learn-meta mt-5">
-          This report is for developmental use within the Super-Cube® model.
-          Scores reflect self-report on this instrument only.
-        </p>
+        <p className="learn-meta mt-5">{t("This report is for developmental use within the Super-Cube® model. Scores reflect self-report on this instrument only.")}</p>
       </div>
     </LearnShell>
   );

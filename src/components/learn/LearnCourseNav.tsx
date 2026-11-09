@@ -88,20 +88,16 @@ export function LearnCourseNav({
         nested ? "ml-2 border-l border-line pl-2 lg:ml-3 lg:pl-2.5" : ""
       } mt-0.5 space-y-0.5 pb-1`}
       role="group"
-      aria-label="Courses and sessions"
+      aria-label={t("Courses and sessions")}
     >
       <div className="flex items-center justify-between gap-2 px-1 pb-1 lg:px-0">
-        <p className="text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-muted">
-          Courses
-        </p>
+        <p className="text-[0.625rem] font-semibold uppercase tracking-[0.12em] text-muted">{t("Courses")}</p>
         {onToggle && (
           <button
             type="button"
             onClick={onToggle}
             className="text-[0.65rem] font-medium text-muted hover:text-ink lg:hidden"
-          >
-            Hide
-          </button>
+          >{t("Hide")}</button>
         )}
       </div>
 
@@ -183,7 +179,7 @@ export function LearnCourseNav({
                     const active = pathLesson === lesson.id;
                     const completed =
                       state?.lessonProgress[lesson.id] === "completed";
-                    const type = TYPE_SHORT[lesson.lessonType] ?? "Session";
+                    const type = t(TYPE_SHORT[lesson.lessonType] ?? "Session");
 
                     return (
                       <li key={lesson.id}>

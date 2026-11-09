@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { Button } from "@/components/ui";
@@ -11,6 +13,8 @@ import {
 import { programmes, type ProgrammeId } from "@/lib/programmes";
 
 export default function LearnProgrammesPage() {
+  const { t } = useLmsT();
+
   const [state, setState] = useState<LocalLmsState | null>(null);
 
   useEffect(() => {
@@ -32,7 +36,7 @@ export default function LearnProgrammesPage() {
 
   return (
     <LearnShell
-      title="Step 1 of 6 · Choose your programme"
+      title={t("Step 1 of 6 · Choose your programme")}
       subtitle="One model for life. Pick the pathway that matches this season—Kids, Adolescents, or Adults. Same six faces; language and practice that fit you."
     >
       <div className="grid gap-3 sm:gap-4 lg:grid-cols-3">
@@ -89,15 +93,13 @@ export default function LearnProgrammesPage() {
                       : "learn-btn-primary"
                   }`}
                 >
-                  {active ? "Selected" : "Select programme"}
+                  {active ? t("Selected") : t("Select programme")}
                 </button>
                 <Button
                   href={`/pricing#${p.id}`}
                   variant={active ? "light" : "ghost"}
                   className="!min-h-9 w-full !py-1.5 !text-[0.8125rem]"
-                >
-                  Subscribe
-                </Button>
+                >{t("Subscribe")}</Button>
               </div>
             </article>
           );
@@ -107,21 +109,15 @@ export default function LearnProgrammesPage() {
       {selected && (
         <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-ink bg-elevated p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
           <div>
-            <p className="learn-eyebrow">Step 1 complete</p>
-            <p className="mt-1 text-sm font-semibold text-ink">
-              Next: Step 2 of 6 · Orient your mind
-            </p>
-            <p className="learn-meta mt-0.5">
-              Map philosophy · theory · model—then you’ll measure your baseline.
-            </p>
+            <p className="learn-eyebrow">{t("Step 1 complete")}</p>
+            <p className="mt-1 text-sm font-semibold text-ink">{t("Next: Step 2 of 6 · Orient your mind")}</p>
+            <p className="learn-meta mt-0.5">{t("Map philosophy · theory · model—then you’ll measure your baseline.")}</p>
           </div>
           <Button
             href="/learn/assessment/orientation"
             variant="primary"
             className="!min-h-10 shrink-0 !text-[0.8125rem]"
-          >
-            Continue to step 2 →
-          </Button>
+          >{t("Continue to step 2 →")}</Button>
         </div>
       )}
     </LearnShell>

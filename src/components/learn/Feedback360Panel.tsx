@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useState } from "react";
 import { constructs } from "@/lib/content";
 import { faceInkStyle } from "@/lib/contrast";
@@ -21,6 +23,8 @@ type Req = { id: string; createdAt: string; closesAt: string | null; groups: Gro
  * MIN_RATERS_TO_SHOW have answered, next to the learner's own scores.
  */
 export function Feedback360Panel({ self, minor }: { self: ConstructScore[] | null; minor: boolean }) {
+  const { t } = useLmsT();
+
   const enabled = is360EnabledClient();
   const [reqs, setReqs] = useState<Req[] | null>(null);
   const [rows, setRows] = useState<{ relationship: RaterRelationship; label: string }[]>([
@@ -51,7 +55,7 @@ export function Feedback360Panel({ self, minor }: { self: ConstructScore[] | nul
     }).catch(() => null);
     const j = r ? await r.json().catch(() => ({})) : {};
     if (r?.ok && j.ok) setLinks(j.links);
-    else setNote(j.error === "open_request_exists" ? "You already have an open feedback request." : String(j.error || "Sign in to invite raters."));
+    else setNote(j.error === "open_request_exists" ? t("You already have an open feedback request.") : String(j.error || "Sign in to invite raters."));
   }
 
   const origin = typeof window !== "undefined" ? window.location.origin : "";
@@ -60,8 +64,8 @@ export function Feedback360Panel({ self, minor }: { self: ConstructScore[] | nul
 
   return (
     <section className="learn-card mt-4 sm:mt-5 print:break-inside-avoid" aria-labelledby="fb360-h" data-testid="feedback-360">
-      <p className="learn-eyebrow">Beta</p>
-      <h2 id="fb360-h" className="learn-card-title">360 feedback: how others see you</h2>
+      <p className="learn-eyebrow">{t("Beta")}</p>
+      <h2 id="fb360-h" className="learn-card-title">{t("360 feedback: how others see you")}</h2>
       <p className="learn-body mt-1">
         Invite 3 to 12 people who see you at work. Each gets a single-use link to an 8-minute form. You only ever see
         averages, and only once at least {MIN_RATERS_TO_SHOW} people have answered, so their answers stay anonymous.
@@ -87,13 +91,13 @@ export function Feedback360Panel({ self, minor }: { self: ConstructScore[] | nul
               <label className="sr-only" htmlFor={`fb-l-${i}`}>Rater {i + 1} first name (optional)</label>
               <input
                 id={`fb-l-${i}`}
-                placeholder="First name (optional, only you see it)"
+                placeholder={t("First name (optional, only you see it)")}
                 value={r.label}
                 maxLength={40}
                 onChange={(e) => setRows((xs) => xs.map((x, k) => (k === i ? { ...x, label: e.target.value } : x)))}
                 className="min-h-10 flex-1 rounded-xl border border-line-strong bg-surface px-3 text-[0.8125rem]"
               />
-              <label className="sr-only" htmlFor={`fb-r-${i}`}>Relationship</label>
+              <label className="sr-only" htmlFor={`fb-r-${i}`}>{t("Relationship")}</label>
               <select
                 id={`fb-r-${i}`}
                 value={r.relationship}
@@ -127,13 +131,13 @@ export function Feedback360Panel({ self, minor }: { self: ConstructScore[] | nul
           </p>
           {all?.shown && all.scores && (
             <table className="mt-3 w-full text-left text-[0.8125rem]">
-              <caption className="sr-only">Your scores compared with the average of your raters</caption>
+              <caption className="sr-only">{t("Your scores compared with the average of your raters")}</caption>
               <thead>
                 <tr className="border-b border-line text-[0.65rem] uppercase tracking-[0.08em] text-muted">
-                  <th scope="col" className="py-2 pr-2">Face</th>
-                  <th scope="col" className="px-1 py-2 text-right">You</th>
+                  <th scope="col" className="py-2 pr-2">{t("Face")}</th>
+                  <th scope="col" className="px-1 py-2 text-right">{t("You")}</th>
                   <th scope="col" className="px-1 py-2 text-right">Others ({all.completed})</th>
-                  <th scope="col" className="py-2 pl-1 text-right">Gap</th>
+                  <th scope="col" className="py-2 pl-1 text-right">{t("Gap")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -150,7 +154,7 @@ export function Feedback360Panel({ self, minor }: { self: ConstructScore[] | nul
                         {gap == null ? "—" : `${gap > 0 ? "+" : ""}${gap}`}
                         {gap != null && Math.abs(gap) >= 10 && (
                           <span className="ml-1 text-[0.625rem] font-semibold uppercase text-muted">
-                            {gap > 0 ? "others see more" : "you see more"}
+                            {gap > 0 ? t("others see more") : t("you see more")}
                           </span>
                         )}
                       </td>

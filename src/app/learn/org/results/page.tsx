@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { LearnShell } from "@/components/learn/LearnShell";
@@ -31,6 +33,8 @@ const sign = (v: number | undefined) => (v != null && Number.isFinite(v) ? `${v 
 const pctOf = (a: number, b: number) => (b > 0 ? `${Math.round((a / b) * 100)}%` : "–");
 
 export default function OrgResultsPage() {
+  const { t } = useLmsT();
+
   const [load, setLoad] = useState<Load>({ state: "loading" });
   const [orgId, setOrgId] = useState<string>(() =>
     typeof window === "undefined" ? "" : (new URLSearchParams(window.location.search).get("org") ?? ""),
@@ -70,36 +74,30 @@ export default function OrgResultsPage() {
 
   return (
     <LearnShell
-      title="Organisation results"
+      title={t("Organisation results")}
       subtitle="Super-Cube® results for your organisation: aggregates of learners who share progress, never names or journals."
       hideJourneyRail
     >
-      {load.state === "loading" && <p className="learn-meta" role="status">Loading results…</p>}
+      {load.state === "loading" && <p className="learn-meta" role="status">{t("Loading results…")}</p>}
 
       {load.state === "sign_in" && (
-        <Notice title="Sign in to see your organisation's results">
-          <Link href="/login?next=%2Flearn%2Forg%2Fresults" className="learn-btn learn-btn-primary mt-3 inline-flex">
-            Sign in
-          </Link>
+        <Notice title={t("Sign in to see your organisation's results")}>
+          <Link href="/login?next=%2Flearn%2Forg%2Fresults" className="learn-btn learn-btn-primary mt-3 inline-flex">{t("Sign in")}</Link>
         </Notice>
       )}
       {load.state === "not_admin" && (
-        <Notice title="Organisation admins only">
+        <Notice title={t("Organisation admins only")}>
           Results are shown to your organisation&apos;s admins. Ask your Super-Cube® contact or your organisation&apos;s
           admin for an admin invite. Coaches can use{" "}
-          <Link href="/learn/coach" className="underline">
-            Coach tools
-          </Link>
+          <Link href="/learn/coach" className="underline">{t("Coach tools")}</Link>
           .
         </Notice>
       )}
       {load.state === "not_ready" && (
-        <Notice title="Results are not switched on yet">
-          Organisation results are being set up for this site. Please check back soon.
-        </Notice>
+        <Notice title={t("Results are not switched on yet")}>{t("Organisation results are being set up for this site. Please check back soon.")}</Notice>
       )}
       {load.state === "unavailable" && (
-        <Notice title="Results unavailable">We could not load results just now. Please try again in a moment.</Notice>
+        <Notice title={t("Results unavailable")}>{t("We could not load results just now. Please try again in a moment.")}</Notice>
       )}
 
       {load.state === "ready" && (
@@ -152,6 +150,8 @@ function Dashboard({
   onOrg: (id: string) => void;
   onCsv: () => void;
 }) {
+  const { t } = useLmsT();
+
   const faces = faceRows(raw);
   const overall = overallRow(raw);
   const steps = funnelRows(raw);
@@ -162,7 +162,7 @@ function Dashboard({
   const generated = new Date(raw.generated_at).toLocaleString("en-ZA", {
     dateStyle: "medium",
     timeStyle: "short",
-    timeZone: "Africa/Johannesburg",
+    timeZone: t("Africa/Johannesburg"),
   });
 
   return (
@@ -171,7 +171,7 @@ function Dashboard({
         <div className="min-w-0">
           {orgs.length > 1 ? (
             <label className="block">
-              <span className="learn-eyebrow">Organisation</span>
+              <span className="learn-eyebrow">{t("Organisation")}</span>
               <select
                 value={orgId}
                 onChange={(ev) => onOrg(ev.target.value)}
@@ -186,7 +186,7 @@ function Dashboard({
             </label>
           ) : (
             <>
-              <p className="learn-eyebrow">Organisation</p>
+              <p className="learn-eyebrow">{t("Organisation")}</p>
               <p className="text-lg font-semibold tracking-tight text-ink">{raw.org?.name}</p>
             </>
           )}
@@ -194,9 +194,7 @@ function Dashboard({
             Cohort code {raw.org?.code} · updated {generated} SAST
           </p>
         </div>
-        <button type="button" onClick={onCsv} className="learn-btn learn-btn-primary" data-testid="org-results-csv">
-          Download CSV
-        </button>
+        <button type="button" onClick={onCsv} className="learn-btn learn-btn-primary" data-testid="org-results-csv">{t("Download CSV")}</button>
       </div>
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -219,9 +217,7 @@ function Dashboard({
       </div>
 
       <section className="learn-card" aria-labelledby="faces-h">
-        <h2 id="faces-h" className="learn-card-title">
-          Before and after, by Super-Cube® face
-        </h2>
+        <h2 id="faces-h" className="learn-card-title">{t("Before and after, by Super-Cube® face")}</h2>
         <p className="learn-meta mt-0.5">
           28-question baseline vs after-test, paired learners only, 0–100. Bars show the after mean; the tick marks the
           baseline. 95% CI of the change and Cohen&apos;s d (0.2 small, 0.5 medium, 0.8 large). Faces with fewer than {k}{" "}
@@ -236,10 +232,8 @@ function Dashboard({
 
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="learn-card" aria-labelledby="funnel-h">
-          <h2 id="funnel-h" className="learn-card-title">
-            Completion
-          </h2>
-          <p className="learn-meta mt-0.5">Share of learners who joined. Coaches and admins are not counted.</p>
+          <h2 id="funnel-h" className="learn-card-title">{t("Completion")}</h2>
+          <p className="learn-meta mt-0.5">{t("Share of learners who joined. Coaches and admins are not counted.")}</p>
           <ol className="mt-3 space-y-2" data-testid="org-results-funnel">
             {steps.map((s) => (
               <li key={s.key}>
@@ -258,9 +252,7 @@ function Dashboard({
         </section>
 
         <section className="learn-card" aria-labelledby="eng-h">
-          <h2 id="eng-h" className="learn-card-title">
-            Engagement
-          </h2>
+          <h2 id="eng-h" className="learn-card-title">{t("Engagement")}</h2>
           <dl className="mt-3 grid grid-cols-2 gap-3 text-[0.8125rem]">
             <Stat label="Sessions completed" value={String(e.sessions_completed)} />
             <Stat
@@ -270,7 +262,7 @@ function Dashboard({
             <Stat label="Median streak" value={e.median_streak == null ? "–" : `${Math.round(Number(e.median_streak))} days`} />
             <Stat label="Practice minutes (30 days)" value={String(Math.round(Number(e.minutes_30d)))} />
           </dl>
-          <h3 className="mt-4 text-[0.8125rem] font-semibold text-ink">Active learners per week</h3>
+          <h3 className="mt-4 text-[0.8125rem] font-semibold text-ink">{t("Active learners per week")}</h3>
           <div className="mt-2 flex h-24 items-end gap-1.5" role="img" aria-label={`Active learners per week: ${e.weekly_active.map((w) => w.active).join(", ")}`}>
             {e.weekly_active.map((w) => (
               <div key={w.week} className="flex flex-1 flex-col items-center gap-1">
@@ -311,6 +303,8 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 function FaceBar({ f, k }: { f: FaceRow; k: number }) {
+  const { t } = useLmsT();
+
   const isOverall = f.id === "overall";
   return (
     <li className={isOverall ? "border-t border-line pt-3" : ""} data-face={f.id}>
@@ -342,7 +336,7 @@ function FaceBar({ f, k }: { f: FaceRow; k: number }) {
           <div
             className="absolute -top-1 h-[1.125rem] w-0.5 rounded bg-ink"
             style={{ left: `calc(${Math.min(100, f.before?.mean ?? 0)}% - 1px)` }}
-            title="Baseline"
+            title={t("Baseline")}
           />
         </div>
       )}

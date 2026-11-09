@@ -1,5 +1,7 @@
 "use client";
 
+import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
+
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { syncLearnerState, type SyncStatus } from "@/lib/lms/sync";
@@ -10,6 +12,8 @@ import { claimDeviceBaselines } from "@/lib/lms/cloud";
  * Renders a slim status strip when syncing or on error.
  */
 export function LmsSyncProvider({ children }: { children: React.ReactNode }) {
+  const { t } = useLmsT();
+
   const [status, setStatus] = useState<SyncStatus>("idle");
   const [message, setMessage] = useState<string | null>(null);
 
