@@ -32,7 +32,18 @@ export function cspMode(env: Record<string, string | undefined> = process.env): 
   return env.CSP_MODE === "report-only" ? "report-only" : "enforce";
 }
 
-export function buildCsp(env: Record<string, string | undefined> = process.env): string {
+export type CspProfile = "site" | "embed" | "lti";
+
+/**
+ * Header sources. LTI pages and the LTI API are excluded from the site rule
+ * so a learning platform can frame the launch and the deep-link response can
+ * post back to that platform. Marketing pages stay locked to this site.
+ */
+export const SITE_SECURITY_SOURCE = "/((?!api/lti|lti).*)";
+export const LTI_API_SOURCE = "/api/lti/:path*";
+export const LTI_PAGE_SOURCE = "/lti/:path*";
+
+export function buildCsp(env: Record<string, string | undefined> = process.env, profile: CspProfile = "site"): string {
   const dev = env.NODE_ENV === "development";
   const supabase = originOf(env.NEXT_PUBLIC_SUPABASE_URL);
   const videoCdn = originOf(env.NEXT_PUBLIC_VIDEO_CDN);
@@ -81,8 +92,11 @@ export function buildCsp(env: Record<string, string | undefined> = process.env):
     "manifest-src": "'self'",
     "object-src": "'none'",
     "base-uri": "'self'",
-    "form-action": "'self' https://checkout.paystack.com",
-    "frame-ancestors": "'self'",
+    "form-action":
+      profile === "lti"
+        ? "'self' https://checkout.paystack.com https: http://127.0.0.1:* http://localhost:*"
+        : "'self' https://checkout.paystack.com",
+    "frame-ancestors": profile === "site" ? "'self'" : "*",
     "report-uri": "/api/csp-report",
     "report-to": "csp",
   };
@@ -92,11 +106,11 @@ export function buildCsp(env: Record<string, string | undefined> = process.env):
     .join("; ");
 }
 
-export function cspHeaders(env: Record<string, string | undefined> = process.env) {
+export function cspHeaders(env: Record<string, string | undefined> = process.env, profile: CspProfile = "site") {
   return [
     {
       key: cspMode(env) === "enforce" ? "Content-Security-Policy" : "Content-Security-Policy-Report-Only",
-      value: buildCsp(env),
+      value: buildCsp(env, profile),
     },
     { key: "Reporting-Endpoints", value: 'csp="/api/csp-report"' },
   ];
