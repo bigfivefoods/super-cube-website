@@ -193,6 +193,16 @@ export interface LocalLmsState {
     userId: string;
     checkedAt: string;
   };
+  /**
+   * Set when a corporate LMS launches a course with LTI 1.3.
+   * Unlocks the pathway on this device. The server still checks entitlement.
+   */
+  ltiAccess?: {
+    programmeId: ProgrammeId;
+    courseId: string;
+    orgCode?: string;
+    at: string;
+  };
 }
 
 /** Old builds stored a fake "active" `_demo` subscription that unlocked everything. */
@@ -407,7 +417,32 @@ function serverEntitled(state: LocalLmsState): boolean {
  */
 export function hasLocalAccess(state: LocalLmsState): boolean {
   if (process.env.NEXT_PUBLIC_DEMO_LMS_OPEN === "true") return true;
-  return hasPaidAccess(state) || serverEntitled(state);
+  return hasPaidAccess(state) || serverEntitled(state) || Boolean(state.ltiAccess?.programmeId);
+}
+
+/** Remember an LTI launch so the course opens on this device. */
+export function grantLtiAccess(input: {
+  programmeId: ProgrammeId;
+  courseId: string;
+  orgCode?: string | null;
+  fullName?: string | null;
+  email?: string | null;
+}): LocalLmsState {
+  const state = loadLmsState();
+  state.ltiAccess = {
+    programmeId: input.programmeId,
+    courseId: input.courseId,
+    orgCode: input.orgCode || undefined,
+    at: new Date().toISOString(),
+  };
+  if (input.orgCode) state.orgCode = input.orgCode;
+  state.user = {
+    email: input.email || state.user?.email || "",
+    fullName: input.fullName || state.user?.fullName || state.profile?.displayName || "Learner",
+    programmeId: input.programmeId,
+  };
+  saveLmsState(state);
+  return state;
 }
 
 /** Learn area visible (paid, or free sample sessions after "try free") */

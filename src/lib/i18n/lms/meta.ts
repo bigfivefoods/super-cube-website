@@ -7,6 +7,7 @@ export type LearnMetaInput = {
   title: string;
   description: string;
   path: string;
+  noIndex?: boolean;
 };
 
 /**
@@ -21,5 +22,6 @@ export function learnMetadata(locale: string | undefined, meta: LearnMetaInput):
     path: meta.path,
     title: lmsText(lang, meta.title),
     description: lmsText(lang, meta.description),
+    noIndex: meta.noIndex,
   });
 }

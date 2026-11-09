@@ -206,6 +206,7 @@ export function mergeLmsStates(
     ...mergeProgression(a, b, newer),
     certificateId: newer.certificateId || older.certificateId,
     serverEntitlement: keepEntitlement(newer.serverEntitlement, older.serverEntitlement),
+    ltiAccess: newer.ltiAccess || older.ltiAccess,
   };
 }
 

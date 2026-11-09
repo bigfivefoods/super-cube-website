@@ -1,21 +1,29 @@
 import type { NextConfig } from "next";
-import { cspHeaders } from "./src/lib/csp";
+import { cspHeaders, LTI_API_SOURCE, LTI_PAGE_SOURCE, SITE_SECURITY_SOURCE } from "./src/lib/csp";
 import { PREFIXED_LOCALES, TRANSLATED_PATHS } from "./src/lib/i18n/config";
 
 /** First path segments of the translated pages ("/faq" → "faq"; the home page needs none). */
 const TRANSLATED_SEGMENTS = TRANSLATED_PATHS.map((p) => p.slice(1)).filter(Boolean);
 
-const securityHeaders = [
+const sharedSecurityHeaders = [
   { key: "X-DNS-Prefetch-Control", value: "on" },
-  { key: "X-Frame-Options", value: "SAMEORIGIN" },
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   {
     key: "Permissions-Policy",
     value: "camera=(), microphone=(), geolocation=()",
   },
+];
+
+const securityHeaders = [
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  ...sharedSecurityHeaders,
   ...cspHeaders(),
 ];
+
+/** Launch and deep-link screens may be framed. The return form may post to the LMS. */
+const ltiApiHeaders = [...sharedSecurityHeaders, ...cspHeaders(process.env, "lti")];
+const ltiPageHeaders = [...sharedSecurityHeaders, ...cspHeaders(process.env, "embed")];
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
@@ -58,8 +66,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/:path*",
+        source: SITE_SECURITY_SOURCE,
         headers: securityHeaders,
+      },
+      {
+        source: LTI_API_SOURCE,
+        headers: ltiApiHeaders,
+      },
+      {
+        source: LTI_PAGE_SOURCE,
+        headers: ltiPageHeaders,
       },
       {
         // Private growth-report links: never index, cache or leak the token in a Referer
