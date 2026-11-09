@@ -1483,7 +1483,10 @@ html.dark .sc-radar circle[fill="#fff"] { fill: #121212; }
 ============================================ */
 html[lang="ar"] body,
 html[lang="ar"] body * {
-  font-family: var(--font-arabic), var(--font-inter), "Noto Sans Arabic", Tahoma, system-ui, sans-serif !important;
+  /* Inter first so Latin text (Super-Cube®, the profile sentence) paints with the preloaded face.
+     Noto Sans Arabic then covers the Arabic letters. Noto also ships a Latin subset; putting it
+     first made the welcome screen wait on that file before the largest text could paint. */
+  font-family: var(--font-inter), var(--font-arabic), "Noto Sans Arabic", Tahoma, system-ui, sans-serif !important;
   letter-spacing: normal !important;
 }
 html[lang="ar"] :is(h1, h2, h3) {

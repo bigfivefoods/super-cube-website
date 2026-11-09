@@ -51,6 +51,7 @@ export function LearnBottomNav() {
             <li key={tab.id} className="flex-1">
               <Link
                 href={L(tab.href)}
+                prefetch={false}
                 className={`flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-xl px-0.5 text-[0.625rem] font-semibold tracking-tight transition ${
                   active
                     ? "bg-void text-void-fg"

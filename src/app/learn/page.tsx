@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { LearnNavTile } from "@/components/learn/LearnPage";
 import { LearnShell } from "@/components/learn/LearnShell";
 import { JourneyRail, useJourney } from "@/components/learn/JourneyProgress";
@@ -23,7 +23,27 @@ import { SessionReviewCard } from "@/components/learn/progress/SessionReviewCard
 import { weeklyGoal } from "@/lib/lms/progression";
 import { useLmsT } from "@/lib/i18n/lms/use-lms-t";
 
-function greeting(now = new Date()): string {
+/**
+ * The clock is read only in the browser. A prerendered page would otherwise bake
+ * the build-time date and greeting into the HTML, and hydration would fail
+ * (React #418) as soon as the visitor's day or hour differed.
+ */
+let clientNow: Date | null = null;
+function subscribeNow() {
+  return () => {};
+}
+function readClientNow() {
+  clientNow ??= new Date();
+  return clientNow;
+}
+function readServerNow() {
+  return null;
+}
+function useClientNow(): Date | null {
+  return useSyncExternalStore(subscribeNow, readClientNow, readServerNow);
+}
+
+function greeting(now: Date): string {
   const hour = Number(
     new Intl.DateTimeFormat("en-ZA", { hour: "numeric", hourCycle: "h23", timeZone: SA_TIME_ZONE }).format(now),
   );
@@ -50,6 +70,7 @@ export default function LearnDashboardPage() {
   const state = useLmsState();
   const journey = useJourney();
   const { t, L } = useLmsT();
+  const now = useClientNow();
   const [reviewsDone, setReviewsDone] = useState<Record<string, string>>({});
 
   useEffect(() => {
@@ -102,10 +123,15 @@ export default function LearnDashboardPage() {
     <LearnShell>
       <header className="mb-4 sm:mb-5">
         <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.14em] text-slate">
-          {t("Today")} · {formatDateZA(new Date())}
+          {t("Today")}
+          {now ? ` · ${formatDateZA(now)}` : ""}
         </p>
         <h1 className="mt-1 text-[1.5rem] font-semibold tracking-tight text-ink sm:text-[1.75rem]">
-          {complete ? t("Pathway complete") : `${t(greeting())}${firstName ? `, ${firstName}` : ""}`}
+          {complete
+            ? t("Pathway complete")
+            : now
+              ? `${t(greeting(now))}${firstName ? `, ${firstName}` : ""}`
+              : t("Today")}
         </h1>
         {journey.programmeName && (
           <p className="mt-1 text-[0.9375rem] text-slate">

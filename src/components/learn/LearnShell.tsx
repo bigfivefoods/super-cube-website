@@ -119,6 +119,7 @@ export function LearnShell({
                 {(
                   <Link
                     href={L(journey.current.href)}
+                    prefetch={false}
                     className="inline-flex min-h-10 shrink-0 items-center rounded-full bg-void px-3.5 text-[0.75rem] font-semibold text-void-fg"
                   >
                     {t("Continue")}
@@ -184,6 +185,7 @@ export function LearnShell({
                   {(
                     <Link
                       href={L(journey.current.href)}
+                      prefetch={false}
                       className="mt-1 inline-flex text-[0.75rem] font-semibold text-ink underline-offset-2 hover:underline"
                     >
                       {t("Continue pathway →")}
@@ -196,6 +198,7 @@ export function LearnShell({
               <p className={SECTION_HEADER}>{t("Journaling")}</p>
               <Link
                 href={L(journal.href)}
+                prefetch={false}
                 className={navClass(pathname.startsWith("/learn/pulse"))}
                 aria-current={pathname.startsWith("/learn/pulse") ? "page" : undefined}
               >
@@ -210,6 +213,7 @@ export function LearnShell({
               </Link>
               <Link
                 href={L(LEARN_JOURNAL_PRACTICE.href)}
+                prefetch={false}
                 className={navClass(practiceActive)}
                 aria-current={practiceActive ? "page" : undefined}
               >
@@ -290,6 +294,7 @@ function NavLink({
   return (
     <Link
       href={L(item.href)}
+      prefetch={false}
       className={navClass(active)}
       aria-current={active ? "page" : undefined}
     >
@@ -325,6 +330,7 @@ function MoreTools({
                 <li key={link.href}>
                   <Link
                     href={L(link.href)}
+                    prefetch={false}
                     aria-current={active ? "page" : undefined}
                     className={`block rounded-lg px-2 py-2 text-[0.8125rem] font-medium transition lg:py-1.5 lg:text-[0.75rem] ${
                       active ? "bg-black/[0.04] font-semibold text-ink" : "text-slate hover:text-ink"
@@ -360,6 +366,7 @@ function LearnExpandable({
       <div className="flex w-full items-stretch gap-0.5">
         <Link
           href={L(item.href)}
+          prefetch={false}
           className={`${navClass(active)} min-w-0 flex-1`}
           onClick={() => setOpen(true)}
           aria-current={active ? "page" : undefined}
