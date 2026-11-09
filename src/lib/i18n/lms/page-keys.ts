@@ -17,7 +17,7 @@ import { programmes } from "@/lib/programmes";
 
 /**
  * Chrome the Learn shell, bottom nav and course tree can ask for on any screen.
- * Lesson bodies and questionnaire items are not here: those pages embed the full catalogue.
+ * Lesson bodies and questionnaire items are added per screen (screen-keys.ts).
  */
 const CHROME_LITERALS = [
   "Skip to page content",

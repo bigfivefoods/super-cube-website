@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Noto_Sans_Arabic } from "next/font/google";
+import { Inter } from "next/font/google";
 import { Header } from "@/components/Header";
 import { MarketingChrome } from "@/components/MarketingChrome";
 import { AnalyticsProvider } from "@/components/AnalyticsProvider";
@@ -25,18 +25,6 @@ const inter = Inter({
   display: "swap",
   variable: "--font-inter",
   weight: ["400", "500", "600", "700", "800", "900"],
-});
-
-/**
- * Arabic pages (/ar): Noto Sans Arabic, Arabic subset only, not preloaded, so English and the other
- * languages never download it. Used only under html[lang="ar"] (globals.css), as on bigfivegroup.africa.
- */
-const notoArabic = Noto_Sans_Arabic({
-  subsets: ["arabic"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-  preload: false,
-  variable: "--font-arabic",
 });
 
 /** FOUC: apply html.dark before paint from sc-theme + prefers-color-scheme */
@@ -118,7 +106,7 @@ export default function RootLayout({
 }>) {
   return (
     // lang/dir follow the URL (/fr/… → fr, /ar/… → ar + rtl); see components/LocaleHtml.
-    <LocaleHtml className={`h-full scroll-smooth antialiased ${inter.variable} ${notoArabic.variable}`}>
+    <LocaleHtml className={`h-full scroll-smooth antialiased ${inter.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>

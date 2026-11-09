@@ -1,7 +1,8 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { stripLocale } from "@/lib/i18n/config";
 
 const KEY = "sc_org_admin_v1";
 
@@ -13,12 +14,16 @@ const KEY = "sc_org_admin_v1";
  */
 export function useOrgAdmin(): boolean {
   const [admin, setAdmin] = useState(false);
+  const skip = stripLocale(usePathname() || "/") === "/learn/welcome";
 
   useEffect(() => {
-    const supabase = createClient();
-    if (!supabase) return;
+    if (skip) return;
     let alive = true;
     void (async () => {
+      const { createClient } = await import("@/lib/supabase/client");
+      if (!alive) return;
+      const supabase = createClient();
+      if (!supabase) return;
       const {
         data: { user },
       } = await supabase.auth.getUser();
@@ -48,7 +53,7 @@ export function useOrgAdmin(): boolean {
     return () => {
       alive = false;
     };
-  }, []);
+  }, [skip]);
 
   return admin;
 }
